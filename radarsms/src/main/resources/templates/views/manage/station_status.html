@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/default_layout}"
+      th:with="metaTitle='지점별 운영상태 설정'">
+
+	<th:block layout:fragment="content">
+        <script th:inline="javascript">
+            /* <![CDATA[ */
+                var mData = /*[[${stationStatusList}]]*/
+                console.log(mData);
+            /* ]]> */
+        </script>
+        <script type="text/javascript">
+        
+        $(function() {
+            $("#configSave").on("click", function(){
+                let list = new Array();
+                $("input[name=config]").each(function(idx, item){
+                    let jObj = new Object();
+                    mData.forEach(e => {
+                        if(e.siteCd == item.id){
+                            jObj.siteCd=e.siteCd;
+                            jObj.siteName=e.siteName;
+                            jObj.siteStatus=$(item).is(":checked") ? 'RUN' : 'MRO';
+                            list.push(jObj);
+                        }
+                    });
+                });
+
+                console.log(list);
+
+                if(confirm("저장 하겠습니까?")){
+                    let result = fnCall('post', '/manage/station_status_modify', JSON.stringify(list));
+                    console.log("result :: "+ result.status);
+                    if(result.status == "success"){
+                        alert("저장되었습니다.");
+                        location.href="/manage/station_status"; //다시 로딩
+                    } else {
+                        alert("저장에 실패하였습니다. \n" + result.data);
+                    }
+                }
+            });
+        });
+
+        </script>
+    
+        <table class="noticeTbl searchSeries">
+            <thead>
+            <tr>
+                <th class="left">
+                    관리 &gt; 지점별 운영상태 설정
+                </th>
+                <th class="right">
+                    <input type="submit" id="configSave" class="btn ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" value="설정저장">
+                </th>
+            </tr>
+            </thead>
+        </table>
+        
+        <table class="table subTbl table-hover" summary="">
+            <caption class="hidden">지점별 운영상태 </caption>
+            <colgroup>
+                <col>
+                <col>
+            </colgroup>
+            <thead class="subThead">
+                <tr>
+                    <th>지점</th>
+                    <th>운영상태</th>
+                </tr>
+            </thead>
+            <tbody class="table-group-divider" th:each="stationStatusList : ${stationStatusList}" th:if="${stationStatusList.status == '1'}">
+                <tr class="subThead">
+                    <td colspan="2" th:if="${stationStatusList.gubun == '1' && stationStatusList.sortOrder == '1'}">
+                        대형 레이더
+                    </td>
+                    <td colspan="2" th:if="${stationStatusList.gubun == '2' && stationStatusList.sortOrder == '20'}">
+                        소형 레이더
+                    </td>
+                    <td colspan="2" th:if="${stationStatusList.gubun == '3' && stationStatusList.sortOrder == '30'}">
+                        공항 레이더
+                    </td>
+                </tr>
+                <tr >
+                    <td><span th:text="${stationStatusList.siteName +'('+ stationStatusList.siteCd +')'}"></span><!-- 백령도 ( BRI ) --></td>
+                    <td>
+                        <label class="a8z-toggle-switch" data-size="sm" style="--a8z-ts-input-checked-content:'정상운영'; --a8z-ts-input-unchecked-content: '유지보수'; --a8z-ts-width: 200px;">
+                            <input type="checkbox" name="config" 
+                                th:id="${stationStatusList.siteCd}"
+                                th:checked="${stationStatusList.siteStatus == 'RUN'}"
+                            />
+                            <span class="toggle">
+                                <span class="switch"></span>
+                            </span>
+                        </label>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </th:block>
+</html>

@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/default_layout}"
+      th:with="metaTitle='문자 수신 그룹 관리'">
+
+	<th:block layout:fragment="content">
+        <script th:inline="javascript">
+            /* <![CDATA[ */
+                var mData = /*[[${smsTargetGroupList}]]*/
+                console.log(mData);
+            /* ]]> */
+        </script>
+        <script type="text/javascript">
+            $(function() {
+                $("#configSave").on("click", function(){
+                    let list = new Array();
+                    $("input[name=config]").each(function(idx, item){
+                        let jObj = new Object();
+                        mData.forEach(e => {
+                            // console.log(e);
+                            if(e.id == item.id){
+                                jObj.id=e.id;
+                                jObj.name=e.name;
+                                jObj.activation=$(item).is(":checked") ? 1 : 0;
+                                jObj.status=e.status;
+                                list.push(jObj);
+                            }
+                        });
+                    });
+
+                    console.log(list);
+
+                    if(confirm("저장 하겠습니까?")){
+                        let result = fnCall('post', '/manage/sms_target_group_modify', JSON.stringify(list));
+                        
+                        console.log("result :: "+ result.status);
+                        if(result.status == "success"){
+                            alert("저장되었습니다.");
+                            location.href="/manage/sms_target_group"; //다시 로딩
+                        } else {
+                            alert("저장에 실패하였습니다. \n" + result.data);
+                        }
+                    }
+                });
+            });
+        </script>
+    
+        <table class="noticeTbl searchSeries">
+            <thead>
+            <tr>
+                <th class="left">
+                    관리 &gt; 문자 수신 그룹 관리
+                </th>
+                <th class="right">
+                    <input type="submit" id="configSave" class="btn ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" value="설정저장">
+                </th>
+            </tr>
+            </thead>
+        </table>
+
+        <table class="table subTbl table-hover" summary="">
+            <caption class="hidden">문자 수신 그룹 관리</caption>
+            <colgroup>
+                <col style="width:33%" />
+                <col style="width:33%" />
+                <col />
+            </colgroup>
+            <thead class="subThead">
+                <tr>
+                    <th>그룹이름</th>
+                    <th>그룹 활성화</th>
+                    <th>그룹 관리</th>
+                </tr>
+            </thead>
+            <tbody class="table-group-divider" th:each="tgList, tgListStat : ${smsTargetGroupList}" th:if="${tgList.id != 1 && tgList.status == '1'}">
+                <tr>
+                    <td>
+                        <input type="hidden" th:name="${'smsTargetGroups['+tgListStat.index+'].id'}" th:value="${tgList.id }"/>
+                        <span th:name="${'smsTargetGroups['+tgListStat.index+'].name' }" th:text="${tgList.name }" class="groupName"/>
+                    </td>
+                    <td>
+                        <label class="a8z-toggle-switch" data-size="sm" style="--a8z-ts-width: 100px;">
+                            <input type="checkbox" th:name="config" 
+                                th:id="${tgList.id}"
+                                th:checked="${tgList.activation == '1'}"
+                            />
+                            <span class="toggle">
+                                <span class="switch"></span>
+                            </span>
+                        </label>
+                    </td>
+                    <td>
+                        <a class="btn" th:href="@{/manage/sms_target_group_member(gid=${tgList.id}) }">멤버 설정</a>
+                        <a class="btn" th:href="@{/manage/sms_target_group_link(gid=${tgList.id}) }">감시 자료 설정</a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </th:block>
+</html>

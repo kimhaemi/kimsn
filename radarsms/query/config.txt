@@ -1,0 +1,259 @@
+
+    ┌───────────────────────────────┐
+    │                 • MobaXterm Personal Edition v23.0 •                               │
+    │               (SSH client, X server and network tools)                               │
+    │                                                                                        │
+    │ ⮞ SSH session to root@175.197.48.213 / watch1234                            │
+    │   • Direct SSH      :  ✓                                                                              │
+    │   • SSH compression :  ✓                                                                        │
+    │   • SSH-browser     :  ✓                                                                           │
+    │   • X11-forwarding  :  ✓  (remote display is forwarded through SSH)   │
+    │                                                                                        │
+    │ ⮞ For more info, ctrl+click on help or visit our website.                        │
+    └───────────────────────────────┘
+
+Last failed login: Wed Jul  5 13:07:39 KST 2023 from 14.34.47.161 on ssh:notty
+There were 13659 failed login attempts since the last successful login.
+Last login: Mon Jul  3 17:15:12 2023 from 14.34.47.161
+
+(os 확인)
+[root@localhost ~]#  cat /etc/redhat-release
+CentOS Linux release 7.9.2009 (Core)
+
+
+
+(yum mysql install error)
+(install mysql-server You could try using --skip-broken to work around the problem로 검색)
+https://m.blog.naver.com/PostView.naver?isHttpsRedirect=true&blogId=andwise&logNo=221006760342
+yum --skip-broken udate
+
+이렇게 했는데 중간에 오류가 났다.
+그래서 다시 검색했다.
+
+(mysql-8.0-community/el/7/x86_64/repodata/74179409fc3a26f13a9f8486c1f080b7015a3e5b-filelists.sqlite.bz2: [Errno 14] HTTP Error 404 - Not Found Trying other mirror. 검색)
+(yum update error 발생시)
+https://m.blog.naver.com/PostView.naver?isHttpsRedirect=true&blogId=jkt0620&logNo=220407159081&categoryNo=87&proxyReferer=
+yum epel저장소를 통해 install하는데 위와 같은 에러 메세지를 토해낸다면,
+# yum clean all && yum clean metadata && yum clean dbcache && yum makecache
+이렇게 하고 다시
+yum --skip-broken udate 했다.
+오래걸린다. ㅡㅡ
+
+현재 리눅스에서 열려있는 포트 확인
+netstat -tulpn | grep LISTEN 또는 netstat -tnlp
+
+
+
+
+
+기본 PATH = /usr/lib64/qt-3.3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/root/bin:
+
+centos 7에서
+참조 : https://blog.miyam.net/190 (java 설치)
+          https://thinmug.tistory.com/22 (java 설치)
+          https://im-codding.tistory.com/60 (초간단 CentOS7 java 설치(환경변수, 방화벽 설정 포함))
+          https://im-codding.tistory.com/61 (spring boot gradle 설치)
+          https://jjeongil.tistory.com/1255 (java 설치 버전 변경)
+
+
+
+mysql 
+https://sd23w.tistory.com/465 (CentOS7 포트(port) 열기(open) 방법)
+https://suzxc2468.tistory.com/165
+
+https://zionh.tistory.com/31 (port 변경)
+https://engineeringcode.tistory.com/269 (mysql 설치)
+https://change-words.tistory.com/entry/CentOS7-MYSQL%EC%82%AD%EC%A0%9C (CentOS 7 MYSQL 깔끔하게 삭제하는 방법)
+
+[MySQL] ERROR 1046 (3D000): No database selected : 사용하겠다고 선택한 database가 없다는 뜻이다.
+
+
+grant all on watchdog.* to root@localhost;
+
+(java 설치 확인)
+java -version 또는 javac version
+echo $JAVA_HOME
+
+(java 경로 확인 / java 설치 위치 확인)
+which javac 또는 which java
+ls -l /usr/bin/javac 또는 ls -l /usr/bin/java
+
+(java 설치 버전 변경)
+alternatives --config java > 해당 버전으로 변경
+
+
+==== JAVA 설치 순서 =====
+1. 설치 가능한 JDK 확인
+yum list java*openjdk-devel
+
+2. java 설치
+yum install java-11-openjdk-devel.x86_64
+
+3. java 설치 위치 확인
+cd /usr/lib/jvm
+
+4. path, classpath 설정
+vi /etc/profile
+추가
+export JAVA_HOME=/usr/lib/jvm/java-11-openjdk-11.0.14.1.1-1.el7_9.x86_64
+export PATH=$PATH:$JAVA_HOME/bin
+export CLASSPATH="."
+
+source /etc/profile 로 수정내용을 적용 시킨뒤
+
+
+==== MySQL 설치 순서 =====
+1.  mysql 설치 확인
+rpm -qa | grep -i mysql 또는 yum list installed | grep mysql
+
+2. 만약 설치버전이 다르고 안쓰는 거면 삭제
+모르겠고
+
+3. mysql 설치
+ - 설치파일 주소 확인
+https://dev.mysql.com/downloads/repo/yum/
+ - 나는 mysql 8 설치한다.
+yum install -y https://dev.mysql.com/get/mysql80-community-release-el7-7.noarch.rpm
+
+4. mysql 8.0 설치한다.
+yum install mysql-server
+
+5. 설치 버전 확인
+[root@localhost ~]# mysql --version
+mysql  Ver 8.0.33 for Linux on x86_64 (MySQL Community Server - GPL)
+
+6. MySQL 시작 및 자동 실행 등록
+systemctl start mysqld
+systemctl enable mysqld
+
+7. 초기 비밀번호 확인
+ - mysql 실행하고 봐야함.
+[root@localhost ~]# grep 'temporary password' /var/log/mysqld.log
+2023-07-05T07:49:23.455436Z 6 [Note] [MY-010454] [Server] A temporary password is generated for root@localhost: X(%jtQqlY0fg
+
+8. 비밀번호 변경
+ALTER USER 'root'@'localhost' IDENTIFIED BY 'Test123~!@';
+
+9. port 변경
+>> systemctl stop mysql (mysql 종료하고 하자)
+>> vi /etc/my.cnf
+port=23307
+:wq!
+>> systemctl start mysql
+======> service 구동 오류시
+참조 https://primayy.tistory.com/53
+CentOS 에서는 MySQL 포트번호를 변경하고 서비스를 재시작하면 에러가 발생한다.
+이 때,
+/usr/sbin/setenforce 0
+입력하고 서비스를 시작하면 정상 작동한다.
+그러나 이 방법을 이용하면 매번 부팅할때마다 수동으로 저 명령어를 입력해주어야 하는데, 이걸 부팅할때 실행되도록 설정할 수 있다.
+1. /etc/rc.d/rc.local 안에
+/usr/sbin/setenforce 0 <- 내용 추가 후 저장
+또는
+2. /etc/selinux/config 안에
+selinux=disabled
+그리고 서버를 reboot하고 mysql을 실행해보면 오류 없이 작동하는 모습을 볼 수 있다.
+
+>> /usr/sbin/setenforce 0 이렇게 하면 재부팅시 문제가 될 소지가 있어 그냥 다른 방법 찾는게 좋을것 같다..
+그래서 다시 부팅 하고 지웠다. ㅡㅡ
+현재는 그냥 수동으로 23307로 띄워진 상태다. 재부팅하면 자동으로 mysql 안 올라온다.. ㅡㅡ
+우선은 그냥 쓰자. 지금 이거 말고도 할게 많다.. ㅡㅡ
+
+10. 방화벽
+firewall-cmd --permanent --zone=public --add-port=23307/tcp
+firewall-cmd --reload <= 방화벽 재설정
+firewall-cmd --list-ports <= 방화벽 확인
+
+11. 방화벽 확인
+현재 리눅스에서 열려있는 포트 확인
+netstat -tulpn | grep LISTEN 또는 netstat -tnlp
+
+12. 외부에서 telnet 테스트
+telnet 175.197.48.213 23307
+Trying 175.197.48.213...
+Connected to 175.197.48.213.
+Escape character is '^]'.
+GHost '175.116.202.68' is not allowed to connect to this MySQL serverConnection closed by foreign host.
+안되네.. ㅡㅡ;;
+
+telnet 175.197.48.213 23307
+Trying 175.197.48.213...
+Connected to 175.197.48.213.
+Escape character is '^]'.
+GHost '175.116.202.68' is not allowed to connect to this MySQL serverConnection closed by foreign host.
+
+모든 IP 허용
+참조 : https://onecutwook.tistory.com/21
+https://velog.io/@wpdlzhf159/MySql-%EC%9B%90%EA%B2%A9%EC%A0%91%EC%86%8D-%ED%95%98%EA%B8%B0
+
+
+참조 : https://velog.io/@taelee/mysql-user%ED%99%95%EC%9D%B8-%EB%B0%8F-%EC%B6%94%EA%B0%80
+CREATE USER 'root'@'%' IDENTIFIED BY 'Test123~!@';
+flush privileges; => 설정적용
+
+
+create user 'root'@'175.116.202.68' identified by 'Test123~!@';
+grant all privileges on root.* to root@'%'; => 비밀번호 입력 안해도 됨.
+flush privileges; => 설정적용
+
+grant all privileges on *.* to 'root'@'175.116.202.68';
+
+비밀번호 정책 낮추기
+참조 : https://junho85.pe.kr/1484
+mysql> show variables like 'validate_password%';
+mysql> set global validate_password.policy=LOW;
+그래도 비밀번호 변경 안된다.. root라 그런가? ㅡㅡㅋ
+
+DBeaver mysql dump 안될때 - IO Error: Utility 'mysqldump.exe' not found in client home
+참조 : https://pjs21s.github.io/error-dump-indbeaber/
+
+Public Key Retrieval is not allowed
+참조 : https://deeplify.dev/database/troubleshoot/public-key-retrieval-is-not-allowed
+
+
+
+==== 외장 tomcat 설치 및 설정 =====
+참조 : https://jung-max.github.io/2020/07/20/Web-CentOs7%EC%97%90-%ED%99%98%EA%B2%BD%EA%B5%AC%EC%84%B1/
+https://velog.io/@lgw2236/springBoot-%EC%99%B8%EB%B6%80-%ED%86%B0%EC%BA%A3-%EC%97%B0%EA%B2%B0%ED%95%98%EA%B8%B0-war-%EB%B9%8C%EB%93%9C
+
+1. tomcat download
+https://tomcat.apache.org/download-10.cgi > tar.gz (pgp, sha512) 다운로드 > ftp로 서버에 옮김
+> 압축풀기 gunzip apach-tomcat-10.x.xx.tar.gz > tar -xvf apach-tomcat-10.x.xx.tar
+> 원하는 위치로 이동 mv apach-tomcat-10.x.xx  /home/watcher/apach-tomcat-10.x.xx
+> 부팅 테스트 > tomcat/bin 이동 > sh startup.sh > 브라우저 열고 ip:8080
+> 톰캣을 위한 폴더 생성 
+cd /home/watcher
+mkdir src
+cd src
+mkdir tomcat10
+이후 이 곳에서 war파일을 배포한다.
+> cd /usr/local/apach-tomcat-10.x.xx/conf
+vi server.xml
+
+
+> 실행 > tomcat/bin/sh ./startup.sh
+
+## 실행시 발생할 수 있는 오류
+JAVA_HOME should point to a JDK not a JRE
+>> JAVA_HOME 환경변수 잘못 셋팅
+echo $JAVA_HOME 확인
+cd 'JAVA_HOME' 경로로 이동 되는지 확인
+
+##touch: cannot touch ‘/home/watcher/apache-tomcat-10.1.10/logs/catalina.out’: Permission denied
+>> 파일 권한 확인해봐야한다.
+그냥 tomcat/bin의 권한을 775로 다 줘버리자..
+chmod 
+
+[CentOS 7] 톰캣에서 80포트 사용하기
+참조 : https://kirts.tistory.com/1
+2) firewall-cmd --permanent --zone=public --add-forward-port=port=80:proto=tcp:toport=8080:toaddr=192.168.0.100
+<포트포워딩 시나리오>
+외부포트 : 80
+내부포트 : 8080 (톰캣서버 설정포트)
+목적지 IP : 192.168.0.100 <= 이걸 모르겠네.. ㅡㅡㅋ
+
+
+
+==== SpringBoot 실행 순서 =====
+1. jar 파일 해당 위치에 업로드
+2. java -jar 파일이름.jar

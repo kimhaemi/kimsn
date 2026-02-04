@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/default_layout}"
+      th:with="metaTitle='경고 기준 설정'">
+
+	<th:block layout:fragment="content">
+        <script th:inline="javascript">
+        /* <![CDATA[ */
+            var mData = /*[[${list.criteriaList}]]*/
+            // console.log(mData);
+        /* ]]> */
+        </script>
+        <script type="text/javascript">
+            $(function() {
+                $("#configSave").on("click", function(){
+                    let list = new Array();
+                    let cnt = 0;
+                    mData.forEach(e => {
+                        if(e.code != 'ORDI'){
+                            let jObj = new Object();
+                            jObj.code=e.code;
+                            jObj.name=e.name;
+                            jObj.criterion=$("#"+e.code+"_"+e.gubun+"_"+e.codedtl).val();
+                            // if(e.codedtl == 'siteconnect_no'){
+                            //     jObj.criterion = $("#"+e.code+"_"+e.gubun+"_file_no").val();
+                            // }
+                            if($("#"+e.code+"_"+e.gubun+"_"+e.codedtl).val() == 0){
+                                cnt++;
+                            }
+
+                            jObj.comment=e.comment;
+                            jObj.gubun=e.gubun;
+                            jObj.codedtl=e.codedtl;
+                            jObj.sort=e.sort;
+                            list.push(jObj);
+                        }
+                    });
+
+                    // console.log("cnt :::: ", cnt);
+                    // console.log(list);
+
+                    if(cnt > 0){
+                        alert("0보다 큰 수를 입력하세요.");
+                        return false;
+                    }
+
+                    if(confirm("저장 하겠습니까?")){
+                    let result = fnCall('post', '/manage/station_set_rcc_modify', JSON.stringify(list));
+                    
+                    console.log("result :: "+ result.status);
+                    if(result.status == "success"){
+                        alert("저장되었습니다.");
+                        location.href="/manage/station_set_rcc"; //다시 로딩
+                    } else {
+                        alert("저장에 실패하였습니다. \n" + result.data);
+                    }
+                }
+                });
+            });
+        </script>
+    
+        <table class="noticeTbl searchSeries">
+            <thead>
+            <tr>
+                <th class="left">
+                    관리 &gt; 경고 기준 설정
+                </th>
+                <th class="right">
+                    <input type="submit" id="configSave" class="btn ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" value="설정저장">
+                </th>
+            </tr>
+            </thead>
+        </table>
+
+        <table class="table subTbl table-hover" summary="">
+            <caption class="hidden">경고 기준 설정</caption>
+            <colgroup>
+                <col />
+                <col />
+            </colgroup>
+            <thead class="subThead">
+                <tr>
+                    <th >구분</th>
+                    <th>설정값</th>
+                </tr>
+            </thead>
+            <tbody class="table-group-divider">
+                <th:block th:each="list, listState : ${list.criteriaList}">
+                <tr class="subThead">
+                    <td colspan="2" th:if="${list.code == 'ORDI' && list.gubun == 1}">
+                        대형 레이더
+                    </td>
+                    <td colspan="2" th:if="${list.code == 'ORDI' && list.gubun == 2}">
+                        소형 레이더
+                    </td>
+                    <td colspan="2" th:if="${list.code == 'ORDI' && list.gubun == 3}">
+                        공항 레이더
+                    </td>
+                </tr>
+                
+                <tr th:if="${list.code != 'ORDI' && list.status == 1}">
+                    <td>
+                        <span th:if="${list.code == 'WARN' &&  list.codedtl == 'file_no'}" th:text="${list.name + ' 기준(자료 미수신)'}"></span>
+                        <span th:if="${list.code == 'WARN' &&  list.codedtl == 'filesize_no'}" th:text="${list.name + ' 기준(자료 품질 이상)'}"></span>
+                        <span th:if="${list.code == 'RETR' &&  list.codedtl == 'file_ok'}" th:text="${list.name + ' 기준(자료 수신)'}"></span>
+                        <span th:if="${list.code == 'RETR' &&  list.codedtl == 'filesize_ok'}" th:text="${list.name + ' 기준(자료 품질 정상)'}"></span>
+                        <span th:if="${list.code != 'WARN' && list.code != 'RETR'}" th:text="${list.name + ' 기준'}"></span>
+                    </td>
+                    <td class="left">
+                        <!-- <span th:if="${list.code} == 'NOTI'">
+                            자료가 연속으로 <input type="text" name="NOTI" th:id="${'NOTI_'+list.gubun}" class="rccset" th:value="${list.criterion}"/>회 이상 자료가 미수신일 때
+                        </span> -->
+                        <span th:if="${list.code == 'WARN' && list.codedtl == 'file_no'} ">
+                            자료가 연속으로 
+                            <input type="text" name="WARN" th:id="${'WARN_'+list.gubun+'_'+list.codedtl}" class="rccset" th:value="${list.criterion}"  oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" maxlength="2"/>
+                            회 이상 자료가 미수신일 때
+                        </span>
+                        <span th:if="${list.code == 'WARN' && list.codedtl == 'filesize_no'} ">
+                            자료 크기가 기준파일크기보다 연속으로 
+                            <input type="text" name="WARN" th:id="${'WARN_'+list.gubun+'_'+list.codedtl}" class="rccset" th:value="${list.criterion}"  oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" maxlength="2"/>
+                            회 이상 작을때
+                        </span>
+                        <span th:if="${list.code == 'RETR' && list.codedtl == 'file_ok'} ">
+                            주의 또는 경고 상태에서 자료가 연속으로 
+                            <input type="text" name="RETR" th:id="${'RETR_'+list.gubun+'_'+list.codedtl}" class="rccset" th:value="${list.criterion}"  oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" maxlength="2"/>
+                            회 이상 자료가 수신되었을 때
+                        </span>
+                        <span th:if="${list.code == 'RETR' && list.codedtl == 'filesize_ok'} ">
+                            자료 크기가 연속으로 
+                            <input type="text" name="RETR" th:id="${'RETR_'+list.gubun+'_'+list.codedtl}" class="rccset" th:value="${list.criterion}"  oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" maxlength="2"/>
+                            회 이상 정상일때
+                        </span>
+                        <span th:if="${list.code} == 'TOTA'">
+                            <div style="display: inline-block;" th:if="${list.gubun == 1}" >대형 레이더</div>
+                            <div style="display: inline-block;" th:if="${list.gubun == 2}" >소형 레이더</div>
+                            <div style="display: inline-block;" th:if="${list.gubun == 3}" >공항 레이더</div>
+                            전 사이트가 연속으로 
+                            <input type="text" name="TOTA" th:id="${'TOTA_'+list.gubun+'_'+list.codedtl}" class="rccset" th:value="${list.criterion}"  oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" maxlength="2"/>
+                            회 이상 자료가 미수신일 때
+                        </span>
+                        <span th:if="${list.code} == 'TORE'">
+                            <div style="display: inline-block;" th:if="${list.gubun == 1}" >대형 레이더</div>
+                            <div style="display: inline-block;" th:if="${list.gubun == 2}" >소형 레이더</div>
+                            <div style="display: inline-block;" th:if="${list.gubun == 3}" >공항 레이더</div>
+                            어느 한 사이트가 연속으로 
+                            <input type="text" name="TORE" th:id="${'TORE_'+list.gubun+'_'+list.codedtl}" class="rccset" th:value="${list.criterion}"  oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" maxlength="2"/>
+                            회 이상 자료가 수신되었을 때
+                        </span>
+                    </td>
+                </tr>
+            </th:block>
+            </tbody>
+        </table>
+    </th:block>
+</html>

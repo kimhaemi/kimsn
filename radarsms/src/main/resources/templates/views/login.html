@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+  <head>
+
+    <meta charset="UTF-8">
+    <title>기상 레이더 장애 문자 전송 시스템 - 로그인</title>
+    <link rel="icon" href="/images/watchdog_icon.png" type="image/x-icon">
+    <link rel="shortcut icon" href="/images/watchdog_icon.png" type="image/x-icon">
+
+    <script type="text/javascript" src="/js/radar/jquery.min.js"></script>
+
+    <!-- 나의 스타일 추가 -->
+    <link rel="stylesheet" href="/css/login.css">
+    <script type="text/javascript">
+      
+      function fnLogin(){
+        let userId = $("#userId").val();
+        let password = $("#pwd").val();
+        
+        if( userId == "" || userId == null || userId == undefined ){
+          alert("ID를 입력하세요.");
+          // $("#idIsNull").css("display", "block");
+          $("#userId").focus();
+          return false;
+        }
+        if( pwd == "" || pwd == null || pwd == undefined ){
+          alert("password를 입력하세요.");
+          // $("#pwdIsNull").css("display", "block");
+          $("#pwd").focus();
+          return false;
+        }
+
+        $('#loginForm').submit();
+      }
+
+      $(document).ready(function() {
+          // ID가 message에서 엔터키를 누를 경우
+          $("#pwd").keydown(function (key) {
+              if (key.keyCode == 13) {
+                  fnLogin();
+              }
+          });
+      });
+
+    </script>
+
+  </head>
+  <body class="text-center">
+    
+    <div id="container">
+      <div id="loginBox">
+        <!-- <div id="loginBoxTitle">기상 레이더<br/>자료수신모니터링</div> -->
+        <div id="loginBoxTitle">기상 레이더 <br/>장애 문자 전송 시스템</div>
+        
+        <form method="post" id="loginForm" name="loginForm"action="/loginProc">
+        <div id="inputBox">
+          <div class="input-form-box"><span>아이디 </span><input type="text" name="userId" id="userId" class="form-control" ></div>
+          <!-- <div id="idIsNull" style="display: none;">
+            <p style="color: red;">ID를 입력하세요.</p>
+          </div> -->
+          <div class="input-form-box"><span>비밀번호 </span><input type="password" name="pwd" id="pwd" class="form-control" ></div>
+          <!-- <div id="pwdIsNull" style="display: none;">
+            <p style="color: red;">비밀번호를 입력하세요.</p>
+          </div> -->
+          <div th:if="${param.error}">
+            <p style="color: red;" th:text="${param.error}"></p>
+            <!-- <div class="alert alert-danger" th:text="${param.error}">
+                사용자ID 또는 비밀번호를 확인해 주세요.
+            </div> -->
+        </div>
+          <div th:if="${error != ''}">
+            <p style="color: red;" th:text="${error}"></p>
+          </div>
+          <!-- <div th:if="${error}">
+            <p style="color: red;" th:text="${errorMessage}"></p>
+          </div> -->
+
+          <div class="button-login-box" >
+            <button type="button" id="btnLogin" class="btn btn-primary" style="width:100%" onclick="fnLogin()">로그인</button>
+          </div>
+        </div>
+        </form>
+        
+      </div>
+    </div>
+  </body>
+</html>

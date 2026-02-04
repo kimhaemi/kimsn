@@ -1,0 +1,52 @@
+plugins {
+	id 'java'
+	id 'org.springframework.boot' version '2.7.15'
+	id 'io.spring.dependency-management' version '1.0.15.RELEASE'
+}
+
+group = 'kr.or.kimsn'
+version = 'RDR'
+
+java {
+	sourceCompatibility = '11'
+}
+
+configurations {
+	compileOnly {
+		extendsFrom annotationProcessor
+	}
+	/*logback 의존성 제거*/
+	all {
+        exclude group: 'org.springframework.boot', module: 'spring-boot-starter-logging'
+    }
+}
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter-batch'
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	implementation 'com.jcraft:jsch:0.1.55'
+	implementation 'org.json:json:20230618'
+	// implementation 'org.apache.commons:commons-lang3:3.12.0'
+
+	implementation 'com.googlecode.json-simple:json-simple:1.1.1'
+
+	/*logback 의존성 추가*/
+	implementation 'org.springframework.boot:spring-boot-starter-log4j2'
+	implementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-yaml'
+
+	compileOnly 'org.projectlombok:lombok'
+	developmentOnly 'org.springframework.boot:spring-boot-devtools'
+	runtimeOnly 'com.h2database:h2'
+	runtimeOnly 'com.mysql:mysql-connector-j'
+	annotationProcessor 'org.projectlombok:lombok'
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	testImplementation 'org.springframework.batch:spring-batch-test'
+}
+
+tasks.named('test') {
+	useJUnitPlatform()
+}

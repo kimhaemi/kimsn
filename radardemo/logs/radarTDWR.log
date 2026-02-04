@@ -1,0 +1,1866 @@
+2026-02-04 13:55:49.306 [INFO ] Starting RadardemoApplication using Java 11.0.2 on haems with PID 21536 (C:\kimsn\radardemo\build\classes\java\main started by imeahmik in C:\kimsn\radardemo)
+2026-02-04 13:55:49.343 [DEBUG] Running with Spring Boot v2.7.15, Spring v5.3.29
+2026-02-04 13:55:49.347 [INFO ] No active profile set, falling back to 1 default profile: "default"
+2026-02-04 13:55:49.547 [INFO ] Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2026-02-04 13:55:52.274 [INFO ] Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-02-04 13:55:52.804 [INFO ] Finished Spring Data repository scanning in 495 ms. Found 11 JPA repository interfaces.
+2026-02-04 13:55:54.432 [INFO ] HikariPool-1 - Starting...
+2026-02-04 13:55:59.844 [ERROR] HikariPool-1 - Exception during pool initialization.
+com.mysql.cj.jdbc.exceptions.CommunicationsException: Communications link failure
+
+The last packet sent successfully to the server was 0 milliseconds ago. The driver has not received any packets from the server.
+	at com.mysql.cj.jdbc.exceptions.SQLError.createCommunicationsException(SQLError.java:175) ~[mysql-connector-j-8.0.33.jar:8.0.33]
+	at com.mysql.cj.jdbc.exceptions.SQLExceptionsMapping.translateException(SQLExceptionsMapping.java:64) ~[mysql-connector-j-8.0.33.jar:8.0.33]
+	at com.mysql.cj.jdbc.ConnectionImpl.createNewIO(ConnectionImpl.java:825) ~[mysql-connector-j-8.0.33.jar:8.0.33]
+	at com.mysql.cj.jdbc.ConnectionImpl.<init>(ConnectionImpl.java:446) ~[mysql-connector-j-8.0.33.jar:8.0.33]
+	at com.mysql.cj.jdbc.ConnectionImpl.getInstance(ConnectionImpl.java:239) ~[mysql-connector-j-8.0.33.jar:8.0.33]
+	at com.mysql.cj.jdbc.NonRegisteringDriver.connect(NonRegisteringDriver.java:188) ~[mysql-connector-j-8.0.33.jar:8.0.33]
+	at com.zaxxer.hikari.util.DriverDataSource.getConnection(DriverDataSource.java:138) ~[HikariCP-4.0.3.jar:?]
+	at com.zaxxer.hikari.pool.PoolBase.newConnection(PoolBase.java:364) ~[HikariCP-4.0.3.jar:?]
+	at com.zaxxer.hikari.pool.PoolBase.newPoolEntry(PoolBase.java:206) ~[HikariCP-4.0.3.jar:?]
+	at com.zaxxer.hikari.pool.HikariPool.createPoolEntry(HikariPool.java:476) ~[HikariCP-4.0.3.jar:?]
+	at com.zaxxer.hikari.pool.HikariPool.checkFailFast(HikariPool.java:561) ~[HikariCP-4.0.3.jar:?]
+	at com.zaxxer.hikari.pool.HikariPool.<init>(HikariPool.java:115) ~[HikariCP-4.0.3.jar:?]
+	at com.zaxxer.hikari.HikariDataSource.getConnection(HikariDataSource.java:112) ~[HikariCP-4.0.3.jar:?]
+	at org.springframework.jdbc.datasource.DataSourceUtils.fetchConnection(DataSourceUtils.java:160) ~[spring-jdbc-5.3.29.jar:5.3.29]
+	at org.springframework.jdbc.datasource.DataSourceUtils.doGetConnection(DataSourceUtils.java:118) ~[spring-jdbc-5.3.29.jar:5.3.29]
+	at org.springframework.jdbc.datasource.DataSourceUtils.getConnection(DataSourceUtils.java:81) ~[spring-jdbc-5.3.29.jar:5.3.29]
+	at org.springframework.jdbc.core.JdbcTemplate.execute(JdbcTemplate.java:332) ~[spring-jdbc-5.3.29.jar:5.3.29]
+	at org.springframework.boot.jdbc.EmbeddedDatabaseConnection.isEmbedded(EmbeddedDatabaseConnection.java:164) ~[spring-boot-2.7.15.jar:2.7.15]
+	at org.springframework.boot.autoconfigure.orm.jpa.HibernateDefaultDdlAutoProvider.getDefaultDdlAuto(HibernateDefaultDdlAutoProvider.java:42) ~[spring-boot-autoconfigure-2.7.15.jar:2.7.15]
+	at org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaConfiguration.lambda$getVendorProperties$1(HibernateJpaConfiguration.java:130) ~[spring-boot-autoconfigure-2.7.15.jar:2.7.15]
+	at org.springframework.boot.autoconfigure.orm.jpa.HibernateSettings.getDdlAuto(HibernateSettings.java:41) ~[spring-boot-autoconfigure-2.7.15.jar:2.7.15]
+	at org.springframework.boot.autoconfigure.orm.jpa.HibernateProperties.determineDdlAuto(HibernateProperties.java:143) ~[spring-boot-autoconfigure-2.7.15.jar:2.7.15]
+	at org.springframework.boot.autoconfigure.orm.jpa.HibernateProperties.getAdditionalProperties(HibernateProperties.java:103) ~[spring-boot-autoconfigure-2.7.15.jar:2.7.15]
+	at org.springframework.boot.autoconfigure.orm.jpa.HibernateProperties.determineHibernateProperties(HibernateProperties.java:95) ~[spring-boot-autoconfigure-2.7.15.jar:2.7.15]
+	at org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaConfiguration.getVendorProperties(HibernateJpaConfiguration.java:131) ~[spring-boot-autoconfigure-2.7.15.jar:2.7.15]
+	at org.springframework.boot.autoconfigure.orm.jpa.JpaBaseConfiguration.entityManagerFactory(JpaBaseConfiguration.java:132) ~[spring-boot-autoconfigure-2.7.15.jar:2.7.15]
+	at jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method) ~[?:?]
+	at jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62) ~[?:?]
+	at jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43) ~[?:?]
+	at java.lang.reflect.Method.invoke(Method.java:566) ~[?:?]
+	at org.springframework.beans.factory.support.SimpleInstantiationStrategy.instantiate(SimpleInstantiationStrategy.java:154) ~[spring-beans-5.3.29.jar:5.3.29]
+	at org.springframework.beans.factory.support.ConstructorResolver.instantiate(ConstructorResolver.java:653) ~[spring-beans-5.3.29.jar:5.3.29]
+	at org.springframework.beans.factory.support.ConstructorResolver.instantiateUsingFactoryMethod(ConstructorResolver.java:638) ~[spring-beans-5.3.29.jar:5.3.29]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.instantiateUsingFactoryMethod(AbstractAutowireCapableBeanFactory.java:1352) ~[spring-beans-5.3.29.jar:5.3.29]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBeanInstance(AbstractAutowireCapableBeanFactory.java:1195) ~[spring-beans-5.3.29.jar:5.3.29]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:582) ~[spring-beans-5.3.29.jar:5.3.29]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:542) ~[spring-beans-5.3.29.jar:5.3.29]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:335) ~[spring-beans-5.3.29.jar:5.3.29]
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:234) ~[spring-beans-5.3.29.jar:5.3.29]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:333) ~[spring-beans-5.3.29.jar:5.3.29]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:208) ~[spring-beans-5.3.29.jar:5.3.29]
+	at org.springframework.context.support.AbstractApplicationContext.getBean(AbstractApplicationContext.java:1157) ~[spring-context-5.3.29.jar:5.3.29]
+	at org.springframework.context.support.AbstractApplicationContext.finishBeanFactoryInitialization(AbstractApplicationContext.java:911) ~[spring-context-5.3.29.jar:5.3.29]
+	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:583) ~[spring-context-5.3.29.jar:5.3.29]
+	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:731) ~[spring-boot-2.7.15.jar:2.7.15]
+	at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:408) ~[spring-boot-2.7.15.jar:2.7.15]
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:307) ~[spring-boot-2.7.15.jar:2.7.15]
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1303) ~[spring-boot-2.7.15.jar:2.7.15]
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1292) ~[spring-boot-2.7.15.jar:2.7.15]
+	at kr.or.kimsn.radardemo.RadardemoApplication.main(RadardemoApplication.java:14) ~[main/:?]
+	at jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method) ~[?:?]
+	at jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62) ~[?:?]
+	at jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43) ~[?:?]
+	at java.lang.reflect.Method.invoke(Method.java:566) ~[?:?]
+	at org.springframework.boot.devtools.restart.RestartLauncher.run(RestartLauncher.java:50) ~[spring-boot-devtools-2.7.15.jar:2.7.15]
+Caused by: com.mysql.cj.exceptions.CJCommunicationsException: Communications link failure
+
+The last packet sent successfully to the server was 0 milliseconds ago. The driver has not received any packets from the server.
+	at jdk.internal.reflect.NativeConstructorAccessorImpl.newInstance0(Native Method) ~[?:?]
+	at jdk.internal.reflect.NativeConstructorAccessorImpl.newInstance(NativeConstructorAccessorImpl.java:62) ~[?:?]
+	at jdk.internal.reflect.DelegatingConstructorAccessorImpl.newInstance(DelegatingConstructorAccessorImpl.java:45) ~[?:?]
+	at java.lang.reflect.Constructor.newInstance(Constructor.java:490) ~[?:?]
+	at com.mysql.cj.exceptions.ExceptionFactory.createException(ExceptionFactory.java:62) ~[mysql-connector-j-8.0.33.jar:8.0.33]
+	at com.mysql.cj.exceptions.ExceptionFactory.createException(ExceptionFactory.java:105) ~[mysql-connector-j-8.0.33.jar:8.0.33]
+	at com.mysql.cj.exceptions.ExceptionFactory.createException(ExceptionFactory.java:150) ~[mysql-connector-j-8.0.33.jar:8.0.33]
+	at com.mysql.cj.exceptions.ExceptionFactory.createCommunicationsException(ExceptionFactory.java:166) ~[mysql-connector-j-8.0.33.jar:8.0.33]
+	at com.mysql.cj.protocol.a.NativeSocketConnection.connect(NativeSocketConnection.java:89) ~[mysql-connector-j-8.0.33.jar:8.0.33]
+	at com.mysql.cj.NativeSession.connect(NativeSession.java:121) ~[mysql-connector-j-8.0.33.jar:8.0.33]
+	at com.mysql.cj.jdbc.ConnectionImpl.connectOneTryOnly(ConnectionImpl.java:945) ~[mysql-connector-j-8.0.33.jar:8.0.33]
+	at com.mysql.cj.jdbc.ConnectionImpl.createNewIO(ConnectionImpl.java:815) ~[mysql-connector-j-8.0.33.jar:8.0.33]
+	... 52 more
+Caused by: java.net.ConnectException: Connection refused: connect
+	at java.net.PlainSocketImpl.waitForConnect(Native Method) ~[?:?]
+	at java.net.PlainSocketImpl.socketConnect(PlainSocketImpl.java:107) ~[?:?]
+	at java.net.AbstractPlainSocketImpl.doConnect(AbstractPlainSocketImpl.java:399) ~[?:?]
+	at java.net.AbstractPlainSocketImpl.connectToAddress(AbstractPlainSocketImpl.java:242) ~[?:?]
+	at java.net.AbstractPlainSocketImpl.connect(AbstractPlainSocketImpl.java:224) ~[?:?]
+	at java.net.SocksSocketImpl.connect(SocksSocketImpl.java:403) ~[?:?]
+	at java.net.Socket.connect(Socket.java:591) ~[?:?]
+	at com.mysql.cj.protocol.StandardSocketFactory.connect(StandardSocketFactory.java:153) ~[mysql-connector-j-8.0.33.jar:8.0.33]
+	at com.mysql.cj.protocol.a.NativeSocketConnection.connect(NativeSocketConnection.java:63) ~[mysql-connector-j-8.0.33.jar:8.0.33]
+	at com.mysql.cj.NativeSession.connect(NativeSession.java:121) ~[mysql-connector-j-8.0.33.jar:8.0.33]
+	at com.mysql.cj.jdbc.ConnectionImpl.connectOneTryOnly(ConnectionImpl.java:945) ~[mysql-connector-j-8.0.33.jar:8.0.33]
+	at com.mysql.cj.jdbc.ConnectionImpl.createNewIO(ConnectionImpl.java:815) ~[mysql-connector-j-8.0.33.jar:8.0.33]
+	... 52 more
+2026-02-04 13:56:00.001 [INFO ] HHH000204: Processing PersistenceUnitInfo [name: default]
+2026-02-04 13:56:00.149 [INFO ] HHH000412: Hibernate ORM core version 5.6.15.Final
+2026-02-04 13:56:00.639 [INFO ] HCANN000001: Hibernate Commons Annotations {5.1.2.Final}
+2026-02-04 13:56:01.034 [INFO ] HikariPool-1 - Starting...
+2026-02-04 13:56:06.117 [ERROR] HikariPool-1 - Exception during pool initialization.
+com.mysql.cj.jdbc.exceptions.CommunicationsException: Communications link failure
+
+The last packet sent successfully to the server was 0 milliseconds ago. The driver has not received any packets from the server.
+	at com.mysql.cj.jdbc.exceptions.SQLError.createCommunicationsException(SQLError.java:175) ~[mysql-connector-j-8.0.33.jar:8.0.33]
+	at com.mysql.cj.jdbc.exceptions.SQLExceptionsMapping.translateException(SQLExceptionsMapping.java:64) ~[mysql-connector-j-8.0.33.jar:8.0.33]
+	at com.mysql.cj.jdbc.ConnectionImpl.createNewIO(ConnectionImpl.java:825) ~[mysql-connector-j-8.0.33.jar:8.0.33]
+	at com.mysql.cj.jdbc.ConnectionImpl.<init>(ConnectionImpl.java:446) ~[mysql-connector-j-8.0.33.jar:8.0.33]
+	at com.mysql.cj.jdbc.ConnectionImpl.getInstance(ConnectionImpl.java:239) ~[mysql-connector-j-8.0.33.jar:8.0.33]
+	at com.mysql.cj.jdbc.NonRegisteringDriver.connect(NonRegisteringDriver.java:188) ~[mysql-connector-j-8.0.33.jar:8.0.33]
+	at com.zaxxer.hikari.util.DriverDataSource.getConnection(DriverDataSource.java:138) ~[HikariCP-4.0.3.jar:?]
+	at com.zaxxer.hikari.pool.PoolBase.newConnection(PoolBase.java:364) ~[HikariCP-4.0.3.jar:?]
+	at com.zaxxer.hikari.pool.PoolBase.newPoolEntry(PoolBase.java:206) ~[HikariCP-4.0.3.jar:?]
+	at com.zaxxer.hikari.pool.HikariPool.createPoolEntry(HikariPool.java:476) ~[HikariCP-4.0.3.jar:?]
+	at com.zaxxer.hikari.pool.HikariPool.checkFailFast(HikariPool.java:561) ~[HikariCP-4.0.3.jar:?]
+	at com.zaxxer.hikari.pool.HikariPool.<init>(HikariPool.java:115) ~[HikariCP-4.0.3.jar:?]
+	at com.zaxxer.hikari.HikariDataSource.getConnection(HikariDataSource.java:112) ~[HikariCP-4.0.3.jar:?]
+	at org.hibernate.engine.jdbc.connections.internal.DatasourceConnectionProviderImpl.getConnection(DatasourceConnectionProviderImpl.java:122) ~[hibernate-core-5.6.15.Final.jar:5.6.15.Final]
+	at org.hibernate.engine.jdbc.env.internal.JdbcEnvironmentInitiator$ConnectionProviderJdbcConnectionAccess.obtainConnection(JdbcEnvironmentInitiator.java:181) ~[hibernate-core-5.6.15.Final.jar:5.6.15.Final]
+	at org.hibernate.engine.jdbc.env.internal.JdbcEnvironmentInitiator.initiateService(JdbcEnvironmentInitiator.java:68) ~[hibernate-core-5.6.15.Final.jar:5.6.15.Final]
+	at org.hibernate.engine.jdbc.env.internal.JdbcEnvironmentInitiator.initiateService(JdbcEnvironmentInitiator.java:35) ~[hibernate-core-5.6.15.Final.jar:5.6.15.Final]
+	at org.hibernate.boot.registry.internal.StandardServiceRegistryImpl.initiateService(StandardServiceRegistryImpl.java:101) ~[hibernate-core-5.6.15.Final.jar:5.6.15.Final]
+	at org.hibernate.service.internal.AbstractServiceRegistryImpl.createService(AbstractServiceRegistryImpl.java:272) ~[hibernate-core-5.6.15.Final.jar:5.6.15.Final]
+	at org.hibernate.service.internal.AbstractServiceRegistryImpl.initializeService(AbstractServiceRegistryImpl.java:246) ~[hibernate-core-5.6.15.Final.jar:5.6.15.Final]
+	at org.hibernate.service.internal.AbstractServiceRegistryImpl.getService(AbstractServiceRegistryImpl.java:223) ~[hibernate-core-5.6.15.Final.jar:5.6.15.Final]
+	at org.hibernate.id.factory.internal.DefaultIdentifierGeneratorFactory.injectServices(DefaultIdentifierGeneratorFactory.java:175) ~[hibernate-core-5.6.15.Final.jar:5.6.15.Final]
+	at org.hibernate.service.internal.AbstractServiceRegistryImpl.injectDependencies(AbstractServiceRegistryImpl.java:295) ~[hibernate-core-5.6.15.Final.jar:5.6.15.Final]
+	at org.hibernate.service.internal.AbstractServiceRegistryImpl.initializeService(AbstractServiceRegistryImpl.java:252) ~[hibernate-core-5.6.15.Final.jar:5.6.15.Final]
+	at org.hibernate.service.internal.AbstractServiceRegistryImpl.getService(AbstractServiceRegistryImpl.java:223) ~[hibernate-core-5.6.15.Final.jar:5.6.15.Final]
+	at org.hibernate.boot.internal.InFlightMetadataCollectorImpl.<init>(InFlightMetadataCollectorImpl.java:173) ~[hibernate-core-5.6.15.Final.jar:5.6.15.Final]
+	at org.hibernate.boot.model.process.spi.MetadataBuildingProcess.complete(MetadataBuildingProcess.java:127) ~[hibernate-core-5.6.15.Final.jar:5.6.15.Final]
+	at org.hibernate.jpa.boot.internal.EntityManagerFactoryBuilderImpl.metadata(EntityManagerFactoryBuilderImpl.java:1460) ~[hibernate-core-5.6.15.Final.jar:5.6.15.Final]
+	at org.hibernate.jpa.boot.internal.EntityManagerFactoryBuilderImpl.build(EntityManagerFactoryBuilderImpl.java:1494) ~[hibernate-core-5.6.15.Final.jar:5.6.15.Final]
+	at org.springframework.orm.jpa.vendor.SpringHibernateJpaPersistenceProvider.createContainerEntityManagerFactory(SpringHibernateJpaPersistenceProvider.java:58) ~[spring-orm-5.3.29.jar:5.3.29]
+	at org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean.createNativeEntityManagerFactory(LocalContainerEntityManagerFactoryBean.java:365) ~[spring-orm-5.3.29.jar:5.3.29]
+	at org.springframework.orm.jpa.AbstractEntityManagerFactoryBean.buildNativeEntityManagerFactory(AbstractEntityManagerFactoryBean.java:409) ~[spring-orm-5.3.29.jar:5.3.29]
+	at org.springframework.orm.jpa.AbstractEntityManagerFactoryBean.afterPropertiesSet(AbstractEntityManagerFactoryBean.java:396) ~[spring-orm-5.3.29.jar:5.3.29]
+	at org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean.afterPropertiesSet(LocalContainerEntityManagerFactoryBean.java:341) ~[spring-orm-5.3.29.jar:5.3.29]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.invokeInitMethods(AbstractAutowireCapableBeanFactory.java:1863) ~[spring-beans-5.3.29.jar:5.3.29]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.initializeBean(AbstractAutowireCapableBeanFactory.java:1800) ~[spring-beans-5.3.29.jar:5.3.29]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:620) ~[spring-beans-5.3.29.jar:5.3.29]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:542) ~[spring-beans-5.3.29.jar:5.3.29]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:335) ~[spring-beans-5.3.29.jar:5.3.29]
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:234) ~[spring-beans-5.3.29.jar:5.3.29]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:333) ~[spring-beans-5.3.29.jar:5.3.29]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:208) ~[spring-beans-5.3.29.jar:5.3.29]
+	at org.springframework.context.support.AbstractApplicationContext.getBean(AbstractApplicationContext.java:1157) ~[spring-context-5.3.29.jar:5.3.29]
+	at org.springframework.context.support.AbstractApplicationContext.finishBeanFactoryInitialization(AbstractApplicationContext.java:911) ~[spring-context-5.3.29.jar:5.3.29]
+	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:583) ~[spring-context-5.3.29.jar:5.3.29]
+	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:731) ~[spring-boot-2.7.15.jar:2.7.15]
+	at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:408) ~[spring-boot-2.7.15.jar:2.7.15]
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:307) ~[spring-boot-2.7.15.jar:2.7.15]
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1303) ~[spring-boot-2.7.15.jar:2.7.15]
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1292) ~[spring-boot-2.7.15.jar:2.7.15]
+	at kr.or.kimsn.radardemo.RadardemoApplication.main(RadardemoApplication.java:14) ~[main/:?]
+	at jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method) ~[?:?]
+	at jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62) ~[?:?]
+	at jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43) ~[?:?]
+	at java.lang.reflect.Method.invoke(Method.java:566) ~[?:?]
+	at org.springframework.boot.devtools.restart.RestartLauncher.run(RestartLauncher.java:50) ~[spring-boot-devtools-2.7.15.jar:2.7.15]
+Caused by: com.mysql.cj.exceptions.CJCommunicationsException: Communications link failure
+
+The last packet sent successfully to the server was 0 milliseconds ago. The driver has not received any packets from the server.
+	at jdk.internal.reflect.NativeConstructorAccessorImpl.newInstance0(Native Method) ~[?:?]
+	at jdk.internal.reflect.NativeConstructorAccessorImpl.newInstance(NativeConstructorAccessorImpl.java:62) ~[?:?]
+	at jdk.internal.reflect.DelegatingConstructorAccessorImpl.newInstance(DelegatingConstructorAccessorImpl.java:45) ~[?:?]
+	at java.lang.reflect.Constructor.newInstance(Constructor.java:490) ~[?:?]
+	at com.mysql.cj.exceptions.ExceptionFactory.createException(ExceptionFactory.java:62) ~[mysql-connector-j-8.0.33.jar:8.0.33]
+	at com.mysql.cj.exceptions.ExceptionFactory.createException(ExceptionFactory.java:105) ~[mysql-connector-j-8.0.33.jar:8.0.33]
+	at com.mysql.cj.exceptions.ExceptionFactory.createException(ExceptionFactory.java:150) ~[mysql-connector-j-8.0.33.jar:8.0.33]
+	at com.mysql.cj.exceptions.ExceptionFactory.createCommunicationsException(ExceptionFactory.java:166) ~[mysql-connector-j-8.0.33.jar:8.0.33]
+	at com.mysql.cj.protocol.a.NativeSocketConnection.connect(NativeSocketConnection.java:89) ~[mysql-connector-j-8.0.33.jar:8.0.33]
+	at com.mysql.cj.NativeSession.connect(NativeSession.java:121) ~[mysql-connector-j-8.0.33.jar:8.0.33]
+	at com.mysql.cj.jdbc.ConnectionImpl.connectOneTryOnly(ConnectionImpl.java:945) ~[mysql-connector-j-8.0.33.jar:8.0.33]
+	at com.mysql.cj.jdbc.ConnectionImpl.createNewIO(ConnectionImpl.java:815) ~[mysql-connector-j-8.0.33.jar:8.0.33]
+	... 53 more
+Caused by: java.net.ConnectException: Connection refused: connect
+	at java.net.PlainSocketImpl.waitForConnect(Native Method) ~[?:?]
+	at java.net.PlainSocketImpl.socketConnect(PlainSocketImpl.java:107) ~[?:?]
+	at java.net.AbstractPlainSocketImpl.doConnect(AbstractPlainSocketImpl.java:399) ~[?:?]
+	at java.net.AbstractPlainSocketImpl.connectToAddress(AbstractPlainSocketImpl.java:242) ~[?:?]
+	at java.net.AbstractPlainSocketImpl.connect(AbstractPlainSocketImpl.java:224) ~[?:?]
+	at java.net.SocksSocketImpl.connect(SocksSocketImpl.java:403) ~[?:?]
+	at java.net.Socket.connect(Socket.java:591) ~[?:?]
+	at com.mysql.cj.protocol.StandardSocketFactory.connect(StandardSocketFactory.java:153) ~[mysql-connector-j-8.0.33.jar:8.0.33]
+	at com.mysql.cj.protocol.a.NativeSocketConnection.connect(NativeSocketConnection.java:63) ~[mysql-connector-j-8.0.33.jar:8.0.33]
+	at com.mysql.cj.NativeSession.connect(NativeSession.java:121) ~[mysql-connector-j-8.0.33.jar:8.0.33]
+	at com.mysql.cj.jdbc.ConnectionImpl.connectOneTryOnly(ConnectionImpl.java:945) ~[mysql-connector-j-8.0.33.jar:8.0.33]
+	at com.mysql.cj.jdbc.ConnectionImpl.createNewIO(ConnectionImpl.java:815) ~[mysql-connector-j-8.0.33.jar:8.0.33]
+	... 53 more
+2026-02-04 13:56:06.122 [WARN ] HHH000342: Could not obtain connection to query metadata
+com.mysql.cj.jdbc.exceptions.CommunicationsException: Communications link failure
+
+The last packet sent successfully to the server was 0 milliseconds ago. The driver has not received any packets from the server.
+	at com.mysql.cj.jdbc.exceptions.SQLError.createCommunicationsException(SQLError.java:175) ~[mysql-connector-j-8.0.33.jar:8.0.33]
+	at com.mysql.cj.jdbc.exceptions.SQLExceptionsMapping.translateException(SQLExceptionsMapping.java:64) ~[mysql-connector-j-8.0.33.jar:8.0.33]
+	at com.mysql.cj.jdbc.ConnectionImpl.createNewIO(ConnectionImpl.java:825) ~[mysql-connector-j-8.0.33.jar:8.0.33]
+	at com.mysql.cj.jdbc.ConnectionImpl.<init>(ConnectionImpl.java:446) ~[mysql-connector-j-8.0.33.jar:8.0.33]
+	at com.mysql.cj.jdbc.ConnectionImpl.getInstance(ConnectionImpl.java:239) ~[mysql-connector-j-8.0.33.jar:8.0.33]
+	at com.mysql.cj.jdbc.NonRegisteringDriver.connect(NonRegisteringDriver.java:188) ~[mysql-connector-j-8.0.33.jar:8.0.33]
+	at com.zaxxer.hikari.util.DriverDataSource.getConnection(DriverDataSource.java:138) ~[HikariCP-4.0.3.jar:?]
+	at com.zaxxer.hikari.pool.PoolBase.newConnection(PoolBase.java:364) ~[HikariCP-4.0.3.jar:?]
+	at com.zaxxer.hikari.pool.PoolBase.newPoolEntry(PoolBase.java:206) ~[HikariCP-4.0.3.jar:?]
+	at com.zaxxer.hikari.pool.HikariPool.createPoolEntry(HikariPool.java:476) ~[HikariCP-4.0.3.jar:?]
+	at com.zaxxer.hikari.pool.HikariPool.checkFailFast(HikariPool.java:561) ~[HikariCP-4.0.3.jar:?]
+	at com.zaxxer.hikari.pool.HikariPool.<init>(HikariPool.java:115) ~[HikariCP-4.0.3.jar:?]
+	at com.zaxxer.hikari.HikariDataSource.getConnection(HikariDataSource.java:112) ~[HikariCP-4.0.3.jar:?]
+	at org.hibernate.engine.jdbc.connections.internal.DatasourceConnectionProviderImpl.getConnection(DatasourceConnectionProviderImpl.java:122) ~[hibernate-core-5.6.15.Final.jar:5.6.15.Final]
+	at org.hibernate.engine.jdbc.env.internal.JdbcEnvironmentInitiator$ConnectionProviderJdbcConnectionAccess.obtainConnection(JdbcEnvironmentInitiator.java:181) ~[hibernate-core-5.6.15.Final.jar:5.6.15.Final]
+	at org.hibernate.engine.jdbc.env.internal.JdbcEnvironmentInitiator.initiateService(JdbcEnvironmentInitiator.java:68) ~[hibernate-core-5.6.15.Final.jar:5.6.15.Final]
+	at org.hibernate.engine.jdbc.env.internal.JdbcEnvironmentInitiator.initiateService(JdbcEnvironmentInitiator.java:35) ~[hibernate-core-5.6.15.Final.jar:5.6.15.Final]
+	at org.hibernate.boot.registry.internal.StandardServiceRegistryImpl.initiateService(StandardServiceRegistryImpl.java:101) ~[hibernate-core-5.6.15.Final.jar:5.6.15.Final]
+	at org.hibernate.service.internal.AbstractServiceRegistryImpl.createService(AbstractServiceRegistryImpl.java:272) ~[hibernate-core-5.6.15.Final.jar:5.6.15.Final]
+	at org.hibernate.service.internal.AbstractServiceRegistryImpl.initializeService(AbstractServiceRegistryImpl.java:246) ~[hibernate-core-5.6.15.Final.jar:5.6.15.Final]
+	at org.hibernate.service.internal.AbstractServiceRegistryImpl.getService(AbstractServiceRegistryImpl.java:223) ~[hibernate-core-5.6.15.Final.jar:5.6.15.Final]
+	at org.hibernate.id.factory.internal.DefaultIdentifierGeneratorFactory.injectServices(DefaultIdentifierGeneratorFactory.java:175) ~[hibernate-core-5.6.15.Final.jar:5.6.15.Final]
+	at org.hibernate.service.internal.AbstractServiceRegistryImpl.injectDependencies(AbstractServiceRegistryImpl.java:295) ~[hibernate-core-5.6.15.Final.jar:5.6.15.Final]
+	at org.hibernate.service.internal.AbstractServiceRegistryImpl.initializeService(AbstractServiceRegistryImpl.java:252) ~[hibernate-core-5.6.15.Final.jar:5.6.15.Final]
+	at org.hibernate.service.internal.AbstractServiceRegistryImpl.getService(AbstractServiceRegistryImpl.java:223) ~[hibernate-core-5.6.15.Final.jar:5.6.15.Final]
+	at org.hibernate.boot.internal.InFlightMetadataCollectorImpl.<init>(InFlightMetadataCollectorImpl.java:173) ~[hibernate-core-5.6.15.Final.jar:5.6.15.Final]
+	at org.hibernate.boot.model.process.spi.MetadataBuildingProcess.complete(MetadataBuildingProcess.java:127) ~[hibernate-core-5.6.15.Final.jar:5.6.15.Final]
+	at org.hibernate.jpa.boot.internal.EntityManagerFactoryBuilderImpl.metadata(EntityManagerFactoryBuilderImpl.java:1460) ~[hibernate-core-5.6.15.Final.jar:5.6.15.Final]
+	at org.hibernate.jpa.boot.internal.EntityManagerFactoryBuilderImpl.build(EntityManagerFactoryBuilderImpl.java:1494) ~[hibernate-core-5.6.15.Final.jar:5.6.15.Final]
+	at org.springframework.orm.jpa.vendor.SpringHibernateJpaPersistenceProvider.createContainerEntityManagerFactory(SpringHibernateJpaPersistenceProvider.java:58) ~[spring-orm-5.3.29.jar:5.3.29]
+	at org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean.createNativeEntityManagerFactory(LocalContainerEntityManagerFactoryBean.java:365) ~[spring-orm-5.3.29.jar:5.3.29]
+	at org.springframework.orm.jpa.AbstractEntityManagerFactoryBean.buildNativeEntityManagerFactory(AbstractEntityManagerFactoryBean.java:409) ~[spring-orm-5.3.29.jar:5.3.29]
+	at org.springframework.orm.jpa.AbstractEntityManagerFactoryBean.afterPropertiesSet(AbstractEntityManagerFactoryBean.java:396) ~[spring-orm-5.3.29.jar:5.3.29]
+	at org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean.afterPropertiesSet(LocalContainerEntityManagerFactoryBean.java:341) ~[spring-orm-5.3.29.jar:5.3.29]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.invokeInitMethods(AbstractAutowireCapableBeanFactory.java:1863) ~[spring-beans-5.3.29.jar:5.3.29]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.initializeBean(AbstractAutowireCapableBeanFactory.java:1800) ~[spring-beans-5.3.29.jar:5.3.29]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:620) ~[spring-beans-5.3.29.jar:5.3.29]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:542) ~[spring-beans-5.3.29.jar:5.3.29]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:335) ~[spring-beans-5.3.29.jar:5.3.29]
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:234) ~[spring-beans-5.3.29.jar:5.3.29]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:333) ~[spring-beans-5.3.29.jar:5.3.29]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:208) ~[spring-beans-5.3.29.jar:5.3.29]
+	at org.springframework.context.support.AbstractApplicationContext.getBean(AbstractApplicationContext.java:1157) ~[spring-context-5.3.29.jar:5.3.29]
+	at org.springframework.context.support.AbstractApplicationContext.finishBeanFactoryInitialization(AbstractApplicationContext.java:911) ~[spring-context-5.3.29.jar:5.3.29]
+	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:583) ~[spring-context-5.3.29.jar:5.3.29]
+	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:731) ~[spring-boot-2.7.15.jar:2.7.15]
+	at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:408) ~[spring-boot-2.7.15.jar:2.7.15]
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:307) ~[spring-boot-2.7.15.jar:2.7.15]
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1303) ~[spring-boot-2.7.15.jar:2.7.15]
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1292) ~[spring-boot-2.7.15.jar:2.7.15]
+	at kr.or.kimsn.radardemo.RadardemoApplication.main(RadardemoApplication.java:14) ~[main/:?]
+	at jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method) ~[?:?]
+	at jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62) ~[?:?]
+	at jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43) ~[?:?]
+	at java.lang.reflect.Method.invoke(Method.java:566) ~[?:?]
+	at org.springframework.boot.devtools.restart.RestartLauncher.run(RestartLauncher.java:50) ~[spring-boot-devtools-2.7.15.jar:2.7.15]
+Caused by: com.mysql.cj.exceptions.CJCommunicationsException: Communications link failure
+
+The last packet sent successfully to the server was 0 milliseconds ago. The driver has not received any packets from the server.
+	at jdk.internal.reflect.NativeConstructorAccessorImpl.newInstance0(Native Method) ~[?:?]
+	at jdk.internal.reflect.NativeConstructorAccessorImpl.newInstance(NativeConstructorAccessorImpl.java:62) ~[?:?]
+	at jdk.internal.reflect.DelegatingConstructorAccessorImpl.newInstance(DelegatingConstructorAccessorImpl.java:45) ~[?:?]
+	at java.lang.reflect.Constructor.newInstance(Constructor.java:490) ~[?:?]
+	at com.mysql.cj.exceptions.ExceptionFactory.createException(ExceptionFactory.java:62) ~[mysql-connector-j-8.0.33.jar:8.0.33]
+	at com.mysql.cj.exceptions.ExceptionFactory.createException(ExceptionFactory.java:105) ~[mysql-connector-j-8.0.33.jar:8.0.33]
+	at com.mysql.cj.exceptions.ExceptionFactory.createException(ExceptionFactory.java:150) ~[mysql-connector-j-8.0.33.jar:8.0.33]
+	at com.mysql.cj.exceptions.ExceptionFactory.createCommunicationsException(ExceptionFactory.java:166) ~[mysql-connector-j-8.0.33.jar:8.0.33]
+	at com.mysql.cj.protocol.a.NativeSocketConnection.connect(NativeSocketConnection.java:89) ~[mysql-connector-j-8.0.33.jar:8.0.33]
+	at com.mysql.cj.NativeSession.connect(NativeSession.java:121) ~[mysql-connector-j-8.0.33.jar:8.0.33]
+	at com.mysql.cj.jdbc.ConnectionImpl.connectOneTryOnly(ConnectionImpl.java:945) ~[mysql-connector-j-8.0.33.jar:8.0.33]
+	at com.mysql.cj.jdbc.ConnectionImpl.createNewIO(ConnectionImpl.java:815) ~[mysql-connector-j-8.0.33.jar:8.0.33]
+	... 53 more
+Caused by: java.net.ConnectException: Connection refused: connect
+	at java.net.PlainSocketImpl.waitForConnect(Native Method) ~[?:?]
+	at java.net.PlainSocketImpl.socketConnect(PlainSocketImpl.java:107) ~[?:?]
+	at java.net.AbstractPlainSocketImpl.doConnect(AbstractPlainSocketImpl.java:399) ~[?:?]
+	at java.net.AbstractPlainSocketImpl.connectToAddress(AbstractPlainSocketImpl.java:242) ~[?:?]
+	at java.net.AbstractPlainSocketImpl.connect(AbstractPlainSocketImpl.java:224) ~[?:?]
+	at java.net.SocksSocketImpl.connect(SocksSocketImpl.java:403) ~[?:?]
+	at java.net.Socket.connect(Socket.java:591) ~[?:?]
+	at com.mysql.cj.protocol.StandardSocketFactory.connect(StandardSocketFactory.java:153) ~[mysql-connector-j-8.0.33.jar:8.0.33]
+	at com.mysql.cj.protocol.a.NativeSocketConnection.connect(NativeSocketConnection.java:63) ~[mysql-connector-j-8.0.33.jar:8.0.33]
+	at com.mysql.cj.NativeSession.connect(NativeSession.java:121) ~[mysql-connector-j-8.0.33.jar:8.0.33]
+	at com.mysql.cj.jdbc.ConnectionImpl.connectOneTryOnly(ConnectionImpl.java:945) ~[mysql-connector-j-8.0.33.jar:8.0.33]
+	at com.mysql.cj.jdbc.ConnectionImpl.createNewIO(ConnectionImpl.java:815) ~[mysql-connector-j-8.0.33.jar:8.0.33]
+	... 53 more
+2026-02-04 13:56:06.128 [ERROR] Failed to initialize JPA EntityManagerFactory: Unable to create requested service [org.hibernate.engine.jdbc.env.spi.JdbcEnvironment]
+2026-02-04 13:56:06.130 [WARN ] Exception encountered during context initialization - cancelling refresh attempt: org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'entityManagerFactory' defined in class path resource [org/springframework/boot/autoconfigure/orm/jpa/HibernateJpaConfiguration.class]: Invocation of init method failed; nested exception is org.hibernate.service.spi.ServiceException: Unable to create requested service [org.hibernate.engine.jdbc.env.spi.JdbcEnvironment]
+2026-02-04 13:56:06.152 [INFO ] 
+
+Error starting ApplicationContext. To display the conditions report re-run your application with 'debug' enabled.
+2026-02-04 13:56:06.221 [ERROR] Application run failed
+org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'entityManagerFactory' defined in class path resource [org/springframework/boot/autoconfigure/orm/jpa/HibernateJpaConfiguration.class]: Invocation of init method failed; nested exception is org.hibernate.service.spi.ServiceException: Unable to create requested service [org.hibernate.engine.jdbc.env.spi.JdbcEnvironment]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.initializeBean(AbstractAutowireCapableBeanFactory.java:1804) ~[spring-beans-5.3.29.jar:5.3.29]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:620) ~[spring-beans-5.3.29.jar:5.3.29]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:542) ~[spring-beans-5.3.29.jar:5.3.29]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:335) ~[spring-beans-5.3.29.jar:5.3.29]
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:234) ~[spring-beans-5.3.29.jar:5.3.29]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:333) ~[spring-beans-5.3.29.jar:5.3.29]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:208) ~[spring-beans-5.3.29.jar:5.3.29]
+	at org.springframework.context.support.AbstractApplicationContext.getBean(AbstractApplicationContext.java:1157) ~[spring-context-5.3.29.jar:5.3.29]
+	at org.springframework.context.support.AbstractApplicationContext.finishBeanFactoryInitialization(AbstractApplicationContext.java:911) ~[spring-context-5.3.29.jar:5.3.29]
+	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:583) ~[spring-context-5.3.29.jar:5.3.29]
+	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:731) ~[spring-boot-2.7.15.jar:2.7.15]
+	at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:408) ~[spring-boot-2.7.15.jar:2.7.15]
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:307) ~[spring-boot-2.7.15.jar:2.7.15]
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1303) ~[spring-boot-2.7.15.jar:2.7.15]
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1292) ~[spring-boot-2.7.15.jar:2.7.15]
+	at kr.or.kimsn.radardemo.RadardemoApplication.main(RadardemoApplication.java:14) ~[main/:?]
+	at jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method) ~[?:?]
+	at jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62) ~[?:?]
+	at jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43) ~[?:?]
+	at java.lang.reflect.Method.invoke(Method.java:566) ~[?:?]
+	at org.springframework.boot.devtools.restart.RestartLauncher.run(RestartLauncher.java:50) ~[spring-boot-devtools-2.7.15.jar:2.7.15]
+Caused by: org.hibernate.service.spi.ServiceException: Unable to create requested service [org.hibernate.engine.jdbc.env.spi.JdbcEnvironment]
+	at org.hibernate.service.internal.AbstractServiceRegistryImpl.createService(AbstractServiceRegistryImpl.java:284) ~[hibernate-core-5.6.15.Final.jar:5.6.15.Final]
+	at org.hibernate.service.internal.AbstractServiceRegistryImpl.initializeService(AbstractServiceRegistryImpl.java:246) ~[hibernate-core-5.6.15.Final.jar:5.6.15.Final]
+	at org.hibernate.service.internal.AbstractServiceRegistryImpl.getService(AbstractServiceRegistryImpl.java:223) ~[hibernate-core-5.6.15.Final.jar:5.6.15.Final]
+	at org.hibernate.id.factory.internal.DefaultIdentifierGeneratorFactory.injectServices(DefaultIdentifierGeneratorFactory.java:175) ~[hibernate-core-5.6.15.Final.jar:5.6.15.Final]
+	at org.hibernate.service.internal.AbstractServiceRegistryImpl.injectDependencies(AbstractServiceRegistryImpl.java:295) ~[hibernate-core-5.6.15.Final.jar:5.6.15.Final]
+	at org.hibernate.service.internal.AbstractServiceRegistryImpl.initializeService(AbstractServiceRegistryImpl.java:252) ~[hibernate-core-5.6.15.Final.jar:5.6.15.Final]
+	at org.hibernate.service.internal.AbstractServiceRegistryImpl.getService(AbstractServiceRegistryImpl.java:223) ~[hibernate-core-5.6.15.Final.jar:5.6.15.Final]
+	at org.hibernate.boot.internal.InFlightMetadataCollectorImpl.<init>(InFlightMetadataCollectorImpl.java:173) ~[hibernate-core-5.6.15.Final.jar:5.6.15.Final]
+	at org.hibernate.boot.model.process.spi.MetadataBuildingProcess.complete(MetadataBuildingProcess.java:127) ~[hibernate-core-5.6.15.Final.jar:5.6.15.Final]
+	at org.hibernate.jpa.boot.internal.EntityManagerFactoryBuilderImpl.metadata(EntityManagerFactoryBuilderImpl.java:1460) ~[hibernate-core-5.6.15.Final.jar:5.6.15.Final]
+	at org.hibernate.jpa.boot.internal.EntityManagerFactoryBuilderImpl.build(EntityManagerFactoryBuilderImpl.java:1494) ~[hibernate-core-5.6.15.Final.jar:5.6.15.Final]
+	at org.springframework.orm.jpa.vendor.SpringHibernateJpaPersistenceProvider.createContainerEntityManagerFactory(SpringHibernateJpaPersistenceProvider.java:58) ~[spring-orm-5.3.29.jar:5.3.29]
+	at org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean.createNativeEntityManagerFactory(LocalContainerEntityManagerFactoryBean.java:365) ~[spring-orm-5.3.29.jar:5.3.29]
+	at org.springframework.orm.jpa.AbstractEntityManagerFactoryBean.buildNativeEntityManagerFactory(AbstractEntityManagerFactoryBean.java:409) ~[spring-orm-5.3.29.jar:5.3.29]
+	at org.springframework.orm.jpa.AbstractEntityManagerFactoryBean.afterPropertiesSet(AbstractEntityManagerFactoryBean.java:396) ~[spring-orm-5.3.29.jar:5.3.29]
+	at org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean.afterPropertiesSet(LocalContainerEntityManagerFactoryBean.java:341) ~[spring-orm-5.3.29.jar:5.3.29]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.invokeInitMethods(AbstractAutowireCapableBeanFactory.java:1863) ~[spring-beans-5.3.29.jar:5.3.29]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.initializeBean(AbstractAutowireCapableBeanFactory.java:1800) ~[spring-beans-5.3.29.jar:5.3.29]
+	... 20 more
+Caused by: org.hibernate.HibernateException: Access to DialectResolutionInfo cannot be null when 'hibernate.dialect' not set
+	at org.hibernate.engine.jdbc.dialect.internal.DialectFactoryImpl.determineDialect(DialectFactoryImpl.java:100) ~[hibernate-core-5.6.15.Final.jar:5.6.15.Final]
+	at org.hibernate.engine.jdbc.dialect.internal.DialectFactoryImpl.buildDialect(DialectFactoryImpl.java:54) ~[hibernate-core-5.6.15.Final.jar:5.6.15.Final]
+	at org.hibernate.engine.jdbc.env.internal.JdbcEnvironmentInitiator.initiateService(JdbcEnvironmentInitiator.java:138) ~[hibernate-core-5.6.15.Final.jar:5.6.15.Final]
+	at org.hibernate.engine.jdbc.env.internal.JdbcEnvironmentInitiator.initiateService(JdbcEnvironmentInitiator.java:35) ~[hibernate-core-5.6.15.Final.jar:5.6.15.Final]
+	at org.hibernate.boot.registry.internal.StandardServiceRegistryImpl.initiateService(StandardServiceRegistryImpl.java:101) ~[hibernate-core-5.6.15.Final.jar:5.6.15.Final]
+	at org.hibernate.service.internal.AbstractServiceRegistryImpl.createService(AbstractServiceRegistryImpl.java:272) ~[hibernate-core-5.6.15.Final.jar:5.6.15.Final]
+	at org.hibernate.service.internal.AbstractServiceRegistryImpl.initializeService(AbstractServiceRegistryImpl.java:246) ~[hibernate-core-5.6.15.Final.jar:5.6.15.Final]
+	at org.hibernate.service.internal.AbstractServiceRegistryImpl.getService(AbstractServiceRegistryImpl.java:223) ~[hibernate-core-5.6.15.Final.jar:5.6.15.Final]
+	at org.hibernate.id.factory.internal.DefaultIdentifierGeneratorFactory.injectServices(DefaultIdentifierGeneratorFactory.java:175) ~[hibernate-core-5.6.15.Final.jar:5.6.15.Final]
+	at org.hibernate.service.internal.AbstractServiceRegistryImpl.injectDependencies(AbstractServiceRegistryImpl.java:295) ~[hibernate-core-5.6.15.Final.jar:5.6.15.Final]
+	at org.hibernate.service.internal.AbstractServiceRegistryImpl.initializeService(AbstractServiceRegistryImpl.java:252) ~[hibernate-core-5.6.15.Final.jar:5.6.15.Final]
+	at org.hibernate.service.internal.AbstractServiceRegistryImpl.getService(AbstractServiceRegistryImpl.java:223) ~[hibernate-core-5.6.15.Final.jar:5.6.15.Final]
+	at org.hibernate.boot.internal.InFlightMetadataCollectorImpl.<init>(InFlightMetadataCollectorImpl.java:173) ~[hibernate-core-5.6.15.Final.jar:5.6.15.Final]
+	at org.hibernate.boot.model.process.spi.MetadataBuildingProcess.complete(MetadataBuildingProcess.java:127) ~[hibernate-core-5.6.15.Final.jar:5.6.15.Final]
+	at org.hibernate.jpa.boot.internal.EntityManagerFactoryBuilderImpl.metadata(EntityManagerFactoryBuilderImpl.java:1460) ~[hibernate-core-5.6.15.Final.jar:5.6.15.Final]
+	at org.hibernate.jpa.boot.internal.EntityManagerFactoryBuilderImpl.build(EntityManagerFactoryBuilderImpl.java:1494) ~[hibernate-core-5.6.15.Final.jar:5.6.15.Final]
+	at org.springframework.orm.jpa.vendor.SpringHibernateJpaPersistenceProvider.createContainerEntityManagerFactory(SpringHibernateJpaPersistenceProvider.java:58) ~[spring-orm-5.3.29.jar:5.3.29]
+	at org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean.createNativeEntityManagerFactory(LocalContainerEntityManagerFactoryBean.java:365) ~[spring-orm-5.3.29.jar:5.3.29]
+	at org.springframework.orm.jpa.AbstractEntityManagerFactoryBean.buildNativeEntityManagerFactory(AbstractEntityManagerFactoryBean.java:409) ~[spring-orm-5.3.29.jar:5.3.29]
+	at org.springframework.orm.jpa.AbstractEntityManagerFactoryBean.afterPropertiesSet(AbstractEntityManagerFactoryBean.java:396) ~[spring-orm-5.3.29.jar:5.3.29]
+	at org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean.afterPropertiesSet(LocalContainerEntityManagerFactoryBean.java:341) ~[spring-orm-5.3.29.jar:5.3.29]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.invokeInitMethods(AbstractAutowireCapableBeanFactory.java:1863) ~[spring-beans-5.3.29.jar:5.3.29]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.initializeBean(AbstractAutowireCapableBeanFactory.java:1800) ~[spring-beans-5.3.29.jar:5.3.29]
+	... 20 more
+2026-02-04 13:57:12.588 [INFO ] Starting RadardemoApplication using Java 11.0.2 on haems with PID 20080 (C:\kimsn\radardemo\build\classes\java\main started by imeahmik in C:\kimsn\radardemo)
+2026-02-04 13:57:12.596 [DEBUG] Running with Spring Boot v2.7.15, Spring v5.3.29
+2026-02-04 13:57:12.598 [INFO ] No active profile set, falling back to 1 default profile: "default"
+2026-02-04 13:57:12.767 [INFO ] Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2026-02-04 13:57:15.128 [INFO ] Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-02-04 13:57:15.573 [INFO ] Finished Spring Data repository scanning in 412 ms. Found 11 JPA repository interfaces.
+2026-02-04 13:57:17.196 [INFO ] HikariPool-1 - Starting...
+2026-02-04 13:57:22.660 [ERROR] HikariPool-1 - Exception during pool initialization.
+com.mysql.cj.jdbc.exceptions.CommunicationsException: Communications link failure
+
+The last packet sent successfully to the server was 0 milliseconds ago. The driver has not received any packets from the server.
+	at com.mysql.cj.jdbc.exceptions.SQLError.createCommunicationsException(SQLError.java:175) ~[mysql-connector-j-8.0.33.jar:8.0.33]
+	at com.mysql.cj.jdbc.exceptions.SQLExceptionsMapping.translateException(SQLExceptionsMapping.java:64) ~[mysql-connector-j-8.0.33.jar:8.0.33]
+	at com.mysql.cj.jdbc.ConnectionImpl.createNewIO(ConnectionImpl.java:825) ~[mysql-connector-j-8.0.33.jar:8.0.33]
+	at com.mysql.cj.jdbc.ConnectionImpl.<init>(ConnectionImpl.java:446) ~[mysql-connector-j-8.0.33.jar:8.0.33]
+	at com.mysql.cj.jdbc.ConnectionImpl.getInstance(ConnectionImpl.java:239) ~[mysql-connector-j-8.0.33.jar:8.0.33]
+	at com.mysql.cj.jdbc.NonRegisteringDriver.connect(NonRegisteringDriver.java:188) ~[mysql-connector-j-8.0.33.jar:8.0.33]
+	at com.zaxxer.hikari.util.DriverDataSource.getConnection(DriverDataSource.java:138) ~[HikariCP-4.0.3.jar:?]
+	at com.zaxxer.hikari.pool.PoolBase.newConnection(PoolBase.java:364) ~[HikariCP-4.0.3.jar:?]
+	at com.zaxxer.hikari.pool.PoolBase.newPoolEntry(PoolBase.java:206) ~[HikariCP-4.0.3.jar:?]
+	at com.zaxxer.hikari.pool.HikariPool.createPoolEntry(HikariPool.java:476) ~[HikariCP-4.0.3.jar:?]
+	at com.zaxxer.hikari.pool.HikariPool.checkFailFast(HikariPool.java:561) ~[HikariCP-4.0.3.jar:?]
+	at com.zaxxer.hikari.pool.HikariPool.<init>(HikariPool.java:115) ~[HikariCP-4.0.3.jar:?]
+	at com.zaxxer.hikari.HikariDataSource.getConnection(HikariDataSource.java:112) ~[HikariCP-4.0.3.jar:?]
+	at org.springframework.jdbc.datasource.DataSourceUtils.fetchConnection(DataSourceUtils.java:160) ~[spring-jdbc-5.3.29.jar:5.3.29]
+	at org.springframework.jdbc.datasource.DataSourceUtils.doGetConnection(DataSourceUtils.java:118) ~[spring-jdbc-5.3.29.jar:5.3.29]
+	at org.springframework.jdbc.datasource.DataSourceUtils.getConnection(DataSourceUtils.java:81) ~[spring-jdbc-5.3.29.jar:5.3.29]
+	at org.springframework.jdbc.core.JdbcTemplate.execute(JdbcTemplate.java:332) ~[spring-jdbc-5.3.29.jar:5.3.29]
+	at org.springframework.boot.jdbc.EmbeddedDatabaseConnection.isEmbedded(EmbeddedDatabaseConnection.java:164) ~[spring-boot-2.7.15.jar:2.7.15]
+	at org.springframework.boot.autoconfigure.orm.jpa.HibernateDefaultDdlAutoProvider.getDefaultDdlAuto(HibernateDefaultDdlAutoProvider.java:42) ~[spring-boot-autoconfigure-2.7.15.jar:2.7.15]
+	at org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaConfiguration.lambda$getVendorProperties$1(HibernateJpaConfiguration.java:130) ~[spring-boot-autoconfigure-2.7.15.jar:2.7.15]
+	at org.springframework.boot.autoconfigure.orm.jpa.HibernateSettings.getDdlAuto(HibernateSettings.java:41) ~[spring-boot-autoconfigure-2.7.15.jar:2.7.15]
+	at org.springframework.boot.autoconfigure.orm.jpa.HibernateProperties.determineDdlAuto(HibernateProperties.java:143) ~[spring-boot-autoconfigure-2.7.15.jar:2.7.15]
+	at org.springframework.boot.autoconfigure.orm.jpa.HibernateProperties.getAdditionalProperties(HibernateProperties.java:103) ~[spring-boot-autoconfigure-2.7.15.jar:2.7.15]
+	at org.springframework.boot.autoconfigure.orm.jpa.HibernateProperties.determineHibernateProperties(HibernateProperties.java:95) ~[spring-boot-autoconfigure-2.7.15.jar:2.7.15]
+	at org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaConfiguration.getVendorProperties(HibernateJpaConfiguration.java:131) ~[spring-boot-autoconfigure-2.7.15.jar:2.7.15]
+	at org.springframework.boot.autoconfigure.orm.jpa.JpaBaseConfiguration.entityManagerFactory(JpaBaseConfiguration.java:132) ~[spring-boot-autoconfigure-2.7.15.jar:2.7.15]
+	at jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method) ~[?:?]
+	at jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62) ~[?:?]
+	at jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43) ~[?:?]
+	at java.lang.reflect.Method.invoke(Method.java:566) ~[?:?]
+	at org.springframework.beans.factory.support.SimpleInstantiationStrategy.instantiate(SimpleInstantiationStrategy.java:154) ~[spring-beans-5.3.29.jar:5.3.29]
+	at org.springframework.beans.factory.support.ConstructorResolver.instantiate(ConstructorResolver.java:653) ~[spring-beans-5.3.29.jar:5.3.29]
+	at org.springframework.beans.factory.support.ConstructorResolver.instantiateUsingFactoryMethod(ConstructorResolver.java:638) ~[spring-beans-5.3.29.jar:5.3.29]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.instantiateUsingFactoryMethod(AbstractAutowireCapableBeanFactory.java:1352) ~[spring-beans-5.3.29.jar:5.3.29]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBeanInstance(AbstractAutowireCapableBeanFactory.java:1195) ~[spring-beans-5.3.29.jar:5.3.29]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:582) ~[spring-beans-5.3.29.jar:5.3.29]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:542) ~[spring-beans-5.3.29.jar:5.3.29]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:335) ~[spring-beans-5.3.29.jar:5.3.29]
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:234) ~[spring-beans-5.3.29.jar:5.3.29]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:333) ~[spring-beans-5.3.29.jar:5.3.29]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:208) ~[spring-beans-5.3.29.jar:5.3.29]
+	at org.springframework.context.support.AbstractApplicationContext.getBean(AbstractApplicationContext.java:1157) ~[spring-context-5.3.29.jar:5.3.29]
+	at org.springframework.context.support.AbstractApplicationContext.finishBeanFactoryInitialization(AbstractApplicationContext.java:911) ~[spring-context-5.3.29.jar:5.3.29]
+	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:583) ~[spring-context-5.3.29.jar:5.3.29]
+	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:731) ~[spring-boot-2.7.15.jar:2.7.15]
+	at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:408) ~[spring-boot-2.7.15.jar:2.7.15]
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:307) ~[spring-boot-2.7.15.jar:2.7.15]
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1303) ~[spring-boot-2.7.15.jar:2.7.15]
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1292) ~[spring-boot-2.7.15.jar:2.7.15]
+	at kr.or.kimsn.radardemo.RadardemoApplication.main(RadardemoApplication.java:14) ~[main/:?]
+	at jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method) ~[?:?]
+	at jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62) ~[?:?]
+	at jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43) ~[?:?]
+	at java.lang.reflect.Method.invoke(Method.java:566) ~[?:?]
+	at org.springframework.boot.devtools.restart.RestartLauncher.run(RestartLauncher.java:50) ~[spring-boot-devtools-2.7.15.jar:2.7.15]
+Caused by: com.mysql.cj.exceptions.CJCommunicationsException: Communications link failure
+
+The last packet sent successfully to the server was 0 milliseconds ago. The driver has not received any packets from the server.
+	at jdk.internal.reflect.NativeConstructorAccessorImpl.newInstance0(Native Method) ~[?:?]
+	at jdk.internal.reflect.NativeConstructorAccessorImpl.newInstance(NativeConstructorAccessorImpl.java:62) ~[?:?]
+	at jdk.internal.reflect.DelegatingConstructorAccessorImpl.newInstance(DelegatingConstructorAccessorImpl.java:45) ~[?:?]
+	at java.lang.reflect.Constructor.newInstance(Constructor.java:490) ~[?:?]
+	at com.mysql.cj.exceptions.ExceptionFactory.createException(ExceptionFactory.java:62) ~[mysql-connector-j-8.0.33.jar:8.0.33]
+	at com.mysql.cj.exceptions.ExceptionFactory.createException(ExceptionFactory.java:105) ~[mysql-connector-j-8.0.33.jar:8.0.33]
+	at com.mysql.cj.exceptions.ExceptionFactory.createException(ExceptionFactory.java:150) ~[mysql-connector-j-8.0.33.jar:8.0.33]
+	at com.mysql.cj.exceptions.ExceptionFactory.createCommunicationsException(ExceptionFactory.java:166) ~[mysql-connector-j-8.0.33.jar:8.0.33]
+	at com.mysql.cj.protocol.a.NativeSocketConnection.connect(NativeSocketConnection.java:89) ~[mysql-connector-j-8.0.33.jar:8.0.33]
+	at com.mysql.cj.NativeSession.connect(NativeSession.java:121) ~[mysql-connector-j-8.0.33.jar:8.0.33]
+	at com.mysql.cj.jdbc.ConnectionImpl.connectOneTryOnly(ConnectionImpl.java:945) ~[mysql-connector-j-8.0.33.jar:8.0.33]
+	at com.mysql.cj.jdbc.ConnectionImpl.createNewIO(ConnectionImpl.java:815) ~[mysql-connector-j-8.0.33.jar:8.0.33]
+	... 52 more
+Caused by: java.net.ConnectException: Connection refused: connect
+	at java.net.PlainSocketImpl.waitForConnect(Native Method) ~[?:?]
+	at java.net.PlainSocketImpl.socketConnect(PlainSocketImpl.java:107) ~[?:?]
+	at java.net.AbstractPlainSocketImpl.doConnect(AbstractPlainSocketImpl.java:399) ~[?:?]
+	at java.net.AbstractPlainSocketImpl.connectToAddress(AbstractPlainSocketImpl.java:242) ~[?:?]
+	at java.net.AbstractPlainSocketImpl.connect(AbstractPlainSocketImpl.java:224) ~[?:?]
+	at java.net.SocksSocketImpl.connect(SocksSocketImpl.java:403) ~[?:?]
+	at java.net.Socket.connect(Socket.java:591) ~[?:?]
+	at com.mysql.cj.protocol.StandardSocketFactory.connect(StandardSocketFactory.java:153) ~[mysql-connector-j-8.0.33.jar:8.0.33]
+	at com.mysql.cj.protocol.a.NativeSocketConnection.connect(NativeSocketConnection.java:63) ~[mysql-connector-j-8.0.33.jar:8.0.33]
+	at com.mysql.cj.NativeSession.connect(NativeSession.java:121) ~[mysql-connector-j-8.0.33.jar:8.0.33]
+	at com.mysql.cj.jdbc.ConnectionImpl.connectOneTryOnly(ConnectionImpl.java:945) ~[mysql-connector-j-8.0.33.jar:8.0.33]
+	at com.mysql.cj.jdbc.ConnectionImpl.createNewIO(ConnectionImpl.java:815) ~[mysql-connector-j-8.0.33.jar:8.0.33]
+	... 52 more
+2026-02-04 13:57:22.919 [INFO ] HHH000204: Processing PersistenceUnitInfo [name: default]
+2026-02-04 13:57:23.311 [INFO ] HHH000412: Hibernate ORM core version 5.6.15.Final
+2026-02-04 13:57:24.318 [INFO ] HCANN000001: Hibernate Commons Annotations {5.1.2.Final}
+2026-02-04 13:57:25.294 [INFO ] HikariPool-1 - Starting...
+2026-02-04 13:57:30.375 [ERROR] HikariPool-1 - Exception during pool initialization.
+com.mysql.cj.jdbc.exceptions.CommunicationsException: Communications link failure
+
+The last packet sent successfully to the server was 0 milliseconds ago. The driver has not received any packets from the server.
+	at com.mysql.cj.jdbc.exceptions.SQLError.createCommunicationsException(SQLError.java:175) ~[mysql-connector-j-8.0.33.jar:8.0.33]
+	at com.mysql.cj.jdbc.exceptions.SQLExceptionsMapping.translateException(SQLExceptionsMapping.java:64) ~[mysql-connector-j-8.0.33.jar:8.0.33]
+	at com.mysql.cj.jdbc.ConnectionImpl.createNewIO(ConnectionImpl.java:825) ~[mysql-connector-j-8.0.33.jar:8.0.33]
+	at com.mysql.cj.jdbc.ConnectionImpl.<init>(ConnectionImpl.java:446) ~[mysql-connector-j-8.0.33.jar:8.0.33]
+	at com.mysql.cj.jdbc.ConnectionImpl.getInstance(ConnectionImpl.java:239) ~[mysql-connector-j-8.0.33.jar:8.0.33]
+	at com.mysql.cj.jdbc.NonRegisteringDriver.connect(NonRegisteringDriver.java:188) ~[mysql-connector-j-8.0.33.jar:8.0.33]
+	at com.zaxxer.hikari.util.DriverDataSource.getConnection(DriverDataSource.java:138) ~[HikariCP-4.0.3.jar:?]
+	at com.zaxxer.hikari.pool.PoolBase.newConnection(PoolBase.java:364) ~[HikariCP-4.0.3.jar:?]
+	at com.zaxxer.hikari.pool.PoolBase.newPoolEntry(PoolBase.java:206) ~[HikariCP-4.0.3.jar:?]
+	at com.zaxxer.hikari.pool.HikariPool.createPoolEntry(HikariPool.java:476) ~[HikariCP-4.0.3.jar:?]
+	at com.zaxxer.hikari.pool.HikariPool.checkFailFast(HikariPool.java:561) ~[HikariCP-4.0.3.jar:?]
+	at com.zaxxer.hikari.pool.HikariPool.<init>(HikariPool.java:115) ~[HikariCP-4.0.3.jar:?]
+	at com.zaxxer.hikari.HikariDataSource.getConnection(HikariDataSource.java:112) ~[HikariCP-4.0.3.jar:?]
+	at org.hibernate.engine.jdbc.connections.internal.DatasourceConnectionProviderImpl.getConnection(DatasourceConnectionProviderImpl.java:122) ~[hibernate-core-5.6.15.Final.jar:5.6.15.Final]
+	at org.hibernate.engine.jdbc.env.internal.JdbcEnvironmentInitiator$ConnectionProviderJdbcConnectionAccess.obtainConnection(JdbcEnvironmentInitiator.java:181) ~[hibernate-core-5.6.15.Final.jar:5.6.15.Final]
+	at org.hibernate.engine.jdbc.env.internal.JdbcEnvironmentInitiator.initiateService(JdbcEnvironmentInitiator.java:68) ~[hibernate-core-5.6.15.Final.jar:5.6.15.Final]
+	at org.hibernate.engine.jdbc.env.internal.JdbcEnvironmentInitiator.initiateService(JdbcEnvironmentInitiator.java:35) ~[hibernate-core-5.6.15.Final.jar:5.6.15.Final]
+	at org.hibernate.boot.registry.internal.StandardServiceRegistryImpl.initiateService(StandardServiceRegistryImpl.java:101) ~[hibernate-core-5.6.15.Final.jar:5.6.15.Final]
+	at org.hibernate.service.internal.AbstractServiceRegistryImpl.createService(AbstractServiceRegistryImpl.java:272) ~[hibernate-core-5.6.15.Final.jar:5.6.15.Final]
+	at org.hibernate.service.internal.AbstractServiceRegistryImpl.initializeService(AbstractServiceRegistryImpl.java:246) ~[hibernate-core-5.6.15.Final.jar:5.6.15.Final]
+	at org.hibernate.service.internal.AbstractServiceRegistryImpl.getService(AbstractServiceRegistryImpl.java:223) ~[hibernate-core-5.6.15.Final.jar:5.6.15.Final]
+	at org.hibernate.id.factory.internal.DefaultIdentifierGeneratorFactory.injectServices(DefaultIdentifierGeneratorFactory.java:175) ~[hibernate-core-5.6.15.Final.jar:5.6.15.Final]
+	at org.hibernate.service.internal.AbstractServiceRegistryImpl.injectDependencies(AbstractServiceRegistryImpl.java:295) ~[hibernate-core-5.6.15.Final.jar:5.6.15.Final]
+	at org.hibernate.service.internal.AbstractServiceRegistryImpl.initializeService(AbstractServiceRegistryImpl.java:252) ~[hibernate-core-5.6.15.Final.jar:5.6.15.Final]
+	at org.hibernate.service.internal.AbstractServiceRegistryImpl.getService(AbstractServiceRegistryImpl.java:223) ~[hibernate-core-5.6.15.Final.jar:5.6.15.Final]
+	at org.hibernate.boot.internal.InFlightMetadataCollectorImpl.<init>(InFlightMetadataCollectorImpl.java:173) ~[hibernate-core-5.6.15.Final.jar:5.6.15.Final]
+	at org.hibernate.boot.model.process.spi.MetadataBuildingProcess.complete(MetadataBuildingProcess.java:127) ~[hibernate-core-5.6.15.Final.jar:5.6.15.Final]
+	at org.hibernate.jpa.boot.internal.EntityManagerFactoryBuilderImpl.metadata(EntityManagerFactoryBuilderImpl.java:1460) ~[hibernate-core-5.6.15.Final.jar:5.6.15.Final]
+	at org.hibernate.jpa.boot.internal.EntityManagerFactoryBuilderImpl.build(EntityManagerFactoryBuilderImpl.java:1494) ~[hibernate-core-5.6.15.Final.jar:5.6.15.Final]
+	at org.springframework.orm.jpa.vendor.SpringHibernateJpaPersistenceProvider.createContainerEntityManagerFactory(SpringHibernateJpaPersistenceProvider.java:58) ~[spring-orm-5.3.29.jar:5.3.29]
+	at org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean.createNativeEntityManagerFactory(LocalContainerEntityManagerFactoryBean.java:365) ~[spring-orm-5.3.29.jar:5.3.29]
+	at org.springframework.orm.jpa.AbstractEntityManagerFactoryBean.buildNativeEntityManagerFactory(AbstractEntityManagerFactoryBean.java:409) ~[spring-orm-5.3.29.jar:5.3.29]
+	at org.springframework.orm.jpa.AbstractEntityManagerFactoryBean.afterPropertiesSet(AbstractEntityManagerFactoryBean.java:396) ~[spring-orm-5.3.29.jar:5.3.29]
+	at org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean.afterPropertiesSet(LocalContainerEntityManagerFactoryBean.java:341) ~[spring-orm-5.3.29.jar:5.3.29]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.invokeInitMethods(AbstractAutowireCapableBeanFactory.java:1863) ~[spring-beans-5.3.29.jar:5.3.29]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.initializeBean(AbstractAutowireCapableBeanFactory.java:1800) ~[spring-beans-5.3.29.jar:5.3.29]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:620) ~[spring-beans-5.3.29.jar:5.3.29]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:542) ~[spring-beans-5.3.29.jar:5.3.29]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:335) ~[spring-beans-5.3.29.jar:5.3.29]
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:234) ~[spring-beans-5.3.29.jar:5.3.29]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:333) ~[spring-beans-5.3.29.jar:5.3.29]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:208) ~[spring-beans-5.3.29.jar:5.3.29]
+	at org.springframework.context.support.AbstractApplicationContext.getBean(AbstractApplicationContext.java:1157) ~[spring-context-5.3.29.jar:5.3.29]
+	at org.springframework.context.support.AbstractApplicationContext.finishBeanFactoryInitialization(AbstractApplicationContext.java:911) ~[spring-context-5.3.29.jar:5.3.29]
+	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:583) ~[spring-context-5.3.29.jar:5.3.29]
+	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:731) ~[spring-boot-2.7.15.jar:2.7.15]
+	at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:408) ~[spring-boot-2.7.15.jar:2.7.15]
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:307) ~[spring-boot-2.7.15.jar:2.7.15]
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1303) ~[spring-boot-2.7.15.jar:2.7.15]
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1292) ~[spring-boot-2.7.15.jar:2.7.15]
+	at kr.or.kimsn.radardemo.RadardemoApplication.main(RadardemoApplication.java:14) ~[main/:?]
+	at jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method) ~[?:?]
+	at jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62) ~[?:?]
+	at jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43) ~[?:?]
+	at java.lang.reflect.Method.invoke(Method.java:566) ~[?:?]
+	at org.springframework.boot.devtools.restart.RestartLauncher.run(RestartLauncher.java:50) ~[spring-boot-devtools-2.7.15.jar:2.7.15]
+Caused by: com.mysql.cj.exceptions.CJCommunicationsException: Communications link failure
+
+The last packet sent successfully to the server was 0 milliseconds ago. The driver has not received any packets from the server.
+	at jdk.internal.reflect.NativeConstructorAccessorImpl.newInstance0(Native Method) ~[?:?]
+	at jdk.internal.reflect.NativeConstructorAccessorImpl.newInstance(NativeConstructorAccessorImpl.java:62) ~[?:?]
+	at jdk.internal.reflect.DelegatingConstructorAccessorImpl.newInstance(DelegatingConstructorAccessorImpl.java:45) ~[?:?]
+	at java.lang.reflect.Constructor.newInstance(Constructor.java:490) ~[?:?]
+	at com.mysql.cj.exceptions.ExceptionFactory.createException(ExceptionFactory.java:62) ~[mysql-connector-j-8.0.33.jar:8.0.33]
+	at com.mysql.cj.exceptions.ExceptionFactory.createException(ExceptionFactory.java:105) ~[mysql-connector-j-8.0.33.jar:8.0.33]
+	at com.mysql.cj.exceptions.ExceptionFactory.createException(ExceptionFactory.java:150) ~[mysql-connector-j-8.0.33.jar:8.0.33]
+	at com.mysql.cj.exceptions.ExceptionFactory.createCommunicationsException(ExceptionFactory.java:166) ~[mysql-connector-j-8.0.33.jar:8.0.33]
+	at com.mysql.cj.protocol.a.NativeSocketConnection.connect(NativeSocketConnection.java:89) ~[mysql-connector-j-8.0.33.jar:8.0.33]
+	at com.mysql.cj.NativeSession.connect(NativeSession.java:121) ~[mysql-connector-j-8.0.33.jar:8.0.33]
+	at com.mysql.cj.jdbc.ConnectionImpl.connectOneTryOnly(ConnectionImpl.java:945) ~[mysql-connector-j-8.0.33.jar:8.0.33]
+	at com.mysql.cj.jdbc.ConnectionImpl.createNewIO(ConnectionImpl.java:815) ~[mysql-connector-j-8.0.33.jar:8.0.33]
+	... 53 more
+Caused by: java.net.ConnectException: Connection refused: connect
+	at java.net.PlainSocketImpl.waitForConnect(Native Method) ~[?:?]
+	at java.net.PlainSocketImpl.socketConnect(PlainSocketImpl.java:107) ~[?:?]
+	at java.net.AbstractPlainSocketImpl.doConnect(AbstractPlainSocketImpl.java:399) ~[?:?]
+	at java.net.AbstractPlainSocketImpl.connectToAddress(AbstractPlainSocketImpl.java:242) ~[?:?]
+	at java.net.AbstractPlainSocketImpl.connect(AbstractPlainSocketImpl.java:224) ~[?:?]
+	at java.net.SocksSocketImpl.connect(SocksSocketImpl.java:403) ~[?:?]
+	at java.net.Socket.connect(Socket.java:591) ~[?:?]
+	at com.mysql.cj.protocol.StandardSocketFactory.connect(StandardSocketFactory.java:153) ~[mysql-connector-j-8.0.33.jar:8.0.33]
+	at com.mysql.cj.protocol.a.NativeSocketConnection.connect(NativeSocketConnection.java:63) ~[mysql-connector-j-8.0.33.jar:8.0.33]
+	at com.mysql.cj.NativeSession.connect(NativeSession.java:121) ~[mysql-connector-j-8.0.33.jar:8.0.33]
+	at com.mysql.cj.jdbc.ConnectionImpl.connectOneTryOnly(ConnectionImpl.java:945) ~[mysql-connector-j-8.0.33.jar:8.0.33]
+	at com.mysql.cj.jdbc.ConnectionImpl.createNewIO(ConnectionImpl.java:815) ~[mysql-connector-j-8.0.33.jar:8.0.33]
+	... 53 more
+2026-02-04 13:57:30.381 [WARN ] HHH000342: Could not obtain connection to query metadata
+com.mysql.cj.jdbc.exceptions.CommunicationsException: Communications link failure
+
+The last packet sent successfully to the server was 0 milliseconds ago. The driver has not received any packets from the server.
+	at com.mysql.cj.jdbc.exceptions.SQLError.createCommunicationsException(SQLError.java:175) ~[mysql-connector-j-8.0.33.jar:8.0.33]
+	at com.mysql.cj.jdbc.exceptions.SQLExceptionsMapping.translateException(SQLExceptionsMapping.java:64) ~[mysql-connector-j-8.0.33.jar:8.0.33]
+	at com.mysql.cj.jdbc.ConnectionImpl.createNewIO(ConnectionImpl.java:825) ~[mysql-connector-j-8.0.33.jar:8.0.33]
+	at com.mysql.cj.jdbc.ConnectionImpl.<init>(ConnectionImpl.java:446) ~[mysql-connector-j-8.0.33.jar:8.0.33]
+	at com.mysql.cj.jdbc.ConnectionImpl.getInstance(ConnectionImpl.java:239) ~[mysql-connector-j-8.0.33.jar:8.0.33]
+	at com.mysql.cj.jdbc.NonRegisteringDriver.connect(NonRegisteringDriver.java:188) ~[mysql-connector-j-8.0.33.jar:8.0.33]
+	at com.zaxxer.hikari.util.DriverDataSource.getConnection(DriverDataSource.java:138) ~[HikariCP-4.0.3.jar:?]
+	at com.zaxxer.hikari.pool.PoolBase.newConnection(PoolBase.java:364) ~[HikariCP-4.0.3.jar:?]
+	at com.zaxxer.hikari.pool.PoolBase.newPoolEntry(PoolBase.java:206) ~[HikariCP-4.0.3.jar:?]
+	at com.zaxxer.hikari.pool.HikariPool.createPoolEntry(HikariPool.java:476) ~[HikariCP-4.0.3.jar:?]
+	at com.zaxxer.hikari.pool.HikariPool.checkFailFast(HikariPool.java:561) ~[HikariCP-4.0.3.jar:?]
+	at com.zaxxer.hikari.pool.HikariPool.<init>(HikariPool.java:115) ~[HikariCP-4.0.3.jar:?]
+	at com.zaxxer.hikari.HikariDataSource.getConnection(HikariDataSource.java:112) ~[HikariCP-4.0.3.jar:?]
+	at org.hibernate.engine.jdbc.connections.internal.DatasourceConnectionProviderImpl.getConnection(DatasourceConnectionProviderImpl.java:122) ~[hibernate-core-5.6.15.Final.jar:5.6.15.Final]
+	at org.hibernate.engine.jdbc.env.internal.JdbcEnvironmentInitiator$ConnectionProviderJdbcConnectionAccess.obtainConnection(JdbcEnvironmentInitiator.java:181) ~[hibernate-core-5.6.15.Final.jar:5.6.15.Final]
+	at org.hibernate.engine.jdbc.env.internal.JdbcEnvironmentInitiator.initiateService(JdbcEnvironmentInitiator.java:68) ~[hibernate-core-5.6.15.Final.jar:5.6.15.Final]
+	at org.hibernate.engine.jdbc.env.internal.JdbcEnvironmentInitiator.initiateService(JdbcEnvironmentInitiator.java:35) ~[hibernate-core-5.6.15.Final.jar:5.6.15.Final]
+	at org.hibernate.boot.registry.internal.StandardServiceRegistryImpl.initiateService(StandardServiceRegistryImpl.java:101) ~[hibernate-core-5.6.15.Final.jar:5.6.15.Final]
+	at org.hibernate.service.internal.AbstractServiceRegistryImpl.createService(AbstractServiceRegistryImpl.java:272) ~[hibernate-core-5.6.15.Final.jar:5.6.15.Final]
+	at org.hibernate.service.internal.AbstractServiceRegistryImpl.initializeService(AbstractServiceRegistryImpl.java:246) ~[hibernate-core-5.6.15.Final.jar:5.6.15.Final]
+	at org.hibernate.service.internal.AbstractServiceRegistryImpl.getService(AbstractServiceRegistryImpl.java:223) ~[hibernate-core-5.6.15.Final.jar:5.6.15.Final]
+	at org.hibernate.id.factory.internal.DefaultIdentifierGeneratorFactory.injectServices(DefaultIdentifierGeneratorFactory.java:175) ~[hibernate-core-5.6.15.Final.jar:5.6.15.Final]
+	at org.hibernate.service.internal.AbstractServiceRegistryImpl.injectDependencies(AbstractServiceRegistryImpl.java:295) ~[hibernate-core-5.6.15.Final.jar:5.6.15.Final]
+	at org.hibernate.service.internal.AbstractServiceRegistryImpl.initializeService(AbstractServiceRegistryImpl.java:252) ~[hibernate-core-5.6.15.Final.jar:5.6.15.Final]
+	at org.hibernate.service.internal.AbstractServiceRegistryImpl.getService(AbstractServiceRegistryImpl.java:223) ~[hibernate-core-5.6.15.Final.jar:5.6.15.Final]
+	at org.hibernate.boot.internal.InFlightMetadataCollectorImpl.<init>(InFlightMetadataCollectorImpl.java:173) ~[hibernate-core-5.6.15.Final.jar:5.6.15.Final]
+	at org.hibernate.boot.model.process.spi.MetadataBuildingProcess.complete(MetadataBuildingProcess.java:127) ~[hibernate-core-5.6.15.Final.jar:5.6.15.Final]
+	at org.hibernate.jpa.boot.internal.EntityManagerFactoryBuilderImpl.metadata(EntityManagerFactoryBuilderImpl.java:1460) ~[hibernate-core-5.6.15.Final.jar:5.6.15.Final]
+	at org.hibernate.jpa.boot.internal.EntityManagerFactoryBuilderImpl.build(EntityManagerFactoryBuilderImpl.java:1494) ~[hibernate-core-5.6.15.Final.jar:5.6.15.Final]
+	at org.springframework.orm.jpa.vendor.SpringHibernateJpaPersistenceProvider.createContainerEntityManagerFactory(SpringHibernateJpaPersistenceProvider.java:58) ~[spring-orm-5.3.29.jar:5.3.29]
+	at org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean.createNativeEntityManagerFactory(LocalContainerEntityManagerFactoryBean.java:365) ~[spring-orm-5.3.29.jar:5.3.29]
+	at org.springframework.orm.jpa.AbstractEntityManagerFactoryBean.buildNativeEntityManagerFactory(AbstractEntityManagerFactoryBean.java:409) ~[spring-orm-5.3.29.jar:5.3.29]
+	at org.springframework.orm.jpa.AbstractEntityManagerFactoryBean.afterPropertiesSet(AbstractEntityManagerFactoryBean.java:396) ~[spring-orm-5.3.29.jar:5.3.29]
+	at org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean.afterPropertiesSet(LocalContainerEntityManagerFactoryBean.java:341) ~[spring-orm-5.3.29.jar:5.3.29]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.invokeInitMethods(AbstractAutowireCapableBeanFactory.java:1863) ~[spring-beans-5.3.29.jar:5.3.29]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.initializeBean(AbstractAutowireCapableBeanFactory.java:1800) ~[spring-beans-5.3.29.jar:5.3.29]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:620) ~[spring-beans-5.3.29.jar:5.3.29]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:542) ~[spring-beans-5.3.29.jar:5.3.29]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:335) ~[spring-beans-5.3.29.jar:5.3.29]
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:234) ~[spring-beans-5.3.29.jar:5.3.29]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:333) ~[spring-beans-5.3.29.jar:5.3.29]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:208) ~[spring-beans-5.3.29.jar:5.3.29]
+	at org.springframework.context.support.AbstractApplicationContext.getBean(AbstractApplicationContext.java:1157) ~[spring-context-5.3.29.jar:5.3.29]
+	at org.springframework.context.support.AbstractApplicationContext.finishBeanFactoryInitialization(AbstractApplicationContext.java:911) ~[spring-context-5.3.29.jar:5.3.29]
+	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:583) ~[spring-context-5.3.29.jar:5.3.29]
+	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:731) ~[spring-boot-2.7.15.jar:2.7.15]
+	at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:408) ~[spring-boot-2.7.15.jar:2.7.15]
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:307) ~[spring-boot-2.7.15.jar:2.7.15]
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1303) ~[spring-boot-2.7.15.jar:2.7.15]
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1292) ~[spring-boot-2.7.15.jar:2.7.15]
+	at kr.or.kimsn.radardemo.RadardemoApplication.main(RadardemoApplication.java:14) ~[main/:?]
+	at jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method) ~[?:?]
+	at jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62) ~[?:?]
+	at jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43) ~[?:?]
+	at java.lang.reflect.Method.invoke(Method.java:566) ~[?:?]
+	at org.springframework.boot.devtools.restart.RestartLauncher.run(RestartLauncher.java:50) ~[spring-boot-devtools-2.7.15.jar:2.7.15]
+Caused by: com.mysql.cj.exceptions.CJCommunicationsException: Communications link failure
+
+The last packet sent successfully to the server was 0 milliseconds ago. The driver has not received any packets from the server.
+	at jdk.internal.reflect.NativeConstructorAccessorImpl.newInstance0(Native Method) ~[?:?]
+	at jdk.internal.reflect.NativeConstructorAccessorImpl.newInstance(NativeConstructorAccessorImpl.java:62) ~[?:?]
+	at jdk.internal.reflect.DelegatingConstructorAccessorImpl.newInstance(DelegatingConstructorAccessorImpl.java:45) ~[?:?]
+	at java.lang.reflect.Constructor.newInstance(Constructor.java:490) ~[?:?]
+	at com.mysql.cj.exceptions.ExceptionFactory.createException(ExceptionFactory.java:62) ~[mysql-connector-j-8.0.33.jar:8.0.33]
+	at com.mysql.cj.exceptions.ExceptionFactory.createException(ExceptionFactory.java:105) ~[mysql-connector-j-8.0.33.jar:8.0.33]
+	at com.mysql.cj.exceptions.ExceptionFactory.createException(ExceptionFactory.java:150) ~[mysql-connector-j-8.0.33.jar:8.0.33]
+	at com.mysql.cj.exceptions.ExceptionFactory.createCommunicationsException(ExceptionFactory.java:166) ~[mysql-connector-j-8.0.33.jar:8.0.33]
+	at com.mysql.cj.protocol.a.NativeSocketConnection.connect(NativeSocketConnection.java:89) ~[mysql-connector-j-8.0.33.jar:8.0.33]
+	at com.mysql.cj.NativeSession.connect(NativeSession.java:121) ~[mysql-connector-j-8.0.33.jar:8.0.33]
+	at com.mysql.cj.jdbc.ConnectionImpl.connectOneTryOnly(ConnectionImpl.java:945) ~[mysql-connector-j-8.0.33.jar:8.0.33]
+	at com.mysql.cj.jdbc.ConnectionImpl.createNewIO(ConnectionImpl.java:815) ~[mysql-connector-j-8.0.33.jar:8.0.33]
+	... 53 more
+Caused by: java.net.ConnectException: Connection refused: connect
+	at java.net.PlainSocketImpl.waitForConnect(Native Method) ~[?:?]
+	at java.net.PlainSocketImpl.socketConnect(PlainSocketImpl.java:107) ~[?:?]
+	at java.net.AbstractPlainSocketImpl.doConnect(AbstractPlainSocketImpl.java:399) ~[?:?]
+	at java.net.AbstractPlainSocketImpl.connectToAddress(AbstractPlainSocketImpl.java:242) ~[?:?]
+	at java.net.AbstractPlainSocketImpl.connect(AbstractPlainSocketImpl.java:224) ~[?:?]
+	at java.net.SocksSocketImpl.connect(SocksSocketImpl.java:403) ~[?:?]
+	at java.net.Socket.connect(Socket.java:591) ~[?:?]
+	at com.mysql.cj.protocol.StandardSocketFactory.connect(StandardSocketFactory.java:153) ~[mysql-connector-j-8.0.33.jar:8.0.33]
+	at com.mysql.cj.protocol.a.NativeSocketConnection.connect(NativeSocketConnection.java:63) ~[mysql-connector-j-8.0.33.jar:8.0.33]
+	at com.mysql.cj.NativeSession.connect(NativeSession.java:121) ~[mysql-connector-j-8.0.33.jar:8.0.33]
+	at com.mysql.cj.jdbc.ConnectionImpl.connectOneTryOnly(ConnectionImpl.java:945) ~[mysql-connector-j-8.0.33.jar:8.0.33]
+	at com.mysql.cj.jdbc.ConnectionImpl.createNewIO(ConnectionImpl.java:815) ~[mysql-connector-j-8.0.33.jar:8.0.33]
+	... 53 more
+2026-02-04 13:57:30.388 [ERROR] Failed to initialize JPA EntityManagerFactory: Unable to create requested service [org.hibernate.engine.jdbc.env.spi.JdbcEnvironment]
+2026-02-04 13:57:30.392 [WARN ] Exception encountered during context initialization - cancelling refresh attempt: org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'entityManagerFactory' defined in class path resource [org/springframework/boot/autoconfigure/orm/jpa/HibernateJpaConfiguration.class]: Invocation of init method failed; nested exception is org.hibernate.service.spi.ServiceException: Unable to create requested service [org.hibernate.engine.jdbc.env.spi.JdbcEnvironment]
+2026-02-04 13:57:30.452 [INFO ] 
+
+Error starting ApplicationContext. To display the conditions report re-run your application with 'debug' enabled.
+2026-02-04 13:57:30.707 [ERROR] Application run failed
+org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'entityManagerFactory' defined in class path resource [org/springframework/boot/autoconfigure/orm/jpa/HibernateJpaConfiguration.class]: Invocation of init method failed; nested exception is org.hibernate.service.spi.ServiceException: Unable to create requested service [org.hibernate.engine.jdbc.env.spi.JdbcEnvironment]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.initializeBean(AbstractAutowireCapableBeanFactory.java:1804) ~[spring-beans-5.3.29.jar:5.3.29]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:620) ~[spring-beans-5.3.29.jar:5.3.29]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:542) ~[spring-beans-5.3.29.jar:5.3.29]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:335) ~[spring-beans-5.3.29.jar:5.3.29]
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:234) ~[spring-beans-5.3.29.jar:5.3.29]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:333) ~[spring-beans-5.3.29.jar:5.3.29]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:208) ~[spring-beans-5.3.29.jar:5.3.29]
+	at org.springframework.context.support.AbstractApplicationContext.getBean(AbstractApplicationContext.java:1157) ~[spring-context-5.3.29.jar:5.3.29]
+	at org.springframework.context.support.AbstractApplicationContext.finishBeanFactoryInitialization(AbstractApplicationContext.java:911) ~[spring-context-5.3.29.jar:5.3.29]
+	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:583) ~[spring-context-5.3.29.jar:5.3.29]
+	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:731) ~[spring-boot-2.7.15.jar:2.7.15]
+	at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:408) ~[spring-boot-2.7.15.jar:2.7.15]
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:307) ~[spring-boot-2.7.15.jar:2.7.15]
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1303) ~[spring-boot-2.7.15.jar:2.7.15]
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1292) ~[spring-boot-2.7.15.jar:2.7.15]
+	at kr.or.kimsn.radardemo.RadardemoApplication.main(RadardemoApplication.java:14) ~[main/:?]
+	at jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method) ~[?:?]
+	at jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62) ~[?:?]
+	at jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43) ~[?:?]
+	at java.lang.reflect.Method.invoke(Method.java:566) ~[?:?]
+	at org.springframework.boot.devtools.restart.RestartLauncher.run(RestartLauncher.java:50) ~[spring-boot-devtools-2.7.15.jar:2.7.15]
+Caused by: org.hibernate.service.spi.ServiceException: Unable to create requested service [org.hibernate.engine.jdbc.env.spi.JdbcEnvironment]
+	at org.hibernate.service.internal.AbstractServiceRegistryImpl.createService(AbstractServiceRegistryImpl.java:284) ~[hibernate-core-5.6.15.Final.jar:5.6.15.Final]
+	at org.hibernate.service.internal.AbstractServiceRegistryImpl.initializeService(AbstractServiceRegistryImpl.java:246) ~[hibernate-core-5.6.15.Final.jar:5.6.15.Final]
+	at org.hibernate.service.internal.AbstractServiceRegistryImpl.getService(AbstractServiceRegistryImpl.java:223) ~[hibernate-core-5.6.15.Final.jar:5.6.15.Final]
+	at org.hibernate.id.factory.internal.DefaultIdentifierGeneratorFactory.injectServices(DefaultIdentifierGeneratorFactory.java:175) ~[hibernate-core-5.6.15.Final.jar:5.6.15.Final]
+	at org.hibernate.service.internal.AbstractServiceRegistryImpl.injectDependencies(AbstractServiceRegistryImpl.java:295) ~[hibernate-core-5.6.15.Final.jar:5.6.15.Final]
+	at org.hibernate.service.internal.AbstractServiceRegistryImpl.initializeService(AbstractServiceRegistryImpl.java:252) ~[hibernate-core-5.6.15.Final.jar:5.6.15.Final]
+	at org.hibernate.service.internal.AbstractServiceRegistryImpl.getService(AbstractServiceRegistryImpl.java:223) ~[hibernate-core-5.6.15.Final.jar:5.6.15.Final]
+	at org.hibernate.boot.internal.InFlightMetadataCollectorImpl.<init>(InFlightMetadataCollectorImpl.java:173) ~[hibernate-core-5.6.15.Final.jar:5.6.15.Final]
+	at org.hibernate.boot.model.process.spi.MetadataBuildingProcess.complete(MetadataBuildingProcess.java:127) ~[hibernate-core-5.6.15.Final.jar:5.6.15.Final]
+	at org.hibernate.jpa.boot.internal.EntityManagerFactoryBuilderImpl.metadata(EntityManagerFactoryBuilderImpl.java:1460) ~[hibernate-core-5.6.15.Final.jar:5.6.15.Final]
+	at org.hibernate.jpa.boot.internal.EntityManagerFactoryBuilderImpl.build(EntityManagerFactoryBuilderImpl.java:1494) ~[hibernate-core-5.6.15.Final.jar:5.6.15.Final]
+	at org.springframework.orm.jpa.vendor.SpringHibernateJpaPersistenceProvider.createContainerEntityManagerFactory(SpringHibernateJpaPersistenceProvider.java:58) ~[spring-orm-5.3.29.jar:5.3.29]
+	at org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean.createNativeEntityManagerFactory(LocalContainerEntityManagerFactoryBean.java:365) ~[spring-orm-5.3.29.jar:5.3.29]
+	at org.springframework.orm.jpa.AbstractEntityManagerFactoryBean.buildNativeEntityManagerFactory(AbstractEntityManagerFactoryBean.java:409) ~[spring-orm-5.3.29.jar:5.3.29]
+	at org.springframework.orm.jpa.AbstractEntityManagerFactoryBean.afterPropertiesSet(AbstractEntityManagerFactoryBean.java:396) ~[spring-orm-5.3.29.jar:5.3.29]
+	at org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean.afterPropertiesSet(LocalContainerEntityManagerFactoryBean.java:341) ~[spring-orm-5.3.29.jar:5.3.29]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.invokeInitMethods(AbstractAutowireCapableBeanFactory.java:1863) ~[spring-beans-5.3.29.jar:5.3.29]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.initializeBean(AbstractAutowireCapableBeanFactory.java:1800) ~[spring-beans-5.3.29.jar:5.3.29]
+	... 20 more
+Caused by: org.hibernate.HibernateException: Access to DialectResolutionInfo cannot be null when 'hibernate.dialect' not set
+	at org.hibernate.engine.jdbc.dialect.internal.DialectFactoryImpl.determineDialect(DialectFactoryImpl.java:100) ~[hibernate-core-5.6.15.Final.jar:5.6.15.Final]
+	at org.hibernate.engine.jdbc.dialect.internal.DialectFactoryImpl.buildDialect(DialectFactoryImpl.java:54) ~[hibernate-core-5.6.15.Final.jar:5.6.15.Final]
+	at org.hibernate.engine.jdbc.env.internal.JdbcEnvironmentInitiator.initiateService(JdbcEnvironmentInitiator.java:138) ~[hibernate-core-5.6.15.Final.jar:5.6.15.Final]
+	at org.hibernate.engine.jdbc.env.internal.JdbcEnvironmentInitiator.initiateService(JdbcEnvironmentInitiator.java:35) ~[hibernate-core-5.6.15.Final.jar:5.6.15.Final]
+	at org.hibernate.boot.registry.internal.StandardServiceRegistryImpl.initiateService(StandardServiceRegistryImpl.java:101) ~[hibernate-core-5.6.15.Final.jar:5.6.15.Final]
+	at org.hibernate.service.internal.AbstractServiceRegistryImpl.createService(AbstractServiceRegistryImpl.java:272) ~[hibernate-core-5.6.15.Final.jar:5.6.15.Final]
+	at org.hibernate.service.internal.AbstractServiceRegistryImpl.initializeService(AbstractServiceRegistryImpl.java:246) ~[hibernate-core-5.6.15.Final.jar:5.6.15.Final]
+	at org.hibernate.service.internal.AbstractServiceRegistryImpl.getService(AbstractServiceRegistryImpl.java:223) ~[hibernate-core-5.6.15.Final.jar:5.6.15.Final]
+	at org.hibernate.id.factory.internal.DefaultIdentifierGeneratorFactory.injectServices(DefaultIdentifierGeneratorFactory.java:175) ~[hibernate-core-5.6.15.Final.jar:5.6.15.Final]
+	at org.hibernate.service.internal.AbstractServiceRegistryImpl.injectDependencies(AbstractServiceRegistryImpl.java:295) ~[hibernate-core-5.6.15.Final.jar:5.6.15.Final]
+	at org.hibernate.service.internal.AbstractServiceRegistryImpl.initializeService(AbstractServiceRegistryImpl.java:252) ~[hibernate-core-5.6.15.Final.jar:5.6.15.Final]
+	at org.hibernate.service.internal.AbstractServiceRegistryImpl.getService(AbstractServiceRegistryImpl.java:223) ~[hibernate-core-5.6.15.Final.jar:5.6.15.Final]
+	at org.hibernate.boot.internal.InFlightMetadataCollectorImpl.<init>(InFlightMetadataCollectorImpl.java:173) ~[hibernate-core-5.6.15.Final.jar:5.6.15.Final]
+	at org.hibernate.boot.model.process.spi.MetadataBuildingProcess.complete(MetadataBuildingProcess.java:127) ~[hibernate-core-5.6.15.Final.jar:5.6.15.Final]
+	at org.hibernate.jpa.boot.internal.EntityManagerFactoryBuilderImpl.metadata(EntityManagerFactoryBuilderImpl.java:1460) ~[hibernate-core-5.6.15.Final.jar:5.6.15.Final]
+	at org.hibernate.jpa.boot.internal.EntityManagerFactoryBuilderImpl.build(EntityManagerFactoryBuilderImpl.java:1494) ~[hibernate-core-5.6.15.Final.jar:5.6.15.Final]
+	at org.springframework.orm.jpa.vendor.SpringHibernateJpaPersistenceProvider.createContainerEntityManagerFactory(SpringHibernateJpaPersistenceProvider.java:58) ~[spring-orm-5.3.29.jar:5.3.29]
+	at org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean.createNativeEntityManagerFactory(LocalContainerEntityManagerFactoryBean.java:365) ~[spring-orm-5.3.29.jar:5.3.29]
+	at org.springframework.orm.jpa.AbstractEntityManagerFactoryBean.buildNativeEntityManagerFactory(AbstractEntityManagerFactoryBean.java:409) ~[spring-orm-5.3.29.jar:5.3.29]
+	at org.springframework.orm.jpa.AbstractEntityManagerFactoryBean.afterPropertiesSet(AbstractEntityManagerFactoryBean.java:396) ~[spring-orm-5.3.29.jar:5.3.29]
+	at org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean.afterPropertiesSet(LocalContainerEntityManagerFactoryBean.java:341) ~[spring-orm-5.3.29.jar:5.3.29]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.invokeInitMethods(AbstractAutowireCapableBeanFactory.java:1863) ~[spring-beans-5.3.29.jar:5.3.29]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.initializeBean(AbstractAutowireCapableBeanFactory.java:1800) ~[spring-beans-5.3.29.jar:5.3.29]
+	... 20 more
+2026-02-04 13:58:53.979 [INFO ] Starting RadardemoApplication using Java 11.0.2 on haems with PID 20468 (C:\kimsn\radardemo\build\classes\java\main started by imeahmik in C:\kimsn\radardemo)
+2026-02-04 13:58:53.989 [DEBUG] Running with Spring Boot v2.7.15, Spring v5.3.29
+2026-02-04 13:58:53.992 [INFO ] No active profile set, falling back to 1 default profile: "default"
+2026-02-04 13:58:54.181 [INFO ] Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2026-02-04 13:58:56.374 [INFO ] Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-02-04 13:58:56.837 [INFO ] Finished Spring Data repository scanning in 427 ms. Found 11 JPA repository interfaces.
+2026-02-04 13:58:58.081 [INFO ] HikariPool-1 - Starting...
+2026-02-04 13:59:03.330 [ERROR] HikariPool-1 - Exception during pool initialization.
+com.mysql.cj.jdbc.exceptions.CommunicationsException: Communications link failure
+
+The last packet sent successfully to the server was 0 milliseconds ago. The driver has not received any packets from the server.
+	at com.mysql.cj.jdbc.exceptions.SQLError.createCommunicationsException(SQLError.java:175) ~[mysql-connector-j-8.0.33.jar:8.0.33]
+	at com.mysql.cj.jdbc.exceptions.SQLExceptionsMapping.translateException(SQLExceptionsMapping.java:64) ~[mysql-connector-j-8.0.33.jar:8.0.33]
+	at com.mysql.cj.jdbc.ConnectionImpl.createNewIO(ConnectionImpl.java:825) ~[mysql-connector-j-8.0.33.jar:8.0.33]
+	at com.mysql.cj.jdbc.ConnectionImpl.<init>(ConnectionImpl.java:446) ~[mysql-connector-j-8.0.33.jar:8.0.33]
+	at com.mysql.cj.jdbc.ConnectionImpl.getInstance(ConnectionImpl.java:239) ~[mysql-connector-j-8.0.33.jar:8.0.33]
+	at com.mysql.cj.jdbc.NonRegisteringDriver.connect(NonRegisteringDriver.java:188) ~[mysql-connector-j-8.0.33.jar:8.0.33]
+	at com.zaxxer.hikari.util.DriverDataSource.getConnection(DriverDataSource.java:138) ~[HikariCP-4.0.3.jar:?]
+	at com.zaxxer.hikari.pool.PoolBase.newConnection(PoolBase.java:364) ~[HikariCP-4.0.3.jar:?]
+	at com.zaxxer.hikari.pool.PoolBase.newPoolEntry(PoolBase.java:206) ~[HikariCP-4.0.3.jar:?]
+	at com.zaxxer.hikari.pool.HikariPool.createPoolEntry(HikariPool.java:476) ~[HikariCP-4.0.3.jar:?]
+	at com.zaxxer.hikari.pool.HikariPool.checkFailFast(HikariPool.java:561) ~[HikariCP-4.0.3.jar:?]
+	at com.zaxxer.hikari.pool.HikariPool.<init>(HikariPool.java:115) ~[HikariCP-4.0.3.jar:?]
+	at com.zaxxer.hikari.HikariDataSource.getConnection(HikariDataSource.java:112) ~[HikariCP-4.0.3.jar:?]
+	at org.springframework.jdbc.datasource.DataSourceUtils.fetchConnection(DataSourceUtils.java:160) ~[spring-jdbc-5.3.29.jar:5.3.29]
+	at org.springframework.jdbc.datasource.DataSourceUtils.doGetConnection(DataSourceUtils.java:118) ~[spring-jdbc-5.3.29.jar:5.3.29]
+	at org.springframework.jdbc.datasource.DataSourceUtils.getConnection(DataSourceUtils.java:81) ~[spring-jdbc-5.3.29.jar:5.3.29]
+	at org.springframework.jdbc.core.JdbcTemplate.execute(JdbcTemplate.java:332) ~[spring-jdbc-5.3.29.jar:5.3.29]
+	at org.springframework.boot.jdbc.EmbeddedDatabaseConnection.isEmbedded(EmbeddedDatabaseConnection.java:164) ~[spring-boot-2.7.15.jar:2.7.15]
+	at org.springframework.boot.autoconfigure.orm.jpa.HibernateDefaultDdlAutoProvider.getDefaultDdlAuto(HibernateDefaultDdlAutoProvider.java:42) ~[spring-boot-autoconfigure-2.7.15.jar:2.7.15]
+	at org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaConfiguration.lambda$getVendorProperties$1(HibernateJpaConfiguration.java:130) ~[spring-boot-autoconfigure-2.7.15.jar:2.7.15]
+	at org.springframework.boot.autoconfigure.orm.jpa.HibernateSettings.getDdlAuto(HibernateSettings.java:41) ~[spring-boot-autoconfigure-2.7.15.jar:2.7.15]
+	at org.springframework.boot.autoconfigure.orm.jpa.HibernateProperties.determineDdlAuto(HibernateProperties.java:143) ~[spring-boot-autoconfigure-2.7.15.jar:2.7.15]
+	at org.springframework.boot.autoconfigure.orm.jpa.HibernateProperties.getAdditionalProperties(HibernateProperties.java:103) ~[spring-boot-autoconfigure-2.7.15.jar:2.7.15]
+	at org.springframework.boot.autoconfigure.orm.jpa.HibernateProperties.determineHibernateProperties(HibernateProperties.java:95) ~[spring-boot-autoconfigure-2.7.15.jar:2.7.15]
+	at org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaConfiguration.getVendorProperties(HibernateJpaConfiguration.java:131) ~[spring-boot-autoconfigure-2.7.15.jar:2.7.15]
+	at org.springframework.boot.autoconfigure.orm.jpa.JpaBaseConfiguration.entityManagerFactory(JpaBaseConfiguration.java:132) ~[spring-boot-autoconfigure-2.7.15.jar:2.7.15]
+	at jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method) ~[?:?]
+	at jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62) ~[?:?]
+	at jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43) ~[?:?]
+	at java.lang.reflect.Method.invoke(Method.java:566) ~[?:?]
+	at org.springframework.beans.factory.support.SimpleInstantiationStrategy.instantiate(SimpleInstantiationStrategy.java:154) ~[spring-beans-5.3.29.jar:5.3.29]
+	at org.springframework.beans.factory.support.ConstructorResolver.instantiate(ConstructorResolver.java:653) ~[spring-beans-5.3.29.jar:5.3.29]
+	at org.springframework.beans.factory.support.ConstructorResolver.instantiateUsingFactoryMethod(ConstructorResolver.java:638) ~[spring-beans-5.3.29.jar:5.3.29]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.instantiateUsingFactoryMethod(AbstractAutowireCapableBeanFactory.java:1352) ~[spring-beans-5.3.29.jar:5.3.29]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBeanInstance(AbstractAutowireCapableBeanFactory.java:1195) ~[spring-beans-5.3.29.jar:5.3.29]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:582) ~[spring-beans-5.3.29.jar:5.3.29]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:542) ~[spring-beans-5.3.29.jar:5.3.29]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:335) ~[spring-beans-5.3.29.jar:5.3.29]
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:234) ~[spring-beans-5.3.29.jar:5.3.29]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:333) ~[spring-beans-5.3.29.jar:5.3.29]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:208) ~[spring-beans-5.3.29.jar:5.3.29]
+	at org.springframework.context.support.AbstractApplicationContext.getBean(AbstractApplicationContext.java:1157) ~[spring-context-5.3.29.jar:5.3.29]
+	at org.springframework.context.support.AbstractApplicationContext.finishBeanFactoryInitialization(AbstractApplicationContext.java:911) ~[spring-context-5.3.29.jar:5.3.29]
+	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:583) ~[spring-context-5.3.29.jar:5.3.29]
+	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:731) ~[spring-boot-2.7.15.jar:2.7.15]
+	at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:408) ~[spring-boot-2.7.15.jar:2.7.15]
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:307) ~[spring-boot-2.7.15.jar:2.7.15]
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1303) ~[spring-boot-2.7.15.jar:2.7.15]
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1292) ~[spring-boot-2.7.15.jar:2.7.15]
+	at kr.or.kimsn.radardemo.RadardemoApplication.main(RadardemoApplication.java:14) ~[main/:?]
+	at jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method) ~[?:?]
+	at jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62) ~[?:?]
+	at jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43) ~[?:?]
+	at java.lang.reflect.Method.invoke(Method.java:566) ~[?:?]
+	at org.springframework.boot.devtools.restart.RestartLauncher.run(RestartLauncher.java:50) ~[spring-boot-devtools-2.7.15.jar:2.7.15]
+Caused by: com.mysql.cj.exceptions.CJCommunicationsException: Communications link failure
+
+The last packet sent successfully to the server was 0 milliseconds ago. The driver has not received any packets from the server.
+	at jdk.internal.reflect.NativeConstructorAccessorImpl.newInstance0(Native Method) ~[?:?]
+	at jdk.internal.reflect.NativeConstructorAccessorImpl.newInstance(NativeConstructorAccessorImpl.java:62) ~[?:?]
+	at jdk.internal.reflect.DelegatingConstructorAccessorImpl.newInstance(DelegatingConstructorAccessorImpl.java:45) ~[?:?]
+	at java.lang.reflect.Constructor.newInstance(Constructor.java:490) ~[?:?]
+	at com.mysql.cj.exceptions.ExceptionFactory.createException(ExceptionFactory.java:62) ~[mysql-connector-j-8.0.33.jar:8.0.33]
+	at com.mysql.cj.exceptions.ExceptionFactory.createException(ExceptionFactory.java:105) ~[mysql-connector-j-8.0.33.jar:8.0.33]
+	at com.mysql.cj.exceptions.ExceptionFactory.createException(ExceptionFactory.java:150) ~[mysql-connector-j-8.0.33.jar:8.0.33]
+	at com.mysql.cj.exceptions.ExceptionFactory.createCommunicationsException(ExceptionFactory.java:166) ~[mysql-connector-j-8.0.33.jar:8.0.33]
+	at com.mysql.cj.protocol.a.NativeSocketConnection.connect(NativeSocketConnection.java:89) ~[mysql-connector-j-8.0.33.jar:8.0.33]
+	at com.mysql.cj.NativeSession.connect(NativeSession.java:121) ~[mysql-connector-j-8.0.33.jar:8.0.33]
+	at com.mysql.cj.jdbc.ConnectionImpl.connectOneTryOnly(ConnectionImpl.java:945) ~[mysql-connector-j-8.0.33.jar:8.0.33]
+	at com.mysql.cj.jdbc.ConnectionImpl.createNewIO(ConnectionImpl.java:815) ~[mysql-connector-j-8.0.33.jar:8.0.33]
+	... 52 more
+Caused by: java.net.ConnectException: Connection refused: connect
+	at java.net.PlainSocketImpl.waitForConnect(Native Method) ~[?:?]
+	at java.net.PlainSocketImpl.socketConnect(PlainSocketImpl.java:107) ~[?:?]
+	at java.net.AbstractPlainSocketImpl.doConnect(AbstractPlainSocketImpl.java:399) ~[?:?]
+	at java.net.AbstractPlainSocketImpl.connectToAddress(AbstractPlainSocketImpl.java:242) ~[?:?]
+	at java.net.AbstractPlainSocketImpl.connect(AbstractPlainSocketImpl.java:224) ~[?:?]
+	at java.net.SocksSocketImpl.connect(SocksSocketImpl.java:403) ~[?:?]
+	at java.net.Socket.connect(Socket.java:591) ~[?:?]
+	at com.mysql.cj.protocol.StandardSocketFactory.connect(StandardSocketFactory.java:153) ~[mysql-connector-j-8.0.33.jar:8.0.33]
+	at com.mysql.cj.protocol.a.NativeSocketConnection.connect(NativeSocketConnection.java:63) ~[mysql-connector-j-8.0.33.jar:8.0.33]
+	at com.mysql.cj.NativeSession.connect(NativeSession.java:121) ~[mysql-connector-j-8.0.33.jar:8.0.33]
+	at com.mysql.cj.jdbc.ConnectionImpl.connectOneTryOnly(ConnectionImpl.java:945) ~[mysql-connector-j-8.0.33.jar:8.0.33]
+	at com.mysql.cj.jdbc.ConnectionImpl.createNewIO(ConnectionImpl.java:815) ~[mysql-connector-j-8.0.33.jar:8.0.33]
+	... 52 more
+2026-02-04 13:59:03.445 [INFO ] HHH000204: Processing PersistenceUnitInfo [name: default]
+2026-02-04 13:59:03.603 [INFO ] HHH000412: Hibernate ORM core version 5.6.15.Final
+2026-02-04 13:59:03.993 [INFO ] HCANN000001: Hibernate Commons Annotations {5.1.2.Final}
+2026-02-04 13:59:04.269 [INFO ] HikariPool-1 - Starting...
+2026-02-04 13:59:09.361 [ERROR] HikariPool-1 - Exception during pool initialization.
+com.mysql.cj.jdbc.exceptions.CommunicationsException: Communications link failure
+
+The last packet sent successfully to the server was 0 milliseconds ago. The driver has not received any packets from the server.
+	at com.mysql.cj.jdbc.exceptions.SQLError.createCommunicationsException(SQLError.java:175) ~[mysql-connector-j-8.0.33.jar:8.0.33]
+	at com.mysql.cj.jdbc.exceptions.SQLExceptionsMapping.translateException(SQLExceptionsMapping.java:64) ~[mysql-connector-j-8.0.33.jar:8.0.33]
+	at com.mysql.cj.jdbc.ConnectionImpl.createNewIO(ConnectionImpl.java:825) ~[mysql-connector-j-8.0.33.jar:8.0.33]
+	at com.mysql.cj.jdbc.ConnectionImpl.<init>(ConnectionImpl.java:446) ~[mysql-connector-j-8.0.33.jar:8.0.33]
+	at com.mysql.cj.jdbc.ConnectionImpl.getInstance(ConnectionImpl.java:239) ~[mysql-connector-j-8.0.33.jar:8.0.33]
+	at com.mysql.cj.jdbc.NonRegisteringDriver.connect(NonRegisteringDriver.java:188) ~[mysql-connector-j-8.0.33.jar:8.0.33]
+	at com.zaxxer.hikari.util.DriverDataSource.getConnection(DriverDataSource.java:138) ~[HikariCP-4.0.3.jar:?]
+	at com.zaxxer.hikari.pool.PoolBase.newConnection(PoolBase.java:364) ~[HikariCP-4.0.3.jar:?]
+	at com.zaxxer.hikari.pool.PoolBase.newPoolEntry(PoolBase.java:206) ~[HikariCP-4.0.3.jar:?]
+	at com.zaxxer.hikari.pool.HikariPool.createPoolEntry(HikariPool.java:476) ~[HikariCP-4.0.3.jar:?]
+	at com.zaxxer.hikari.pool.HikariPool.checkFailFast(HikariPool.java:561) ~[HikariCP-4.0.3.jar:?]
+	at com.zaxxer.hikari.pool.HikariPool.<init>(HikariPool.java:115) ~[HikariCP-4.0.3.jar:?]
+	at com.zaxxer.hikari.HikariDataSource.getConnection(HikariDataSource.java:112) ~[HikariCP-4.0.3.jar:?]
+	at org.hibernate.engine.jdbc.connections.internal.DatasourceConnectionProviderImpl.getConnection(DatasourceConnectionProviderImpl.java:122) ~[hibernate-core-5.6.15.Final.jar:5.6.15.Final]
+	at org.hibernate.engine.jdbc.env.internal.JdbcEnvironmentInitiator$ConnectionProviderJdbcConnectionAccess.obtainConnection(JdbcEnvironmentInitiator.java:181) ~[hibernate-core-5.6.15.Final.jar:5.6.15.Final]
+	at org.hibernate.engine.jdbc.env.internal.JdbcEnvironmentInitiator.initiateService(JdbcEnvironmentInitiator.java:68) ~[hibernate-core-5.6.15.Final.jar:5.6.15.Final]
+	at org.hibernate.engine.jdbc.env.internal.JdbcEnvironmentInitiator.initiateService(JdbcEnvironmentInitiator.java:35) ~[hibernate-core-5.6.15.Final.jar:5.6.15.Final]
+	at org.hibernate.boot.registry.internal.StandardServiceRegistryImpl.initiateService(StandardServiceRegistryImpl.java:101) ~[hibernate-core-5.6.15.Final.jar:5.6.15.Final]
+	at org.hibernate.service.internal.AbstractServiceRegistryImpl.createService(AbstractServiceRegistryImpl.java:272) ~[hibernate-core-5.6.15.Final.jar:5.6.15.Final]
+	at org.hibernate.service.internal.AbstractServiceRegistryImpl.initializeService(AbstractServiceRegistryImpl.java:246) ~[hibernate-core-5.6.15.Final.jar:5.6.15.Final]
+	at org.hibernate.service.internal.AbstractServiceRegistryImpl.getService(AbstractServiceRegistryImpl.java:223) ~[hibernate-core-5.6.15.Final.jar:5.6.15.Final]
+	at org.hibernate.id.factory.internal.DefaultIdentifierGeneratorFactory.injectServices(DefaultIdentifierGeneratorFactory.java:175) ~[hibernate-core-5.6.15.Final.jar:5.6.15.Final]
+	at org.hibernate.service.internal.AbstractServiceRegistryImpl.injectDependencies(AbstractServiceRegistryImpl.java:295) ~[hibernate-core-5.6.15.Final.jar:5.6.15.Final]
+	at org.hibernate.service.internal.AbstractServiceRegistryImpl.initializeService(AbstractServiceRegistryImpl.java:252) ~[hibernate-core-5.6.15.Final.jar:5.6.15.Final]
+	at org.hibernate.service.internal.AbstractServiceRegistryImpl.getService(AbstractServiceRegistryImpl.java:223) ~[hibernate-core-5.6.15.Final.jar:5.6.15.Final]
+	at org.hibernate.boot.internal.InFlightMetadataCollectorImpl.<init>(InFlightMetadataCollectorImpl.java:173) ~[hibernate-core-5.6.15.Final.jar:5.6.15.Final]
+	at org.hibernate.boot.model.process.spi.MetadataBuildingProcess.complete(MetadataBuildingProcess.java:127) ~[hibernate-core-5.6.15.Final.jar:5.6.15.Final]
+	at org.hibernate.jpa.boot.internal.EntityManagerFactoryBuilderImpl.metadata(EntityManagerFactoryBuilderImpl.java:1460) ~[hibernate-core-5.6.15.Final.jar:5.6.15.Final]
+	at org.hibernate.jpa.boot.internal.EntityManagerFactoryBuilderImpl.build(EntityManagerFactoryBuilderImpl.java:1494) ~[hibernate-core-5.6.15.Final.jar:5.6.15.Final]
+	at org.springframework.orm.jpa.vendor.SpringHibernateJpaPersistenceProvider.createContainerEntityManagerFactory(SpringHibernateJpaPersistenceProvider.java:58) ~[spring-orm-5.3.29.jar:5.3.29]
+	at org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean.createNativeEntityManagerFactory(LocalContainerEntityManagerFactoryBean.java:365) ~[spring-orm-5.3.29.jar:5.3.29]
+	at org.springframework.orm.jpa.AbstractEntityManagerFactoryBean.buildNativeEntityManagerFactory(AbstractEntityManagerFactoryBean.java:409) ~[spring-orm-5.3.29.jar:5.3.29]
+	at org.springframework.orm.jpa.AbstractEntityManagerFactoryBean.afterPropertiesSet(AbstractEntityManagerFactoryBean.java:396) ~[spring-orm-5.3.29.jar:5.3.29]
+	at org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean.afterPropertiesSet(LocalContainerEntityManagerFactoryBean.java:341) ~[spring-orm-5.3.29.jar:5.3.29]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.invokeInitMethods(AbstractAutowireCapableBeanFactory.java:1863) ~[spring-beans-5.3.29.jar:5.3.29]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.initializeBean(AbstractAutowireCapableBeanFactory.java:1800) ~[spring-beans-5.3.29.jar:5.3.29]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:620) ~[spring-beans-5.3.29.jar:5.3.29]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:542) ~[spring-beans-5.3.29.jar:5.3.29]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:335) ~[spring-beans-5.3.29.jar:5.3.29]
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:234) ~[spring-beans-5.3.29.jar:5.3.29]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:333) ~[spring-beans-5.3.29.jar:5.3.29]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:208) ~[spring-beans-5.3.29.jar:5.3.29]
+	at org.springframework.context.support.AbstractApplicationContext.getBean(AbstractApplicationContext.java:1157) ~[spring-context-5.3.29.jar:5.3.29]
+	at org.springframework.context.support.AbstractApplicationContext.finishBeanFactoryInitialization(AbstractApplicationContext.java:911) ~[spring-context-5.3.29.jar:5.3.29]
+	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:583) ~[spring-context-5.3.29.jar:5.3.29]
+	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:731) ~[spring-boot-2.7.15.jar:2.7.15]
+	at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:408) ~[spring-boot-2.7.15.jar:2.7.15]
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:307) ~[spring-boot-2.7.15.jar:2.7.15]
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1303) ~[spring-boot-2.7.15.jar:2.7.15]
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1292) ~[spring-boot-2.7.15.jar:2.7.15]
+	at kr.or.kimsn.radardemo.RadardemoApplication.main(RadardemoApplication.java:14) ~[main/:?]
+	at jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method) ~[?:?]
+	at jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62) ~[?:?]
+	at jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43) ~[?:?]
+	at java.lang.reflect.Method.invoke(Method.java:566) ~[?:?]
+	at org.springframework.boot.devtools.restart.RestartLauncher.run(RestartLauncher.java:50) ~[spring-boot-devtools-2.7.15.jar:2.7.15]
+Caused by: com.mysql.cj.exceptions.CJCommunicationsException: Communications link failure
+
+The last packet sent successfully to the server was 0 milliseconds ago. The driver has not received any packets from the server.
+	at jdk.internal.reflect.NativeConstructorAccessorImpl.newInstance0(Native Method) ~[?:?]
+	at jdk.internal.reflect.NativeConstructorAccessorImpl.newInstance(NativeConstructorAccessorImpl.java:62) ~[?:?]
+	at jdk.internal.reflect.DelegatingConstructorAccessorImpl.newInstance(DelegatingConstructorAccessorImpl.java:45) ~[?:?]
+	at java.lang.reflect.Constructor.newInstance(Constructor.java:490) ~[?:?]
+	at com.mysql.cj.exceptions.ExceptionFactory.createException(ExceptionFactory.java:62) ~[mysql-connector-j-8.0.33.jar:8.0.33]
+	at com.mysql.cj.exceptions.ExceptionFactory.createException(ExceptionFactory.java:105) ~[mysql-connector-j-8.0.33.jar:8.0.33]
+	at com.mysql.cj.exceptions.ExceptionFactory.createException(ExceptionFactory.java:150) ~[mysql-connector-j-8.0.33.jar:8.0.33]
+	at com.mysql.cj.exceptions.ExceptionFactory.createCommunicationsException(ExceptionFactory.java:166) ~[mysql-connector-j-8.0.33.jar:8.0.33]
+	at com.mysql.cj.protocol.a.NativeSocketConnection.connect(NativeSocketConnection.java:89) ~[mysql-connector-j-8.0.33.jar:8.0.33]
+	at com.mysql.cj.NativeSession.connect(NativeSession.java:121) ~[mysql-connector-j-8.0.33.jar:8.0.33]
+	at com.mysql.cj.jdbc.ConnectionImpl.connectOneTryOnly(ConnectionImpl.java:945) ~[mysql-connector-j-8.0.33.jar:8.0.33]
+	at com.mysql.cj.jdbc.ConnectionImpl.createNewIO(ConnectionImpl.java:815) ~[mysql-connector-j-8.0.33.jar:8.0.33]
+	... 53 more
+Caused by: java.net.ConnectException: Connection refused: connect
+	at java.net.PlainSocketImpl.waitForConnect(Native Method) ~[?:?]
+	at java.net.PlainSocketImpl.socketConnect(PlainSocketImpl.java:107) ~[?:?]
+	at java.net.AbstractPlainSocketImpl.doConnect(AbstractPlainSocketImpl.java:399) ~[?:?]
+	at java.net.AbstractPlainSocketImpl.connectToAddress(AbstractPlainSocketImpl.java:242) ~[?:?]
+	at java.net.AbstractPlainSocketImpl.connect(AbstractPlainSocketImpl.java:224) ~[?:?]
+	at java.net.SocksSocketImpl.connect(SocksSocketImpl.java:403) ~[?:?]
+	at java.net.Socket.connect(Socket.java:591) ~[?:?]
+	at com.mysql.cj.protocol.StandardSocketFactory.connect(StandardSocketFactory.java:153) ~[mysql-connector-j-8.0.33.jar:8.0.33]
+	at com.mysql.cj.protocol.a.NativeSocketConnection.connect(NativeSocketConnection.java:63) ~[mysql-connector-j-8.0.33.jar:8.0.33]
+	at com.mysql.cj.NativeSession.connect(NativeSession.java:121) ~[mysql-connector-j-8.0.33.jar:8.0.33]
+	at com.mysql.cj.jdbc.ConnectionImpl.connectOneTryOnly(ConnectionImpl.java:945) ~[mysql-connector-j-8.0.33.jar:8.0.33]
+	at com.mysql.cj.jdbc.ConnectionImpl.createNewIO(ConnectionImpl.java:815) ~[mysql-connector-j-8.0.33.jar:8.0.33]
+	... 53 more
+2026-02-04 13:59:09.364 [WARN ] HHH000342: Could not obtain connection to query metadata
+com.mysql.cj.jdbc.exceptions.CommunicationsException: Communications link failure
+
+The last packet sent successfully to the server was 0 milliseconds ago. The driver has not received any packets from the server.
+	at com.mysql.cj.jdbc.exceptions.SQLError.createCommunicationsException(SQLError.java:175) ~[mysql-connector-j-8.0.33.jar:8.0.33]
+	at com.mysql.cj.jdbc.exceptions.SQLExceptionsMapping.translateException(SQLExceptionsMapping.java:64) ~[mysql-connector-j-8.0.33.jar:8.0.33]
+	at com.mysql.cj.jdbc.ConnectionImpl.createNewIO(ConnectionImpl.java:825) ~[mysql-connector-j-8.0.33.jar:8.0.33]
+	at com.mysql.cj.jdbc.ConnectionImpl.<init>(ConnectionImpl.java:446) ~[mysql-connector-j-8.0.33.jar:8.0.33]
+	at com.mysql.cj.jdbc.ConnectionImpl.getInstance(ConnectionImpl.java:239) ~[mysql-connector-j-8.0.33.jar:8.0.33]
+	at com.mysql.cj.jdbc.NonRegisteringDriver.connect(NonRegisteringDriver.java:188) ~[mysql-connector-j-8.0.33.jar:8.0.33]
+	at com.zaxxer.hikari.util.DriverDataSource.getConnection(DriverDataSource.java:138) ~[HikariCP-4.0.3.jar:?]
+	at com.zaxxer.hikari.pool.PoolBase.newConnection(PoolBase.java:364) ~[HikariCP-4.0.3.jar:?]
+	at com.zaxxer.hikari.pool.PoolBase.newPoolEntry(PoolBase.java:206) ~[HikariCP-4.0.3.jar:?]
+	at com.zaxxer.hikari.pool.HikariPool.createPoolEntry(HikariPool.java:476) ~[HikariCP-4.0.3.jar:?]
+	at com.zaxxer.hikari.pool.HikariPool.checkFailFast(HikariPool.java:561) ~[HikariCP-4.0.3.jar:?]
+	at com.zaxxer.hikari.pool.HikariPool.<init>(HikariPool.java:115) ~[HikariCP-4.0.3.jar:?]
+	at com.zaxxer.hikari.HikariDataSource.getConnection(HikariDataSource.java:112) ~[HikariCP-4.0.3.jar:?]
+	at org.hibernate.engine.jdbc.connections.internal.DatasourceConnectionProviderImpl.getConnection(DatasourceConnectionProviderImpl.java:122) ~[hibernate-core-5.6.15.Final.jar:5.6.15.Final]
+	at org.hibernate.engine.jdbc.env.internal.JdbcEnvironmentInitiator$ConnectionProviderJdbcConnectionAccess.obtainConnection(JdbcEnvironmentInitiator.java:181) ~[hibernate-core-5.6.15.Final.jar:5.6.15.Final]
+	at org.hibernate.engine.jdbc.env.internal.JdbcEnvironmentInitiator.initiateService(JdbcEnvironmentInitiator.java:68) ~[hibernate-core-5.6.15.Final.jar:5.6.15.Final]
+	at org.hibernate.engine.jdbc.env.internal.JdbcEnvironmentInitiator.initiateService(JdbcEnvironmentInitiator.java:35) ~[hibernate-core-5.6.15.Final.jar:5.6.15.Final]
+	at org.hibernate.boot.registry.internal.StandardServiceRegistryImpl.initiateService(StandardServiceRegistryImpl.java:101) ~[hibernate-core-5.6.15.Final.jar:5.6.15.Final]
+	at org.hibernate.service.internal.AbstractServiceRegistryImpl.createService(AbstractServiceRegistryImpl.java:272) ~[hibernate-core-5.6.15.Final.jar:5.6.15.Final]
+	at org.hibernate.service.internal.AbstractServiceRegistryImpl.initializeService(AbstractServiceRegistryImpl.java:246) ~[hibernate-core-5.6.15.Final.jar:5.6.15.Final]
+	at org.hibernate.service.internal.AbstractServiceRegistryImpl.getService(AbstractServiceRegistryImpl.java:223) ~[hibernate-core-5.6.15.Final.jar:5.6.15.Final]
+	at org.hibernate.id.factory.internal.DefaultIdentifierGeneratorFactory.injectServices(DefaultIdentifierGeneratorFactory.java:175) ~[hibernate-core-5.6.15.Final.jar:5.6.15.Final]
+	at org.hibernate.service.internal.AbstractServiceRegistryImpl.injectDependencies(AbstractServiceRegistryImpl.java:295) ~[hibernate-core-5.6.15.Final.jar:5.6.15.Final]
+	at org.hibernate.service.internal.AbstractServiceRegistryImpl.initializeService(AbstractServiceRegistryImpl.java:252) ~[hibernate-core-5.6.15.Final.jar:5.6.15.Final]
+	at org.hibernate.service.internal.AbstractServiceRegistryImpl.getService(AbstractServiceRegistryImpl.java:223) ~[hibernate-core-5.6.15.Final.jar:5.6.15.Final]
+	at org.hibernate.boot.internal.InFlightMetadataCollectorImpl.<init>(InFlightMetadataCollectorImpl.java:173) ~[hibernate-core-5.6.15.Final.jar:5.6.15.Final]
+	at org.hibernate.boot.model.process.spi.MetadataBuildingProcess.complete(MetadataBuildingProcess.java:127) ~[hibernate-core-5.6.15.Final.jar:5.6.15.Final]
+	at org.hibernate.jpa.boot.internal.EntityManagerFactoryBuilderImpl.metadata(EntityManagerFactoryBuilderImpl.java:1460) ~[hibernate-core-5.6.15.Final.jar:5.6.15.Final]
+	at org.hibernate.jpa.boot.internal.EntityManagerFactoryBuilderImpl.build(EntityManagerFactoryBuilderImpl.java:1494) ~[hibernate-core-5.6.15.Final.jar:5.6.15.Final]
+	at org.springframework.orm.jpa.vendor.SpringHibernateJpaPersistenceProvider.createContainerEntityManagerFactory(SpringHibernateJpaPersistenceProvider.java:58) ~[spring-orm-5.3.29.jar:5.3.29]
+	at org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean.createNativeEntityManagerFactory(LocalContainerEntityManagerFactoryBean.java:365) ~[spring-orm-5.3.29.jar:5.3.29]
+	at org.springframework.orm.jpa.AbstractEntityManagerFactoryBean.buildNativeEntityManagerFactory(AbstractEntityManagerFactoryBean.java:409) ~[spring-orm-5.3.29.jar:5.3.29]
+	at org.springframework.orm.jpa.AbstractEntityManagerFactoryBean.afterPropertiesSet(AbstractEntityManagerFactoryBean.java:396) ~[spring-orm-5.3.29.jar:5.3.29]
+	at org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean.afterPropertiesSet(LocalContainerEntityManagerFactoryBean.java:341) ~[spring-orm-5.3.29.jar:5.3.29]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.invokeInitMethods(AbstractAutowireCapableBeanFactory.java:1863) ~[spring-beans-5.3.29.jar:5.3.29]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.initializeBean(AbstractAutowireCapableBeanFactory.java:1800) ~[spring-beans-5.3.29.jar:5.3.29]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:620) ~[spring-beans-5.3.29.jar:5.3.29]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:542) ~[spring-beans-5.3.29.jar:5.3.29]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:335) ~[spring-beans-5.3.29.jar:5.3.29]
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:234) ~[spring-beans-5.3.29.jar:5.3.29]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:333) ~[spring-beans-5.3.29.jar:5.3.29]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:208) ~[spring-beans-5.3.29.jar:5.3.29]
+	at org.springframework.context.support.AbstractApplicationContext.getBean(AbstractApplicationContext.java:1157) ~[spring-context-5.3.29.jar:5.3.29]
+	at org.springframework.context.support.AbstractApplicationContext.finishBeanFactoryInitialization(AbstractApplicationContext.java:911) ~[spring-context-5.3.29.jar:5.3.29]
+	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:583) ~[spring-context-5.3.29.jar:5.3.29]
+	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:731) ~[spring-boot-2.7.15.jar:2.7.15]
+	at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:408) ~[spring-boot-2.7.15.jar:2.7.15]
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:307) ~[spring-boot-2.7.15.jar:2.7.15]
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1303) ~[spring-boot-2.7.15.jar:2.7.15]
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1292) ~[spring-boot-2.7.15.jar:2.7.15]
+	at kr.or.kimsn.radardemo.RadardemoApplication.main(RadardemoApplication.java:14) ~[main/:?]
+	at jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method) ~[?:?]
+	at jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62) ~[?:?]
+	at jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43) ~[?:?]
+	at java.lang.reflect.Method.invoke(Method.java:566) ~[?:?]
+	at org.springframework.boot.devtools.restart.RestartLauncher.run(RestartLauncher.java:50) ~[spring-boot-devtools-2.7.15.jar:2.7.15]
+Caused by: com.mysql.cj.exceptions.CJCommunicationsException: Communications link failure
+
+The last packet sent successfully to the server was 0 milliseconds ago. The driver has not received any packets from the server.
+	at jdk.internal.reflect.NativeConstructorAccessorImpl.newInstance0(Native Method) ~[?:?]
+	at jdk.internal.reflect.NativeConstructorAccessorImpl.newInstance(NativeConstructorAccessorImpl.java:62) ~[?:?]
+	at jdk.internal.reflect.DelegatingConstructorAccessorImpl.newInstance(DelegatingConstructorAccessorImpl.java:45) ~[?:?]
+	at java.lang.reflect.Constructor.newInstance(Constructor.java:490) ~[?:?]
+	at com.mysql.cj.exceptions.ExceptionFactory.createException(ExceptionFactory.java:62) ~[mysql-connector-j-8.0.33.jar:8.0.33]
+	at com.mysql.cj.exceptions.ExceptionFactory.createException(ExceptionFactory.java:105) ~[mysql-connector-j-8.0.33.jar:8.0.33]
+	at com.mysql.cj.exceptions.ExceptionFactory.createException(ExceptionFactory.java:150) ~[mysql-connector-j-8.0.33.jar:8.0.33]
+	at com.mysql.cj.exceptions.ExceptionFactory.createCommunicationsException(ExceptionFactory.java:166) ~[mysql-connector-j-8.0.33.jar:8.0.33]
+	at com.mysql.cj.protocol.a.NativeSocketConnection.connect(NativeSocketConnection.java:89) ~[mysql-connector-j-8.0.33.jar:8.0.33]
+	at com.mysql.cj.NativeSession.connect(NativeSession.java:121) ~[mysql-connector-j-8.0.33.jar:8.0.33]
+	at com.mysql.cj.jdbc.ConnectionImpl.connectOneTryOnly(ConnectionImpl.java:945) ~[mysql-connector-j-8.0.33.jar:8.0.33]
+	at com.mysql.cj.jdbc.ConnectionImpl.createNewIO(ConnectionImpl.java:815) ~[mysql-connector-j-8.0.33.jar:8.0.33]
+	... 53 more
+Caused by: java.net.ConnectException: Connection refused: connect
+	at java.net.PlainSocketImpl.waitForConnect(Native Method) ~[?:?]
+	at java.net.PlainSocketImpl.socketConnect(PlainSocketImpl.java:107) ~[?:?]
+	at java.net.AbstractPlainSocketImpl.doConnect(AbstractPlainSocketImpl.java:399) ~[?:?]
+	at java.net.AbstractPlainSocketImpl.connectToAddress(AbstractPlainSocketImpl.java:242) ~[?:?]
+	at java.net.AbstractPlainSocketImpl.connect(AbstractPlainSocketImpl.java:224) ~[?:?]
+	at java.net.SocksSocketImpl.connect(SocksSocketImpl.java:403) ~[?:?]
+	at java.net.Socket.connect(Socket.java:591) ~[?:?]
+	at com.mysql.cj.protocol.StandardSocketFactory.connect(StandardSocketFactory.java:153) ~[mysql-connector-j-8.0.33.jar:8.0.33]
+	at com.mysql.cj.protocol.a.NativeSocketConnection.connect(NativeSocketConnection.java:63) ~[mysql-connector-j-8.0.33.jar:8.0.33]
+	at com.mysql.cj.NativeSession.connect(NativeSession.java:121) ~[mysql-connector-j-8.0.33.jar:8.0.33]
+	at com.mysql.cj.jdbc.ConnectionImpl.connectOneTryOnly(ConnectionImpl.java:945) ~[mysql-connector-j-8.0.33.jar:8.0.33]
+	at com.mysql.cj.jdbc.ConnectionImpl.createNewIO(ConnectionImpl.java:815) ~[mysql-connector-j-8.0.33.jar:8.0.33]
+	... 53 more
+2026-02-04 13:59:09.369 [ERROR] Failed to initialize JPA EntityManagerFactory: Unable to create requested service [org.hibernate.engine.jdbc.env.spi.JdbcEnvironment]
+2026-02-04 13:59:09.370 [WARN ] Exception encountered during context initialization - cancelling refresh attempt: org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'entityManagerFactory' defined in class path resource [org/springframework/boot/autoconfigure/orm/jpa/HibernateJpaConfiguration.class]: Invocation of init method failed; nested exception is org.hibernate.service.spi.ServiceException: Unable to create requested service [org.hibernate.engine.jdbc.env.spi.JdbcEnvironment]
+2026-02-04 13:59:09.389 [INFO ] 
+
+Error starting ApplicationContext. To display the conditions report re-run your application with 'debug' enabled.
+2026-02-04 13:59:09.475 [ERROR] Application run failed
+org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'entityManagerFactory' defined in class path resource [org/springframework/boot/autoconfigure/orm/jpa/HibernateJpaConfiguration.class]: Invocation of init method failed; nested exception is org.hibernate.service.spi.ServiceException: Unable to create requested service [org.hibernate.engine.jdbc.env.spi.JdbcEnvironment]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.initializeBean(AbstractAutowireCapableBeanFactory.java:1804) ~[spring-beans-5.3.29.jar:5.3.29]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:620) ~[spring-beans-5.3.29.jar:5.3.29]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:542) ~[spring-beans-5.3.29.jar:5.3.29]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:335) ~[spring-beans-5.3.29.jar:5.3.29]
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:234) ~[spring-beans-5.3.29.jar:5.3.29]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:333) ~[spring-beans-5.3.29.jar:5.3.29]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:208) ~[spring-beans-5.3.29.jar:5.3.29]
+	at org.springframework.context.support.AbstractApplicationContext.getBean(AbstractApplicationContext.java:1157) ~[spring-context-5.3.29.jar:5.3.29]
+	at org.springframework.context.support.AbstractApplicationContext.finishBeanFactoryInitialization(AbstractApplicationContext.java:911) ~[spring-context-5.3.29.jar:5.3.29]
+	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:583) ~[spring-context-5.3.29.jar:5.3.29]
+	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:731) ~[spring-boot-2.7.15.jar:2.7.15]
+	at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:408) ~[spring-boot-2.7.15.jar:2.7.15]
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:307) ~[spring-boot-2.7.15.jar:2.7.15]
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1303) ~[spring-boot-2.7.15.jar:2.7.15]
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1292) ~[spring-boot-2.7.15.jar:2.7.15]
+	at kr.or.kimsn.radardemo.RadardemoApplication.main(RadardemoApplication.java:14) ~[main/:?]
+	at jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method) ~[?:?]
+	at jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62) ~[?:?]
+	at jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43) ~[?:?]
+	at java.lang.reflect.Method.invoke(Method.java:566) ~[?:?]
+	at org.springframework.boot.devtools.restart.RestartLauncher.run(RestartLauncher.java:50) ~[spring-boot-devtools-2.7.15.jar:2.7.15]
+Caused by: org.hibernate.service.spi.ServiceException: Unable to create requested service [org.hibernate.engine.jdbc.env.spi.JdbcEnvironment]
+	at org.hibernate.service.internal.AbstractServiceRegistryImpl.createService(AbstractServiceRegistryImpl.java:284) ~[hibernate-core-5.6.15.Final.jar:5.6.15.Final]
+	at org.hibernate.service.internal.AbstractServiceRegistryImpl.initializeService(AbstractServiceRegistryImpl.java:246) ~[hibernate-core-5.6.15.Final.jar:5.6.15.Final]
+	at org.hibernate.service.internal.AbstractServiceRegistryImpl.getService(AbstractServiceRegistryImpl.java:223) ~[hibernate-core-5.6.15.Final.jar:5.6.15.Final]
+	at org.hibernate.id.factory.internal.DefaultIdentifierGeneratorFactory.injectServices(DefaultIdentifierGeneratorFactory.java:175) ~[hibernate-core-5.6.15.Final.jar:5.6.15.Final]
+	at org.hibernate.service.internal.AbstractServiceRegistryImpl.injectDependencies(AbstractServiceRegistryImpl.java:295) ~[hibernate-core-5.6.15.Final.jar:5.6.15.Final]
+	at org.hibernate.service.internal.AbstractServiceRegistryImpl.initializeService(AbstractServiceRegistryImpl.java:252) ~[hibernate-core-5.6.15.Final.jar:5.6.15.Final]
+	at org.hibernate.service.internal.AbstractServiceRegistryImpl.getService(AbstractServiceRegistryImpl.java:223) ~[hibernate-core-5.6.15.Final.jar:5.6.15.Final]
+	at org.hibernate.boot.internal.InFlightMetadataCollectorImpl.<init>(InFlightMetadataCollectorImpl.java:173) ~[hibernate-core-5.6.15.Final.jar:5.6.15.Final]
+	at org.hibernate.boot.model.process.spi.MetadataBuildingProcess.complete(MetadataBuildingProcess.java:127) ~[hibernate-core-5.6.15.Final.jar:5.6.15.Final]
+	at org.hibernate.jpa.boot.internal.EntityManagerFactoryBuilderImpl.metadata(EntityManagerFactoryBuilderImpl.java:1460) ~[hibernate-core-5.6.15.Final.jar:5.6.15.Final]
+	at org.hibernate.jpa.boot.internal.EntityManagerFactoryBuilderImpl.build(EntityManagerFactoryBuilderImpl.java:1494) ~[hibernate-core-5.6.15.Final.jar:5.6.15.Final]
+	at org.springframework.orm.jpa.vendor.SpringHibernateJpaPersistenceProvider.createContainerEntityManagerFactory(SpringHibernateJpaPersistenceProvider.java:58) ~[spring-orm-5.3.29.jar:5.3.29]
+	at org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean.createNativeEntityManagerFactory(LocalContainerEntityManagerFactoryBean.java:365) ~[spring-orm-5.3.29.jar:5.3.29]
+	at org.springframework.orm.jpa.AbstractEntityManagerFactoryBean.buildNativeEntityManagerFactory(AbstractEntityManagerFactoryBean.java:409) ~[spring-orm-5.3.29.jar:5.3.29]
+	at org.springframework.orm.jpa.AbstractEntityManagerFactoryBean.afterPropertiesSet(AbstractEntityManagerFactoryBean.java:396) ~[spring-orm-5.3.29.jar:5.3.29]
+	at org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean.afterPropertiesSet(LocalContainerEntityManagerFactoryBean.java:341) ~[spring-orm-5.3.29.jar:5.3.29]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.invokeInitMethods(AbstractAutowireCapableBeanFactory.java:1863) ~[spring-beans-5.3.29.jar:5.3.29]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.initializeBean(AbstractAutowireCapableBeanFactory.java:1800) ~[spring-beans-5.3.29.jar:5.3.29]
+	... 20 more
+Caused by: org.hibernate.HibernateException: Access to DialectResolutionInfo cannot be null when 'hibernate.dialect' not set
+	at org.hibernate.engine.jdbc.dialect.internal.DialectFactoryImpl.determineDialect(DialectFactoryImpl.java:100) ~[hibernate-core-5.6.15.Final.jar:5.6.15.Final]
+	at org.hibernate.engine.jdbc.dialect.internal.DialectFactoryImpl.buildDialect(DialectFactoryImpl.java:54) ~[hibernate-core-5.6.15.Final.jar:5.6.15.Final]
+	at org.hibernate.engine.jdbc.env.internal.JdbcEnvironmentInitiator.initiateService(JdbcEnvironmentInitiator.java:138) ~[hibernate-core-5.6.15.Final.jar:5.6.15.Final]
+	at org.hibernate.engine.jdbc.env.internal.JdbcEnvironmentInitiator.initiateService(JdbcEnvironmentInitiator.java:35) ~[hibernate-core-5.6.15.Final.jar:5.6.15.Final]
+	at org.hibernate.boot.registry.internal.StandardServiceRegistryImpl.initiateService(StandardServiceRegistryImpl.java:101) ~[hibernate-core-5.6.15.Final.jar:5.6.15.Final]
+	at org.hibernate.service.internal.AbstractServiceRegistryImpl.createService(AbstractServiceRegistryImpl.java:272) ~[hibernate-core-5.6.15.Final.jar:5.6.15.Final]
+	at org.hibernate.service.internal.AbstractServiceRegistryImpl.initializeService(AbstractServiceRegistryImpl.java:246) ~[hibernate-core-5.6.15.Final.jar:5.6.15.Final]
+	at org.hibernate.service.internal.AbstractServiceRegistryImpl.getService(AbstractServiceRegistryImpl.java:223) ~[hibernate-core-5.6.15.Final.jar:5.6.15.Final]
+	at org.hibernate.id.factory.internal.DefaultIdentifierGeneratorFactory.injectServices(DefaultIdentifierGeneratorFactory.java:175) ~[hibernate-core-5.6.15.Final.jar:5.6.15.Final]
+	at org.hibernate.service.internal.AbstractServiceRegistryImpl.injectDependencies(AbstractServiceRegistryImpl.java:295) ~[hibernate-core-5.6.15.Final.jar:5.6.15.Final]
+	at org.hibernate.service.internal.AbstractServiceRegistryImpl.initializeService(AbstractServiceRegistryImpl.java:252) ~[hibernate-core-5.6.15.Final.jar:5.6.15.Final]
+	at org.hibernate.service.internal.AbstractServiceRegistryImpl.getService(AbstractServiceRegistryImpl.java:223) ~[hibernate-core-5.6.15.Final.jar:5.6.15.Final]
+	at org.hibernate.boot.internal.InFlightMetadataCollectorImpl.<init>(InFlightMetadataCollectorImpl.java:173) ~[hibernate-core-5.6.15.Final.jar:5.6.15.Final]
+	at org.hibernate.boot.model.process.spi.MetadataBuildingProcess.complete(MetadataBuildingProcess.java:127) ~[hibernate-core-5.6.15.Final.jar:5.6.15.Final]
+	at org.hibernate.jpa.boot.internal.EntityManagerFactoryBuilderImpl.metadata(EntityManagerFactoryBuilderImpl.java:1460) ~[hibernate-core-5.6.15.Final.jar:5.6.15.Final]
+	at org.hibernate.jpa.boot.internal.EntityManagerFactoryBuilderImpl.build(EntityManagerFactoryBuilderImpl.java:1494) ~[hibernate-core-5.6.15.Final.jar:5.6.15.Final]
+	at org.springframework.orm.jpa.vendor.SpringHibernateJpaPersistenceProvider.createContainerEntityManagerFactory(SpringHibernateJpaPersistenceProvider.java:58) ~[spring-orm-5.3.29.jar:5.3.29]
+	at org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean.createNativeEntityManagerFactory(LocalContainerEntityManagerFactoryBean.java:365) ~[spring-orm-5.3.29.jar:5.3.29]
+	at org.springframework.orm.jpa.AbstractEntityManagerFactoryBean.buildNativeEntityManagerFactory(AbstractEntityManagerFactoryBean.java:409) ~[spring-orm-5.3.29.jar:5.3.29]
+	at org.springframework.orm.jpa.AbstractEntityManagerFactoryBean.afterPropertiesSet(AbstractEntityManagerFactoryBean.java:396) ~[spring-orm-5.3.29.jar:5.3.29]
+	at org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean.afterPropertiesSet(LocalContainerEntityManagerFactoryBean.java:341) ~[spring-orm-5.3.29.jar:5.3.29]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.invokeInitMethods(AbstractAutowireCapableBeanFactory.java:1863) ~[spring-beans-5.3.29.jar:5.3.29]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.initializeBean(AbstractAutowireCapableBeanFactory.java:1800) ~[spring-beans-5.3.29.jar:5.3.29]
+	... 20 more
+2026-02-04 14:00:25.045 [INFO ] Starting RadardemoApplication using Java 11.0.2 on haems with PID 14696 (C:\kimsn\radardemo\build\classes\java\main started by imeahmik in C:\kimsn\radardemo)
+2026-02-04 14:00:25.053 [DEBUG] Running with Spring Boot v2.7.15, Spring v5.3.29
+2026-02-04 14:00:25.055 [INFO ] No active profile set, falling back to 1 default profile: "default"
+2026-02-04 14:00:25.188 [INFO ] Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2026-02-04 14:00:26.848 [INFO ] Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-02-04 14:00:27.230 [INFO ] Finished Spring Data repository scanning in 355 ms. Found 11 JPA repository interfaces.
+2026-02-04 14:00:28.083 [INFO ] HikariPool-1 - Starting...
+2026-02-04 14:00:28.720 [INFO ] HikariPool-1 - Start completed.
+2026-02-04 14:00:28.870 [INFO ] HHH000204: Processing PersistenceUnitInfo [name: default]
+2026-02-04 14:00:29.089 [INFO ] HHH000412: Hibernate ORM core version 5.6.15.Final
+2026-02-04 14:00:29.520 [INFO ] HCANN000001: Hibernate Commons Annotations {5.1.2.Final}
+2026-02-04 14:00:30.094 [INFO ] HHH000400: Using dialect: org.hibernate.dialect.MySQL8Dialect
+2026-02-04 14:00:32.203 [INFO ] HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+2026-02-04 14:00:32.298 [INFO ] Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-02-04 14:00:37.871 [WARN ] Unable to start LiveReload server
+2026-02-04 14:00:38.002 [INFO ] Started RadardemoApplication in 14.121 seconds (JVM running for 22.54)
+2026-02-04 14:01:30.038 [ERROR] Unexpected exception occurred invoking async method: public void kr.or.kimsn.radardemo.Scheduler.cronJobSch() throws java.lang.InterruptedException
+java.lang.NumberFormatException: For input string: ""
+	at java.lang.NumberFormatException.forInputString(NumberFormatException.java:65) ~[?:?]
+	at java.lang.Integer.parseInt(Integer.java:662) ~[?:?]
+	at java.lang.Integer.parseInt(Integer.java:770) ~[?:?]
+	at kr.or.kimsn.radardemo.Scheduler.cronJobSch(Scheduler.java:45) ~[main/:?]
+	at kr.or.kimsn.radardemo.Scheduler$$FastClassBySpringCGLIB$$f3d36b2e.invoke(<generated>) ~[main/:?]
+	at org.springframework.cglib.proxy.MethodProxy.invoke(MethodProxy.java:218) ~[spring-core-5.3.29.jar:5.3.29]
+	at org.springframework.aop.framework.CglibAopProxy$CglibMethodInvocation.invokeJoinpoint(CglibAopProxy.java:793) ~[spring-aop-5.3.29.jar:5.3.29]
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:163) ~[spring-aop-5.3.29.jar:5.3.29]
+	at org.springframework.aop.framework.CglibAopProxy$CglibMethodInvocation.proceed(CglibAopProxy.java:763) ~[spring-aop-5.3.29.jar:5.3.29]
+	at org.springframework.aop.interceptor.AsyncExecutionInterceptor.lambda$invoke$0(AsyncExecutionInterceptor.java:115) ~[spring-aop-5.3.29.jar:5.3.29]
+	at java.util.concurrent.FutureTask.run(FutureTask.java:264) ~[?:?]
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1128) ~[?:?]
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:628) ~[?:?]
+	at java.lang.Thread.run(Thread.java:834) ~[?:?]
+2026-02-04 14:02:12.644 [INFO ] Closing JPA EntityManagerFactory for persistence unit 'default'
+2026-02-04 14:02:12.655 [INFO ] HikariPool-1 - Shutdown initiated...
+2026-02-04 14:02:12.689 [INFO ] HikariPool-1 - Shutdown completed.
+2026-02-04 14:02:43.644 [INFO ] Starting RadardemoApplication using Java 11.0.2 on haems with PID 23024 (C:\kimsn\radardemo\build\classes\java\main started by imeahmik in C:\kimsn\radardemo)
+2026-02-04 14:02:43.942 [DEBUG] Running with Spring Boot v2.7.15, Spring v5.3.29
+2026-02-04 14:02:43.945 [INFO ] No active profile set, falling back to 1 default profile: "default"
+2026-02-04 14:02:44.157 [INFO ] Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2026-02-04 14:02:47.198 [INFO ] Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-02-04 14:02:48.541 [INFO ] Finished Spring Data repository scanning in 1219 ms. Found 11 JPA repository interfaces.
+2026-02-04 14:02:50.063 [INFO ] HikariPool-1 - Starting...
+2026-02-04 14:02:51.300 [INFO ] HikariPool-1 - Start completed.
+2026-02-04 14:02:51.647 [INFO ] HHH000204: Processing PersistenceUnitInfo [name: default]
+2026-02-04 14:02:51.906 [INFO ] HHH000412: Hibernate ORM core version 5.6.15.Final
+2026-02-04 14:02:52.717 [INFO ] HCANN000001: Hibernate Commons Annotations {5.1.2.Final}
+2026-02-04 14:02:53.252 [INFO ] HHH000400: Using dialect: org.hibernate.dialect.MySQL8Dialect
+2026-02-04 14:02:55.775 [INFO ] HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+2026-02-04 14:02:55.829 [INFO ] Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-02-04 14:02:58.347 [WARN ] Unable to start LiveReload server
+2026-02-04 14:02:58.417 [INFO ] Started RadardemoApplication in 16.418 seconds (JVM running for 23.491)
+2026-02-04 14:03:30.148 [INFO ] [데몬 구분] : 소형
+2026-02-04 14:03:31.299 [INFO ] [========================= 망일산 접속 정보(connect, file, filesize) ===============================]
+2026-02-04 14:03:31.306 [INFO ] [망일산 port] : 22
+2026-02-04 14:03:31.313 [INFO ] [망일산 ip] : 172.20.132.114
+2026-02-04 14:03:31.313 [INFO ] [망일산 username] : sradar
+2026-02-04 14:03:31.314 [INFO ] [망일산 pwd] : radar!@#
+2026-02-04 14:03:31.695 [INFO ] StepOneProcess run Error - java.lang.NumberFormatException: null
+2026-02-04 14:03:31.789 [INFO ] [========================= 수리산 접속 정보(connect, file, filesize) ===============================]
+2026-02-04 14:03:31.790 [INFO ] [수리산 port] : 22
+2026-02-04 14:03:31.790 [INFO ] [수리산 ip] : 172.20.132.114
+2026-02-04 14:03:31.790 [INFO ] [수리산 username] : sradar
+2026-02-04 14:03:31.790 [INFO ] [수리산 pwd] : radar!@#
+2026-02-04 14:03:31.800 [INFO ] StepOneProcess run Error - java.lang.NumberFormatException: null
+2026-02-04 14:03:32.309 [INFO ] [========================= 덕적도 접속 정보(connect, file, filesize) ===============================]
+2026-02-04 14:03:32.309 [INFO ] [덕적도 port] : 22
+2026-02-04 14:03:32.309 [INFO ] [덕적도 ip] : 172.20.132.114
+2026-02-04 14:03:32.310 [INFO ] [덕적도 username] : sradar
+2026-02-04 14:03:32.310 [INFO ] [덕적도 pwd] : radar!@#
+2026-02-04 14:03:32.318 [INFO ] StepOneProcess run Error - java.lang.NumberFormatException: null
+2026-02-04 14:04:08.254 [INFO ] Closing JPA EntityManagerFactory for persistence unit 'default'
+2026-02-04 14:04:08.261 [INFO ] HikariPool-1 - Shutdown initiated...
+2026-02-04 14:04:08.252 [ERROR] Unexpected exception occurred invoking async method: public void kr.or.kimsn.radardemo.Scheduler.cronJobSch() throws java.lang.InterruptedException
+java.lang.InterruptedException: sleep interrupted
+	at java.lang.Thread.sleep(Native Method) ~[?:?]
+	at kr.or.kimsn.radardemo.Scheduler.cronJobSch(Scheduler.java:87) ~[main/:?]
+	at kr.or.kimsn.radardemo.Scheduler$$FastClassBySpringCGLIB$$f3d36b2e.invoke(<generated>) ~[main/:?]
+	at org.springframework.cglib.proxy.MethodProxy.invoke(MethodProxy.java:218) ~[spring-core-5.3.29.jar:5.3.29]
+	at org.springframework.aop.framework.CglibAopProxy$CglibMethodInvocation.invokeJoinpoint(CglibAopProxy.java:793) ~[spring-aop-5.3.29.jar:5.3.29]
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:163) ~[spring-aop-5.3.29.jar:5.3.29]
+	at org.springframework.aop.framework.CglibAopProxy$CglibMethodInvocation.proceed(CglibAopProxy.java:763) ~[spring-aop-5.3.29.jar:5.3.29]
+	at org.springframework.aop.interceptor.AsyncExecutionInterceptor.lambda$invoke$0(AsyncExecutionInterceptor.java:115) ~[spring-aop-5.3.29.jar:5.3.29]
+	at java.util.concurrent.FutureTask.run(FutureTask.java:264) ~[?:?]
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1128) ~[?:?]
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:628) ~[?:?]
+	at java.lang.Thread.run(Thread.java:834) ~[?:?]
+2026-02-04 14:04:08.280 [INFO ] HikariPool-1 - Shutdown completed.
+2026-02-04 14:04:50.579 [INFO ] Starting RadardemoApplication using Java 11.0.2 on haems with PID 16228 (C:\kimsn\radardemo\build\classes\java\main started by imeahmik in C:\kimsn\radardemo)
+2026-02-04 14:04:50.587 [DEBUG] Running with Spring Boot v2.7.15, Spring v5.3.29
+2026-02-04 14:04:50.589 [INFO ] No active profile set, falling back to 1 default profile: "default"
+2026-02-04 14:04:50.728 [INFO ] Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2026-02-04 14:04:52.409 [INFO ] Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-02-04 14:04:52.736 [INFO ] Finished Spring Data repository scanning in 309 ms. Found 11 JPA repository interfaces.
+2026-02-04 14:04:53.691 [INFO ] HikariPool-1 - Starting...
+2026-02-04 14:04:54.454 [INFO ] HikariPool-1 - Start completed.
+2026-02-04 14:04:54.615 [INFO ] HHH000204: Processing PersistenceUnitInfo [name: default]
+2026-02-04 14:04:54.790 [INFO ] HHH000412: Hibernate ORM core version 5.6.15.Final
+2026-02-04 14:04:55.322 [INFO ] HCANN000001: Hibernate Commons Annotations {5.1.2.Final}
+2026-02-04 14:04:55.753 [INFO ] HHH000400: Using dialect: org.hibernate.dialect.MySQL8Dialect
+2026-02-04 14:04:57.466 [INFO ] HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+2026-02-04 14:04:57.501 [INFO ] Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-02-04 14:04:59.560 [WARN ] Unable to start LiveReload server
+2026-02-04 14:04:59.615 [INFO ] Started RadardemoApplication in 10.519 seconds (JVM running for 20.049)
+2026-02-04 14:05:30.047 [INFO ] [데몬 구분] : 소형
+2026-02-04 14:05:30.398 [INFO ] [========================= 망일산 접속 정보(connect, file, filesize) ===============================]
+2026-02-04 14:05:30.401 [INFO ] [망일산 port] : 22
+2026-02-04 14:05:30.406 [INFO ] [망일산 ip] : 172.20.132.114
+2026-02-04 14:05:30.406 [INFO ] [망일산 username] : sradar
+2026-02-04 14:05:30.406 [INFO ] [망일산 pwd] : radar!@#
+2026-02-04 14:05:30.423 [INFO ] StepOneProcess run Error - java.lang.NumberFormatException: null
+2026-02-04 14:05:30.900 [INFO ] [========================= 수리산 접속 정보(connect, file, filesize) ===============================]
+2026-02-04 14:05:30.901 [INFO ] [수리산 port] : 22
+2026-02-04 14:05:30.901 [INFO ] [수리산 ip] : 172.20.132.114
+2026-02-04 14:05:30.901 [INFO ] [수리산 username] : sradar
+2026-02-04 14:05:30.901 [INFO ] [수리산 pwd] : radar!@#
+2026-02-04 14:05:30.906 [INFO ] StepOneProcess run Error - java.lang.NumberFormatException: null
+2026-02-04 14:05:31.415 [INFO ] [========================= 덕적도 접속 정보(connect, file, filesize) ===============================]
+2026-02-04 14:05:31.415 [INFO ] [덕적도 port] : 22
+2026-02-04 14:05:31.415 [INFO ] [덕적도 ip] : 172.20.132.114
+2026-02-04 14:05:31.415 [INFO ] [덕적도 username] : sradar
+2026-02-04 14:05:31.415 [INFO ] [덕적도 pwd] : radar!@#
+2026-02-04 14:05:31.420 [INFO ] StepOneProcess run Error - java.lang.NumberFormatException: null
+2026-02-04 14:06:11.940 [INFO ] [40초 후 다음] : 2026-02-04 14:06:11
+2026-02-04 14:06:11.941 [INFO ] [=================== 2번째 프로세스 ===================] 2026-02-04 14:06:11
+2026-02-04 14:06:14.257 [INFO ] [============ 망일산 정보 ==============]
+2026-02-04 14:06:14.258 [INFO ] dataKindStr : SDR
+2026-02-04 14:06:14.258 [INFO ] site_cd : MIL
+2026-02-04 14:06:14.258 [INFO ] data_type : NQC
+2026-02-04 14:06:14.259 [INFO ] currentTime : 2026-02-04 14:06
+2026-02-04 14:06:14.266 [INFO ] 최종 상태 : ORDI
+2026-02-04 14:06:14.306 [INFO ] [결과] : 
+2026-02-04 14:06:14.307 [INFO ] [결과 상세] : 
+2026-02-04 14:06:14.307 [INFO ] [상태 안바뀜 - update 날짜는 바뀜]
+2026-02-04 14:06:14.339 [INFO ] [============ 수리산 정보 ==============]
+2026-02-04 14:06:14.339 [INFO ] dataKindStr : SDR
+2026-02-04 14:06:14.339 [INFO ] site_cd : SRI
+2026-02-04 14:06:14.339 [INFO ] data_type : NQC
+2026-02-04 14:06:14.339 [INFO ] currentTime : 2026-02-04 14:06
+2026-02-04 14:06:14.343 [INFO ] 최종 상태 : ORDI
+2026-02-04 14:06:14.379 [INFO ] [결과] : 
+2026-02-04 14:06:14.379 [INFO ] [결과 상세] : 
+2026-02-04 14:06:14.379 [INFO ] [상태 안바뀜 - update 날짜는 바뀜]
+2026-02-04 14:06:14.388 [INFO ] [============ 덕적도 정보 ==============]
+2026-02-04 14:06:14.388 [INFO ] dataKindStr : SDR
+2026-02-04 14:06:14.388 [INFO ] site_cd : DJK
+2026-02-04 14:06:14.388 [INFO ] data_type : NQC
+2026-02-04 14:06:14.388 [INFO ] currentTime : 2026-02-04 14:06
+2026-02-04 14:06:14.392 [INFO ] 최종 상태 : ORDI
+2026-02-04 14:06:14.423 [INFO ] [결과] : 
+2026-02-04 14:06:14.423 [INFO ] [결과 상세] : 
+2026-02-04 14:06:14.423 [INFO ] [상태 안바뀜 - update 날짜는 바뀜]
+2026-02-04 14:06:14.464 [INFO ] ======================= 문자 전송 =================================
+2026-02-04 14:06:14.508 [INFO ] [============ 망일산 정보 ==============]
+2026-02-04 14:06:14.515 [INFO ] [최종 상태 정상]
+2026-02-04 14:06:14.515 [INFO ] [============ 수리산 정보 ==============]
+2026-02-04 14:06:14.521 [INFO ] [최종 상태 정상]
+2026-02-04 14:06:14.521 [INFO ] [============ 덕적도 정보 ==============]
+2026-02-04 14:06:14.527 [INFO ] [최종 상태 정상]
+2026-02-04 14:06:14.527 [INFO ] [=================== end ===================]
+2026-02-04 14:06:30.044 [INFO ] [데몬 구분] : 소형
+2026-02-04 14:06:30.225 [INFO ] [========================= 망일산 접속 정보(connect, file, filesize) ===============================]
+2026-02-04 14:06:30.226 [INFO ] [망일산 port] : 22
+2026-02-04 14:06:30.227 [INFO ] [망일산 ip] : 172.20.132.114
+2026-02-04 14:06:30.227 [INFO ] [망일산 username] : sradar
+2026-02-04 14:06:30.228 [INFO ] [망일산 pwd] : radar!@#
+2026-02-04 14:06:30.238 [INFO ] StepOneProcess run Error - java.lang.NumberFormatException: null
+2026-02-04 14:06:31.355 [INFO ] [========================= 수리산 접속 정보(connect, file, filesize) ===============================]
+2026-02-04 14:06:31.355 [INFO ] [수리산 port] : 22
+2026-02-04 14:06:31.356 [INFO ] [수리산 ip] : 172.20.132.114
+2026-02-04 14:06:31.356 [INFO ] [수리산 username] : sradar
+2026-02-04 14:06:31.356 [INFO ] [수리산 pwd] : radar!@#
+2026-02-04 14:06:31.470 [INFO ] StepOneProcess run Error - java.lang.NumberFormatException: null
+2026-02-04 14:06:31.900 [INFO ] [========================= 덕적도 접속 정보(connect, file, filesize) ===============================]
+2026-02-04 14:06:31.901 [INFO ] [덕적도 port] : 22
+2026-02-04 14:06:31.902 [INFO ] [덕적도 ip] : 172.20.132.114
+2026-02-04 14:06:31.902 [INFO ] [덕적도 username] : sradar
+2026-02-04 14:06:31.902 [INFO ] [덕적도 pwd] : radar!@#
+2026-02-04 14:06:32.132 [INFO ] StepOneProcess run Error - java.lang.NumberFormatException: null
+2026-02-04 14:07:11.609 [INFO ] [40초 후 다음] : 2026-02-04 14:07:11
+2026-02-04 14:07:11.609 [INFO ] [=================== 2번째 프로세스 ===================] 2026-02-04 14:07:11
+2026-02-04 14:07:11.637 [INFO ] [============ 망일산 정보 ==============]
+2026-02-04 14:07:11.638 [INFO ] dataKindStr : SDR
+2026-02-04 14:07:11.638 [INFO ] site_cd : MIL
+2026-02-04 14:07:11.638 [INFO ] data_type : NQC
+2026-02-04 14:07:11.638 [INFO ] currentTime : 2026-02-04 14:07
+2026-02-04 14:07:11.641 [INFO ] 최종 상태 : ORDI
+2026-02-04 14:07:11.667 [INFO ] [결과] : 
+2026-02-04 14:07:11.667 [INFO ] [결과 상세] : 
+2026-02-04 14:07:11.667 [INFO ] [상태 안바뀜 - update 날짜는 바뀜]
+2026-02-04 14:07:11.707 [INFO ] [============ 수리산 정보 ==============]
+2026-02-04 14:07:11.707 [INFO ] dataKindStr : SDR
+2026-02-04 14:07:11.707 [INFO ] site_cd : SRI
+2026-02-04 14:07:11.707 [INFO ] data_type : NQC
+2026-02-04 14:07:11.707 [INFO ] currentTime : 2026-02-04 14:07
+2026-02-04 14:07:11.711 [INFO ] 최종 상태 : ORDI
+2026-02-04 14:07:11.741 [INFO ] [결과] : 
+2026-02-04 14:07:11.741 [INFO ] [결과 상세] : 
+2026-02-04 14:07:11.741 [INFO ] [상태 안바뀜 - update 날짜는 바뀜]
+2026-02-04 14:07:11.753 [INFO ] [============ 덕적도 정보 ==============]
+2026-02-04 14:07:11.753 [INFO ] dataKindStr : SDR
+2026-02-04 14:07:11.753 [INFO ] site_cd : DJK
+2026-02-04 14:07:11.753 [INFO ] data_type : NQC
+2026-02-04 14:07:11.753 [INFO ] currentTime : 2026-02-04 14:07
+2026-02-04 14:07:11.757 [INFO ] 최종 상태 : ORDI
+2026-02-04 14:07:11.785 [INFO ] [결과] : 
+2026-02-04 14:07:11.785 [INFO ] [결과 상세] : 
+2026-02-04 14:07:11.785 [INFO ] [상태 안바뀜 - update 날짜는 바뀜]
+2026-02-04 14:07:11.795 [INFO ] ======================= 문자 전송 =================================
+2026-02-04 14:07:11.801 [INFO ] [============ 망일산 정보 ==============]
+2026-02-04 14:07:11.805 [INFO ] [최종 상태 정상]
+2026-02-04 14:07:11.806 [INFO ] [============ 수리산 정보 ==============]
+2026-02-04 14:07:11.811 [INFO ] [최종 상태 정상]
+2026-02-04 14:07:11.811 [INFO ] [============ 덕적도 정보 ==============]
+2026-02-04 14:07:11.817 [INFO ] [최종 상태 정상]
+2026-02-04 14:07:11.817 [INFO ] [=================== end ===================]
+2026-02-04 14:07:30.013 [INFO ] [데몬 구분] : 소형
+2026-02-04 14:07:30.025 [INFO ] [========================= 망일산 접속 정보(connect, file, filesize) ===============================]
+2026-02-04 14:07:30.026 [INFO ] [망일산 port] : 22
+2026-02-04 14:07:30.026 [INFO ] [망일산 ip] : 172.20.132.114
+2026-02-04 14:07:30.026 [INFO ] [망일산 username] : sradar
+2026-02-04 14:07:30.026 [INFO ] [망일산 pwd] : radar!@#
+2026-02-04 14:07:30.033 [INFO ] StepOneProcess run Error - java.lang.NumberFormatException: null
+2026-02-04 14:07:30.530 [INFO ] [========================= 수리산 접속 정보(connect, file, filesize) ===============================]
+2026-02-04 14:07:30.530 [INFO ] [수리산 port] : 22
+2026-02-04 14:07:30.530 [INFO ] [수리산 ip] : 172.20.132.114
+2026-02-04 14:07:30.530 [INFO ] [수리산 username] : sradar
+2026-02-04 14:07:30.531 [INFO ] [수리산 pwd] : radar!@#
+2026-02-04 14:07:30.538 [INFO ] StepOneProcess run Error - java.lang.NumberFormatException: null
+2026-02-04 14:07:31.044 [INFO ] [========================= 덕적도 접속 정보(connect, file, filesize) ===============================]
+2026-02-04 14:07:31.044 [INFO ] [덕적도 port] : 22
+2026-02-04 14:07:31.044 [INFO ] [덕적도 ip] : 172.20.132.114
+2026-02-04 14:07:31.044 [INFO ] [덕적도 username] : sradar
+2026-02-04 14:07:31.044 [INFO ] [덕적도 pwd] : radar!@#
+2026-02-04 14:07:31.050 [INFO ] StepOneProcess run Error - java.lang.NumberFormatException: null
+2026-02-04 14:08:11.569 [INFO ] [40초 후 다음] : 2026-02-04 14:08:11
+2026-02-04 14:08:11.569 [INFO ] [=================== 2번째 프로세스 ===================] 2026-02-04 14:08:11
+2026-02-04 14:08:11.681 [INFO ] [============ 망일산 정보 ==============]
+2026-02-04 14:08:11.681 [INFO ] dataKindStr : SDR
+2026-02-04 14:08:11.682 [INFO ] site_cd : MIL
+2026-02-04 14:08:11.682 [INFO ] data_type : NQC
+2026-02-04 14:08:11.682 [INFO ] currentTime : 2026-02-04 14:08
+2026-02-04 14:08:11.685 [INFO ] 최종 상태 : ORDI
+2026-02-04 14:08:11.726 [INFO ] [결과] : 
+2026-02-04 14:08:11.727 [INFO ] [결과 상세] : 
+2026-02-04 14:08:11.727 [INFO ] [상태 안바뀜 - update 날짜는 바뀜]
+2026-02-04 14:08:11.744 [INFO ] [============ 수리산 정보 ==============]
+2026-02-04 14:08:11.744 [INFO ] dataKindStr : SDR
+2026-02-04 14:08:11.744 [INFO ] site_cd : SRI
+2026-02-04 14:08:11.744 [INFO ] data_type : NQC
+2026-02-04 14:08:11.744 [INFO ] currentTime : 2026-02-04 14:08
+2026-02-04 14:08:11.748 [INFO ] 최종 상태 : ORDI
+2026-02-04 14:08:11.784 [INFO ] [결과] : 
+2026-02-04 14:08:11.784 [INFO ] [결과 상세] : 
+2026-02-04 14:08:11.786 [INFO ] [상태 안바뀜 - update 날짜는 바뀜]
+2026-02-04 14:08:11.812 [INFO ] [============ 덕적도 정보 ==============]
+2026-02-04 14:08:11.812 [INFO ] dataKindStr : SDR
+2026-02-04 14:08:11.812 [INFO ] site_cd : DJK
+2026-02-04 14:08:11.812 [INFO ] data_type : NQC
+2026-02-04 14:08:11.812 [INFO ] currentTime : 2026-02-04 14:08
+2026-02-04 14:08:11.817 [INFO ] 최종 상태 : ORDI
+2026-02-04 14:08:11.862 [INFO ] [결과] : 
+2026-02-04 14:08:11.862 [INFO ] [결과 상세] : 
+2026-02-04 14:08:11.862 [INFO ] [상태 안바뀜 - update 날짜는 바뀜]
+2026-02-04 14:08:11.878 [INFO ] ======================= 문자 전송 =================================
+2026-02-04 14:08:11.888 [INFO ] [============ 망일산 정보 ==============]
+2026-02-04 14:08:11.897 [INFO ] [최종 상태 정상]
+2026-02-04 14:08:11.897 [INFO ] [============ 수리산 정보 ==============]
+2026-02-04 14:08:11.905 [INFO ] [최종 상태 정상]
+2026-02-04 14:08:11.905 [INFO ] [============ 덕적도 정보 ==============]
+2026-02-04 14:08:11.914 [INFO ] [최종 상태 정상]
+2026-02-04 14:08:11.914 [INFO ] [=================== end ===================]
+2026-02-04 14:08:30.084 [INFO ] [데몬 구분] : 소형
+2026-02-04 14:08:30.170 [INFO ] [========================= 망일산 접속 정보(connect, file, filesize) ===============================]
+2026-02-04 14:08:30.171 [INFO ] [망일산 port] : 22
+2026-02-04 14:08:30.171 [INFO ] [망일산 ip] : 172.20.132.114
+2026-02-04 14:08:30.171 [INFO ] [망일산 username] : sradar
+2026-02-04 14:08:30.171 [INFO ] [망일산 pwd] : radar!@#
+2026-02-04 14:08:30.181 [INFO ] StepOneProcess run Error - java.lang.NumberFormatException: null
+2026-02-04 14:08:30.609 [INFO ] [========================= 수리산 접속 정보(connect, file, filesize) ===============================]
+2026-02-04 14:08:30.609 [INFO ] [수리산 port] : 22
+2026-02-04 14:08:30.609 [INFO ] [수리산 ip] : 172.20.132.114
+2026-02-04 14:08:30.609 [INFO ] [수리산 username] : sradar
+2026-02-04 14:08:30.609 [INFO ] [수리산 pwd] : radar!@#
+2026-02-04 14:08:30.615 [INFO ] StepOneProcess run Error - java.lang.NumberFormatException: null
+2026-02-04 14:08:31.137 [INFO ] [========================= 덕적도 접속 정보(connect, file, filesize) ===============================]
+2026-02-04 14:08:31.137 [INFO ] [덕적도 port] : 22
+2026-02-04 14:08:31.137 [INFO ] [덕적도 ip] : 172.20.132.114
+2026-02-04 14:08:31.137 [INFO ] [덕적도 username] : sradar
+2026-02-04 14:08:31.138 [INFO ] [덕적도 pwd] : radar!@#
+2026-02-04 14:08:31.146 [INFO ] StepOneProcess run Error - java.lang.NumberFormatException: null
+2026-02-04 14:08:34.089 [INFO ] Closing JPA EntityManagerFactory for persistence unit 'default'
+2026-02-04 14:08:34.100 [INFO ] HikariPool-1 - Shutdown initiated...
+2026-02-04 14:08:34.085 [ERROR] Unexpected exception occurred invoking async method: public void kr.or.kimsn.radardemo.Scheduler.cronJobSch() throws java.lang.InterruptedException
+java.lang.InterruptedException: sleep interrupted
+	at java.lang.Thread.sleep(Native Method) ~[?:?]
+	at kr.or.kimsn.radardemo.Scheduler.cronJobSch(Scheduler.java:87) ~[main/:?]
+	at kr.or.kimsn.radardemo.Scheduler$$FastClassBySpringCGLIB$$f3d36b2e.invoke(<generated>) ~[main/:?]
+	at org.springframework.cglib.proxy.MethodProxy.invoke(MethodProxy.java:218) ~[spring-core-5.3.29.jar:5.3.29]
+	at org.springframework.aop.framework.CglibAopProxy$CglibMethodInvocation.invokeJoinpoint(CglibAopProxy.java:793) ~[spring-aop-5.3.29.jar:5.3.29]
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:163) ~[spring-aop-5.3.29.jar:5.3.29]
+	at org.springframework.aop.framework.CglibAopProxy$CglibMethodInvocation.proceed(CglibAopProxy.java:763) ~[spring-aop-5.3.29.jar:5.3.29]
+	at org.springframework.aop.interceptor.AsyncExecutionInterceptor.lambda$invoke$0(AsyncExecutionInterceptor.java:115) ~[spring-aop-5.3.29.jar:5.3.29]
+	at java.util.concurrent.FutureTask.run(FutureTask.java:264) ~[?:?]
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1128) ~[?:?]
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:628) ~[?:?]
+	at java.lang.Thread.run(Thread.java:834) ~[?:?]
+2026-02-04 14:08:34.215 [INFO ] HikariPool-1 - Shutdown completed.
+2026-02-04 14:14:50.427 [INFO ] Starting RadardemoApplication using Java 11.0.2 on haems with PID 11596 (C:\kimsn\radardemo\build\classes\java\main started by imeahmik in C:\kimsn\radardemo)
+2026-02-04 14:14:50.435 [DEBUG] Running with Spring Boot v2.7.15, Spring v5.3.29
+2026-02-04 14:14:50.437 [INFO ] No active profile set, falling back to 1 default profile: "default"
+2026-02-04 14:14:50.624 [INFO ] Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2026-02-04 14:14:52.342 [INFO ] Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-02-04 14:14:52.625 [INFO ] Finished Spring Data repository scanning in 257 ms. Found 11 JPA repository interfaces.
+2026-02-04 14:14:53.647 [INFO ] HikariPool-1 - Starting...
+2026-02-04 14:14:54.559 [INFO ] HikariPool-1 - Start completed.
+2026-02-04 14:14:54.749 [INFO ] HHH000204: Processing PersistenceUnitInfo [name: default]
+2026-02-04 14:14:54.967 [INFO ] HHH000412: Hibernate ORM core version 5.6.15.Final
+2026-02-04 14:14:55.320 [INFO ] HCANN000001: Hibernate Commons Annotations {5.1.2.Final}
+2026-02-04 14:14:55.576 [INFO ] HHH000400: Using dialect: org.hibernate.dialect.MySQL8Dialect
+2026-02-04 14:14:57.729 [INFO ] HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+2026-02-04 14:14:57.765 [INFO ] Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-02-04 14:15:00.189 [WARN ] Unable to start LiveReload server
+2026-02-04 14:15:00.256 [INFO ] Started RadardemoApplication in 11.242 seconds (JVM running for 18.622)
+2026-02-04 14:15:30.196 [INFO ] [데몬 구분] : 소형
+2026-02-04 14:15:30.933 [INFO ] [========================= 망일산 접속 정보(connect, file, filesize) ===============================]
+2026-02-04 14:15:30.938 [INFO ] [망일산 port] : 22
+2026-02-04 14:15:30.944 [INFO ] [망일산 ip] : 172.20.132.114
+2026-02-04 14:15:30.945 [INFO ] [망일산 username] : sradar
+2026-02-04 14:15:30.945 [INFO ] [망일산 pwd] : radar!@#
+2026-02-04 14:15:30.990 [INFO ] StepOneProcess run Error - java.lang.NumberFormatException: null
+2026-02-04 14:15:31.419 [INFO ] [========================= 수리산 접속 정보(connect, file, filesize) ===============================]
+2026-02-04 14:15:31.419 [INFO ] [수리산 port] : 22
+2026-02-04 14:15:31.419 [INFO ] [수리산 ip] : 172.20.132.114
+2026-02-04 14:15:31.419 [INFO ] [수리산 username] : sradar
+2026-02-04 14:15:31.420 [INFO ] [수리산 pwd] : radar!@#
+2026-02-04 14:15:31.438 [INFO ] StepOneProcess run Error - java.lang.NumberFormatException: null
+2026-02-04 14:15:31.924 [INFO ] [========================= 덕적도 접속 정보(connect, file, filesize) ===============================]
+2026-02-04 14:15:31.925 [INFO ] [덕적도 port] : 22
+2026-02-04 14:15:31.925 [INFO ] [덕적도 ip] : 172.20.132.114
+2026-02-04 14:15:31.926 [INFO ] [덕적도 username] : sradar
+2026-02-04 14:15:31.926 [INFO ] [덕적도 pwd] : radar!@#
+2026-02-04 14:15:31.935 [INFO ] StepOneProcess run Error - java.lang.NumberFormatException: null
+2026-02-04 14:16:12.493 [INFO ] [40초 후 다음] : 2026-02-04 14:16:12
+2026-02-04 14:16:12.494 [INFO ] [=================== 2번째 프로세스 ===================] 2026-02-04 14:16:12
+2026-02-04 14:16:12.800 [INFO ] [============ 망일산 정보 ==============]
+2026-02-04 14:16:12.801 [INFO ] dataKindStr : SDR
+2026-02-04 14:16:12.801 [INFO ] site_cd : MIL
+2026-02-04 14:16:12.802 [INFO ] data_type : NQC
+2026-02-04 14:16:12.802 [INFO ] currentTime : 2026-02-04 14:16
+2026-02-04 14:16:12.816 [INFO ] 최종 상태 : ORDI
+2026-02-04 14:16:12.876 [INFO ] [결과] : 
+2026-02-04 14:16:12.876 [INFO ] [결과 상세] : 
+2026-02-04 14:16:12.877 [INFO ] [상태 안바뀜 - update 날짜는 바뀜]
+2026-02-04 14:16:12.920 [INFO ] [============ 수리산 정보 ==============]
+2026-02-04 14:16:12.920 [INFO ] dataKindStr : SDR
+2026-02-04 14:16:12.920 [INFO ] site_cd : SRI
+2026-02-04 14:16:12.920 [INFO ] data_type : NQC
+2026-02-04 14:16:12.920 [INFO ] currentTime : 2026-02-04 14:16
+2026-02-04 14:16:12.925 [INFO ] 최종 상태 : ORDI
+2026-02-04 14:16:12.972 [INFO ] [결과] : 
+2026-02-04 14:16:12.972 [INFO ] [결과 상세] : 
+2026-02-04 14:16:12.973 [INFO ] [상태 안바뀜 - update 날짜는 바뀜]
+2026-02-04 14:16:12.985 [INFO ] [============ 덕적도 정보 ==============]
+2026-02-04 14:16:12.986 [INFO ] dataKindStr : SDR
+2026-02-04 14:16:12.986 [INFO ] site_cd : DJK
+2026-02-04 14:16:12.986 [INFO ] data_type : NQC
+2026-02-04 14:16:12.986 [INFO ] currentTime : 2026-02-04 14:16
+2026-02-04 14:16:12.990 [INFO ] 최종 상태 : ORDI
+2026-02-04 14:16:13.030 [INFO ] [결과] : 
+2026-02-04 14:16:13.030 [INFO ] [결과 상세] : 
+2026-02-04 14:16:13.031 [INFO ] [상태 안바뀜 - update 날짜는 바뀜]
+2026-02-04 14:16:13.050 [INFO ] ======================= 문자 전송 =================================
+2026-02-04 14:16:13.069 [INFO ] [============ 망일산 정보 ==============]
+2026-02-04 14:16:13.085 [INFO ] [최종 상태 정상]
+2026-02-04 14:16:13.085 [INFO ] [============ 수리산 정보 ==============]
+2026-02-04 14:16:13.093 [INFO ] [최종 상태 정상]
+2026-02-04 14:16:13.093 [INFO ] [============ 덕적도 정보 ==============]
+2026-02-04 14:16:13.102 [INFO ] [최종 상태 정상]
+2026-02-04 14:16:13.103 [INFO ] [=================== end ===================]
+2026-02-04 14:16:30.096 [INFO ] [데몬 구분] : 소형
+2026-02-04 14:16:30.145 [INFO ] [========================= 망일산 접속 정보(connect, file, filesize) ===============================]
+2026-02-04 14:16:30.146 [INFO ] [망일산 port] : 22
+2026-02-04 14:16:30.146 [INFO ] [망일산 ip] : 172.20.132.114
+2026-02-04 14:16:30.147 [INFO ] [망일산 username] : sradar
+2026-02-04 14:16:30.147 [INFO ] [망일산 pwd] : radar!@#
+2026-02-04 14:16:30.159 [INFO ] StepOneProcess run Error - java.lang.NumberFormatException: null
+2026-02-04 14:16:30.617 [INFO ] [========================= 수리산 접속 정보(connect, file, filesize) ===============================]
+2026-02-04 14:16:30.617 [INFO ] [수리산 port] : 22
+2026-02-04 14:16:30.617 [INFO ] [수리산 ip] : 172.20.132.114
+2026-02-04 14:16:30.617 [INFO ] [수리산 username] : sradar
+2026-02-04 14:16:30.618 [INFO ] [수리산 pwd] : radar!@#
+2026-02-04 14:16:30.627 [INFO ] StepOneProcess run Error - java.lang.NumberFormatException: null
+2026-02-04 14:16:31.121 [INFO ] [========================= 덕적도 접속 정보(connect, file, filesize) ===============================]
+2026-02-04 14:16:31.121 [INFO ] [덕적도 port] : 22
+2026-02-04 14:16:31.121 [INFO ] [덕적도 ip] : 172.20.132.114
+2026-02-04 14:16:31.121 [INFO ] [덕적도 username] : sradar
+2026-02-04 14:16:31.122 [INFO ] [덕적도 pwd] : radar!@#
+2026-02-04 14:16:31.133 [INFO ] StepOneProcess run Error - java.lang.NumberFormatException: null
+2026-02-04 14:17:11.634 [INFO ] [40초 후 다음] : 2026-02-04 14:17:11
+2026-02-04 14:17:11.634 [INFO ] [=================== 2번째 프로세스 ===================] 2026-02-04 14:17:11
+2026-02-04 14:17:11.671 [INFO ] [============ 망일산 정보 ==============]
+2026-02-04 14:17:11.671 [INFO ] dataKindStr : SDR
+2026-02-04 14:17:11.671 [INFO ] site_cd : MIL
+2026-02-04 14:17:11.672 [INFO ] data_type : NQC
+2026-02-04 14:17:11.672 [INFO ] currentTime : 2026-02-04 14:17
+2026-02-04 14:17:11.680 [INFO ] 최종 상태 : ORDI
+2026-02-04 14:17:11.720 [INFO ] [결과] : 
+2026-02-04 14:17:11.721 [INFO ] [결과 상세] : 
+2026-02-04 14:17:11.721 [INFO ] [상태 안바뀜 - update 날짜는 바뀜]
+2026-02-04 14:17:11.738 [INFO ] [============ 수리산 정보 ==============]
+2026-02-04 14:17:11.739 [INFO ] dataKindStr : SDR
+2026-02-04 14:17:11.739 [INFO ] site_cd : SRI
+2026-02-04 14:17:11.739 [INFO ] data_type : NQC
+2026-02-04 14:17:11.739 [INFO ] currentTime : 2026-02-04 14:17
+2026-02-04 14:17:11.745 [INFO ] 최종 상태 : ORDI
+2026-02-04 14:17:11.796 [INFO ] [결과] : 
+2026-02-04 14:17:11.796 [INFO ] [결과 상세] : 
+2026-02-04 14:17:11.796 [INFO ] [상태 안바뀜 - update 날짜는 바뀜]
+2026-02-04 14:17:11.813 [INFO ] [============ 덕적도 정보 ==============]
+2026-02-04 14:17:11.813 [INFO ] dataKindStr : SDR
+2026-02-04 14:17:11.814 [INFO ] site_cd : DJK
+2026-02-04 14:17:11.814 [INFO ] data_type : NQC
+2026-02-04 14:17:11.814 [INFO ] currentTime : 2026-02-04 14:17
+2026-02-04 14:17:11.820 [INFO ] 최종 상태 : ORDI
+2026-02-04 14:17:11.873 [INFO ] [결과] : 
+2026-02-04 14:17:11.873 [INFO ] [결과 상세] : 
+2026-02-04 14:17:11.873 [INFO ] [상태 안바뀜 - update 날짜는 바뀜]
+2026-02-04 14:17:11.892 [INFO ] ======================= 문자 전송 =================================
+2026-02-04 14:17:11.904 [INFO ] [============ 망일산 정보 ==============]
+2026-02-04 14:17:11.914 [INFO ] [최종 상태 정상]
+2026-02-04 14:17:11.915 [INFO ] [============ 수리산 정보 ==============]
+2026-02-04 14:17:11.924 [INFO ] [최종 상태 정상]
+2026-02-04 14:17:11.924 [INFO ] [============ 덕적도 정보 ==============]
+2026-02-04 14:17:11.934 [INFO ] [최종 상태 정상]
+2026-02-04 14:17:11.934 [INFO ] [=================== end ===================]
+2026-02-04 14:17:30.067 [INFO ] [데몬 구분] : 소형
+2026-02-04 14:17:30.294 [INFO ] [========================= 망일산 접속 정보(connect, file, filesize) ===============================]
+2026-02-04 14:17:30.296 [INFO ] [망일산 port] : 22
+2026-02-04 14:17:30.296 [INFO ] [망일산 ip] : 172.20.132.114
+2026-02-04 14:17:30.296 [INFO ] [망일산 username] : sradar
+2026-02-04 14:17:30.296 [INFO ] [망일산 pwd] : radar!@#
+2026-02-04 14:17:30.329 [INFO ] StepOneProcess run Error - java.lang.NumberFormatException: null
+2026-02-04 14:17:30.672 [INFO ] [========================= 수리산 접속 정보(connect, file, filesize) ===============================]
+2026-02-04 14:17:30.672 [INFO ] [수리산 port] : 22
+2026-02-04 14:17:30.673 [INFO ] [수리산 ip] : 172.20.132.114
+2026-02-04 14:17:30.673 [INFO ] [수리산 username] : sradar
+2026-02-04 14:17:30.673 [INFO ] [수리산 pwd] : radar!@#
+2026-02-04 14:17:30.760 [INFO ] StepOneProcess run Error - java.lang.NumberFormatException: null
+2026-02-04 14:17:31.189 [INFO ] [========================= 덕적도 접속 정보(connect, file, filesize) ===============================]
+2026-02-04 14:17:31.189 [INFO ] [덕적도 port] : 22
+2026-02-04 14:17:31.189 [INFO ] [덕적도 ip] : 172.20.132.114
+2026-02-04 14:17:31.189 [INFO ] [덕적도 username] : sradar
+2026-02-04 14:17:31.189 [INFO ] [덕적도 pwd] : radar!@#
+2026-02-04 14:17:31.214 [INFO ] StepOneProcess run Error - java.lang.NumberFormatException: null
+2026-02-04 14:18:11.674 [INFO ] [40초 후 다음] : 2026-02-04 14:18:11
+2026-02-04 14:18:11.674 [INFO ] [=================== 2번째 프로세스 ===================] 2026-02-04 14:18:11
+2026-02-04 14:18:11.701 [INFO ] [============ 망일산 정보 ==============]
+2026-02-04 14:18:11.702 [INFO ] dataKindStr : SDR
+2026-02-04 14:18:11.702 [INFO ] site_cd : MIL
+2026-02-04 14:18:11.702 [INFO ] data_type : NQC
+2026-02-04 14:18:11.702 [INFO ] currentTime : 2026-02-04 14:18
+2026-02-04 14:18:11.705 [INFO ] 최종 상태 : ORDI
+2026-02-04 14:18:11.736 [INFO ] [결과] : 
+2026-02-04 14:18:11.736 [INFO ] [결과 상세] : 
+2026-02-04 14:18:11.736 [INFO ] [상태 안바뀜 - update 날짜는 바뀜]
+2026-02-04 14:18:11.746 [INFO ] [============ 수리산 정보 ==============]
+2026-02-04 14:18:11.746 [INFO ] dataKindStr : SDR
+2026-02-04 14:18:11.746 [INFO ] site_cd : SRI
+2026-02-04 14:18:11.746 [INFO ] data_type : NQC
+2026-02-04 14:18:11.746 [INFO ] currentTime : 2026-02-04 14:18
+2026-02-04 14:18:11.749 [INFO ] 최종 상태 : ORDI
+2026-02-04 14:18:11.775 [INFO ] [결과] : 
+2026-02-04 14:18:11.776 [INFO ] [결과 상세] : 
+2026-02-04 14:18:11.776 [INFO ] [상태 안바뀜 - update 날짜는 바뀜]
+2026-02-04 14:18:11.786 [INFO ] [============ 덕적도 정보 ==============]
+2026-02-04 14:18:11.786 [INFO ] dataKindStr : SDR
+2026-02-04 14:18:11.786 [INFO ] site_cd : DJK
+2026-02-04 14:18:11.786 [INFO ] data_type : NQC
+2026-02-04 14:18:11.786 [INFO ] currentTime : 2026-02-04 14:18
+2026-02-04 14:18:11.789 [INFO ] 최종 상태 : ORDI
+2026-02-04 14:18:11.817 [INFO ] [결과] : 
+2026-02-04 14:18:11.817 [INFO ] [결과 상세] : 
+2026-02-04 14:18:11.818 [INFO ] [상태 안바뀜 - update 날짜는 바뀜]
+2026-02-04 14:18:11.829 [INFO ] ======================= 문자 전송 =================================
+2026-02-04 14:18:11.834 [INFO ] [============ 망일산 정보 ==============]
+2026-02-04 14:18:11.840 [INFO ] [최종 상태 정상]
+2026-02-04 14:18:11.840 [INFO ] [============ 수리산 정보 ==============]
+2026-02-04 14:18:11.844 [INFO ] [최종 상태 정상]
+2026-02-04 14:18:11.845 [INFO ] [============ 덕적도 정보 ==============]
+2026-02-04 14:18:11.849 [INFO ] [최종 상태 정상]
+2026-02-04 14:18:11.849 [INFO ] [=================== end ===================]
+2026-02-04 14:18:30.019 [INFO ] [데몬 구분] : 소형
+2026-02-04 14:18:30.027 [INFO ] [========================= 망일산 접속 정보(connect, file, filesize) ===============================]
+2026-02-04 14:18:30.027 [INFO ] [망일산 port] : 22
+2026-02-04 14:18:30.027 [INFO ] [망일산 ip] : 172.20.132.114
+2026-02-04 14:18:30.027 [INFO ] [망일산 username] : sradar
+2026-02-04 14:18:30.027 [INFO ] [망일산 pwd] : radar!@#
+2026-02-04 14:18:30.031 [INFO ] StepOneProcess run Error - java.lang.NumberFormatException: null
+2026-02-04 14:18:30.528 [INFO ] [========================= 수리산 접속 정보(connect, file, filesize) ===============================]
+2026-02-04 14:18:30.529 [INFO ] [수리산 port] : 22
+2026-02-04 14:18:30.529 [INFO ] [수리산 ip] : 172.20.132.114
+2026-02-04 14:18:30.529 [INFO ] [수리산 username] : sradar
+2026-02-04 14:18:30.529 [INFO ] [수리산 pwd] : radar!@#
+2026-02-04 14:18:30.533 [INFO ] StepOneProcess run Error - java.lang.NumberFormatException: null
+2026-02-04 14:18:31.044 [INFO ] [========================= 덕적도 접속 정보(connect, file, filesize) ===============================]
+2026-02-04 14:18:31.044 [INFO ] [덕적도 port] : 22
+2026-02-04 14:18:31.044 [INFO ] [덕적도 ip] : 172.20.132.114
+2026-02-04 14:18:31.044 [INFO ] [덕적도 username] : sradar
+2026-02-04 14:18:31.044 [INFO ] [덕적도 pwd] : radar!@#
+2026-02-04 14:18:31.049 [INFO ] StepOneProcess run Error - java.lang.NumberFormatException: null
+2026-02-04 14:19:11.569 [INFO ] [40초 후 다음] : 2026-02-04 14:19:11
+2026-02-04 14:19:11.569 [INFO ] [=================== 2번째 프로세스 ===================] 2026-02-04 14:19:11
+2026-02-04 14:19:11.590 [INFO ] [============ 망일산 정보 ==============]
+2026-02-04 14:19:11.590 [INFO ] dataKindStr : SDR
+2026-02-04 14:19:11.590 [INFO ] site_cd : MIL
+2026-02-04 14:19:11.590 [INFO ] data_type : NQC
+2026-02-04 14:19:11.590 [INFO ] currentTime : 2026-02-04 14:19
+2026-02-04 14:19:11.592 [INFO ] 최종 상태 : ORDI
+2026-02-04 14:19:11.614 [INFO ] [결과] : 
+2026-02-04 14:19:11.615 [INFO ] [결과 상세] : 
+2026-02-04 14:19:11.615 [INFO ] [상태 안바뀜 - update 날짜는 바뀜]
+2026-02-04 14:19:11.626 [INFO ] [============ 수리산 정보 ==============]
+2026-02-04 14:19:11.626 [INFO ] dataKindStr : SDR
+2026-02-04 14:19:11.626 [INFO ] site_cd : SRI
+2026-02-04 14:19:11.626 [INFO ] data_type : NQC
+2026-02-04 14:19:11.626 [INFO ] currentTime : 2026-02-04 14:19
+2026-02-04 14:19:11.630 [INFO ] 최종 상태 : ORDI
+2026-02-04 14:19:11.646 [INFO ] [결과] : 
+2026-02-04 14:19:11.646 [INFO ] [결과 상세] : 
+2026-02-04 14:19:11.646 [INFO ] [상태 안바뀜 - update 날짜는 바뀜]
+2026-02-04 14:19:11.654 [INFO ] [============ 덕적도 정보 ==============]
+2026-02-04 14:19:11.654 [INFO ] dataKindStr : SDR
+2026-02-04 14:19:11.654 [INFO ] site_cd : DJK
+2026-02-04 14:19:11.654 [INFO ] data_type : NQC
+2026-02-04 14:19:11.654 [INFO ] currentTime : 2026-02-04 14:19
+2026-02-04 14:19:11.655 [INFO ] 최종 상태 : ORDI
+2026-02-04 14:19:11.674 [INFO ] [결과] : 
+2026-02-04 14:19:11.674 [INFO ] [결과 상세] : 
+2026-02-04 14:19:11.674 [INFO ] [상태 안바뀜 - update 날짜는 바뀜]
+2026-02-04 14:19:11.684 [INFO ] ======================= 문자 전송 =================================
+2026-02-04 14:19:11.688 [INFO ] [============ 망일산 정보 ==============]
+2026-02-04 14:19:11.692 [INFO ] [최종 상태 정상]
+2026-02-04 14:19:11.692 [INFO ] [============ 수리산 정보 ==============]
+2026-02-04 14:19:11.696 [INFO ] [최종 상태 정상]
+2026-02-04 14:19:11.696 [INFO ] [============ 덕적도 정보 ==============]
+2026-02-04 14:19:11.701 [INFO ] [최종 상태 정상]
+2026-02-04 14:19:11.701 [INFO ] [=================== end ===================]
+2026-02-04 14:19:30.011 [INFO ] [데몬 구분] : 소형
+2026-02-04 14:19:30.017 [INFO ] [========================= 망일산 접속 정보(connect, file, filesize) ===============================]
+2026-02-04 14:19:30.017 [INFO ] [망일산 port] : 22
+2026-02-04 14:19:30.017 [INFO ] [망일산 ip] : 172.20.132.114
+2026-02-04 14:19:30.018 [INFO ] [망일산 username] : sradar
+2026-02-04 14:19:30.018 [INFO ] [망일산 pwd] : radar!@#
+2026-02-04 14:19:30.021 [INFO ] StepOneProcess run Error - java.lang.NumberFormatException: null
+2026-02-04 14:19:30.522 [INFO ] [========================= 수리산 접속 정보(connect, file, filesize) ===============================]
+2026-02-04 14:19:30.522 [INFO ] [수리산 port] : 22
+2026-02-04 14:19:30.522 [INFO ] [수리산 ip] : 172.20.132.114
+2026-02-04 14:19:30.522 [INFO ] [수리산 username] : sradar
+2026-02-04 14:19:30.523 [INFO ] [수리산 pwd] : radar!@#
+2026-02-04 14:19:30.528 [INFO ] StepOneProcess run Error - java.lang.NumberFormatException: null
+2026-02-04 14:19:31.036 [INFO ] [========================= 덕적도 접속 정보(connect, file, filesize) ===============================]
+2026-02-04 14:19:31.036 [INFO ] [덕적도 port] : 22
+2026-02-04 14:19:31.036 [INFO ] [덕적도 ip] : 172.20.132.114
+2026-02-04 14:19:31.036 [INFO ] [덕적도 username] : sradar
+2026-02-04 14:19:31.036 [INFO ] [덕적도 pwd] : radar!@#
+2026-02-04 14:19:31.042 [INFO ] StepOneProcess run Error - java.lang.NumberFormatException: null
+2026-02-04 14:20:11.548 [INFO ] [40초 후 다음] : 2026-02-04 14:20:11
+2026-02-04 14:20:11.549 [INFO ] [=================== 2번째 프로세스 ===================] 2026-02-04 14:20:11
+2026-02-04 14:20:11.562 [INFO ] [============ 망일산 정보 ==============]
+2026-02-04 14:20:11.562 [INFO ] dataKindStr : SDR
+2026-02-04 14:20:11.562 [INFO ] site_cd : MIL
+2026-02-04 14:20:11.563 [INFO ] data_type : NQC
+2026-02-04 14:20:11.563 [INFO ] currentTime : 2026-02-04 14:20
+2026-02-04 14:20:11.564 [INFO ] 최종 상태 : ORDI
+2026-02-04 14:20:11.580 [INFO ] [결과] : 
+2026-02-04 14:20:11.580 [INFO ] [결과 상세] : 
+2026-02-04 14:20:11.580 [INFO ] [상태 안바뀜 - update 날짜는 바뀜]
+2026-02-04 14:20:11.592 [INFO ] [============ 수리산 정보 ==============]
+2026-02-04 14:20:11.592 [INFO ] dataKindStr : SDR
+2026-02-04 14:20:11.592 [INFO ] site_cd : SRI
+2026-02-04 14:20:11.592 [INFO ] data_type : NQC
+2026-02-04 14:20:11.592 [INFO ] currentTime : 2026-02-04 14:20
+2026-02-04 14:20:11.595 [INFO ] 최종 상태 : ORDI
+2026-02-04 14:20:11.613 [INFO ] [결과] : 
+2026-02-04 14:20:11.613 [INFO ] [결과 상세] : 
+2026-02-04 14:20:11.613 [INFO ] [상태 안바뀜 - update 날짜는 바뀜]
+2026-02-04 14:20:11.622 [INFO ] [============ 덕적도 정보 ==============]
+2026-02-04 14:20:11.622 [INFO ] dataKindStr : SDR
+2026-02-04 14:20:11.622 [INFO ] site_cd : DJK
+2026-02-04 14:20:11.622 [INFO ] data_type : NQC
+2026-02-04 14:20:11.622 [INFO ] currentTime : 2026-02-04 14:20
+2026-02-04 14:20:11.624 [INFO ] 최종 상태 : ORDI
+2026-02-04 14:20:11.643 [INFO ] [결과] : 
+2026-02-04 14:20:11.643 [INFO ] [결과 상세] : 
+2026-02-04 14:20:11.643 [INFO ] [상태 안바뀜 - update 날짜는 바뀜]
+2026-02-04 14:20:11.653 [INFO ] ======================= 문자 전송 =================================
+2026-02-04 14:20:11.656 [INFO ] [============ 망일산 정보 ==============]
+2026-02-04 14:20:11.659 [INFO ] [최종 상태 정상]
+2026-02-04 14:20:11.659 [INFO ] [============ 수리산 정보 ==============]
+2026-02-04 14:20:11.662 [INFO ] [최종 상태 정상]
+2026-02-04 14:20:11.662 [INFO ] [============ 덕적도 정보 ==============]
+2026-02-04 14:20:11.665 [INFO ] [최종 상태 정상]
+2026-02-04 14:20:11.665 [INFO ] [=================== end ===================]
+2026-02-04 14:20:30.007 [INFO ] [데몬 구분] : 소형
+2026-02-04 14:20:30.014 [INFO ] [========================= 망일산 접속 정보(connect, file, filesize) ===============================]
+2026-02-04 14:20:30.014 [INFO ] [망일산 port] : 22
+2026-02-04 14:20:30.014 [INFO ] [망일산 ip] : 172.20.132.114
+2026-02-04 14:20:30.014 [INFO ] [망일산 username] : sradar
+2026-02-04 14:20:30.014 [INFO ] [망일산 pwd] : radar!@#
+2026-02-04 14:20:30.018 [INFO ] StepOneProcess run Error - java.lang.NumberFormatException: null
+2026-02-04 14:20:30.516 [INFO ] [========================= 수리산 접속 정보(connect, file, filesize) ===============================]
+2026-02-04 14:20:30.516 [INFO ] [수리산 port] : 22
+2026-02-04 14:20:30.516 [INFO ] [수리산 ip] : 172.20.132.114
+2026-02-04 14:20:30.516 [INFO ] [수리산 username] : sradar
+2026-02-04 14:20:30.516 [INFO ] [수리산 pwd] : radar!@#
+2026-02-04 14:20:30.520 [INFO ] StepOneProcess run Error - java.lang.NumberFormatException: null
+2026-02-04 14:20:31.031 [INFO ] [========================= 덕적도 접속 정보(connect, file, filesize) ===============================]
+2026-02-04 14:20:31.031 [INFO ] [덕적도 port] : 22
+2026-02-04 14:20:31.031 [INFO ] [덕적도 ip] : 172.20.132.114
+2026-02-04 14:20:31.031 [INFO ] [덕적도 username] : sradar
+2026-02-04 14:20:31.031 [INFO ] [덕적도 pwd] : radar!@#
+2026-02-04 14:20:31.035 [INFO ] StepOneProcess run Error - java.lang.NumberFormatException: null
+2026-02-04 14:21:11.533 [INFO ] [40초 후 다음] : 2026-02-04 14:21:11
+2026-02-04 14:21:11.534 [INFO ] [=================== 2번째 프로세스 ===================] 2026-02-04 14:21:11
+2026-02-04 14:21:11.548 [INFO ] [============ 망일산 정보 ==============]
+2026-02-04 14:21:11.548 [INFO ] dataKindStr : SDR
+2026-02-04 14:21:11.548 [INFO ] site_cd : MIL
+2026-02-04 14:21:11.548 [INFO ] data_type : NQC
+2026-02-04 14:21:11.548 [INFO ] currentTime : 2026-02-04 14:21
+2026-02-04 14:21:11.550 [INFO ] 최종 상태 : ORDI
+2026-02-04 14:21:11.564 [INFO ] [결과] : 
+2026-02-04 14:21:11.565 [INFO ] [결과 상세] : 
+2026-02-04 14:21:11.565 [INFO ] [상태 안바뀜 - update 날짜는 바뀜]
+2026-02-04 14:21:11.577 [INFO ] [============ 수리산 정보 ==============]
+2026-02-04 14:21:11.577 [INFO ] dataKindStr : SDR
+2026-02-04 14:21:11.577 [INFO ] site_cd : SRI
+2026-02-04 14:21:11.577 [INFO ] data_type : NQC
+2026-02-04 14:21:11.577 [INFO ] currentTime : 2026-02-04 14:21
+2026-02-04 14:21:11.579 [INFO ] 최종 상태 : ORDI
+2026-02-04 14:21:11.594 [INFO ] [결과] : 
+2026-02-04 14:21:11.594 [INFO ] [결과 상세] : 
+2026-02-04 14:21:11.594 [INFO ] [상태 안바뀜 - update 날짜는 바뀜]
+2026-02-04 14:21:11.602 [INFO ] [============ 덕적도 정보 ==============]
+2026-02-04 14:21:11.602 [INFO ] dataKindStr : SDR
+2026-02-04 14:21:11.602 [INFO ] site_cd : DJK
+2026-02-04 14:21:11.602 [INFO ] data_type : NQC
+2026-02-04 14:21:11.602 [INFO ] currentTime : 2026-02-04 14:21
+2026-02-04 14:21:11.604 [INFO ] 최종 상태 : ORDI
+2026-02-04 14:21:11.619 [INFO ] [결과] : 
+2026-02-04 14:21:11.619 [INFO ] [결과 상세] : 
+2026-02-04 14:21:11.619 [INFO ] [상태 안바뀜 - update 날짜는 바뀜]
+2026-02-04 14:21:11.628 [INFO ] ======================= 문자 전송 =================================
+2026-02-04 14:21:11.631 [INFO ] [============ 망일산 정보 ==============]
+2026-02-04 14:21:11.634 [INFO ] [최종 상태 정상]
+2026-02-04 14:21:11.634 [INFO ] [============ 수리산 정보 ==============]
+2026-02-04 14:21:11.637 [INFO ] [최종 상태 정상]
+2026-02-04 14:21:11.637 [INFO ] [============ 덕적도 정보 ==============]
+2026-02-04 14:21:11.640 [INFO ] [최종 상태 정상]
+2026-02-04 14:21:11.640 [INFO ] [=================== end ===================]
+2026-02-04 14:21:30.014 [INFO ] [데몬 구분] : 소형
+2026-02-04 14:21:30.020 [INFO ] [========================= 망일산 접속 정보(connect, file, filesize) ===============================]
+2026-02-04 14:21:30.020 [INFO ] [망일산 port] : 22
+2026-02-04 14:21:30.020 [INFO ] [망일산 ip] : 172.20.132.114
+2026-02-04 14:21:30.020 [INFO ] [망일산 username] : sradar
+2026-02-04 14:21:30.020 [INFO ] [망일산 pwd] : radar!@#
+2026-02-04 14:21:30.023 [INFO ] StepOneProcess run Error - java.lang.NumberFormatException: null
+2026-02-04 14:21:30.529 [INFO ] [========================= 수리산 접속 정보(connect, file, filesize) ===============================]
+2026-02-04 14:21:30.529 [INFO ] [수리산 port] : 22
+2026-02-04 14:21:30.529 [INFO ] [수리산 ip] : 172.20.132.114
+2026-02-04 14:21:30.529 [INFO ] [수리산 username] : sradar
+2026-02-04 14:21:30.529 [INFO ] [수리산 pwd] : radar!@#
+2026-02-04 14:21:30.533 [INFO ] StepOneProcess run Error - java.lang.NumberFormatException: null
+2026-02-04 14:21:31.035 [INFO ] [========================= 덕적도 접속 정보(connect, file, filesize) ===============================]
+2026-02-04 14:21:31.035 [INFO ] [덕적도 port] : 22
+2026-02-04 14:21:31.035 [INFO ] [덕적도 ip] : 172.20.132.114
+2026-02-04 14:21:31.035 [INFO ] [덕적도 username] : sradar
+2026-02-04 14:21:31.035 [INFO ] [덕적도 pwd] : radar!@#
+2026-02-04 14:21:31.040 [INFO ] StepOneProcess run Error - java.lang.NumberFormatException: null
+2026-02-04 14:22:11.553 [INFO ] [40초 후 다음] : 2026-02-04 14:22:11
+2026-02-04 14:22:11.553 [INFO ] [=================== 2번째 프로세스 ===================] 2026-02-04 14:22:11
+2026-02-04 14:22:11.569 [INFO ] [============ 망일산 정보 ==============]
+2026-02-04 14:22:11.569 [INFO ] dataKindStr : SDR
+2026-02-04 14:22:11.569 [INFO ] site_cd : MIL
+2026-02-04 14:22:11.569 [INFO ] data_type : NQC
+2026-02-04 14:22:11.569 [INFO ] currentTime : 2026-02-04 14:22
+2026-02-04 14:22:11.572 [INFO ] 최종 상태 : ORDI
+2026-02-04 14:22:11.591 [INFO ] [결과] : 
+2026-02-04 14:22:11.591 [INFO ] [결과 상세] : 
+2026-02-04 14:22:11.591 [INFO ] [상태 안바뀜 - update 날짜는 바뀜]
+2026-02-04 14:22:11.598 [INFO ] [============ 수리산 정보 ==============]
+2026-02-04 14:22:11.599 [INFO ] dataKindStr : SDR
+2026-02-04 14:22:11.599 [INFO ] site_cd : SRI
+2026-02-04 14:22:11.599 [INFO ] data_type : NQC
+2026-02-04 14:22:11.599 [INFO ] currentTime : 2026-02-04 14:22
+2026-02-04 14:22:11.601 [INFO ] 최종 상태 : ORDI
+2026-02-04 14:22:11.622 [INFO ] [결과] : 
+2026-02-04 14:22:11.622 [INFO ] [결과 상세] : 
+2026-02-04 14:22:11.622 [INFO ] [상태 안바뀜 - update 날짜는 바뀜]
+2026-02-04 14:22:11.630 [INFO ] [============ 덕적도 정보 ==============]
+2026-02-04 14:22:11.630 [INFO ] dataKindStr : SDR
+2026-02-04 14:22:11.630 [INFO ] site_cd : DJK
+2026-02-04 14:22:11.630 [INFO ] data_type : NQC
+2026-02-04 14:22:11.630 [INFO ] currentTime : 2026-02-04 14:22
+2026-02-04 14:22:11.633 [INFO ] 최종 상태 : ORDI
+2026-02-04 14:22:11.650 [INFO ] [결과] : 
+2026-02-04 14:22:11.650 [INFO ] [결과 상세] : 
+2026-02-04 14:22:11.650 [INFO ] [상태 안바뀜 - update 날짜는 바뀜]
+2026-02-04 14:22:11.658 [INFO ] ======================= 문자 전송 =================================
+2026-02-04 14:22:11.663 [INFO ] [============ 망일산 정보 ==============]
+2026-02-04 14:22:11.666 [INFO ] [최종 상태 정상]
+2026-02-04 14:22:11.666 [INFO ] [============ 수리산 정보 ==============]
+2026-02-04 14:22:11.669 [INFO ] [최종 상태 정상]
+2026-02-04 14:22:11.669 [INFO ] [============ 덕적도 정보 ==============]
+2026-02-04 14:22:11.673 [INFO ] [최종 상태 정상]
+2026-02-04 14:22:11.673 [INFO ] [=================== end ===================]
+2026-02-04 14:22:30.023 [INFO ] [데몬 구분] : 소형
+2026-02-04 14:22:30.052 [INFO ] [========================= 망일산 접속 정보(connect, file, filesize) ===============================]
+2026-02-04 14:22:30.052 [INFO ] [망일산 port] : 22
+2026-02-04 14:22:30.052 [INFO ] [망일산 ip] : 172.20.132.114
+2026-02-04 14:22:30.052 [INFO ] [망일산 username] : sradar
+2026-02-04 14:22:30.053 [INFO ] [망일산 pwd] : radar!@#
+2026-02-04 14:22:30.059 [INFO ] StepOneProcess run Error - java.lang.NumberFormatException: null
+2026-02-04 14:22:30.546 [INFO ] [========================= 수리산 접속 정보(connect, file, filesize) ===============================]
+2026-02-04 14:22:30.546 [INFO ] [수리산 port] : 22
+2026-02-04 14:22:30.546 [INFO ] [수리산 ip] : 172.20.132.114
+2026-02-04 14:22:30.547 [INFO ] [수리산 username] : sradar
+2026-02-04 14:22:30.547 [INFO ] [수리산 pwd] : radar!@#
+2026-02-04 14:22:30.552 [INFO ] StepOneProcess run Error - java.lang.NumberFormatException: null
+2026-02-04 14:22:31.072 [INFO ] [========================= 덕적도 접속 정보(connect, file, filesize) ===============================]
+2026-02-04 14:22:31.072 [INFO ] [덕적도 port] : 22
+2026-02-04 14:22:31.072 [INFO ] [덕적도 ip] : 172.20.132.114
+2026-02-04 14:22:31.072 [INFO ] [덕적도 username] : sradar
+2026-02-04 14:22:31.072 [INFO ] [덕적도 pwd] : radar!@#
+2026-02-04 14:22:31.079 [INFO ] StepOneProcess run Error - java.lang.NumberFormatException: null
+2026-02-04 14:23:11.580 [INFO ] [40초 후 다음] : 2026-02-04 14:23:11
+2026-02-04 14:23:11.580 [INFO ] [=================== 2번째 프로세스 ===================] 2026-02-04 14:23:11
+2026-02-04 14:23:11.594 [INFO ] [============ 망일산 정보 ==============]
+2026-02-04 14:23:11.595 [INFO ] dataKindStr : SDR
+2026-02-04 14:23:11.595 [INFO ] site_cd : MIL
+2026-02-04 14:23:11.595 [INFO ] data_type : NQC
+2026-02-04 14:23:11.595 [INFO ] currentTime : 2026-02-04 14:23
+2026-02-04 14:23:11.596 [INFO ] 최종 상태 : ORDI
+2026-02-04 14:23:11.609 [INFO ] [결과] : 
+2026-02-04 14:23:11.609 [INFO ] [결과 상세] : 
+2026-02-04 14:23:11.609 [INFO ] [상태 안바뀜 - update 날짜는 바뀜]
+2026-02-04 14:23:11.619 [INFO ] [============ 수리산 정보 ==============]
+2026-02-04 14:23:11.619 [INFO ] dataKindStr : SDR
+2026-02-04 14:23:11.619 [INFO ] site_cd : SRI
+2026-02-04 14:23:11.620 [INFO ] data_type : NQC
+2026-02-04 14:23:11.620 [INFO ] currentTime : 2026-02-04 14:23
+2026-02-04 14:23:11.621 [INFO ] 최종 상태 : ORDI
+2026-02-04 14:23:11.634 [INFO ] [결과] : 
+2026-02-04 14:23:11.634 [INFO ] [결과 상세] : 
+2026-02-04 14:23:11.634 [INFO ] [상태 안바뀜 - update 날짜는 바뀜]
+2026-02-04 14:23:11.640 [INFO ] [============ 덕적도 정보 ==============]
+2026-02-04 14:23:11.640 [INFO ] dataKindStr : SDR
+2026-02-04 14:23:11.640 [INFO ] site_cd : DJK
+2026-02-04 14:23:11.640 [INFO ] data_type : NQC
+2026-02-04 14:23:11.640 [INFO ] currentTime : 2026-02-04 14:23
+2026-02-04 14:23:11.643 [INFO ] 최종 상태 : ORDI
+2026-02-04 14:23:11.657 [INFO ] [결과] : 
+2026-02-04 14:23:11.657 [INFO ] [결과 상세] : 
+2026-02-04 14:23:11.657 [INFO ] [상태 안바뀜 - update 날짜는 바뀜]
+2026-02-04 14:23:11.665 [INFO ] ======================= 문자 전송 =================================
+2026-02-04 14:23:11.668 [INFO ] [============ 망일산 정보 ==============]
+2026-02-04 14:23:11.671 [INFO ] [최종 상태 정상]
+2026-02-04 14:23:11.672 [INFO ] [============ 수리산 정보 ==============]
+2026-02-04 14:23:11.675 [INFO ] [최종 상태 정상]
+2026-02-04 14:23:11.675 [INFO ] [============ 덕적도 정보 ==============]
+2026-02-04 14:23:11.678 [INFO ] [최종 상태 정상]
+2026-02-04 14:23:11.678 [INFO ] [=================== end ===================]
+2026-02-04 14:23:30.006 [INFO ] [데몬 구분] : 소형
+2026-02-04 14:23:30.011 [INFO ] [========================= 망일산 접속 정보(connect, file, filesize) ===============================]
+2026-02-04 14:23:30.011 [INFO ] [망일산 port] : 22
+2026-02-04 14:23:30.011 [INFO ] [망일산 ip] : 172.20.132.114
+2026-02-04 14:23:30.011 [INFO ] [망일산 username] : sradar
+2026-02-04 14:23:30.012 [INFO ] [망일산 pwd] : radar!@#
+2026-02-04 14:23:30.014 [INFO ] StepOneProcess run Error - java.lang.NumberFormatException: null
+2026-02-04 14:23:30.525 [INFO ] [========================= 수리산 접속 정보(connect, file, filesize) ===============================]
+2026-02-04 14:23:30.526 [INFO ] [수리산 port] : 22
+2026-02-04 14:23:30.526 [INFO ] [수리산 ip] : 172.20.132.114
+2026-02-04 14:23:30.526 [INFO ] [수리산 username] : sradar
+2026-02-04 14:23:30.526 [INFO ] [수리산 pwd] : radar!@#
+2026-02-04 14:23:30.529 [INFO ] StepOneProcess run Error - java.lang.NumberFormatException: null
+2026-02-04 14:23:31.029 [INFO ] [========================= 덕적도 접속 정보(connect, file, filesize) ===============================]
+2026-02-04 14:23:31.029 [INFO ] [덕적도 port] : 22
+2026-02-04 14:23:31.029 [INFO ] [덕적도 ip] : 172.20.132.114
+2026-02-04 14:23:31.029 [INFO ] [덕적도 username] : sradar
+2026-02-04 14:23:31.029 [INFO ] [덕적도 pwd] : radar!@#
+2026-02-04 14:23:31.033 [INFO ] StepOneProcess run Error - java.lang.NumberFormatException: null
+2026-02-04 14:23:42.826 [INFO ] Closing JPA EntityManagerFactory for persistence unit 'default'
+2026-02-04 14:23:42.833 [INFO ] HikariPool-1 - Shutdown initiated...
+2026-02-04 14:23:42.822 [ERROR] Unexpected exception occurred invoking async method: public void kr.or.kimsn.radardemo.Scheduler.cronJobSch() throws java.lang.InterruptedException
+java.lang.InterruptedException: sleep interrupted
+	at java.lang.Thread.sleep(Native Method) ~[?:?]
+	at kr.or.kimsn.radardemo.Scheduler.cronJobSch(Scheduler.java:87) ~[main/:?]
+	at kr.or.kimsn.radardemo.Scheduler$$FastClassBySpringCGLIB$$f3d36b2e.invoke(<generated>) ~[main/:?]
+	at org.springframework.cglib.proxy.MethodProxy.invoke(MethodProxy.java:218) ~[spring-core-5.3.29.jar:5.3.29]
+	at org.springframework.aop.framework.CglibAopProxy$CglibMethodInvocation.invokeJoinpoint(CglibAopProxy.java:793) ~[spring-aop-5.3.29.jar:5.3.29]
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:163) ~[spring-aop-5.3.29.jar:5.3.29]
+	at org.springframework.aop.framework.CglibAopProxy$CglibMethodInvocation.proceed(CglibAopProxy.java:763) ~[spring-aop-5.3.29.jar:5.3.29]
+	at org.springframework.aop.interceptor.AsyncExecutionInterceptor.lambda$invoke$0(AsyncExecutionInterceptor.java:115) ~[spring-aop-5.3.29.jar:5.3.29]
+	at java.util.concurrent.FutureTask.run(FutureTask.java:264) ~[?:?]
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1128) ~[?:?]
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:628) ~[?:?]
+	at java.lang.Thread.run(Thread.java:834) ~[?:?]
+2026-02-04 14:23:42.853 [INFO ] HikariPool-1 - Shutdown completed.

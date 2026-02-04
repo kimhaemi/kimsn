@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/default_layout}"
+      th:with="metaTitle='전체 감시'">
+
+	<th:block layout:fragment="content">
+		<script th:inline="javascript">
+			/* <![CDATA[ */
+			var rcState = /*[[${rcState}]]*/
+			console.log(rcState);
+            /* ]]> */
+		</script>
+		<script type="text/javascript">
+			var alertToggle;
+			$(document).ready(function(){
+			  $("#nowTime").text(nowTime());
+			  window.setInterval(function(){
+				$("#nowTime").text(nowTime());
+			  },1000);
+			  window.setInterval(function(){
+				//alertCheck2();
+				//f5Station();
+				location.href = "/";
+			  },30000);
+			  alertToggle=$('.toggle').data('toggles');
+			});
+			
+		  </script>
+
+		<table class="noticeTbl mainSeries">
+			<colgroup>
+				<col style="width:auto">
+				<col style="width:70px;">
+				<col style="width:105px;">
+				<col style="width:70px;">
+				<col style="width:130px;">
+			</colgroup>
+			<thead>
+				<tr>
+					<th class="left"></th>
+					<th class="left"><!-- 알람설정: --></th>
+					<th class="center toggle-light">
+						<!-- <label class="a8z-toggle-switch" data-size="sm" style="--a8z-ts-width: 60px;">
+                            <input type="checkbox" th:name="notiConfig" />
+                            <span class="toggle">
+                                <span class="switch"></span>
+                            </span>
+                        </label> -->
+						<input type="hidden" name="alert_activity" id="alert_activity" value="1">
+						<input type="hidden" name="alert_lasttime" id="alert_lasttime" value="">
+						<input type="hidden" name="alert_checksite" id="alert_checksite" value="ALL">
+					</th>
+					<th class="left">현재시간:</th>
+					<th class="right" id="nowTime"></th>
+				</tr>
+			</thead>
+		</table>
+	
+		<div id="f5content" class="mainSeries">
+			<div class="alertMap">
+				<div class="map"><img src="/images/map.png" alt="지도"></div>
+				<th:block th:each="rcSite : ${rcState}">
+					<div th:if="${rcSite.gubun == 1}" th:classappend="${'radar '+rcSite.site+' '+ rcSite.recv_condition}" th:id="${rcSite.site}">
+						<th:block th:if="${rcSite.site == 'KWK' || rcSite.site == 'YIT'}">
+							<div class="KWKYIT"><a th:href="${'/station/'+rcSite.site}" th:text="${rcSite.name_kr}"></a></div>
+						</th:block>
+						<th:block th:if="${rcSite.site != 'KWK' && rcSite.site != 'YIT'}">
+							<div class="large"><a th:href="${'/station/'+rcSite.site}" th:text="${rcSite.name_kr}"></a></div>
+						</th:block>
+					</div>
+					<!-- <div th:if="${rcSite.gubun == 2}" th:classappend="${'radar '+rcSite.site+' small '+ rcSite.recv_condition}" th:id="${rcSite.site}"> -->
+						<div th:if="${rcSite.gubun == 2}" th:classappend="${'radar '+rcSite.site+' '+ rcSite.recv_condition}" th:id="${rcSite.site}">
+						<div class="small"><a th:href="${'/station/'+rcSite.site}" th:text="${rcSite.name_kr}"></a></div>
+					</div>
+					<div th:if="${rcSite.gubun == 3}" th:classappend="${'radar '+rcSite.site+' '+ rcSite.recv_condition}" th:id="${rcSite.site}">
+						<div class="large"><a th:href="${'/station/'+rcSite.site}" th:text="${rcSite.name_kr}"></a></div>
+					</div>
+				</th:block>
+			</div>
+
+			<div class="alertTbls">
+				<table class="table subTbl table-hover" summary="">
+					<colgroup>
+						<col width="150px">
+						<col >
+					</colgroup>
+					<thead>
+						<th colspan="2">대형 레이더</th>
+					</thead>
+					<tbody>
+						<tr th:each="rcSite : ${rcState}" th:if="${rcSite.gubun == 1}">
+							<td class="subThead">
+								<a th:href="${'/station/'+rcSite.site}" class="radar" th:text="${rcSite.name_kr+' 레이더'}"></a>
+							</td>
+							<td>
+								<span th:classappend="${'status '+ rcSite.recv_condition}"></span>
+								<!-- <span th:text="${'최종 수신 '+ rcSite.apply_time}"></span> -->
+								<!-- <span th:text="${'최종 수신 '+ rcSite.last_check_time}"></span> -->
+								<span th:text="${'최종 수신 '+ rcSite.last_check_time.substring(0, rcSite.last_check_time.length-3)}"></span>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+				<table class="table subTbl table-hover" style="width:400px;" summary="">
+					<colgroup>
+						<col width="150px">
+						<col>
+					</colgroup>
+					<thead>
+						<th colspan="2">소형 레이더</th>
+					</thead>
+					<tbody>
+						<tr th:each="rcSite : ${rcState}" th:if="${rcSite.gubun == 2}">
+							<td class="subThead">
+								<a th:href="${'/station/'+rcSite.site}" class="radar" th:text="${rcSite.name_kr+' 레이더'}"></a>
+							</td>
+							<td>
+								<span th:classappend="${'status '+ rcSite.recv_condition}" ></span>
+								<!-- <span th:text="${'최종 수신 '+ rcSite.apply_time}"></span> -->
+								<span th:text="${'최종 수신 '+ rcSite.last_check_time.substring(0, rcSite.last_check_time.length-3)}"></span>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+				<table class="table subTbl table-hover" summary="">
+					<colgroup>
+						<col width="150px">
+						<col>
+					</colgroup>
+					<thead>
+						<th colspan="2">공항 레이더</th>
+					</thead>
+					<tbody>
+						<tr th:each="rcSite : ${rcState}" th:if="${rcSite.gubun == 3}">
+							<td class="subThead">
+								<a th:href="${'/station/'+rcSite.site}" class="radar" th:text="${rcSite.name_kr+' 레이더'}"></a>
+							</td>
+							<td>
+								<span th:classappend="${'status '+ rcSite.recv_condition}" ></span>
+								<!-- <span th:text="${'최종 수신 '+ rcSite.apply_time}"></span> -->
+								<span th:text="${'최종 수신 '+ rcSite.last_check_time.substring(0, rcSite.last_check_time.length-3)}"></span>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</th:block>
+	<audio class="alarmAudio" controls="" preload="auto" loop=""><source src="/sounds/Electronic_Chime.mp3" type="audio/mpeg"></audio>
+</html>

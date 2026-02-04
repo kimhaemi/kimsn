@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/default_layout}"
+      th:with="metaTitle='문자 메시지 패턴'">
+
+	<th:block layout:fragment="content">
+        <script th:inline="javascript">
+            /* <![CDATA[ */
+                var mData = /*[[${smsSendPatternList}]]*/
+                console.log(mData);
+            /* ]]> */
+        </script>
+        <script type="text/javascript">
+            $(function() {
+                $("#configSave").on("click", function(){
+
+                    let list = new Array();
+                    
+                    // list.push({ "code":"NOTI", "mode":"RUN", "activation":$("input[name='NOTI_RUN_activation']").is(":checked") ? 1 : 0, "pattern":$("#NOTI_RUN_pattern").val() });
+                    // list.push({ "code":"NOTI", "mode":"MRO", "activation":$("input[name='NOTI_MRO_activation']").is(":checked") ? 1 : 0, "pattern":$("#NOTI_MRO_pattern").val() });
+
+                    //경고(자료 미수신)
+                    list.push({ "code":"WARN", "mode":"RUN", "codedtl":"file_no", "activation":$("input[name='WARN_RUN_file_no_activation']").is(":checked") ? 1 : 0, "pattern":$("#WARN_RUN_file_no_pattern").val() });
+                    list.push({ "code":"WARN", "mode":"MRO", "codedtl":"file_no", "activation":$("input[name='WARN_MRO_file_no_activation']").is(":checked") ? 1 : 0, "pattern":$("#WARN_MRO_file_no_pattern").val() });
+
+                    //경고(자료 품질 이상)
+                    list.push({ "code":"WARN", "mode":"RUN", "codedtl":"filesize_no", "activation":$("input[name='WARN_RUN_filesize_no_activation']").is(":checked") ? 1 : 0, "pattern":$("#WARN_RUN_filesize_no_pattern").val() });
+                    list.push({ "code":"WARN", "mode":"MRO", "codedtl":"filesize_no", "activation":$("input[name='WARN_MRO_filesize_no_activation']").is(":checked") ? 1 : 0, "pattern":$("#WARN_MRO_filesize_no_pattern").val() });
+                    
+                    //복구(자료 수신)
+                    list.push({ "code":"RETR", "mode":"RUN", "codedtl":"file_ok", "activation":$("input[name='RETR_RUN_file_ok_activation']").is(":checked") ? 1 : 0, "pattern":$("#RETR_RUN_file_ok_pattern").val() });
+                    list.push({ "code":"RETR", "mode":"MRO", "codedtl":"file_ok", "activation":$("input[name='RETR_MRO_file_ok_activation']").is(":checked") ? 1 : 0, "pattern":$("#RETR_MRO_file_ok_pattern").val() });
+
+                    //복구(자료 품질 정상)
+                    list.push({ "code":"RETR", "mode":"RUN", "codedtl":"filesize_ok", "activation":$("input[name='RETR_RUN_filesize_ok_activation']").is(":checked") ? 1 : 0, "pattern":$("#RETR_RUN_filesize_ok_pattern").val() });
+                    list.push({ "code":"RETR", "mode":"MRO", "codedtl":"filesize_ok", "activation":$("input[name='RETR_MRO_filesize_ok_activation']").is(":checked") ? 1 : 0, "pattern":$("#RETR_MRO_filesize_ok_pattern").val() });
+
+                    //네트워크 장애
+                    list.push({ "code":"TOTA", "mode":"RUN", "codedtl":"network_no", "activation":$("input[name='TOTA_RUN_network_no_activation']").is(":checked") ? 1 : 0, "pattern":$("#TOTA_RUN_network_no_pattern").val() });
+                    list.push({ "code":"TOTA", "mode":"MRO", "codedtl":"network_no", "activation":$("input[name='TOTA_MRO_network_no_activation']").is(":checked") ? 1 : 0, "pattern":$("#TOTA_MRO_network_no_pattern").val() });
+
+                    //네트워크 복구
+                    list.push({ "code":"TORE", "mode":"RUN", "codedtl":"network_ok", "activation":$("input[name='TORE_RUN_network_ok_activation']").is(":checked") ? 1 : 0, "pattern":$("#TORE_RUN_network_ok_pattern").val() });
+                    list.push({ "code":"TORE", "mode":"MRO", "codedtl":"network_ok", "activation":$("input[name='TORE_MRO_network_ok_activation']").is(":checked") ? 1 : 0, "pattern":$("#TORE_MRO_network_ok_pattern").val() });
+
+                    console.log(list);
+
+                    if(confirm("저장 하겠습니까?")){
+                        let result = fnCall('post', '/manage/sms_set_msg_modify', JSON.stringify(list));
+                        
+                        console.log("result :: "+ result.status);
+                        if(result.status == "success"){
+                            alert("저장되었습니다.");
+                            location.href="/manage/sms_set_msg"; //다시 로딩
+                        } else {
+                            alert("저장에 실패하였습니다. \n" + result.data);
+                        }
+                    }
+                    
+                });
+
+            });
+        </script>
+    
+        <input type="hidden" name="termStart" id="termStart">
+        <input type="hidden" name="termClose" id="termClose">
+        <table class="noticeTbl searchSeries">
+            <thead>
+            <tr>
+                <th class="left">
+                    관리 &gt; 문자 메시지 패턴
+                </th>
+                <th class="right">
+                    <input type="submit" id="configSave" class="btn ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" value="설정저장">
+                </th>
+            </tr>
+            </thead>
+        </table>
+        
+        <table class="table subTbl table-hover" summary="">
+            <caption class="hidden">문자 전송 메시지 패턴</caption>
+            <colgroup>
+                <col style="width:100px"/>
+                <col />
+            </colgroup>
+            <thead class="subThead">
+                <tr>
+                    <th rowspan="2">구분</th>
+                    <th colspan="2">설정값</th>
+                </tr>
+                <tr>
+                    <th>정상 운영 상태</th>
+                    <th>유지보수 상태</th>
+                </tr>
+            </thead>
+            <tbody class="table-group-divider" >
+                <!-- <tr>
+                    <td rowspan="2">주의</td>
+                    <td>
+                        <label class="a8z-toggle-switch" data-size="sm" style="--a8z-ts-width: 100px;">
+                            <input type="checkbox" name="NOTI_RUN_activation" 
+                                id="NOTI_RUN_activation" 
+                                th:checked="${smsSendPatternList.NOTI_RUN_activation == '1'}"
+                            />
+                            <span class="toggle">
+                                <span class="switch"></span>
+                            </span>
+                        </label>
+                    </td>
+                    <td>
+                        <label class="a8z-toggle-switch" data-size="sm" style="--a8z-ts-width: 100px;">
+                            <input type="checkbox" name="NOTI_MRO_activation" 
+                                id="NOTI_MRO_activation" 
+                                th:checked="${smsSendPatternList.NOTI_MRO_activation == '1'}"
+                            />
+                            <span class="toggle">
+                                <span class="switch"></span>
+                            </span>
+                        </label>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <textarea name="NOTI_RUN_pattern" id="NOTI_RUN_pattern" class="msgPtn" th:text="${smsSendPatternList.NOTI_RUN_pattern}"></textarea>
+                    </td>
+                    <td>
+                        <textarea name="NOTI_MRO_pattern" id="NOTI_MRO_pattern" class="msgPtn" th:text="${smsSendPatternList.NOTI_MRO_pattern}"></textarea>
+                    </td>
+                </tr> -->
+
+                <tr>
+                    <td rowspan="2">경고<br>(자료 미수신)</td>
+                    <td>
+                        <label class="a8z-toggle-switch" data-size="sm" style="--a8z-ts-width: 100px;">
+                            <input type="checkbox" name="WARN_RUN_file_no_activation" id="WARN_RUN_file_no_activation" 
+                                th:checked="${smsSendPatternList.WARN_RUN_file_no_activation == '1'}"
+                            />
+                            <span class="toggle">
+                                <span class="switch"></span>
+                            </span>
+                        </label>
+                    </td> 
+                    <td>
+                        <label class="a8z-toggle-switch" data-size="sm" style="--a8z-ts-width: 100px;">
+                            <input type="checkbox" name="WARN_MRO_file_no_activation" id="WARN_MRO_file_no_activation" 
+                                th:checked="${smsSendPatternList.WARN_MRO_file_no_activation == '1'}"
+                            />
+                            <span class="toggle">
+                                <span class="switch"></span>
+                            </span>
+                        </label>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <textarea name="WARN_RUN_file_no_pattern" id="WARN_RUN_file_no_pattern" class="msgPtn" th:text="${smsSendPatternList.WARN_RUN_file_no_pattern}"></textarea>
+                    </td>
+                    <td>
+                        <textarea name="WARN_MRO_file_no_pattern" id="WARN_MRO_file_no_pattern" class="msgPtn" th:text="${smsSendPatternList.WARN_MRO_file_no_pattern}"></textarea>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td rowspan="2">경고<br>(자료 품질 이상)</td>
+                    <td>
+                        <label class="a8z-toggle-switch" data-size="sm" style="--a8z-ts-width: 100px;">
+                            <input type="checkbox" name="WARN_RUN_filesize_no_activation" id="WARN_RUN_filesize_no_activation" 
+                                th:checked="${smsSendPatternList.WARN_RUN_filesize_no_activation == '1'}"
+                            />
+                            <span class="toggle">
+                                <span class="switch"></span>
+                            </span>
+                        </label>
+                    </td>
+                    <td>
+                        <label class="a8z-toggle-switch" data-size="sm" style="--a8z-ts-width: 100px;">
+                            <input type="checkbox" name="WARN_MRO_filesize_no_activation" id="WARN_MRO_filesize_no_activation" 
+                                th:checked="${smsSendPatternList.WARN_MRO_filesize_no_activation == '1'}"
+                            />
+                            <span class="toggle">
+                                <span class="switch"></span>
+                            </span>
+                        </label>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <textarea name="WARN_RUN_filesize_no_pattern" id="WARN_RUN_filesize_no_pattern" class="msgPtn" th:text="${smsSendPatternList.WARN_RUN_filesize_no_pattern}"></textarea>
+                    </td>
+                    <td>
+                        <textarea name="WARN_MRO_filesize_no_pattern" id="WARN_MRO_filesize_no_pattern" class="msgPtn" th:text="${smsSendPatternList.WARN_MRO_filesize_no_pattern}"></textarea>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td rowspan="2">복구<br>(자료 수신)</td>
+                    <td>
+                        <label class="a8z-toggle-switch" data-size="sm" style="--a8z-ts-width: 100px;">
+                            <input type="checkbox" name="RETR_RUN_file_ok_activation" id="RETR_RUN_file_ok_activation" 
+                                th:checked="${smsSendPatternList.RETR_RUN_file_ok_activation == '1'}"
+                            />
+                            <span class="toggle">
+                                <span class="switch"></span>
+                            </span>
+                        </label>
+                    </td>
+                    <td>
+                        <label class="a8z-toggle-switch" data-size="sm" style="--a8z-ts-width: 100px;">
+                            <input type="checkbox" name="RETR_MRO_file_ok_activation" id="RETR_MRO_file_ok_activation" 
+                                th:checked="${smsSendPatternList.RETR_MRO_file_ok_activation == '1'}"
+                            />
+                            <span class="toggle">
+                                <span class="switch"></span>
+                            </span>
+                        </label>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <textarea name="RETR_RUN_file_ok_pattern" id="RETR_RUN_file_ok_pattern" class="msgPtn" th:text="${smsSendPatternList.RETR_RUN_file_ok_pattern}"></textarea>
+                    </td>
+                    <td>
+                        <textarea name="RETR_MRO_file_ok_pattern" id="RETR_MRO_file_ok_pattern" class="msgPtn" th:text="${smsSendPatternList.RETR_MRO_file_ok_pattern}"></textarea>
+                    </td>
+                </tr>
+ 
+                <tr>
+                    <td rowspan="2">복구<br>(자료 품질 정상)</td>
+                    <td>
+                        <label class="a8z-toggle-switch" data-size="sm" style="--a8z-ts-width: 100px;">
+                            <input type="checkbox" name="RETR_RUN_filesize_ok_activation" id="RETR_RUN_filesize_ok_activation" 
+                                th:checked="${smsSendPatternList.RETR_RUN_filesize_ok_activation == '1'}"
+                            />
+                            <span class="toggle">
+                                <span class="switch"></span>
+                            </span>
+                        </label>
+                    </td>
+                    <td>
+                        <label class="a8z-toggle-switch" data-size="sm" style="--a8z-ts-width: 100px;">
+                            <input type="checkbox" name="RETR_MRO_filesize_ok_activation" id="RETR_MRO_filesize_ok_activation" 
+                                th:checked="${smsSendPatternList.RETR_MRO_filesize_ok_activation == '1'}"
+                            />
+                            <span class="toggle">
+                                <span class="switch"></span>
+                            </span>
+                        </label>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <textarea name="RETR_RUN_filesize_ok_pattern" id="RETR_RUN_filesize_ok_pattern" class="msgPtn" th:text="${smsSendPatternList.RETR_RUN_filesize_ok_pattern}"></textarea>
+                    </td>
+                    <td>
+                        <textarea name="RETR_MRO_filesize_ok_pattern" id="RETR_MRO_filesize_ok_pattern" class="msgPtn" th:text="${smsSendPatternList.RETR_MRO_filesize_ok_pattern}"></textarea>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td rowspan="2">네트워크 장애</td>
+                    <td>
+                        <label class="a8z-toggle-switch" data-size="sm" style="--a8z-ts-width: 100px;">
+                            <input type="checkbox" name="TOTA_RUN_network_no_activation" id="TOTA_RUN_network_no_activation" 
+                                th:checked="${smsSendPatternList.TOTA_RUN_network_no_activation == '1'}"
+                            />
+                            <span class="toggle">
+                                <span class="switch"></span>
+                            </span>
+                        </label>
+                    </td>
+                    <td>
+                        <label class="a8z-toggle-switch" data-size="sm" style="--a8z-ts-width: 100px;">
+                            <input type="checkbox" name="TOTA_MRO_network_no_activation" id="TOTA_MRO_network_no_activation" 
+                                th:checked="${smsSendPatternList.TOTA_MRO_network_no_activation == '1'}"
+                            />
+                            <span class="toggle">
+                                <span class="switch"></span>
+                            </span>
+                        </label>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <textarea name="TOTA_RUN_network_no_pattern" id="TOTA_RUN_network_no_pattern" class="msgPtn" th:text="${smsSendPatternList.TOTA_RUN_network_no_pattern}"></textarea>
+                    </td>
+                    <td>
+                        <textarea name="TOTA_MRO_network_no_pattern" id="TOTA_MRO_network_no_pattern" class="msgPtn" th:text="${smsSendPatternList.TOTA_MRO_network_no_pattern}"></textarea>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td rowspan="2">네트워크 복구</td>
+                    <td>
+                        <label class="a8z-toggle-switch" data-size="sm" style="--a8z-ts-width: 100px;">
+                            <input type="checkbox" name="TORE_RUN_network_ok_activation" id="TORE_RUN_network_ok_activation" 
+                                th:checked="${smsSendPatternList.TORE_RUN_network_ok_activation == '1'}"
+                            />
+                            <span class="toggle">
+                                <span class="switch"></span>
+                            </span>
+                        </label>
+                    </td>
+                    <td>
+                        <label class="a8z-toggle-switch" data-size="sm" style="--a8z-ts-width: 100px;">
+                            <input type="checkbox" name="TORE_MRO_network_ok_activation" id="TORE_MRO_network_ok_activation" 
+                                th:checked="${smsSendPatternList.TORE_MRO_network_ok_activation == '1'}"
+                            />
+                            <span class="toggle">
+                                <span class="switch"></span>
+                            </span>
+                        </label>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <textarea name="TORE_RUN_network_ok_pattern" id="TORE_RUN_network_ok_pattern" class="msgPtn" th:text="${smsSendPatternList.TORE_RUN_network_ok_pattern}"></textarea>
+                    </td>
+                    <td>
+                        <textarea name="TORE_MRO_network_ok_pattern" id="TORE_MRO_network_ok_pattern" class="msgPtn" th:text="${smsSendPatternList.TORE_MRO_network_ok_pattern}"></textarea>
+                    </td>
+                </tr>
+                
+            </tbody>
+        </table>
+    </th:block>
+</html>

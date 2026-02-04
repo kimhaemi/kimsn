@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/default_layout}"
+      th:with="metaTitle='그룹 감시 자료 설정'">
+
+	<th:block layout:fragment="content">
+        <script th:inline="javascript">
+            /* <![CDATA[ */
+                var group = /*[[${smsTargetGroup}]]*/
+                console.log(group);
+                var links = /*[[${links}]]*/
+                console.log(links);
+                var notlinks = /*[[${notlinks}]]*/
+                console.log(notlinks);
+            /* ]]> */
+        </script>
+        <script type="text/javascript">
+        $(function() {
+            $('input.back').click(function(e){
+                window.location.href = "/manage/sms_target_group";
+            });
+        });
+
+        //연결 해제
+        function fnUnLink(link){
+            //if(confirm("연결을 해제하겠습니까?")){
+                let result = fnCall('post', '/manage/sms_target_group_unlink', JSON.stringify(link));
+                if(result.status == "success"){
+                    alert("연결 해제되었습니다.");
+                    location.href="/manage/sms_target_group_link?gid="+group.id;
+                } else {
+                    alert("연결 해제에 실패했습니다.\n" + result.data);
+                }
+                console.log("result :: "+ result);
+            //}
+        }
+
+        //연결 추가
+        function fnLink(unlink){
+            unlink.group_id = group.id;
+            console.log(unlink);
+            // if(confirm("추가 하겠습니까?")){
+                let result = fnCall('post', '/manage/sms_target_group_addlink', JSON.stringify(unlink));
+                if(result.status == "success"){
+                    alert("추가 되었습니다.");
+                    location.href="/manage/sms_target_group_link?gid="+group.id;
+                } else {
+                    alert("연결 추가에 실패했습니다.\n" + result.data);
+                }
+                console.log("result :: "+ result);
+            // }
+        }
+        </script>
+
+        <table class="noticeTbl searchSeries" >
+            <thead>
+            <tr>
+                <th class="left">
+                    <span th:text="${'관리 > 그룹 관리 > [ '+smsTargetGroup.name}+' ] 그룹 감시 자료 설정'"></span>
+                </th>
+                <th class="right">
+                    <input type="button" class="btn ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only back" value="그룹관리로 돌아가기"/>
+                </th>
+            </tr>
+            </thead>
+        </table>
+
+        <!-- <table class="mainTbl searchSeries" summary=""> -->
+        <table class="table subTbl table-hover" summary="">
+            <caption class="hidden">그룹 관리</caption>
+            <colgroup>
+                <col style="width:100px" />
+                <col style="width:120px" />
+                <col style="width:100px"/>
+                <col />
+                <col style="width:140px"/>
+            </colgroup>
+            <thead class="subThead">
+                <tr>
+                    <th colspan="5">
+                        <span th:text="${smsTargetGroup.name}+' 그룹에게 문자가 통보되는 지점별 데이터 목록'"></span>
+                    </th>
+                </tr>
+                <tr>
+                    <th>구분</th>
+                    <th>지점</th>
+                    <th colspan="2">데이터</th>
+                    <th>삭제</th>
+                </tr>
+            </thead>
+            <tbody class="table-group-divider">
+                <tr th:each="link : ${links}">
+                    <td th:switch="${link.dataKind}">
+                        <span th:case="RDR">대형레이더</span>
+                        <span th:case="SDR">소형레이더</span>
+                        <span th:case="TDWR">공항레이더</span>
+                        <span th:case="all">네트워크</span>
+                        <span th:case="LGT">낙뢰</span>
+                    </td>
+                    <td>
+                        <span th:text="${link.name_kr}"></span>
+                    </td>
+                    <td>
+                        <span th:text="${link.dataType}"></span>
+                    </td>
+                    <td>
+                        <spen th:text="${link.data_name}"></spen>
+                    </td>
+                    <td>
+                        <input type="submit" id="bthUnLink" class="btn ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" value="연결 해제" th:onclick="fnUnLink([[${link}]])"/>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        
+        <table class="table subTbl table-hover" summary="">
+            <caption class="hidden">그룹 관리</caption>
+            <colgroup>
+                <col style="width:100px" />
+                <col style="width:120px" />
+                <col style="width:100px"/>
+                <col />
+                <col style="width:140px"/>
+            </colgroup>
+            <thead class="subThead">
+                <tr>
+                    <th colspan="5">
+                        <spen th:text="${smsTargetGroup.name}+' 그룹에게 문자가 통보되도록 추가할 수 있는 지점별 데이터 목록'"></spen>
+                    </th>
+                </tr>
+                <tr>
+                    <th>구분</th>
+                    <th>지점</th>
+                    <th colspan="2">데이터</th>
+                    <th>추가</th>
+                </tr>
+            </thead>
+            <tbody class="table-group-divider">
+                <tr th:each="notLink : ${notlinks}" th:if="${notLink.status == 1}">
+                    <td th:switch="${notLink.dataKind}">
+                        <span th:case="RDR">대형레이더</span>
+                        <span th:case="SDR">소형레이더</span>
+                        <span th:case="TDWR">공항레이더</span>
+                        <span th:case="all">네트워크</span>
+                        <span th:case="LGT">낙뢰</span>
+                    </td>
+                    <td>
+                        <span th:text="${notLink.name_kr}"></span>
+                    </td>
+                    <td>
+                        <span th:text="${notLink.dataType}"></span>
+                    </td>
+                    <td>
+                        <spen th:text="${notLink.data_name}"></spen>
+                    </td>
+                    <td>
+                        <input type="submit" id="bthLink" class="btn ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" value="연결 추가" th:onclick="fnLink([[${notLink}]])"/>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </th:block>
+</html>

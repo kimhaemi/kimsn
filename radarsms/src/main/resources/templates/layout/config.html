@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<th:block th:fragment="configFragment">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- 반응형 메타 태그 -->
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="title" th:content="${metaTitle}">
+    <!-- <title th:text="${metaTitle}"></title> -->
+    <title>기상 레이더 장애 문자 전송 시스템</title>
+    <link rel="icon" href="/images/watchdog_icon.png" type="image/x-icon">
+    <link rel="shortcut icon" href="/images/watchdog_icon.png" type="image/x-icon">
+
+    <link rel="stylesheet" type="text/css" th:href="@{/css/bootstrap/bootstrap.min.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/radar/jquery-ui.css}" />
+    <link rel="stylesheet" type="text/css" th:href="@{/css/radar/common.css}" />
+    <link rel="stylesheet" type="text/css" th:href="@{/css/radar/header.css}" />
+    <link rel="stylesheet" type="text/css" th:href="@{/css/font-awesome.css}" />
+    <link rel="stylesheet" type="text/css" th:href="@{/css/noty/buttons.css}" />
+
+    <link rel="stylesheet" media="screen" th:href="@{/css/radar/jquery-ui-timepicker-addon.css}" />
+    <link rel="stylesheet" media="screen" th:href="@{/css/toggle/toggle-switch.css}" />
+    
+    <script type="application/json" src="/js/radar/jquery-3.7.0.js"></script>
+    <script type="application/json" src="/js/radar/jquery-3.7.0.min.js"></script>
+
+    <script type="text/javascript" src="/js/radar/jquery.min.js"></script>
+    <script type="text/javascript" src="/js/radar/jquery-ui.min.js"></script>
+    <script type="text/javascript" src="/js/radar/jquery-ui-timepicker-addon.js"></script>
+    <script type="text/javascript" src="/js/radar/jquery-ui-timepicker-ko.js"></script>
+    <script type="text/javascript" src="/js/radar/jquery.ui.monthpicker.js"></script>
+    <!-- <script type="text/javascript" src="/js/radar/jquery.mtz.monthpicker.js"></script> -->
+    <script type="text/javascript" src="/js/radar/ui_common.js"></script>
+    <script type="text/javascript" src="/js/common/common.js"></script>
+
+    <script type="text/javascript" src="/js/toggles.min.js"></script>
+    <script type="text/javascript" src="/js/default.js"></script>
+  </head>
+</th:block>
+</html>

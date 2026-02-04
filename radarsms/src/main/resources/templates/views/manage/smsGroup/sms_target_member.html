@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/default_layout}"
+      th:with="metaTitle='문자 수신자 관리'">
+
+	<th:block layout:fragment="content">
+        <script th:inline="javascript">
+            /* <![CDATA[ */
+                var tData = /*[[${targetmembers}]]*/
+                console.log(tData);
+            /* ]]> */
+        </script>
+        <script type="text/javascript">
+            //수정
+            function fnModify(mid){
+                const params = {
+                    id: mid,
+                    name: $("#name_"+mid).val(),
+                    organization: $("#organization_"+mid).val(),
+                    department: $("#department_"+mid).val(),
+                    position: $("#position_"+mid).val(),
+                    phone_num: $("#phone_num_"+mid).val(),
+                    activation: $("#activation_"+mid).is(":checked") ? 1 : 0
+                }
+                if(confirm("수정 하겠습니까?")){
+                    let result = fnCall('post', '/manage/sms_target_member_modify', JSON.stringify(params));
+                    if(result.status == "success"){
+                        alert("수정 되었습니다.");
+                        location.href="/manage/sms_target_member";
+                    } else {
+                        alert("수정에 실패했습니다.\n" + result.data);
+                    }
+                    console.log("result :: "+ result);
+                }
+            }
+
+            //삭제
+            function fnDelete(mid){
+                if(confirm("삭제 하겠습니까?")){
+                    let result = fnCall('post', '/manage/sms_target_member_delete?mid='+mid, {});
+                    if(result.status == "success"){
+                        alert("삭제 되었습니다.");
+                        location.href="/manage/sms_target_member";
+                    } else {
+                        alert("삭제에 실패했습니다.\n" + result.data);
+                    }
+                    console.log("result :: "+ result);
+                }
+            }
+
+            //추가
+            function fnAdd(){
+                const params = {
+                    name: $("#add_name").val(),
+                    organization: $("#add_organization").val(),
+                    department: $("#add_department").val(),
+                    position: $("#add_position").val(),
+                    phone_num: $("#add_phone_num").val(),
+                    activation: $("#add_activation").is(":checked") ? 1 : 0
+                }
+                console.log(params);
+                if(confirm("등록 하겠습니까?")){
+                        let result = fnCall('post', '/manage/sms_target_member_add', JSON.stringify(params));
+                    if(result.status == "success"){
+                        alert("등록 되었습니다.");
+                        location.href="/manage/sms_target_member";
+                    } else {
+                        alert("등록에 실패했습니다.\n" + result.data);
+                    }
+                    console.log("result :: "+ result);
+                }
+            }
+        </script>
+    
+        <table class="noticeTbl settingSeries">
+            <thead>
+            <tr>
+                <th class="left">
+                    관리 &gt; 문자 수신자 관리
+                </th>
+                <th class="right">
+                </th>
+            </tr>
+            </thead>
+        </table>
+        
+        <table class="table subTbl table-hover" summary="">
+            <caption class="hidden">문자 수신자 관리</caption>
+            <colgroup>
+                <col style="width:90px" />
+                <col style="width:120px" />
+                <col style="width:120px" />
+                <col style="width:150px" />
+                <col />
+                <col />
+                <col style="width:140px" />
+            </colgroup>
+            <thead class="subThead">
+                <tr>
+                    <th>성명</th>
+                    <th>직책</th>
+                    <th>부서</th>
+                    <th>소속</th>
+                    <th>연락처</th>
+                    <th>활성화</th>
+                    <th>관리</th>
+                </tr>
+            </thead>
+            <tbody class="table-group-divider">
+                <tr th:each="tmList, tmListStat : ${targetmembers}">
+                    <td>
+                        <input type="text" name="name" th:id="${'name_'+tmList.id}" size="16" th:value="${tmList.name }"/>
+                    </td>
+                    <td>
+                        <input type="text" name="position" th:id="${'position_'+tmList.id}" size="16" th:value="${tmList.position }"/>
+                    </td>
+                    <td>
+                        <input type="text" name="department" th:id="${'department_'+tmList.id}" size="16" th:value="${tmList.department }"/>
+                    </td>
+                    <td>
+                        <input type="text" name="organization" th:id="${'organization_'+tmList.id}" size="16" th:value="${tmList.organization }"/>
+                    </td>
+                    <td>
+                        <input type="text" name="phone_num" th:id="${'phone_num_'+tmList.id}" size="16" th:value="${tmList.phone_num }"/>
+                    </td>
+                    <td>
+                        <label class="a8z-toggle-switch" data-size="sm" style="--a8z-ts-width: 60px;">
+                            <input type="checkbox" th:name="activation" 
+                                th:id="${'activation_'+tmList.id}"
+                                th:checked="${tmList.activation}"
+                            />
+                            <span class="toggle">
+                                <span class="switch"></span>
+                            </span>
+                        </label>
+                    </td>
+                    <td>
+                        <input type="submit" class="btn" name="" id="modify" value="수정" th:onclick="fnModify([[${tmList.id}]])"/>
+                        <input type="submit" class="btn" name="" id="delete" value="삭제" th:onclick="fnDelete([[${tmList.id}]])"/>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <table class="noticeTbl settingSeries" >
+            <thead>
+            <tr>
+                <th class="left">
+                    관리 > 문자 수신자 추가
+                </th>
+                <th class="right">
+                
+                </th>
+            </tr>
+            </thead>
+        </table>
+        
+        <table class="table subTbl table-hover" summary="">
+            <caption class="hidden">문자 수신자 추가</caption>
+            <colgroup>
+                <col style="width:90px" />
+                <col style="width:120px" />
+                <col style="width:120px" />
+                <col style="width:150px" />
+                <col />
+                <col />
+                <col style="width:140px" />
+            </colgroup>
+            <thead class="subThead">
+                <tr>
+                    <th>성명</th>
+                    <th>직책</th>
+                    <th>부서</th>
+                    <th>소속</th>
+                    <th>연락처</th>
+                    <th>활성화</th>
+                    <th>추가</th>
+                </tr>
+            </thead>
+            <tbody class="table-group-divider">
+                <tr>
+                    <td>
+                        <input type="text" name="add_name" id="add_name" size="16" value=""/>
+                    </td>
+                    <td>
+                        <input type="text" name="add_position" id="add_position" size="16" value=""/>
+                    </td>
+                    <td>
+                        <input type="text" name="add_department" id="add_department" size="16" value=""/>
+                    </td>
+                    <td>
+                        <input type="text" name="add_organization" id="add_organization" size="16" value=""/>
+                    </td>
+                    <td>
+                        <input type="text" name="add_phone_num" id="add_phone_num" size="16" value=""/>
+                    </td>
+                    <td>
+                        <label class="a8z-toggle-switch" data-size="sm" style="--a8z-ts-width: 60px;">
+                            <input type="checkbox" th:name="add_activation" 
+                                id="add_activation"
+                                checked="1"
+                            />
+                            <span class="toggle">
+                                <span class="switch"></span>
+                            </span>
+                        </label>
+                    </td>
+                    <td>
+                        <input type="submit" class="btn" name="" value="사용자 추가" th:onclick="fnAdd()"/>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </th:block>
+</html>

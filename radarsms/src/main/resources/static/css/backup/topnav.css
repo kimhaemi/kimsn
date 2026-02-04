@@ -1,0 +1,82 @@
+ul.topnav {
+	list-style: none;
+	padding: 0 20px;	
+	margin: 0;
+	float: left;
+/* 	width: 920px; */
+/* 	background: #222; */
+	font-size: 13px;
+/* 	background: url(topnav_bg.gif) repeat-x; */
+}
+ul.topnav li {
+	float: left;
+	margin: 0;	
+	padding: 0 15px 0 0;
+	position: relative; /*--Declare X and Y axis base for sub navigation--*/
+}
+ul.topnav li a{
+	padding: 10px 5px 4px;
+	color: #333;
+	display: block;
+	text-decoration: none;
+	float: left;
+}
+ul.topnav li a:hover{
+	text-decoration: underline;
+/* 	background: url(topnav_hover.gif) no-repeat center top; */
+}
+ul.topnav li span { /*--Drop down trigger styles--*/
+	width: 17px;
+	height: 33px;
+	float: left;
+	background: url(../images/down.gif) no-repeat center;
+}
+ul.topnav li span.subhover {background-position: center bottom; cursor: pointer;} /*--Hover effect for trigger--*/
+ul.topnav li ul.subnav {
+	list-style: none;
+	position: absolute; /*--Important - Keeps subnav from affecting main navigation flow--*/
+	left: 0; top: 32px;
+	background: #F2F2F2;
+	margin: 0; padding: 0;
+	display: none;
+	float: left;
+/* 	width: 170px; */
+	border: 1px solid #D8D8D8;
+	font-size:12px;
+	z-index:100;
+}
+ul.topnav li ul.subnav li{
+	margin: 0; padding: 0;
+/* 	border-top: 1px solid #252525; --Create bevel effect-- */
+	border-bottom: 1px solid #D8D8D8; /*--Create bevel effect--*/
+	clear: both;
+/* 	width: 170px; */
+}
+html ul.topnav li ul.subnav li a {
+	float: left;
+	width: 115px;
+/* 	background: #333 url(dropdown_linkbg.gif) no-repeat 10px center; */
+/* 	padding-left: 20px; */
+	background: #F2F2F2;
+	padding: 5px;
+}
+html ul.topnav li ul.subnav li a:hover { /*--Hover effect for subnav links--*/
+	background: #F2F2F2; 
+}
+html ul.topnav li ul.subnav li a.rdr {
+	background: #F2F2F2 url("../images/watchcon/radar.png") no-repeat left center;
+	background-size: 13px;
+	padding-left: 17px;
+	margin-left: 10px;
+}
+html ul.topnav li ul.subnav li a.lgt {
+	background: #F2F2F2 url("../images/watchcon/lightning.png") no-repeat left center;
+	background-size: 13px;
+	padding-left: 17px;
+	margin-left: 10px;
+}
+
+
+ul.topnav li ul.subnav.manage a {
+	width: 160px;
+}

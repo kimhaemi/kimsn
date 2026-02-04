@@ -1,0 +1,40 @@
+<!-- 
+
+ -->
+
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<!-- 
+  해당 영역을 fragment로 치환
+  해당 layout을 사용하는 내용 출력
+  <th:block th:replace="파일경로 :: Fragment명" />
+-->
+  <!-- config -->
+  <th:block th:replace="layout/config :: configFragment"></th:block>
+  
+  <body style="zoom: 1;">
+    
+    <!-- header -->
+    <div class="wrap">
+      <th:block th:replace="layout/header :: headerFragment"></th:block>
+    </div>
+    
+    <div id="wrap">
+      <div class="container">
+        <div id="contents" class="wide">
+            <!-- <div class="cont max_width"> -->
+            <div class="cont">
+              <!-- content -->
+              <th:block layout:fragment="content"></th:block>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </body>
+  <!-- footer -->
+  <!-- <th:block th:replace="layout/footer :: footerFragment"></th:block> -->
+</html>

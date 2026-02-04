@@ -1,0 +1,138 @@
+2023-10-09 14:47:34.493 [INFO ] Starting RadardemoApplication using Java 11.0.18 on DESKTOP-BJ29IOC with PID 15232 (C:\000_dev\radardemo\build\classes\java\main started by haem in c:\000_dev\radardemo)
+2023-10-09 14:47:34.496 [DEBUG] Running with Spring Boot v2.7.15, Spring v5.3.29
+2023-10-09 14:47:34.497 [INFO ] No active profile set, falling back to 1 default profile: "default"
+2023-10-09 14:47:34.561 [INFO ] Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2023-10-09 14:47:35.366 [INFO ] Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2023-10-09 14:47:35.533 [INFO ] Finished Spring Data repository scanning in 152 ms. Found 10 JPA repository interfaces.
+2023-10-09 14:47:36.138 [INFO ] HikariPool-1 - Starting...
+2023-10-09 14:47:37.064 [INFO ] HikariPool-1 - Start completed.
+2023-10-09 14:47:37.129 [INFO ] HHH000204: Processing PersistenceUnitInfo [name: default]
+2023-10-09 14:47:37.210 [INFO ] HHH000412: Hibernate ORM core version 5.6.15.Final
+2023-10-09 14:47:37.574 [INFO ] HCANN000001: Hibernate Commons Annotations {5.1.2.Final}
+2023-10-09 14:47:37.848 [INFO ] HHH000400: Using dialect: org.hibernate.dialect.MySQL8Dialect
+2023-10-09 14:47:39.018 [INFO ] HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+2023-10-09 14:47:39.029 [INFO ] Initialized JPA EntityManagerFactory for persistence unit 'default'
+2023-10-09 14:47:40.108 [WARN ] Unable to start LiveReload server
+2023-10-09 14:47:40.136 [INFO ] Started RadardemoApplication in 6.144 seconds (JVM running for 8.729)
+2023-10-09 14:47:40.178 [INFO ] [데몬 구분] : 공항
+2023-10-09 14:47:40.482 [INFO ] [========================= 인천공항 접속 정보(connect, file, filesize) ===============================]
+2023-10-09 14:47:40.489 [INFO ] [인천공항 port] : 22
+2023-10-09 14:47:40.495 [INFO ] [인천공항 ip] : 190.1.11.209
+2023-10-09 14:47:40.495 [INFO ] [인천공항 username] : rainbow
+2023-10-09 14:47:40.496 [INFO ] [인천공항 pwd] : rain99
+2023-10-09 14:47:45.552 [INFO ] [인천공항 접속 유무] : false
+2023-10-09 14:47:45.552 [INFO ] [인천공항 접속 X]
+2023-10-09 14:47:45.553 [INFO ] [/// 인천공항 ssh 접속 종료 /// ]
+2023-10-09 14:47:45.554 [INFO ] [인천공항 파일 명] : 
+2023-10-09 14:47:45.554 [INFO ] [인천공항 파일 size] : 0
+2023-10-09 14:47:45.555 [INFO ] [인천공항 파일 recv] : MISS
+2023-10-09 14:47:45.555 [INFO ] [인천공항 파일 recvDtl] : file_no
+2023-10-09 14:47:45.555 [INFO ] [인천공항 접속 실패 query insert - receive_data]
+2023-10-09 14:47:50.995 [INFO ] [10초 후 다음] : 2023-10-09 14:47:50
+2023-10-09 14:47:50.996 [INFO ] [=================== 2번째 프로세스 ===================] 2023-10-09 14:47:50
+2023-10-09 14:47:51.095 [INFO ] [============ 인천공항 정보 ==============]
+2023-10-09 14:47:51.096 [INFO ] [####### 전 사이트 네트워크 장애 이력 update ########]
+2023-10-09 14:47:51.134 [INFO ] dataKindStr : TDWR
+2023-10-09 14:47:51.135 [INFO ] site_cd : IIA
+2023-10-09 14:47:51.135 [INFO ] data_type : NQC
+2023-10-09 14:47:51.135 [INFO ] currentTime : 2023-10-09 14:45
+2023-10-09 14:47:51.148 [INFO ] 최종 상태 : ORDI
+2023-10-09 14:47:51.212 [INFO ] [결과] : 
+2023-10-09 14:47:51.212 [INFO ] [결과 상세] : 
+2023-10-09 14:47:51.212 [INFO ] [상태 안바뀜 - update 날짜는 바뀜]
+2023-10-09 14:47:51.252 [INFO ] ======================= 문자 전송 =================================
+2023-10-09 14:47:51.278 [INFO ] [============ 인천공항 정보 ==============]
+2023-10-09 14:47:51.299 [INFO ] [최종 상태 정상]
+2023-10-09 14:47:51.299 [INFO ] [=================== end ===================]
+2023-10-09 15:01:57.322 [INFO ] Starting RadardemoApplication using Java 11.0.18 on DESKTOP-BJ29IOC with PID 4920 (C:\000_dev\radardemo\build\classes\java\main started by haem in c:\000_dev\radardemo)
+2023-10-09 15:01:57.325 [DEBUG] Running with Spring Boot v2.7.15, Spring v5.3.29
+2023-10-09 15:01:57.326 [INFO ] No active profile set, falling back to 1 default profile: "default"
+2023-10-09 15:01:57.373 [INFO ] Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2023-10-09 15:01:58.038 [INFO ] Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2023-10-09 15:01:58.178 [INFO ] Finished Spring Data repository scanning in 130 ms. Found 10 JPA repository interfaces.
+2023-10-09 15:01:58.767 [INFO ] HikariPool-1 - Starting...
+2023-10-09 15:01:59.708 [INFO ] HikariPool-1 - Start completed.
+2023-10-09 15:01:59.801 [INFO ] HHH000204: Processing PersistenceUnitInfo [name: default]
+2023-10-09 15:01:59.881 [INFO ] HHH000412: Hibernate ORM core version 5.6.15.Final
+2023-10-09 15:02:00.117 [INFO ] HCANN000001: Hibernate Commons Annotations {5.1.2.Final}
+2023-10-09 15:02:00.357 [INFO ] HHH000400: Using dialect: org.hibernate.dialect.MySQL8Dialect
+2023-10-09 15:02:01.223 [INFO ] HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+2023-10-09 15:02:01.234 [INFO ] Initialized JPA EntityManagerFactory for persistence unit 'default'
+2023-10-09 15:02:02.363 [WARN ] Unable to start LiveReload server
+2023-10-09 15:02:02.387 [INFO ] Started RadardemoApplication in 5.491 seconds (JVM running for 7.864)
+2023-10-09 15:02:02.416 [INFO ] [데몬 구분] : 공항
+2023-10-09 15:02:02.679 [INFO ] [========================= 인천공항 접속 정보(connect, file, filesize) ===============================]
+2023-10-09 15:02:02.685 [INFO ] [인천공항 port] : 22
+2023-10-09 15:02:02.690 [INFO ] [인천공항 ip] : 190.1.11.209
+2023-10-09 15:02:02.690 [INFO ] [인천공항 username] : rainbow
+2023-10-09 15:02:02.690 [INFO ] [인천공항 pwd] : rain99
+2023-10-09 15:02:07.728 [INFO ] [인천공항 접속 유무] : false
+2023-10-09 15:02:07.729 [INFO ] [인천공항 접속 X]
+2023-10-09 15:02:07.729 [INFO ] [/// 인천공항 ssh 접속 종료 /// ]
+2023-10-09 15:02:07.729 [INFO ] [인천공항 파일 명] : 
+2023-10-09 15:02:07.729 [INFO ] [인천공항 파일 size] : 0
+2023-10-09 15:02:07.730 [INFO ] [인천공항 파일 recv] : MISS
+2023-10-09 15:02:07.730 [INFO ] [인천공항 파일 recvDtl] : file_no
+2023-10-09 15:02:07.730 [INFO ] [인천공항 접속 실패 query insert - receive_data]
+2023-10-09 15:02:27.484 [INFO ] Starting RadardemoApplication using Java 11.0.18 on DESKTOP-BJ29IOC with PID 3776 (C:\000_dev\radardemo\build\classes\java\main started by haem in c:\000_dev\radardemo)
+2023-10-09 15:02:27.487 [DEBUG] Running with Spring Boot v2.7.15, Spring v5.3.29
+2023-10-09 15:02:27.488 [INFO ] No active profile set, falling back to 1 default profile: "default"
+2023-10-09 15:02:27.535 [INFO ] Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2023-10-09 15:02:28.167 [INFO ] Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2023-10-09 15:02:28.314 [INFO ] Finished Spring Data repository scanning in 131 ms. Found 10 JPA repository interfaces.
+2023-10-09 15:02:28.891 [INFO ] HikariPool-1 - Starting...
+2023-10-09 15:02:29.847 [INFO ] HikariPool-1 - Start completed.
+2023-10-09 15:02:29.931 [INFO ] HHH000204: Processing PersistenceUnitInfo [name: default]
+2023-10-09 15:02:30.008 [INFO ] HHH000412: Hibernate ORM core version 5.6.15.Final
+2023-10-09 15:02:30.248 [INFO ] HCANN000001: Hibernate Commons Annotations {5.1.2.Final}
+2023-10-09 15:02:30.463 [INFO ] HHH000400: Using dialect: org.hibernate.dialect.MySQL8Dialect
+2023-10-09 15:05:26.813 [INFO ] Starting RadardemoApplication using Java 11.0.18 on DESKTOP-BJ29IOC with PID 3592 (C:\000_dev\radardemo\build\classes\java\main started by haem in c:\000_dev\radardemo)
+2023-10-09 15:05:26.816 [DEBUG] Running with Spring Boot v2.7.15, Spring v5.3.29
+2023-10-09 15:05:26.817 [INFO ] No active profile set, falling back to 1 default profile: "default"
+2023-10-09 15:05:26.877 [INFO ] Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2023-10-09 15:05:27.505 [INFO ] Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2023-10-09 15:05:27.660 [INFO ] Finished Spring Data repository scanning in 144 ms. Found 10 JPA repository interfaces.
+2023-10-09 15:05:28.200 [INFO ] HikariPool-1 - Starting...
+2023-10-09 15:05:29.084 [INFO ] HikariPool-1 - Start completed.
+2023-10-09 15:05:29.172 [INFO ] HHH000204: Processing PersistenceUnitInfo [name: default]
+2023-10-09 15:05:29.260 [INFO ] HHH000412: Hibernate ORM core version 5.6.15.Final
+2023-10-09 15:05:29.471 [INFO ] HCANN000001: Hibernate Commons Annotations {5.1.2.Final}
+2023-10-09 15:05:29.697 [INFO ] HHH000400: Using dialect: org.hibernate.dialect.MySQL8Dialect
+2023-10-09 15:05:30.682 [INFO ] HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+2023-10-09 15:05:30.698 [INFO ] Initialized JPA EntityManagerFactory for persistence unit 'default'
+2023-10-09 15:05:31.848 [WARN ] Unable to start LiveReload server
+2023-10-09 15:05:31.868 [INFO ] Started RadardemoApplication in 5.516 seconds (JVM running for 7.13)
+2023-10-09 15:05:31.898 [INFO ] [데몬 구분] : 공항
+2023-10-09 15:05:32.197 [INFO ] [========================= 인천공항 접속 정보(connect, file, filesize) ===============================]
+2023-10-09 15:05:32.205 [INFO ] [인천공항 port] : 22
+2023-10-09 15:05:32.210 [INFO ] [인천공항 ip] : 190.1.11.209
+2023-10-09 15:05:32.211 [INFO ] [인천공항 username] : rainbow
+2023-10-09 15:05:32.211 [INFO ] [인천공항 pwd] : rain99
+2023-10-09 15:05:37.251 [INFO ] [인천공항 접속 유무] : false
+2023-10-09 15:05:37.252 [INFO ] [인천공항 접속 X]
+2023-10-09 15:05:37.252 [INFO ] [/// 인천공항 ssh 접속 종료 /// ]
+2023-10-09 15:05:37.252 [INFO ] [인천공항 파일 명] : 
+2023-10-09 15:05:37.252 [INFO ] [인천공항 파일 size] : 0
+2023-10-09 15:05:37.253 [INFO ] [인천공항 파일 recv] : MISS
+2023-10-09 15:05:37.253 [INFO ] [인천공항 파일 recvDtl] : file_no
+2023-10-09 15:05:37.253 [INFO ] [인천공항 접속 실패 query insert - receive_data]
+2023-10-09 15:05:42.708 [INFO ] [10초 후 다음] : 2023-10-09 15:05:42
+2023-10-09 15:05:42.708 [INFO ] [=================== 2번째 프로세스 ===================] 2023-10-09 15:05:42
+2023-10-09 15:05:42.825 [INFO ] [============ 인천공항 정보 ==============]
+2023-10-09 15:05:42.825 [INFO ] [####### 전 사이트 네트워크 장애 이력 update ########]
+2023-10-09 15:05:42.862 [INFO ] dataKindStr : TDWR
+2023-10-09 15:05:42.862 [INFO ] site_cd : IIA
+2023-10-09 15:05:42.862 [INFO ] data_type : NQC
+2023-10-09 15:05:42.862 [INFO ] currentTime : 2023-10-09 15:00
+2023-10-09 15:05:42.874 [INFO ] 최종 상태 : ORDI
+2023-10-09 15:05:42.937 [INFO ] [결과] : 
+2023-10-09 15:05:42.937 [INFO ] [결과 상세] : 
+2023-10-09 15:05:42.938 [INFO ] [상태 안바뀜 - update 날짜는 바뀜]
+2023-10-09 15:05:42.983 [INFO ] ======================= 문자 전송 =================================
+2023-10-09 15:05:43.012 [INFO ] [============ 인천공항 정보 ==============]
+2023-10-09 15:05:43.036 [INFO ] [최종 상태 정상]
+2023-10-09 15:05:43.036 [INFO ] [=================== end ===================]
+2023-10-09 15:06:07.269 [INFO ] Restarting due to 1 class path change (0 additions, 1 deletion, 0 modifications)
+2023-10-09 15:06:07.275 [INFO ] Closing JPA EntityManagerFactory for persistence unit 'default'
+2023-10-09 15:06:07.280 [INFO ] HikariPool-1 - Shutdown initiated...
+2023-10-09 15:06:07.297 [INFO ] HikariPool-1 - Shutdown completed.

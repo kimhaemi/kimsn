@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/default_layout}"
+      th:with="metaTitle='문자 발송 내역 Nuri2'">
+
+	<th:block layout:fragment="content">
+        <script th:inline="javascript">
+            /* <![CDATA[ */
+                var smsRsultList = /*[[${smsRsultList}]]*/
+                console.log("smsRsultList", smsRsultList);
+            /* ]]> */
+        </script>
+        
+        <script type="text/javascript">
+        
+        $(document).ready(function(){
+            history.replaceState({}, null, location.pathname);
+            var currentYear = (new Date()).getFullYear();
+
+            // var months = [];
+            // var month = (new Date()).getMonth()+1;
+            // var j = 0;
+            // for(var i=month+1;i <= 12; i++){
+            //     months[j++] = i.toString();
+            // }
+            
+            // monthpicker 적용
+            $('#month').monthpicker({
+                // pattern: 'yyyy년 mm월', //input 태그에 표시될 형식
+                // selectedYear: currentYear, //선택 연도
+                // startYear: 2023, //시작연도
+                // finalYear: currentYear, //마지막 연도
+                // monthNames: ['1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월'],
+                // openOnFocus: true, //focus시 달려이 보일지 유무
+                // disableMonths: [] //월 비활성화
+
+                changeMonth : true,
+                changeYear : true,
+                monthNames : ['1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월'],
+                monthNamesShort : ['1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월'],
+                firstDay : 0,
+                isRTL : false,
+                // showMonthAfterYear : true,
+                yearSuffix : "년",
+                showOn: 'both',
+                dateFormat: 'yy년 mm월',
+                yearRange: "2023:"+ currentYear
+            });
+        });
+
+        $(function() {	
+            $("#btnSearch").on('click', function (e) {
+                var selDate = $("#month").val().replace(/ |년|월|일/g, "");
+                var nowYearMonth = ((new Date()).getFullYear()).toString() + ((new Date()).getMonth()+1).toString();
+                if(selDate < 202308){
+                    alert("2023년 8월 이전 DATA는 없습니다.");
+                    $("#month").val(((new Date()).getFullYear())+ "년 " + ((new Date()).getMonth()+1).toString()+"월");
+                    return false;
+                }
+                // console.log("nowYearMonth ::: " + nowYearMonth);
+                // console.log("selDate :::" + selDate);
+                if(selDate > nowYearMonth){
+                    alert("현재 월보다 이후 DATA는 조회할 수 없습니다.");
+                    $("#month").val(((new Date()).getFullYear())+ "년 " + ((new Date()).getMonth()+1).toString()+"월");
+                    return false;
+                }
+                $("#sDt").val(selDate);
+                $("#searchDate").submit();
+            });    
+        });
+
+        </script>
+    
+        <table class="noticeTbl settingSeries">
+            <thead>
+            <tr>
+                <th class="left">
+                    관리 &gt; 문자 발송 내역 Nuri2
+                </th>
+                <th class="right">
+                    <button class="btn ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only"
+                     onclick="location.href='/manage/sms_send_nuri2'">문자 보내기</button>
+                </th>
+            </tr>
+            </thead>
+        </table>
+        <form action="" method="post" target="_self" id="searchDate">
+			<input type="hidden" name="sDt" id="sDt"/>
+            <table class="noticeTbl searchSeries">
+                <colgroup>
+                    <col style="width:400px;"/>
+                    <col style="width:350px;"/>
+                    <col style="width:50px;"/>
+                </colgroup>
+                <thead>
+                <tr>
+                    <th>
+                      <span th:text="${smsRsultList.totalElements}"></span>
+                    </th>
+                    <th class="right">
+                        발송 상태
+                        <select name="smsResult" id="smsResult" style="size: 200px;">
+                            <option value="" th:selected="${smsResult == null || smsResult == '' ? true : false}">전체</option>
+                            <option value="1" th:selected="${smsResult == '1' ? true : false}">성공</option>
+                            <option value="0" th:selected="${smsResult == '0' ? true : false}">실패</option>
+                            <option value="9" th:selected="${smsResult == '9' ? true : false}">대기</option>
+                        </select>
+                        <input type="text" id="month" th:value="${monthpick}" readonly />
+                    </th>
+                    <th class="right">
+                        <button class="btn ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" id="btnSearch">검색</button>
+                    </th>
+                </tr>
+                </thead>
+            </table>
+        </form>
+        
+        <!-- <table class="mainTbl settingSeries" summary="" id="smsSendTab"> -->
+        <table class="table subTbl table-hover">
+            <caption class="hidden">문자 발송 내역 Nuri2</caption>
+            <colgroup>
+              <col style="width:50px;"/>
+              <col style="width:80px;"/>
+              <col style="width:80px;"/>
+              <col style="width:80px;"/>
+              <col style="width:120px;"/>
+              <col style="width:350px;"/>
+            </colgroup>
+            <thead class="subThead">
+                <tr>
+                    <th>순번</th>
+                    <th>발송 타입</th>
+                    <!-- <th width="80">문자 종류</th> -->
+                    <th>발송 번호</th>
+                    <th>발송 상태</th>
+                    <th>발신 요청 시각</th>
+<!--                    <th width="120">수신 전화번호</th>-->
+                    <th>발신 메시지</th>
+                </tr>
+            </thead>
+            <tbody class="table-group-divider">
+                  <tr th:each="smsData, smsListStat : ${smsRsultList.content}">
+                    <td>
+                        <!-- <span th:text="${smsListStat.index+1}">
+                            ${전체 게시글 수 - (현재 페이지-1) * 페이지 당 보여지는 게시물 수 - smsListStat.index}
+                        </span> -->
+<!--                        <span th:text="${smsRsultList.totalElements - (smsRsultList.number) * 15 - smsListStat.index}"></span>-->
+                    </td>
+                    <td><span th:text="${smsData.RSLT_TYPE_NAME}"></span></td>
+                    <td><span th:text="${smsData.PHONE}"></span></td>
+<!--                    <td th:if="${smsData.PHONE.length} ge 11">&lt;!&ndash; >= &ndash;&gt;-->
+<!--                        <span th:text="${smsData.PHONE.substring(0,3)}"></span> - -->
+<!--                        <span th:text="${smsData.PHONE.substring(3,7)}"></span> - -->
+<!--                        <span th:text="${smsData.PHONE.substring(7,11)}"></span>-->
+<!--                    </td>-->
+<!--                    <td th:if="${smsData.PHONE.length lt 11} ">-->
+<!--                        <span th:text="${smsData.PHONE.substring(0,3) == '010' ? smsData.PHONE.substring(0,3) : smsData.PHONE.substring(0,2)}"></span> - -->
+<!--                        <span th:text="${smsData.PHONE.substring(0,3) == '010' ? smsData.PHONE.substring(3,6) : smsData.PHONE.substring(2,6)}"></span> - -->
+<!--                        <span th:text="${smsData.PHONE.substring(6,10)}"></span>-->
+<!--                        <span th:text="${smsData.PHONE}"></span>-->
+<!--                    </td>-->
+                    <td><span th:text="${smsData.MSG_STATE_NAME}"></span></td>
+                    <td>
+                      <span th:text="${smsData.RES_DATE}"></span>
+<!--                        <fmt:formatDate pattern="yyyy-MM-dd HH:mm:ss" th:text="${smsData.RES_DATE }" />-->
+                    </td>
+
+<!--                    <td th:if="${smsData.call_from.length} ge 11">&lt;!&ndash; >= &ndash;&gt;-->
+<!--                        <span th:text="${smsData.call_from.substring(0,3)}"></span> - -->
+<!--                        <span th:text="${smsData.call_from.substring(3,7)}"></span> - -->
+<!--                        <span th:text="${smsData.call_from.substring(7,11)}"></span>-->
+<!--                    </td>-->
+<!--                    <td th:if="${smsData.call_from.length lt 11} ">&lt;!&ndash; lt:< / gt:> &ndash;&gt;-->
+<!--                        &lt;!&ndash; <span th:text="${smsList.call_from.substring(0,3) == '010' ? smsData.call_from.substring(0,3) : smsData.call_from.substring(0,2)}"></span> - -->
+<!--                        <span th:text="${smsData.call_from.substring(0,3) == '010' ? smsData.call_from.substring(3,6) : smsData.call_from.substring(2,6)}"></span> - -->
+<!--                        <span th:text="${smsData.call_from.substring(6,10)}"></span> &ndash;&gt;-->
+<!--                        <span th:text="${smsData.call_from}"></span>-->
+<!--                    </td>-->
+                    <td><span th:utext="${smsData.SMS_TEXT == '' ? '' : #strings.replace(smsData.SMS_TEXT, '\n', '<br />')}"></span>
+                    </td>
+                </tr>
+                <tr th:if="${smsRsultList.content.size == 0 }">
+                    <td colspan="7">데이터가 없습니다.</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <nav aria-label="Page navigation" th:if="${smsRsultList.size > 0}">
+            <!--표에 사용될 변수값 초기화 -->
+            <ul class="pagination justify-content-center"
+                th:with="
+                    pageNumber = ${smsRsultList.pageable.pageNumber},
+                    pageSize = ${smsRsultList.pageable.pageSize},
+                    totalPages = ${smsRsultList.totalPages},
+                    startPage = ${T(java.lang.Math).floor(pageNumber / pageSize) * pageSize + 1},
+                    tempEndPage = ${startPage + pageSize - 1},
+                    endPage = (${tempEndPage < totalPages ? tempEndPage : totalPages}),
+                    sDt=${sDt},
+                    smsResult=${smsResult}
+                    "
+                    >
+                    <!-- th:with="start=${T(java.lang.Math).floor(smsRsultList.number/10)*10 + 1},
+                        last=(${start + 9 < smsRsultList.totalPages ? start + 9 : smsRsultList.totalPages})"> -->
+
+                <li th:classappend="${smsRsultList.first} ? 'disabled'" class="page-item">
+                    <a class="page-link" th:href="${smsRsultList.first} ? '#' : @{/manage/sms_send_result_nuri2(page=${0}, sDt=${sDt}, smsResult=${smsResult})}">
+                        <span aria-hidden="true">&lt;&lt;</span>
+                    </a>
+                </li>
+
+                <li th:classappend="${smsRsultList.first} ? 'disabled'" class="page-item">
+                    <a class="page-link" th:href="${smsRsultList.first} ? '#' : @{/manage/sms_send_result_nuri2(page=${pageNumber - 1}, sDt=${sDt}, smsResult=${smsResult})}">
+                        <span aria-hidden="true">&lt;</span>
+                    </a>
+                </li>
+
+                <li th:each="page: ${#numbers.sequence(startPage, endPage)}" th:classappend="${page == pageNumber + 1} ? 'active'" class="page-item">
+                    <th:block th:if="${page != 0}">
+                        <a th:text="${page}" class="page-link" th:href="@{/manage/sms_send_result_nuri2(page=${page - 1}, sDt=${sDt}, smsResult=${smsResult})}"></a>
+                    </th:block>
+                </li>
+
+                <li th:classappend="${smsRsultList.last} ? 'disabled'" class="page-item">
+                    <a class="page-link" th:href="${smsRsultList.last} ? '#' : @{/manage/sms_send_result_nuri2(page=${pageNumber + 1}, sDt=${sDt}, smsResult=${smsResult})}" aria-label="Next">
+                        <span aria-hidden="true">&gt;</span>
+                    </a>
+                </li>
+
+                <li th:classappend="${smsRsultList.last} ? 'disabled'" class="page-item">
+                    <a class="page-link" th:href="${smsRsultList.last} ? '#' : @{/manage/sms_send_result_nuri2(page=${totalPages-1}, sDt=${sDt}, smsResult=${smsResult})}" aria-label="Next">
+                        <span aria-hidden="true">&gt;&gt;</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </th:block>
+</html>

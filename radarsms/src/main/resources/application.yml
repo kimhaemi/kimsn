@@ -1,0 +1,74 @@
+# server
+server:
+  port: 8700
+  
+spring:
+# 콘솔 색상
+  output:
+    ansi:
+      enabled: always
+
+# DB
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: root
+    #local
+    # url: jdbc:mysql://175.197.48.213:3306/watchdog
+    # password: Test123~!@
+    # real
+    url: jdbc:mysql://localhost:3308/watchdog
+    password: qpalzm11!
+
+# query
+  jpa:
+    open-in-view: false #spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+    # show-sql: true # true 설정시 JPA 쿼리문 확인 가능
+    # format-sql: true # query 보기 예쁘게
+    use_sql_comments: true
+    # hibernate: 
+    #   ddl-auto: none # DDL(create, alter, drop, none) 정의시 DB의 고유 기능을 사용할 수 있다.
+
+# JPA의 구현체인 Hibernate가 동작하면서 발생한 SQL의 가독성을 높여준다.
+# spring.jpa.properties.hibernate.format_sql=true
+
+# View
+  # mvc:
+  # view:
+  #  prefix: /WEB-INF/views/
+  #  suffix: .jsp
+
+#JSP와 같이 사용할 경우 뷰 구분을 위해 컨트롤러가 뷰 이름을 반환할때 thymeleaf/ 로 시작하면 타임리프로 처리하도록 view-names 지정
+  mvc:
+    view:
+  # thymeleaf:
+      prefix: classpath:templates/
+      suffix: .html
+# thymeleaf를 사용하다 수정 사항이 생길 때 수정을 하면 재시작을 해줘야 한다. 이를 무시하고 브라우저 새로고침시 수정사항 반영을 취해 cache=false 설정(운영시는 true)
+  thymeleaf:
+      cache: false
+      check-template-location: true
+      
+# 디버그
+logging:
+  config:
+    classpath: log4j2.yml
+  level: # 각 package 별로 로깅 레벨을 지정할 수 있다.
+    '[kr.or.kimsn.radarsms]': DEBUG
+    # '[kr.or.kimsn.radarsms.restApiController.SaveController]': debug
+    # org:
+    #   hibernate:
+    #     type:
+    #       descriptor:
+    #         sql: trace #query에 어떤 값이 들어갔는지 확인
+  # file:
+  #   # name: ${user.dir}/log/test.log  # 로깅 파일 위치이다.
+  #   name: ./logs/radarsms.log  # 로깅 파일 위치이다.
+  #   max-history: 7 # 로그 파일 삭제 주기이다. 7일 이후 로그는 삭제한다.
+    # max-size: 10MB  # 로그 파일 하나당 최대 파일 사이즈이다.
+  #   # logging.level.org.springframework.security=DEBUG
+  #  로그 패턴 설정
+  pattern:
+    console: "%-5level [%d{yyyy-MM-dd HH:mm:ss}] - %msg%n"
+    file: "%-5level [%d{yyyy-MM-dd HH:mm:ss}] - %msg%n"
+    # logging.pattern.console=%-5level %d{yyyy-MM-dd HH:mm:ss}[%thread] [%F - %M] [%logger{0}:%line] - %msg%n
+    # logging.pattern.file= %-5level %d{yyyy-MM-dd HH:mm:ss}[%thread] [%F - %M] [%logger{0}:%line] - %msg%n

@@ -1,0 +1,72 @@
+plugins {
+	id 'java'
+	id 'org.springframework.boot' version '2.7.12'
+	id 'io.spring.dependency-management' version '1.0.15.RELEASE'
+}
+
+group = 'kr.or.kimsn'
+version = 'REAL'
+sourceCompatibility = '11'
+apply plugin: 'war'
+
+configurations {
+	compileOnly {
+		extendsFrom annotationProcessor
+	}
+	/*logback 의존성 제거*/
+	all {
+        exclude group: 'org.springframework.boot', module: 'spring-boot-starter-logging'
+    }
+}
+
+repositories {
+	mavenCentral()
+//	maven {
+//		url = uri("https://repo.maven.apache.grg/maven2")
+//	}
+//	mavenLocal()
+	// flatDir {
+	// 	dirs "libs"
+	// }
+}
+
+dependencies {
+	//thymeleaf layout
+	implementation 'nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect'
+	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation 'org.springframework.boot:spring-boot-starter-security'
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa' //query
+	//spring-boot-devtools .html파일을 컴파일만 해주면 서버 재시작 없이 view 파일 변경이 가능
+	implementation 'org.springframework.boot:spring-boot-devtools'
+	// implementation 'org.springframework.boot:spring-boot-starter-mustache'
+
+ 	implementation 'com.googlecode.json-simple:json-simple:1.1.1'
+
+	/*logback 의존성 추가*/
+	implementation 'org.springframework.boot:spring-boot-starter-log4j2'
+	implementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-yaml'
+
+	implementation 'org.apache.commons:commons-lang3:3.12.0'
+	// implementation 'com.fasterxml.jackson.core:jackson-databind'
+    // implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310'
+    implementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-xml'
+    implementation 'org.modelmapper:modelmapper:2.3.9'
+	
+	runtimeOnly 'mysql:mysql-connector-java:8.0.33'
+	compileOnly 'org.projectlombok:lombok'
+	annotationProcessor 'org.projectlombok:lombok'
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
+	runtimeOnly 'com.h2database:h2'
+
+	providedRuntime 'org.springframework.boot:spring-boot-starter-tomcat'
+
+	//jsp 파일 설정
+	// implementation 'org.apache.tomcat.embed:tomcat-embed-jasper'
+	// implementation 'javax.servlet:jstl'
+}
+
+tasks.named('test') {
+	useJUnitPlatform()
+}

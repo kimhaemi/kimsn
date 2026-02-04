@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/default_layout}"
+      th:with="metaTitle='문자 템플릿'">
+
+      <th:block layout:fragment="content">
+        <script th:inline="javascript">
+            /* <![CDATA[ */
+                var tempCodeList = /*[[${tempCodeList}]]*/
+                console.log("tempCodeList", tempCodeList);
+            /* ]]> */
+        </script>
+        
+        <script type="text/javascript">
+        //수정
+        function fnModify(tempCode){
+            let list = new Array();
+            let cnt = 0;
+            $("input[name=templateBtn]").each(function(idx, item){
+                console.log(item.id + " : " + $("#"+item.id).is(":checked"));
+                let jObj = new Object();
+                tempCodeList.forEach(e => {
+                    // console.log(e);
+                    if(("templateBtn_"+e.templateCode) == item.id){
+                        jObj.appGubun= "KAKAO",
+                        jObj.oldTemplateCode= e.templateCode,
+                        jObj.newTemplateCode= $("#templateCode_"+e.templateCode).val(),
+                        jObj.head= $("#head_"+e.templateCode).val()+"\n",
+                        jObj.foot= null,
+                        jObj.title= null,
+                        jObj.useButton= $("#"+item.id).is(":checked") ? "Y" : "N";
+                        list.push(jObj);
+
+                        if($("#"+item.id).is(":checked")){
+                            cnt++;
+                        }
+                    }
+                });
+            });
+            console.log(cnt);
+            console.log(list);
+            if(cnt == 0){
+                alert("하나의 템플릿 코드를 활성화 하세요.");
+                return false;
+            }
+            if(cnt > 1){
+                alert("템플릿 코드는 하나의 코드만 활성화할 수 있습니다.");
+                return false;
+            }
+            // const params = {
+            //     appGubun: "KAKAO",
+            //     oldTemplateCode: tempCode,
+            //     newTemplateCode: $("#templateCode_"+tempCode).val(),
+            //     head: $("#head_"+tempCode).val()+"\n",
+            //     foot: null,
+            //     title: null,
+            //     useButton: $("#templateBtn_"+tempCode).is(":checked") ? "Y" : "N"
+            // }
+            // console.log(params);
+            if(confirm("수정 하겠습니까?")){
+                let result = fnCall('post', '/manage/sms_temp_modify', JSON.stringify(list));
+                if(result.status == "success"){
+                    alert("수정 되었습니다.");
+                    location.href="/manage/sms_template";
+                } else {
+                    alert("수정에 실패했습니다.\n" + result.data);
+                }
+                console.log("result :: "+ result);
+            }
+        }
+
+        //삭제
+        function fnDelete(tempCode){
+            if($("#templateBtn_"+tempCode).is(":checked")){
+                alert("활성화 되어있는 코드는 삭제 할 수 없습니다.");
+                return false;
+            }
+            if(confirm("삭제 하겠습니까?")){
+                let result = fnCall('post', '/manage/sms_temp_delete?tempCode='+tempCode, {});
+                if(result.status == "success"){
+                    alert("삭제 되었습니다.");
+                    location.href="/manage/sms_template";
+                } else {
+                    alert("삭제에 실패했습니다.\n" + result.data);
+                }
+                console.log("result :: "+ result);
+            }
+        }
+
+        //추가
+        function fnAdd(){
+            const params = {
+                appGubun: "KAKAO",
+                templateCode: $("#addTemplateCode").val(),
+                head: $("#addHead").val()+"\n",
+                foot: null,
+                title: null,
+                useButton: "N"
+            }
+            console.log(params);
+            if(confirm("등록 하겠습니까?")){
+                    let result = fnCall('post', '/manage/sms_temp_add', JSON.stringify(params));
+                if(result.status == "success"){
+                    alert("등록 되었습니다.");
+                    location.href="/manage/sms_template";
+                } else {
+                    alert("등록에 실패했습니다.\n" + result.data);
+                }
+                console.log("result :: "+ result);
+            }
+        }
+
+        </script>
+    
+        <table class="noticeTbl settingSeries">
+            <thead>
+            <tr>
+                <th class="left">
+                    관리 &gt; 문자발송 &gt; 문자 템플릿
+                </th>
+                <th class="right">
+                    <button class="btn ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only"
+                     onclick="location.href='/manage/sms_send'">문자 보내기</button>
+                </th>
+            </tr>
+            </thead>
+        </table>
+        
+        <!-- <table class="mainTbl settingSeries" summary="" id="smsSendTab"> -->
+        <table class="table subTbl table-hover" summary="">
+            <caption class="hidden">문자 템플릿</caption>
+            <thead class="subThead">
+                <tr>
+                    <th width="50">순번</th>
+                    <th width="100">APP 구분</th>
+                    <th width="100">템플릿 코드</th>
+                    <th width="250">템플릿 머릿말</th>
+                    <th width="100">설정</th>
+                    <th width="100">관리</th>
+                </tr>
+            </thead>
+            <tbody class="table-group-divider">
+                <tr th:each="tempCode, tempCodetStat : ${tempCodeList}">
+                    <td><span th:text="${tempCodetStat.index+1}"></span></td>
+                    <td><span th:text="${tempCode.appGubun}"></span></td>
+                    <td>
+                        <input type="text" name="templateCode" th:id="${'templateCode_'+tempCode.templateCode}" size="30" maxlength="40" th:value="${tempCode.templateCode }"/></span>
+                    </td>
+                    <td>
+                        <input type="text" name="head" th:id="${'head_'+tempCode.templateCode}" size="30" maxlength="300" th:value="${tempCode.head }"/>
+                    </td>
+                    <td>
+                        <label class="a8z-toggle-switch" data-size="sm" style="--a8z-ts-width: 60px;">
+                            <input type="checkbox" name="templateBtn"
+                                th:id="${'templateBtn_'+tempCode.templateCode}"
+                                th:checked="${tempCode.useButton == 'Y' ? 1 : 0}"
+                            />
+                            <span class="toggle">
+                                <span class="switch"></span>
+                            </span>
+                        </label>
+                    </td>
+                    <td>
+                        <input type="submit" class="btn" name="" id="modify" value="수정" th:onclick="fnModify([[${tempCode.templateCode}]])"/>
+                        <!-- <input type="submit" class="btn" name="" id="delete" value="삭제" th:onclick="fnDelete([[${tempCode.templateCode}]])"/> -->
+                    </td>
+                </tr>
+                <tr th:if="${tempCodeList.size == 0 }">
+                    <td colspan="7">데이터가 없습니다.</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <br />
+        <table class="noticeTbl settingSeries" >
+            <thead>
+            <tr>
+                <th class="left">
+                    관리 > 문자발송 > 문자 템플릿 추가 등록
+                </th>
+                <th class="right">
+                </th>
+            </tr>
+            </thead>
+        </table>
+
+        <table class="table subTbl table-hover" summary="">
+            <caption class="hidden">문자 템플릿 추가 등록</caption>
+            <thead class="subThead">
+                <tr>
+                    <th width="300">템플릿 코드</th>
+                    <th width="300">템플릿 머릿말</th>
+                    <th width="60"></th>
+                </tr>
+            </thead>
+            <tbody class="table-group-divider">
+                <tr>
+                    <td>
+                        <input type="text" name="addTemplateCode" id="addTemplateCode" size="50" value=""/>
+                    </td>
+                    <td>
+                        <input type="text" name="addHead" id="addHead" size="50" value=""/>
+                    </td>
+                    <td>
+                        <input type="submit" class="btn" name="" value="추가" th:onclick="fnAdd()"/>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </th:block>
+</html>

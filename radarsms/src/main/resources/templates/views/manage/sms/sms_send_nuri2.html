@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/default_layout}"
+      th:with="metaTitle='문자 발송 NURI2'">
+
+	<th:block layout:fragment="content">
+        <style type="text/css">
+        .mainTbl tbody td {
+            text-align: left;
+            padding-left: 10px;
+        }
+        </style>
+
+        <script th:inline="javascript">
+        /* <![CDATA[ */
+            var members = /*[[${memberList}]]*/
+            console.log("members : ", members);
+            var groups = /*[[${groups}]]*/
+            console.log("groups :: ", groups);
+            var tempCodeList = /*[[${tempCodeList}]]*/
+            console.log("tempCodeList :: ", tempCodeList);
+
+        /* ]]> */
+
+        </script>
+
+        <script type="text/javascript">
+            const mems = [];
+            $(document).ready(function (){
+                members.forEach(e => {
+                    mems.push([e.gid.toString(), e.mid.toString(), e.name, e.organization, e.position, e.phone_num]);
+                });
+            });
+
+            $(function() {
+                $('a.btn').button();
+                $( "#reqTime" ).timepicker({
+                    'minTime': '09:00am', // 조회하고자 할 시작 시간 ( 09시 부터 선택 가능하다. )
+                    'maxTime': '20:00pm', // 조회하고자 할 종료 시간 ( 20시 까지 선택 가능하다. )
+                    'timeFormat': 'HH:mm'
+                });
+                $( "#reqDate" ).datepicker({
+                    changeMonth: true,
+                    changeYear: true,
+                    prevText: '이전 달',
+                    nextText: '다음 달',
+                    monthNames: ['1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월'],
+                    monthNamesShort: ['1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월'],
+                    dayNames: ['일','월','화','수','목','금','토'],
+                    dayNamesShort: ['일','월','화','수','목','금','토'],
+                    dayNamesMin: ['일','월','화','수','목','금','토'],
+                    showMonthAfterYear: true,
+                    yearSuffix: '년',
+                    dateFormat: 'yy.mm.dd',
+                    minDate: "+0D", 
+                    maxDate: "+2Y"/*(new Date(2014, 11, 31)) /*"+1Y +1M +10D"*/
+                });
+                
+                $("#check_groups_all").click(function(){
+                    if($("#check_groups_all").prop("checked")){
+                        $("input[name=groups]").prop("checked",true);
+                    }else{
+                        $("input[name=groups]").prop("checked",false);
+                        if($("#check_groups_member").prop("checked")){
+                            $("#check_groups_member").prop("checked",false);
+                            $("tr#targetMembers>td").html("");
+                            $("tr#targetMembers").hide();
+                        }
+                    }
+                });
+                
+                $("#groupsCell input[name='groups']").click(function(e){
+                    if($("#check_groups_member").prop("checked")){
+                        if( e.target.checked ){
+                            setGroupsMembers();
+                        }
+                        else{
+                            if($("#groupsCell input[name='groups']:checked").length>0){
+                                console.log("e.target.value ::::: " + e.target.value);
+                                delGroupsMembers(e.target.value);
+                            }
+                            else{
+                                $("#check_groups_member").prop("checked",false);
+                                $("#check_groups_all").prop("checked",false);
+                                $("tr#targetMembers>td").html("");
+                                $("tr#targetMembers").hide();
+                            }
+                        }	
+                    } 
+                });
+                
+                $("#check_groups_member").click(function(){
+                    
+                    if($("#check_groups_member").prop("checked")){
+                        if($("input[name=groups]:checked").length>0){
+                            $("tr#targetMembers").show();
+                            //전체선택 check box
+                            // var html = '<span style="margin-right:10px;white-space: nowrap;">'
+                            //     + '<input type="checkbox" id="membersAll" name="membersAll" onchange="fnMembersAll()"" checked/>'
+                            //     + '<label for="membersAll" style="margin-right:10px" > '
+                            //     + '전체 선택'
+                            //     + '</label></span><br />';
+                            // $("tr#targetMembers>td").append(html);
+                            setGroupsMembers();
+                        }
+                        else{
+                            alert("선택된 그룹이 없습니다.");
+                            $("#check_groups_all").focus();
+                            $("#check_groups_member").prop("checked",false);
+                        }
+                    }else{
+                        $("tr#targetMembers>td").html("");
+                        $("tr#targetMembers").hide();
+                    }
+                });
+                
+                $("#setReqDateRSV").click(function(){
+                    $("input[name=reqDate]").prop("disabled",false);
+                    $("input[name=reqTime]").prop("disabled",false);
+                });
+                $("#setReqDateNOW").click(function(){
+                    $("input[name=reqDate]").prop("disabled",true);
+                    $("input[name=reqTime]").prop("disabled",true);
+                });
+
+            });
+
+            //부분선택시 전체선택 해제
+            function fnMembersChk(){
+                var members = $("input[name='members']");
+                var membersChk = $("input[name='members']:checked");
+                if(members.length == membersChk.length){
+                    $("input[name=membersAll]").prop("checked",true);
+                } else {
+                    $("input[name=membersAll]").prop("checked",false);
+                }
+            }
+
+            //전체선택/해제
+            function fnMembersAll(){
+                let memberAllchk = $("#membersAll").prop("checked");
+                if(memberAllchk){
+                    $("input[name=members]").prop("checked",true);
+                } else {
+                    $("input[name=members]").prop("checked",false);
+                }
+            }
+            
+            //지점별 그룹선택
+            function setGroupsMembers(){
+                var groups = $("input[name='groups']:checked");
+                let params = new Array();
+                for(let i=0; i<groups.length; i++){
+                    params.push(groups.eq(i).val());
+
+                    for(var j=0; j<mems.length; j++){
+                        if( groups.eq(i).val() == mems[j][0] ){
+                            // console.log("mems :: ", mems[j]);
+                            makeGroupsMember(mems[j]);
+                        }
+                    }
+                }
+
+                // console.log(params);
+
+                // let result = fnCall('get', '/manage/sms_memberList?gId='+params, {});
+                // let reArr = [];
+                // result.forEach(e => {
+                //     reArr.push([e.gid.toString(), e.mid.toString(), e.name, e.organization, e.position, e.phone_num]);
+                // });
+                // $("tr#targetMembers>td>span").remove();
+                // var html = '<span style="margin-right:10px;white-space: nowrap;">'
+                //                 + '<input type="checkbox" id="membersAll" name="membersAll" onchange="fnMembersAll()"" checked/>'
+                //                 + '<label for="membersAll" style="margin-right:10px" > '
+                //                 + '전체 선택'
+                //                 + '</label></span><br />';
+                //             $("tr#targetMembers>td").append(html);
+                // for(let i=0; i<reArr.length; i++){
+                //     makeGroupsMember(reArr[i]);
+                // }
+            }
+            function makeGroupsMember(member){
+                if(checkGroupsMember(member[1])){
+                    var html = '<span id="member_'+ member[1] +'" style="margin-right:10px;white-space: nowrap;">'
+                    + '<input type="checkbox" id="members_'+ member[1] +'" name="members" value="'+ member[5] +'" onchange="fnMembersChk()" checked/>'
+                    + '<label for="members_'+ member[1] + '" style="margin-right:10px" > '
+                    + member[2] + ' ' + member[5] + ' (' + member[3] + ' ' + member[4] +')'
+                    + '</label></span><br />';
+                    $("tr#targetMembers>td").append(html);
+                }
+            }
+            function checkGroupsMember(memid){
+                var members = $("td#targetMembers input[name='members']");
+                for(var i=0; i<members.length; i++){
+                    if(memid == members.eq(i).val()){
+                        return false;
+                    }
+                }
+                return true;
+            }
+            function delGroupsMembers(){
+                $("tr#targetMembers input[name='members']").addClass("DO_DEL");
+                console.log("mems ::: " + mems);
+                $("td#groupsCell input[name='groups']:checked").each(function(e){
+                    console.log("e ::::: " + e);
+                    console.log($(this).val());
+                    for(var i=0; i<mems.length; i++){
+                        // console.log("mems[i][0] ::: " + mems[i][0]);
+                        // console.log("this(val) ::: " + $(this).val());
+                        
+                        if(mems[i][0] == $(this).val()){
+                            console.log("mems[i][1] ::: " + mems[i][1]);
+                            console.log("#member_ :::::: " + $("#member_"+mems[i][1]));
+                            $("tr#targetMembers input#members_"+mems[i][1]).removeClass("DO_DEL");
+                        }
+                    }
+                });
+                console.log($("tr#targetMembers input.DO_DEL"));
+                $("tr#targetMembers input.DO_DEL").each(function(){
+                    $(this).parent().next("br").remove();
+                    $(this).parent().remove();
+                });
+            }
+
+            //문자 전송
+            function fnSubmit(){
+
+                if($("input[name='groups']:checked").length==0){
+                    alert("문자를 수신받을 그룹을 선택하세요.");
+                    $("#check_groups_all").focus();
+                    return false;
+                }
+                if($.trim($("#smsMsg").val()).length==0){
+                    alert("문자 내용을 입력하세요.");
+                    $("#smsMsg").focus();
+                    return false;
+                }
+                if (getByteB($("#smsMsg").val()) > 1000) {
+                    alert("1000자 이내만 가능합니다.");
+                    $("#smsMsg").focus();
+                    return false;
+                }
+                // if(getByteB($("#smsMsg").val()) > 50){
+                //     alert("50Byte가 넘어 장문 메시지로 전환합니다.");
+                //     $("#smsMsg").focus();
+                //     return false;
+                // }
+
+                let arr = new Array();
+                let groupsMembers = $("#check_groups_member").prop("checked");
+                let groups = $("td#groupsCell input[name='groups']:checked");
+                
+                if( groups.length > 0){
+                    for(let i=0; i<groups.length; i++){
+                        for(let j=0; j<mems.length; j++){
+                            if( groups.eq(i).val() == mems[j][0] ){
+                                if(groupsMembers){
+                                    if($("#members_"+mems[j][1]).prop("checked")){
+                                        let val = {
+                                            // id: mems[j][1],
+                                            // req_date: $("#reqDate").val().replaceAll(".", "") + $("#reqTime").val().replaceAll(":", "") + "00",
+                                            req_date: $("#reqDate").val() + $("#reqTime").val() + "00",
+                                            cur_state: 0,
+                                            // call_to: $("#members_"+mems[j][1]).val().replaceAll("-", ""),
+                                            call_to: $("#members_"+mems[j][1]).val(),
+                                            call_from: "0",
+                                            sms_txt: $("#smsMsg").val(),
+                                            msg_type: 4, //4:SMS, 6:MMS
+                                            templateCode: $("#smsTitle :selected").val()
+                                            // CONT_SEQ: 0//mms 발송시 필요
+                                        }
+                                        arr.push(val);
+                                    }
+                                } else {
+                                    let val = {
+                                        // MSG_SEQ: 0,
+                                        // id: mems[j][1],
+                                        // req_date: $("#reqDate").val().replaceAll(".", "") + $("#reqTime").val().replaceAll(":", ""),
+                                        req_date: $("#reqDate").val()+$("#reqTime").val(),
+                                        cur_state: 0,
+                                        // call_to: mems[j][5].replaceAll("-", ""),
+                                        call_to: mems[j][5],
+                                        call_from: "0",
+                                        sms_txt: $("#smsMsg").val(),
+                                        msg_type: 4, //4:SMS, 6:MMS
+                                        // CONT_SEQ: 0//mms 발송시 필요
+                                        templateCode: $("#smsTitle :selected").val()
+                                    };
+                                    arr.push(val);
+                                }
+                            }
+                        }
+                    }
+                } 
+                console.log(arr);
+                if(arr.length > 0){
+                    if(confirm("전송 하겠습니까?")){
+                        let result = fnCall('post', '/manage/sms_send_save_nuri2', JSON.stringify(arr));
+                        
+                        console.log("result :: "+ result.status);
+                        if(result.status == "success"){
+                            alert("전송 되었습니다.");
+                            // location.href="/manage/sms_send"; //다시 로딩
+                        } else {
+                            alert("전송에 실패하였습니다. \n" + result.data);
+                        }
+                    }
+                } else {
+                    alert("전송 대상이 없습니다. \n전송 대상을 선택하세요.");    
+                }
+                
+                //return true;
+            }
+
+            //초기화
+            function fnReset(){
+                location.href="/manage/sms_send_nuri2";
+            }
+
+            function fnGoList(){
+                location.href="/manage/sms_send_result_nuri2";
+            }
+
+            //textarea 바이트 수 체크하는 함수
+            function fn_checkByte(obj){
+                const maxByte = 1000; //최대 1000바이트
+                const text_val = obj.value; //입력한 문자
+                const text_len = text_val.length; //입력한 문자수
+
+                let totalByte=0;
+                for(let i=0; i<text_len; i++){
+                    const each_char = text_val.charAt(i);
+                    const uni_char = escape(each_char); //유니코드 형식으로 변환
+                    if(uni_char.length>4){
+                        // 한글 : 2Byte
+                        totalByte += 2;
+                    }else{
+                        // 영문,숫자,특수문자 : 1Byte
+                        totalByte += 1;
+                    }
+                }
+
+                if(totalByte>maxByte){
+                    alert('최대 100Byte까지만 입력가능합니다.');
+                    document.getElementById("byteInfo").innerText = totalByte;
+                    document.getElementById("byteInfo").style.color = "red";
+                }else{
+                    document.getElementById("byteInfo").innerText = totalByte;
+                    document.getElementById("byteInfo").style.color = "green";
+                }
+            }
+            
+        </script>
+    
+        <table class="noticeTbl searchSeries">
+            <thead>
+            <tr>
+                <th class="left">
+                    관리 &gt; 문자 발송 NURI2
+                </th>
+                <th class="right">
+                </th>
+            </tr>
+            </thead>
+        </table>
+        
+        <!-- <form action="manage/sms_send" name="smsSend" id="smsSend" method="post" target="_self"> -->
+            <table class="table subTbl table-hover" summary="">
+            <caption class="hidden">문자 발송 NURI2</caption>
+            <colgroup>
+                <col style="width:200px;">
+                <col>
+            </colgroup>
+            <thead>
+                <tr>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <th rowspan="2" class="subThead">문자 수신 그룹<i class="fa fa-asterisk required_ico"></i></th>
+                    <td>
+                        <span style="margin-right:20px;">
+                            <input type="checkbox" id="check_groups_all" name="check_groups_all" value="all" >
+                            <label for="check_groups_all"> 그룹 전체 선택</label>
+                        </span>
+                        <span style="margin-right:10px;">
+                            <input type="checkbox" id="check_groups_member" name="check_groups_member" value="member">
+                            <label for="check_groups_member"> 그룹 멤버 선택</label>
+                        </span>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="left" id="groupsCell">
+                        <input type="hidden" name="check_groups" id="check_groups" value="" />
+                        <th:block th:each="groups, groupsStat : ${groups}" th:if="${groups.id > 1}">
+                            <span id="" style="margin-right:10px;white-space: nowrap;" th:if="${groups.status != '0' && groups.activation == '1'}">
+                                <input type="checkbox" th:id="${'groups_'+groups.id}" name="groups" th:value="${groups.id}" />
+                                <label th:id="${'groups_'+groups.id}" style="margin-right:10px;vertical-align: middle;" th:text="${groups.name}"></label>
+                            </span>
+                        </th:block>
+                    </td>
+                </tr>
+                <tr id="targetMembers" style="display:none;">
+                    <th class="subThead">문자 수신 멤버</th>
+                    <td class="left">
+                    </td>
+                </tr>
+                <tr>
+                    <th class="subThead">문자 제목<i class="fa fa-asterisk required_ico"></i></th>
+                    <td class="left">
+                        <select name="smsTitle" id="smsTitle" class="">
+                            <th:block th:each="tempCode : ${tempCodeList}">
+                                <option th:value="${tempCode.templateCode}" th:text="${tempCode.head}"></option>    
+                            </th:block>
+                        </select>
+                        <button type="button" class="btn" data-target="#temp" onclick="location.href='/manage/sms_template'">
+                            템플릿 등록
+                        </button>
+                    </td>
+                </tr>
+                <tr>
+                    <th class="subThead">문자 내용<i class="fa fa-asterisk required_ico"></i></th>
+                    <td>
+                        <textarea class="msgPtn" id="smsMsg" name="smsMsg" maxlength="1000" onKeyUp="javascript:fn_checkByte(this,'1000')"></textarea>
+                        <div style="text-align: right;">
+                            <span id="byteInfo">0</span> / 1000 byte
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <th rowspan="2" class="subThead">문자 발송 시각</th>
+                    <td class="left">
+                        <input type="radio" checked="checked" name="setReqDate" value="NOW" id="setReqDateNOW">
+                        <label for="setReqDateNOW">즉시 전송 </label>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="left">
+                        <input type="radio" name="setReqDate" value="RSV" id="setReqDateRSV"/>
+                        <label for="setReqDateRSV">예약 전송 </label>
+                        <!-- <input type="text" id="datepicker" th:value="${searchDate}" readonly /> -->
+                        <input type="text" name="reqDate" id="reqDate" readonly th:value="${nowDate}" style="width: 90px;text-align: center;" disabled />
+                        <input type="text" name="reqTime" id="reqTime" readonly th:value="${nowTime}" style="width: 70px;text-align: center;" disabled />
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2" style="text-align:center;">
+                        <input type="submit" class="btn login_btn" style="border-color: #8CC7F7;  background: #C4E4F1;" value="전 송" onclick="fnSubmit();">
+                        <input type="reset" class="btn login_btn" value="다시 입력" onclick="fnReset()">
+                        <input type="button" class="btn login_btn" value="문자 발송 내역 Nuri2" onclick="fnGoList();return false;">
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <!-- </form> -->
+    </th:block>
+</html>

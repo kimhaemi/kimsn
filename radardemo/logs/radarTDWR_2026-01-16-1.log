@@ -1,0 +1,2205 @@
+2023-10-30 17:36:46.527 [INFO ] Starting RadardemoApplication using Java 11.0.18 on DESKTOP-BJ29IOC with PID 16172 (C:\000_dev\radardemo\build\classes\java\main started by haem in c:\000_dev\radardemo)
+2023-10-30 17:36:46.544 [DEBUG] Running with Spring Boot v2.7.15, Spring v5.3.29
+2023-10-30 17:36:46.547 [INFO ] No active profile set, falling back to 1 default profile: "default"
+2023-10-30 17:36:46.639 [INFO ] Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2023-10-30 17:36:47.872 [INFO ] Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2023-10-30 17:36:48.132 [INFO ] Finished Spring Data repository scanning in 238 ms. Found 10 JPA repository interfaces.
+2023-10-30 17:36:49.219 [INFO ] HikariPool-1 - Starting...
+2023-10-30 17:36:51.168 [INFO ] HikariPool-1 - Start completed.
+2023-10-30 17:36:51.244 [INFO ] HHH000204: Processing PersistenceUnitInfo [name: default]
+2023-10-30 17:36:51.328 [INFO ] HHH000412: Hibernate ORM core version 5.6.15.Final
+2023-10-30 17:36:51.580 [INFO ] HCANN000001: Hibernate Commons Annotations {5.1.2.Final}
+2023-10-30 17:36:51.852 [INFO ] HHH000400: Using dialect: org.hibernate.dialect.MySQL8Dialect
+2023-10-30 17:36:53.087 [INFO ] HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+2023-10-30 17:36:53.103 [INFO ] Initialized JPA EntityManagerFactory for persistence unit 'default'
+2023-10-30 17:36:54.957 [WARN ] Unable to start LiveReload server
+2023-10-30 17:36:54.991 [INFO ] Started RadardemoApplication in 9.18 seconds (JVM running for 11.764)
+2023-10-30 17:36:55.054 [INFO ] [데몬 구분] : 대형
+2023-10-30 17:36:55.508 [INFO ] [========================= 관악산 접속 정보(connect, file, filesize) ===============================]
+2023-10-30 17:36:55.519 [INFO ] [관악산 port] : 22
+2023-10-30 17:36:55.526 [INFO ] [관악산 ip] : 190.1.56.113
+2023-10-30 17:36:55.527 [INFO ] [관악산 username] : root
+2023-10-30 17:36:55.527 [INFO ] [관악산 pwd] : test123
+2023-10-30 17:36:56.014 [INFO ] [========================= 백령도 접속 정보(connect, file, filesize) ===============================]
+2023-10-30 17:36:56.014 [INFO ] [백령도 port] : 22
+2023-10-30 17:36:56.014 [INFO ] [백령도 ip] : 190.1.11.103
+2023-10-30 17:36:56.014 [INFO ] [백령도 username] : root
+2023-10-30 17:36:56.014 [INFO ] [백령도 pwd] : test123
+2023-10-30 17:36:56.527 [INFO ] [========================= 광덕산 접속 정보(connect, file, filesize) ===============================]
+2023-10-30 17:36:56.527 [INFO ] [광덕산 port] : 22
+2023-10-30 17:36:56.527 [INFO ] [광덕산 ip] : 190.1.218.113
+2023-10-30 17:36:56.528 [INFO ] [광덕산 username] : root
+2023-10-30 17:36:56.528 [INFO ] [광덕산 pwd] : test123
+2023-10-30 17:36:57.031 [INFO ] [========================= 강릉 접속 정보(connect, file, filesize) ===============================]
+2023-10-30 17:36:57.031 [INFO ] [강릉 port] : 22
+2023-10-30 17:36:57.031 [INFO ] [강릉 ip] : 190.1.219.113
+2023-10-30 17:36:57.031 [INFO ] [강릉 username] : root
+2023-10-30 17:36:57.031 [INFO ] [강릉 pwd] : test123
+2023-10-30 17:36:57.544 [INFO ] [========================= 면봉산 접속 정보(connect, file, filesize) ===============================]
+2023-10-30 17:36:57.545 [INFO ] [면봉산 port] : 22
+2023-10-30 17:36:57.545 [INFO ] [면봉산 ip] : 190.1.126.113
+2023-10-30 17:36:57.545 [INFO ] [면봉산 username] : root
+2023-10-30 17:36:57.545 [INFO ] [면봉산 pwd] : test123
+2023-10-30 17:36:58.055 [INFO ] [========================= 구덕산 접속 정보(connect, file, filesize) ===============================]
+2023-10-30 17:36:58.056 [INFO ] [구덕산 port] : 22
+2023-10-30 17:36:58.056 [INFO ] [구덕산 ip] : 190.1.110.113
+2023-10-30 17:36:58.056 [INFO ] [구덕산 username] : root
+2023-10-30 17:36:58.056 [INFO ] [구덕산 pwd] : test123
+2023-10-30 17:36:58.566 [INFO ] [========================= 오성산 접속 정보(connect, file, filesize) ===============================]
+2023-10-30 17:36:58.566 [INFO ] [오성산 port] : 22
+2023-10-30 17:36:58.566 [INFO ] [오성산 ip] : 190.1.150.113
+2023-10-30 17:36:58.566 [INFO ] [오성산 username] : root
+2023-10-30 17:36:58.566 [INFO ] [오성산 pwd] : test123
+2023-10-30 17:36:59.075 [INFO ] [========================= 진도 접속 정보(connect, file, filesize) ===============================]
+2023-10-30 17:36:59.075 [INFO ] [진도 port] : 22
+2023-10-30 17:36:59.075 [INFO ] [진도 ip] : 190.1.137.113
+2023-10-30 17:36:59.075 [INFO ] [진도 username] : root
+2023-10-30 17:36:59.076 [INFO ] [진도 pwd] : test123
+2023-10-30 17:36:59.586 [INFO ] [========================= 고산 접속 정보(connect, file, filesize) ===============================]
+2023-10-30 17:36:59.586 [INFO ] [고산 port] : 22
+2023-10-30 17:36:59.586 [INFO ] [고산 ip] : 190.1.52.113
+2023-10-30 17:36:59.587 [INFO ] [고산 username] : root
+2023-10-30 17:36:59.587 [INFO ] [고산 pwd] : test123
+2023-10-30 17:37:00.096 [INFO ] [========================= 성산 접속 정보(connect, file, filesize) ===============================]
+2023-10-30 17:37:00.096 [INFO ] [성산 port] : 22
+2023-10-30 17:37:00.096 [INFO ] [성산 ip] : 190.1.54.113
+2023-10-30 17:37:00.096 [INFO ] [성산 username] : root
+2023-10-30 17:37:00.096 [INFO ] [성산 pwd] : test123
+2023-10-30 17:37:00.593 [INFO ] [관악산 접속 유무] : false
+2023-10-30 17:37:00.594 [INFO ] [관악산 접속 X]
+2023-10-30 17:37:00.594 [INFO ] [/// 관악산 ssh 접속 종료 /// ]
+2023-10-30 17:37:00.594 [INFO ] [관악산 파일 명] : 
+2023-10-30 17:37:00.594 [INFO ] [관악산 파일 size] : 0
+2023-10-30 17:37:00.595 [INFO ] [관악산 파일 recv] : RECV
+2023-10-30 17:37:00.595 [INFO ] [관악산 파일 recvDtl] : ok
+2023-10-30 17:37:00.595 [INFO ] [관악산 접속 실패 query insert - receive_data]
+2023-10-30 17:37:00.609 [INFO ] [========================= 용인 접속 정보(connect, file, filesize) ===============================]
+2023-10-30 17:37:00.609 [INFO ] [용인 port] : 22
+2023-10-30 17:37:00.609 [INFO ] [용인 ip] : 190.1.59.113
+2023-10-30 17:37:00.609 [INFO ] [용인 username] : root
+2023-10-30 17:37:00.609 [INFO ] [용인 pwd] : test123
+2023-10-30 17:37:01.033 [INFO ] [백령도 접속 유무] : false
+2023-10-30 17:37:01.033 [INFO ] [백령도 접속 X]
+2023-10-30 17:37:01.033 [INFO ] [/// 백령도 ssh 접속 종료 /// ]
+2023-10-30 17:37:01.033 [INFO ] [백령도 파일 명] : 
+2023-10-30 17:37:01.033 [INFO ] [백령도 파일 size] : 0
+2023-10-30 17:37:01.033 [INFO ] [백령도 파일 recv] : RECV
+2023-10-30 17:37:01.034 [INFO ] [백령도 파일 recvDtl] : ok
+2023-10-30 17:37:01.034 [INFO ] [백령도 접속 실패 query insert - receive_data]
+2023-10-30 17:37:01.564 [INFO ] [광덕산 접속 유무] : false
+2023-10-30 17:37:01.564 [INFO ] [광덕산 접속 X]
+2023-10-30 17:37:01.564 [INFO ] [/// 광덕산 ssh 접속 종료 /// ]
+2023-10-30 17:37:01.564 [INFO ] [광덕산 파일 명] : 
+2023-10-30 17:37:01.564 [INFO ] [광덕산 파일 size] : 0
+2023-10-30 17:37:01.564 [INFO ] [광덕산 파일 recv] : RECV
+2023-10-30 17:37:01.564 [INFO ] [광덕산 파일 recvDtl] : ok
+2023-10-30 17:37:01.564 [INFO ] [광덕산 접속 실패 query insert - receive_data]
+2023-10-30 17:37:02.052 [INFO ] [강릉 접속 유무] : false
+2023-10-30 17:37:02.052 [INFO ] [강릉 접속 X]
+2023-10-30 17:37:02.052 [INFO ] [/// 강릉 ssh 접속 종료 /// ]
+2023-10-30 17:37:02.052 [INFO ] [강릉 파일 명] : 
+2023-10-30 17:37:02.052 [INFO ] [강릉 파일 size] : 0
+2023-10-30 17:37:02.052 [INFO ] [강릉 파일 recv] : RECV
+2023-10-30 17:37:02.053 [INFO ] [강릉 파일 recvDtl] : ok
+2023-10-30 17:37:02.053 [INFO ] [강릉 접속 실패 query insert - receive_data]
+2023-10-30 17:37:02.568 [INFO ] [면봉산 접속 유무] : false
+2023-10-30 17:37:02.568 [INFO ] [면봉산 접속 X]
+2023-10-30 17:37:02.569 [INFO ] [/// 면봉산 ssh 접속 종료 /// ]
+2023-10-30 17:37:02.569 [INFO ] [면봉산 파일 명] : 
+2023-10-30 17:37:02.569 [INFO ] [면봉산 파일 size] : 0
+2023-10-30 17:37:02.569 [INFO ] [면봉산 파일 recv] : RECV
+2023-10-30 17:37:02.569 [INFO ] [면봉산 파일 recvDtl] : ok
+2023-10-30 17:37:02.569 [INFO ] [면봉산 접속 실패 query insert - receive_data]
+2023-10-30 17:37:03.083 [INFO ] [구덕산 접속 유무] : false
+2023-10-30 17:37:03.083 [INFO ] [구덕산 접속 X]
+2023-10-30 17:37:03.083 [INFO ] [/// 구덕산 ssh 접속 종료 /// ]
+2023-10-30 17:37:03.083 [INFO ] [구덕산 파일 명] : 
+2023-10-30 17:37:03.083 [INFO ] [구덕산 파일 size] : 0
+2023-10-30 17:37:03.083 [INFO ] [구덕산 파일 recv] : RECV
+2023-10-30 17:37:03.083 [INFO ] [구덕산 파일 recvDtl] : ok
+2023-10-30 17:37:03.083 [INFO ] [구덕산 접속 실패 query insert - receive_data]
+2023-10-30 17:37:03.600 [INFO ] [오성산 접속 유무] : false
+2023-10-30 17:37:03.600 [INFO ] [오성산 접속 X]
+2023-10-30 17:37:03.600 [INFO ] [/// 오성산 ssh 접속 종료 /// ]
+2023-10-30 17:37:03.600 [INFO ] [오성산 파일 명] : 
+2023-10-30 17:37:03.600 [INFO ] [오성산 파일 size] : 0
+2023-10-30 17:37:03.600 [INFO ] [오성산 파일 recv] : RECV
+2023-10-30 17:37:03.600 [INFO ] [오성산 파일 recvDtl] : ok
+2023-10-30 17:37:03.600 [INFO ] [오성산 접속 실패 query insert - receive_data]
+2023-10-30 17:37:04.099 [INFO ] [진도 접속 유무] : false
+2023-10-30 17:37:04.099 [INFO ] [진도 접속 X]
+2023-10-30 17:37:04.099 [INFO ] [/// 진도 ssh 접속 종료 /// ]
+2023-10-30 17:37:04.099 [INFO ] [진도 파일 명] : 
+2023-10-30 17:37:04.099 [INFO ] [진도 파일 size] : 0
+2023-10-30 17:37:04.099 [INFO ] [진도 파일 recv] : RECV
+2023-10-30 17:37:04.099 [INFO ] [진도 파일 recvDtl] : ok
+2023-10-30 17:37:04.099 [INFO ] [진도 접속 실패 query insert - receive_data]
+2023-10-30 17:37:04.626 [INFO ] [고산 접속 유무] : false
+2023-10-30 17:37:04.626 [INFO ] [고산 접속 X]
+2023-10-30 17:37:04.626 [INFO ] [/// 고산 ssh 접속 종료 /// ]
+2023-10-30 17:37:04.626 [INFO ] [고산 파일 명] : 
+2023-10-30 17:37:04.626 [INFO ] [고산 파일 size] : 0
+2023-10-30 17:37:04.626 [INFO ] [고산 파일 recv] : RECV
+2023-10-30 17:37:04.626 [INFO ] [고산 파일 recvDtl] : ok
+2023-10-30 17:37:04.626 [INFO ] [고산 접속 실패 query insert - receive_data]
+2023-10-30 17:37:05.113 [INFO ] [성산 접속 유무] : false
+2023-10-30 17:37:05.113 [INFO ] [성산 접속 X]
+2023-10-30 17:37:05.113 [INFO ] [/// 성산 ssh 접속 종료 /// ]
+2023-10-30 17:37:05.114 [INFO ] [성산 파일 명] : 
+2023-10-30 17:37:05.114 [INFO ] [성산 파일 size] : 0
+2023-10-30 17:37:05.114 [INFO ] [성산 파일 recv] : RECV
+2023-10-30 17:37:05.114 [INFO ] [성산 파일 recvDtl] : ok
+2023-10-30 17:37:05.114 [INFO ] [성산 접속 실패 query insert - receive_data]
+2023-10-30 17:37:05.633 [INFO ] [용인 접속 유무] : false
+2023-10-30 17:37:05.633 [INFO ] [용인 접속 X]
+2023-10-30 17:37:05.633 [INFO ] [/// 용인 ssh 접속 종료 /// ]
+2023-10-30 17:37:05.634 [INFO ] [용인 파일 명] : 
+2023-10-30 17:37:05.634 [INFO ] [용인 파일 size] : 0
+2023-10-30 17:37:05.634 [INFO ] [용인 파일 recv] : RECV
+2023-10-30 17:37:05.634 [INFO ] [용인 파일 recvDtl] : ok
+2023-10-30 17:37:05.634 [INFO ] [용인 접속 실패 query insert - receive_data]
+2023-10-30 17:37:21.127 [INFO ] [20초 후 다음] : 2023-10-30 17:37:21
+2023-10-30 17:37:21.127 [INFO ] [=================== 2번째 프로세스 ===================] 2023-10-30 17:37:21
+2023-10-30 17:37:21.373 [INFO ] [============ 관악산 정보 ==============]
+2023-10-30 17:37:21.373 [INFO ] dataKindStr : RDR
+2023-10-30 17:37:21.373 [INFO ] site_cd : KWK
+2023-10-30 17:37:21.373 [INFO ] data_type : NQC
+2023-10-30 17:37:21.373 [INFO ] currentTime : 2023-10-30 17:35
+2023-10-30 17:37:21.386 [INFO ] 최종 상태 : WARN
+2023-10-30 17:37:21.540 [INFO ] [결과] : 
+2023-10-30 17:37:21.540 [INFO ] [결과 상세] : 
+2023-10-30 17:37:21.540 [INFO ] [상태 안바뀜 - update 날짜는 바뀜]
+2023-10-30 17:37:21.569 [INFO ] [============ 백령도 정보 ==============]
+2023-10-30 17:37:21.569 [INFO ] dataKindStr : RDR
+2023-10-30 17:37:21.569 [INFO ] site_cd : BRI
+2023-10-30 17:37:21.569 [INFO ] data_type : NQC
+2023-10-30 17:37:21.569 [INFO ] currentTime : 2023-10-30 17:35
+2023-10-30 17:37:21.580 [INFO ] 최종 상태 : ORDI
+2023-10-30 17:37:21.636 [INFO ] [결과] : 
+2023-10-30 17:37:21.636 [INFO ] [결과 상세] : 
+2023-10-30 17:37:21.637 [INFO ] [상태 안바뀜 - update 날짜는 바뀜]
+2023-10-30 17:37:21.666 [INFO ] [============ 광덕산 정보 ==============]
+2023-10-30 17:37:21.666 [INFO ] dataKindStr : RDR
+2023-10-30 17:37:21.666 [INFO ] site_cd : GDK
+2023-10-30 17:37:21.666 [INFO ] data_type : NQC
+2023-10-30 17:37:21.666 [INFO ] currentTime : 2023-10-30 17:35
+2023-10-30 17:37:21.676 [INFO ] 최종 상태 : WARN
+2023-10-30 17:37:21.822 [INFO ] [결과] : 
+2023-10-30 17:37:21.822 [INFO ] [결과 상세] : 
+2023-10-30 17:37:21.822 [INFO ] [상태 안바뀜 - update 날짜는 바뀜]
+2023-10-30 17:37:21.854 [INFO ] [============ 강릉 정보 ==============]
+2023-10-30 17:37:21.854 [INFO ] dataKindStr : RDR
+2023-10-30 17:37:21.854 [INFO ] site_cd : GNG
+2023-10-30 17:37:21.855 [INFO ] data_type : NQC
+2023-10-30 17:37:21.855 [INFO ] currentTime : 2023-10-30 17:35
+2023-10-30 17:37:21.866 [INFO ] 최종 상태 : WARN
+2023-10-30 17:37:22.014 [INFO ] [결과] : 
+2023-10-30 17:37:22.014 [INFO ] [결과 상세] : 
+2023-10-30 17:37:22.014 [INFO ] [상태 안바뀜 - update 날짜는 바뀜]
+2023-10-30 17:37:22.045 [INFO ] [============ 면봉산 정보 ==============]
+2023-10-30 17:37:22.045 [INFO ] dataKindStr : RDR
+2023-10-30 17:37:22.045 [INFO ] site_cd : MYN
+2023-10-30 17:37:22.045 [INFO ] data_type : NQC
+2023-10-30 17:37:22.045 [INFO ] currentTime : 2023-10-30 17:35
+2023-10-30 17:37:22.056 [INFO ] 최종 상태 : WARN
+2023-10-30 17:37:22.199 [INFO ] [결과] : 
+2023-10-30 17:37:22.200 [INFO ] [결과 상세] : 
+2023-10-30 17:37:22.200 [INFO ] [상태 안바뀜 - update 날짜는 바뀜]
+2023-10-30 17:37:22.229 [INFO ] [============ 구덕산 정보 ==============]
+2023-10-30 17:37:22.229 [INFO ] dataKindStr : RDR
+2023-10-30 17:37:22.229 [INFO ] site_cd : PSN
+2023-10-30 17:37:22.229 [INFO ] data_type : NQC
+2023-10-30 17:37:22.229 [INFO ] currentTime : 2023-10-30 17:35
+2023-10-30 17:37:22.239 [INFO ] 최종 상태 : ORDI
+2023-10-30 17:37:22.295 [INFO ] [결과] : 
+2023-10-30 17:37:22.295 [INFO ] [결과 상세] : 
+2023-10-30 17:37:22.295 [INFO ] [상태 안바뀜 - update 날짜는 바뀜]
+2023-10-30 17:37:22.323 [INFO ] [============ 오성산 정보 ==============]
+2023-10-30 17:37:22.323 [INFO ] dataKindStr : RDR
+2023-10-30 17:37:22.323 [INFO ] site_cd : KSN
+2023-10-30 17:37:22.323 [INFO ] data_type : NQC
+2023-10-30 17:37:22.324 [INFO ] currentTime : 2023-10-30 17:35
+2023-10-30 17:37:22.335 [INFO ] 최종 상태 : WARN
+2023-10-30 17:37:22.483 [INFO ] [결과] : 
+2023-10-30 17:37:22.483 [INFO ] [결과 상세] : 
+2023-10-30 17:37:22.483 [INFO ] [상태 안바뀜 - update 날짜는 바뀜]
+2023-10-30 17:37:22.514 [INFO ] [============ 진도 정보 ==============]
+2023-10-30 17:37:22.514 [INFO ] dataKindStr : RDR
+2023-10-30 17:37:22.514 [INFO ] site_cd : JNI
+2023-10-30 17:37:22.514 [INFO ] data_type : NQC
+2023-10-30 17:37:22.514 [INFO ] currentTime : 2023-10-30 17:35
+2023-10-30 17:37:22.524 [INFO ] 최종 상태 : WARN
+2023-10-30 17:37:22.659 [INFO ] [결과] : 
+2023-10-30 17:37:22.659 [INFO ] [결과 상세] : 
+2023-10-30 17:37:22.659 [INFO ] [상태 안바뀜 - update 날짜는 바뀜]
+2023-10-30 17:37:22.695 [INFO ] [============ 고산 정보 ==============]
+2023-10-30 17:37:22.695 [INFO ] dataKindStr : RDR
+2023-10-30 17:37:22.695 [INFO ] site_cd : GSN
+2023-10-30 17:37:22.695 [INFO ] data_type : NQC
+2023-10-30 17:37:22.695 [INFO ] currentTime : 2023-10-30 17:35
+2023-10-30 17:37:22.710 [INFO ] 최종 상태 : TOTA
+2023-10-30 17:37:22.831 [INFO ] [결과] : 
+2023-10-30 17:37:22.832 [INFO ] [결과 상세] : 
+2023-10-30 17:37:22.832 [INFO ] [상태 안바뀜 - update 날짜는 바뀜]
+2023-10-30 17:37:22.860 [INFO ] [============ 성산 정보 ==============]
+2023-10-30 17:37:22.862 [INFO ] dataKindStr : RDR
+2023-10-30 17:37:22.862 [INFO ] site_cd : SSP
+2023-10-30 17:37:22.862 [INFO ] data_type : NQC
+2023-10-30 17:37:22.862 [INFO ] currentTime : 2023-10-30 17:35
+2023-10-30 17:37:22.874 [INFO ] 최종 상태 : TOTA
+2023-10-30 17:37:22.988 [INFO ] [결과] : 
+2023-10-30 17:37:22.988 [INFO ] [결과 상세] : 
+2023-10-30 17:37:22.988 [INFO ] [상태 안바뀜 - update 날짜는 바뀜]
+2023-10-30 17:37:23.018 [INFO ] [============ 용인 정보 ==============]
+2023-10-30 17:37:23.018 [INFO ] dataKindStr : RDR
+2023-10-30 17:37:23.018 [INFO ] site_cd : YIT
+2023-10-30 17:37:23.018 [INFO ] data_type : NQC
+2023-10-30 17:37:23.018 [INFO ] currentTime : 2023-10-30 17:35
+2023-10-30 17:37:23.028 [INFO ] 최종 상태 : TOTA
+2023-10-30 17:37:23.140 [INFO ] [결과] : 
+2023-10-30 17:37:23.140 [INFO ] [결과 상세] : 
+2023-10-30 17:37:23.140 [INFO ] [상태 안바뀜 - update 날짜는 바뀜]
+2023-10-30 17:37:23.182 [INFO ] ======================= 문자 전송 =================================
+2023-10-30 17:37:23.208 [INFO ] [=================== end ===================]
+2023-10-30 17:37:25.028 [INFO ] [데몬 구분] : 대형
+2023-10-30 17:37:25.055 [INFO ] [========================= 관악산 접속 정보(connect, file, filesize) ===============================]
+2023-10-30 17:37:25.056 [INFO ] [관악산 port] : 22
+2023-10-30 17:37:25.056 [INFO ] [관악산 ip] : 190.1.56.113
+2023-10-30 17:37:25.056 [INFO ] [관악산 username] : root
+2023-10-30 17:37:25.056 [INFO ] [관악산 pwd] : test123
+2023-10-30 17:37:25.558 [INFO ] [========================= 백령도 접속 정보(connect, file, filesize) ===============================]
+2023-10-30 17:37:25.558 [INFO ] [백령도 port] : 22
+2023-10-30 17:37:25.558 [INFO ] [백령도 ip] : 190.1.11.103
+2023-10-30 17:37:25.558 [INFO ] [백령도 username] : root
+2023-10-30 17:37:25.558 [INFO ] [백령도 pwd] : test123
+2023-10-30 17:37:26.062 [INFO ] [========================= 광덕산 접속 정보(connect, file, filesize) ===============================]
+2023-10-30 17:37:26.062 [INFO ] [광덕산 port] : 22
+2023-10-30 17:37:26.062 [INFO ] [광덕산 ip] : 190.1.218.113
+2023-10-30 17:37:26.062 [INFO ] [광덕산 username] : root
+2023-10-30 17:37:26.062 [INFO ] [광덕산 pwd] : test123
+2023-10-30 17:37:26.568 [INFO ] [========================= 강릉 접속 정보(connect, file, filesize) ===============================]
+2023-10-30 17:37:26.568 [INFO ] [강릉 port] : 22
+2023-10-30 17:37:26.568 [INFO ] [강릉 ip] : 190.1.219.113
+2023-10-30 17:37:26.568 [INFO ] [강릉 username] : root
+2023-10-30 17:37:26.568 [INFO ] [강릉 pwd] : test123
+2023-10-30 17:37:27.068 [INFO ] [========================= 면봉산 접속 정보(connect, file, filesize) ===============================]
+2023-10-30 17:37:27.068 [INFO ] [면봉산 port] : 22
+2023-10-30 17:37:27.068 [INFO ] [면봉산 ip] : 190.1.126.113
+2023-10-30 17:37:27.068 [INFO ] [면봉산 username] : root
+2023-10-30 17:37:27.068 [INFO ] [면봉산 pwd] : test123
+2023-10-30 17:37:27.573 [INFO ] [========================= 구덕산 접속 정보(connect, file, filesize) ===============================]
+2023-10-30 17:37:27.574 [INFO ] [구덕산 port] : 22
+2023-10-30 17:37:27.574 [INFO ] [구덕산 ip] : 190.1.110.113
+2023-10-30 17:37:27.574 [INFO ] [구덕산 username] : root
+2023-10-30 17:37:27.574 [INFO ] [구덕산 pwd] : test123
+2023-10-30 17:37:28.075 [INFO ] [========================= 오성산 접속 정보(connect, file, filesize) ===============================]
+2023-10-30 17:37:28.075 [INFO ] [오성산 port] : 22
+2023-10-30 17:37:28.075 [INFO ] [오성산 ip] : 190.1.150.113
+2023-10-30 17:37:28.075 [INFO ] [오성산 username] : root
+2023-10-30 17:37:28.075 [INFO ] [오성산 pwd] : test123
+2023-10-30 17:37:28.581 [INFO ] [========================= 진도 접속 정보(connect, file, filesize) ===============================]
+2023-10-30 17:37:28.581 [INFO ] [진도 port] : 22
+2023-10-30 17:37:28.582 [INFO ] [진도 ip] : 190.1.137.113
+2023-10-30 17:37:28.582 [INFO ] [진도 username] : root
+2023-10-30 17:37:28.582 [INFO ] [진도 pwd] : test123
+2023-10-30 17:37:29.081 [INFO ] [========================= 고산 접속 정보(connect, file, filesize) ===============================]
+2023-10-30 17:37:29.082 [INFO ] [고산 port] : 22
+2023-10-30 17:37:29.082 [INFO ] [고산 ip] : 190.1.52.113
+2023-10-30 17:37:29.082 [INFO ] [고산 username] : root
+2023-10-30 17:37:29.082 [INFO ] [고산 pwd] : test123
+2023-10-30 17:37:29.593 [INFO ] [========================= 성산 접속 정보(connect, file, filesize) ===============================]
+2023-10-30 17:37:29.593 [INFO ] [성산 port] : 22
+2023-10-30 17:37:29.593 [INFO ] [성산 ip] : 190.1.54.113
+2023-10-30 17:37:29.593 [INFO ] [성산 username] : root
+2023-10-30 17:37:29.593 [INFO ] [성산 pwd] : test123
+2023-10-30 17:37:30.082 [INFO ] [관악산 접속 유무] : false
+2023-10-30 17:37:30.082 [INFO ] [관악산 접속 X]
+2023-10-30 17:37:30.082 [INFO ] [/// 관악산 ssh 접속 종료 /// ]
+2023-10-30 17:37:30.082 [INFO ] [관악산 파일 명] : 
+2023-10-30 17:37:30.082 [INFO ] [관악산 파일 size] : 0
+2023-10-30 17:37:30.082 [INFO ] [관악산 파일 recv] : RECV
+2023-10-30 17:37:30.082 [INFO ] [관악산 파일 recvDtl] : ok
+2023-10-30 17:37:30.082 [INFO ] [관악산 접속 실패 query insert - receive_data]
+2023-10-30 17:37:30.098 [INFO ] [========================= 용인 접속 정보(connect, file, filesize) ===============================]
+2023-10-30 17:37:30.098 [INFO ] [용인 port] : 22
+2023-10-30 17:37:30.098 [INFO ] [용인 ip] : 190.1.59.113
+2023-10-30 17:37:30.098 [INFO ] [용인 username] : root
+2023-10-30 17:37:30.098 [INFO ] [용인 pwd] : test123
+2023-10-30 17:37:30.583 [INFO ] [백령도 접속 유무] : false
+2023-10-30 17:37:30.583 [INFO ] [백령도 접속 X]
+2023-10-30 17:37:30.583 [INFO ] [/// 백령도 ssh 접속 종료 /// ]
+2023-10-30 17:37:30.583 [INFO ] [백령도 파일 명] : 
+2023-10-30 17:37:30.583 [INFO ] [백령도 파일 size] : 0
+2023-10-30 17:37:30.583 [INFO ] [백령도 파일 recv] : RECV
+2023-10-30 17:37:30.583 [INFO ] [백령도 파일 recvDtl] : ok
+2023-10-30 17:37:30.583 [INFO ] [백령도 접속 실패 query insert - receive_data]
+2023-10-30 17:37:31.086 [INFO ] [광덕산 접속 유무] : false
+2023-10-30 17:37:31.086 [INFO ] [광덕산 접속 X]
+2023-10-30 17:37:31.086 [INFO ] [/// 광덕산 ssh 접속 종료 /// ]
+2023-10-30 17:37:31.086 [INFO ] [광덕산 파일 명] : 
+2023-10-30 17:37:31.086 [INFO ] [광덕산 파일 size] : 0
+2023-10-30 17:37:31.086 [INFO ] [광덕산 파일 recv] : RECV
+2023-10-30 17:37:31.086 [INFO ] [광덕산 파일 recvDtl] : ok
+2023-10-30 17:37:31.086 [INFO ] [광덕산 접속 실패 query insert - receive_data]
+2023-10-30 17:37:31.601 [INFO ] [강릉 접속 유무] : false
+2023-10-30 17:37:31.601 [INFO ] [강릉 접속 X]
+2023-10-30 17:37:31.601 [INFO ] [/// 강릉 ssh 접속 종료 /// ]
+2023-10-30 17:37:31.601 [INFO ] [강릉 파일 명] : 
+2023-10-30 17:37:31.601 [INFO ] [강릉 파일 size] : 0
+2023-10-30 17:37:31.601 [INFO ] [강릉 파일 recv] : RECV
+2023-10-30 17:37:31.601 [INFO ] [강릉 파일 recvDtl] : ok
+2023-10-30 17:37:31.601 [INFO ] [강릉 접속 실패 query insert - receive_data]
+2023-10-30 17:37:32.089 [INFO ] [면봉산 접속 유무] : false
+2023-10-30 17:37:32.089 [INFO ] [면봉산 접속 X]
+2023-10-30 17:37:32.089 [INFO ] [/// 면봉산 ssh 접속 종료 /// ]
+2023-10-30 17:37:32.089 [INFO ] [면봉산 파일 명] : 
+2023-10-30 17:37:32.090 [INFO ] [면봉산 파일 size] : 0
+2023-10-30 17:37:32.090 [INFO ] [면봉산 파일 recv] : RECV
+2023-10-30 17:37:32.090 [INFO ] [면봉산 파일 recvDtl] : ok
+2023-10-30 17:37:32.090 [INFO ] [면봉산 접속 실패 query insert - receive_data]
+2023-10-30 17:37:32.604 [INFO ] [구덕산 접속 유무] : false
+2023-10-30 17:37:32.604 [INFO ] [구덕산 접속 X]
+2023-10-30 17:37:32.605 [INFO ] [/// 구덕산 ssh 접속 종료 /// ]
+2023-10-30 17:37:32.605 [INFO ] [구덕산 파일 명] : 
+2023-10-30 17:37:32.605 [INFO ] [구덕산 파일 size] : 0
+2023-10-30 17:37:32.605 [INFO ] [구덕산 파일 recv] : RECV
+2023-10-30 17:37:32.605 [INFO ] [구덕산 파일 recvDtl] : ok
+2023-10-30 17:37:32.605 [INFO ] [구덕산 접속 실패 query insert - receive_data]
+2023-10-30 17:37:33.092 [INFO ] [오성산 접속 유무] : false
+2023-10-30 17:37:33.092 [INFO ] [오성산 접속 X]
+2023-10-30 17:37:33.092 [INFO ] [/// 오성산 ssh 접속 종료 /// ]
+2023-10-30 17:37:33.092 [INFO ] [오성산 파일 명] : 
+2023-10-30 17:37:33.092 [INFO ] [오성산 파일 size] : 0
+2023-10-30 17:37:33.092 [INFO ] [오성산 파일 recv] : RECV
+2023-10-30 17:37:33.092 [INFO ] [오성산 파일 recvDtl] : ok
+2023-10-30 17:37:33.092 [INFO ] [오성산 접속 실패 query insert - receive_data]
+2023-10-30 17:37:33.607 [INFO ] [진도 접속 유무] : false
+2023-10-30 17:37:33.607 [INFO ] [진도 접속 X]
+2023-10-30 17:37:33.607 [INFO ] [/// 진도 ssh 접속 종료 /// ]
+2023-10-30 17:37:33.607 [INFO ] [진도 파일 명] : 
+2023-10-30 17:37:33.607 [INFO ] [진도 파일 size] : 0
+2023-10-30 17:37:33.607 [INFO ] [진도 파일 recv] : RECV
+2023-10-30 17:37:33.608 [INFO ] [진도 파일 recvDtl] : ok
+2023-10-30 17:37:33.608 [INFO ] [진도 접속 실패 query insert - receive_data]
+2023-10-30 17:37:34.103 [INFO ] [고산 접속 유무] : false
+2023-10-30 17:37:34.103 [INFO ] [고산 접속 X]
+2023-10-30 17:37:34.103 [INFO ] [/// 고산 ssh 접속 종료 /// ]
+2023-10-30 17:37:34.103 [INFO ] [고산 파일 명] : 
+2023-10-30 17:37:34.103 [INFO ] [고산 파일 size] : 0
+2023-10-30 17:37:34.103 [INFO ] [고산 파일 recv] : RECV
+2023-10-30 17:37:34.103 [INFO ] [고산 파일 recvDtl] : ok
+2023-10-30 17:37:34.103 [INFO ] [고산 접속 실패 query insert - receive_data]
+2023-10-30 17:37:34.617 [INFO ] [성산 접속 유무] : false
+2023-10-30 17:37:34.617 [INFO ] [성산 접속 X]
+2023-10-30 17:37:34.617 [INFO ] [/// 성산 ssh 접속 종료 /// ]
+2023-10-30 17:37:34.617 [INFO ] [성산 파일 명] : 
+2023-10-30 17:37:34.617 [INFO ] [성산 파일 size] : 0
+2023-10-30 17:37:34.617 [INFO ] [성산 파일 recv] : RECV
+2023-10-30 17:37:34.617 [INFO ] [성산 파일 recvDtl] : ok
+2023-10-30 17:37:34.617 [INFO ] [성산 접속 실패 query insert - receive_data]
+2023-10-30 17:37:35.132 [INFO ] [용인 접속 유무] : false
+2023-10-30 17:37:35.132 [INFO ] [용인 접속 X]
+2023-10-30 17:37:35.132 [INFO ] [/// 용인 ssh 접속 종료 /// ]
+2023-10-30 17:37:35.132 [INFO ] [용인 파일 명] : 
+2023-10-30 17:37:35.132 [INFO ] [용인 파일 size] : 0
+2023-10-30 17:37:35.132 [INFO ] [용인 파일 recv] : RECV
+2023-10-30 17:37:35.132 [INFO ] [용인 파일 recvDtl] : ok
+2023-10-30 17:37:35.132 [INFO ] [용인 접속 실패 query insert - receive_data]
+2023-10-30 17:37:50.599 [INFO ] [20초 후 다음] : 2023-10-30 17:37:50
+2023-10-30 17:37:50.599 [INFO ] [=================== 2번째 프로세스 ===================] 2023-10-30 17:37:50
+2023-10-30 17:37:50.770 [INFO ] [============ 관악산 정보 ==============]
+2023-10-30 17:37:50.770 [INFO ] dataKindStr : RDR
+2023-10-30 17:37:50.770 [INFO ] site_cd : KWK
+2023-10-30 17:37:50.771 [INFO ] data_type : NQC
+2023-10-30 17:37:50.771 [INFO ] currentTime : 2023-10-30 17:35
+2023-10-30 17:37:50.787 [INFO ] 최종 상태 : WARN
+2023-10-30 17:37:50.939 [INFO ] [결과] : 
+2023-10-30 17:37:50.939 [INFO ] [결과 상세] : 
+2023-10-30 17:37:50.939 [INFO ] [상태 안바뀜 - update 날짜는 바뀜]
+2023-10-30 17:37:50.971 [INFO ] [============ 백령도 정보 ==============]
+2023-10-30 17:37:50.971 [INFO ] dataKindStr : RDR
+2023-10-30 17:37:50.971 [INFO ] site_cd : BRI
+2023-10-30 17:37:50.971 [INFO ] data_type : NQC
+2023-10-30 17:37:50.971 [INFO ] currentTime : 2023-10-30 17:35
+2023-10-30 17:37:50.981 [INFO ] 최종 상태 : ORDI
+2023-10-30 17:37:51.036 [INFO ] [결과] : 
+2023-10-30 17:37:51.036 [INFO ] [결과 상세] : 
+2023-10-30 17:37:51.036 [INFO ] [상태 안바뀜 - update 날짜는 바뀜]
+2023-10-30 17:37:51.067 [INFO ] [============ 광덕산 정보 ==============]
+2023-10-30 17:37:51.067 [INFO ] dataKindStr : RDR
+2023-10-30 17:37:51.067 [INFO ] site_cd : GDK
+2023-10-30 17:37:51.067 [INFO ] data_type : NQC
+2023-10-30 17:37:51.067 [INFO ] currentTime : 2023-10-30 17:35
+2023-10-30 17:37:51.076 [INFO ] 최종 상태 : WARN
+2023-10-30 17:37:51.221 [INFO ] [결과] : 
+2023-10-30 17:37:51.221 [INFO ] [결과 상세] : 
+2023-10-30 17:37:51.221 [INFO ] [상태 안바뀜 - update 날짜는 바뀜]
+2023-10-30 17:37:51.247 [INFO ] [============ 강릉 정보 ==============]
+2023-10-30 17:37:51.247 [INFO ] dataKindStr : RDR
+2023-10-30 17:37:51.247 [INFO ] site_cd : GNG
+2023-10-30 17:37:51.247 [INFO ] data_type : NQC
+2023-10-30 17:37:51.247 [INFO ] currentTime : 2023-10-30 17:35
+2023-10-30 17:37:51.257 [INFO ] 최종 상태 : WARN
+2023-10-30 17:37:51.401 [INFO ] [결과] : 
+2023-10-30 17:37:51.401 [INFO ] [결과 상세] : 
+2023-10-30 17:37:51.401 [INFO ] [상태 안바뀜 - update 날짜는 바뀜]
+2023-10-30 17:37:51.444 [INFO ] [============ 면봉산 정보 ==============]
+2023-10-30 17:37:51.444 [INFO ] dataKindStr : RDR
+2023-10-30 17:37:51.444 [INFO ] site_cd : MYN
+2023-10-30 17:37:51.444 [INFO ] data_type : NQC
+2023-10-30 17:37:51.444 [INFO ] currentTime : 2023-10-30 17:35
+2023-10-30 17:37:51.453 [INFO ] 최종 상태 : WARN
+2023-10-30 17:37:51.594 [INFO ] [결과] : 
+2023-10-30 17:37:51.594 [INFO ] [결과 상세] : 
+2023-10-30 17:37:51.594 [INFO ] [상태 안바뀜 - update 날짜는 바뀜]
+2023-10-30 17:37:51.621 [INFO ] [============ 구덕산 정보 ==============]
+2023-10-30 17:37:51.622 [INFO ] dataKindStr : RDR
+2023-10-30 17:37:51.622 [INFO ] site_cd : PSN
+2023-10-30 17:37:51.622 [INFO ] data_type : NQC
+2023-10-30 17:37:51.622 [INFO ] currentTime : 2023-10-30 17:35
+2023-10-30 17:37:51.631 [INFO ] 최종 상태 : ORDI
+2023-10-30 17:37:51.692 [INFO ] [결과] : 
+2023-10-30 17:37:51.692 [INFO ] [결과 상세] : 
+2023-10-30 17:37:51.692 [INFO ] [상태 안바뀜 - update 날짜는 바뀜]
+2023-10-30 17:37:51.722 [INFO ] [============ 오성산 정보 ==============]
+2023-10-30 17:37:51.722 [INFO ] dataKindStr : RDR
+2023-10-30 17:37:51.722 [INFO ] site_cd : KSN
+2023-10-30 17:37:51.722 [INFO ] data_type : NQC
+2023-10-30 17:37:51.722 [INFO ] currentTime : 2023-10-30 17:35
+2023-10-30 17:37:51.731 [INFO ] 최종 상태 : WARN
+2023-10-30 17:37:51.872 [INFO ] [결과] : 
+2023-10-30 17:37:51.872 [INFO ] [결과 상세] : 
+2023-10-30 17:37:51.872 [INFO ] [상태 안바뀜 - update 날짜는 바뀜]
+2023-10-30 17:37:51.900 [INFO ] [============ 진도 정보 ==============]
+2023-10-30 17:37:51.900 [INFO ] dataKindStr : RDR
+2023-10-30 17:37:51.900 [INFO ] site_cd : JNI
+2023-10-30 17:37:51.900 [INFO ] data_type : NQC
+2023-10-30 17:37:51.900 [INFO ] currentTime : 2023-10-30 17:35
+2023-10-30 17:37:51.912 [INFO ] 최종 상태 : WARN
+2023-10-30 17:37:52.049 [INFO ] [결과] : 
+2023-10-30 17:37:52.050 [INFO ] [결과 상세] : 
+2023-10-30 17:37:52.050 [INFO ] [상태 안바뀜 - update 날짜는 바뀜]
+2023-10-30 17:37:52.076 [INFO ] [============ 고산 정보 ==============]
+2023-10-30 17:37:52.076 [INFO ] dataKindStr : RDR
+2023-10-30 17:37:52.076 [INFO ] site_cd : GSN
+2023-10-30 17:37:52.076 [INFO ] data_type : NQC
+2023-10-30 17:37:52.076 [INFO ] currentTime : 2023-10-30 17:35
+2023-10-30 17:37:52.086 [INFO ] 최종 상태 : TOTA
+2023-10-30 17:37:52.203 [INFO ] 네트워크 복구(network_ok)
+2023-10-30 17:37:52.214 [INFO ] [결과] : TORE
+2023-10-30 17:37:52.214 [INFO ] [결과 상세] : network_ok
+2023-10-30 17:37:52.214 [INFO ] 고산 별 최종상태 update
+2023-10-30 17:37:52.214 [INFO ] new_recv_condition ::: TORE
+2023-10-30 17:37:52.214 [INFO ] recv_con_dtl ::: network_ok
+2023-10-30 17:37:52.243 [INFO ] [============ 성산 정보 ==============]
+2023-10-30 17:37:52.243 [INFO ] dataKindStr : RDR
+2023-10-30 17:37:52.243 [INFO ] site_cd : SSP
+2023-10-30 17:37:52.243 [INFO ] data_type : NQC
+2023-10-30 17:37:52.243 [INFO ] currentTime : 2023-10-30 17:35
+2023-10-30 17:37:52.252 [INFO ] 최종 상태 : TOTA
+2023-10-30 17:37:52.360 [INFO ] 네트워크 복구(network_ok)
+2023-10-30 17:37:52.373 [INFO ] [결과] : TORE
+2023-10-30 17:37:52.373 [INFO ] [결과 상세] : network_ok
+2023-10-30 17:37:52.373 [INFO ] 성산 별 최종상태 update
+2023-10-30 17:37:52.373 [INFO ] new_recv_condition ::: TORE
+2023-10-30 17:37:52.373 [INFO ] recv_con_dtl ::: network_ok
+2023-10-30 17:37:52.404 [INFO ] [============ 용인 정보 ==============]
+2023-10-30 17:37:52.404 [INFO ] dataKindStr : RDR
+2023-10-30 17:37:52.404 [INFO ] site_cd : YIT
+2023-10-30 17:37:52.404 [INFO ] data_type : NQC
+2023-10-30 17:37:52.404 [INFO ] currentTime : 2023-10-30 17:35
+2023-10-30 17:37:52.414 [INFO ] 최종 상태 : TOTA
+2023-10-30 17:37:52.519 [INFO ] 네트워크 복구(network_ok)
+2023-10-30 17:37:52.531 [INFO ] [결과] : TORE
+2023-10-30 17:37:52.531 [INFO ] [결과 상세] : network_ok
+2023-10-30 17:37:52.531 [INFO ] 용인 별 최종상태 update
+2023-10-30 17:37:52.531 [INFO ] new_recv_condition ::: TORE
+2023-10-30 17:37:52.531 [INFO ] recv_con_dtl ::: network_ok
+2023-10-30 17:37:52.565 [INFO ] ======================= 문자 전송 =================================
+2023-10-30 17:37:52.601 [INFO ] [smsPetterns] :: 대형 (시범운영)
+네트워크 복구  [2023-10-30 17:37:52]
+2023-10-30 17:37:52.615 [INFO ] [TORE // 문자 전송 app sequence] :316
+2023-10-30 17:37:52.666 [INFO ] [수신자명] : kimhaemi : 01031248577
+2023-10-30 17:37:52.691 [WARN ] SQL Error: 1064, SQLState: 42000
+2023-10-30 17:37:52.691 [ERROR] You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '(select TEMPLATE_CODE from nuri.app_template_code atc where USE_BUTTON = 'Y')
+, ' at line 19
+2023-10-30 17:37:52.706 [ERROR] Unexpected exception occurred invoking async method: public void kr.or.kimsn.radardemo.Scheduler.cronJobSch() throws java.lang.InterruptedException
+org.springframework.dao.InvalidDataAccessResourceUsageException: could not execute statement; SQL [n/a]; nested exception is org.hibernate.exception.SQLGrammarException: could not execute statement
+	at org.springframework.orm.jpa.vendor.HibernateJpaDialect.convertHibernateAccessException(HibernateJpaDialect.java:259) ~[spring-orm-5.3.29.jar:5.3.29]
+	at org.springframework.orm.jpa.vendor.HibernateJpaDialect.translateExceptionIfPossible(HibernateJpaDialect.java:233) ~[spring-orm-5.3.29.jar:5.3.29]
+	at org.springframework.orm.jpa.AbstractEntityManagerFactoryBean.translateExceptionIfPossible(AbstractEntityManagerFactoryBean.java:551) ~[spring-orm-5.3.29.jar:5.3.29]
+	at org.springframework.dao.support.ChainedPersistenceExceptionTranslator.translateExceptionIfPossible(ChainedPersistenceExceptionTranslator.java:61) ~[spring-tx-5.3.29.jar:5.3.29]
+	at org.springframework.dao.support.DataAccessUtils.translateIfNecessary(DataAccessUtils.java:242) ~[spring-tx-5.3.29.jar:5.3.29]
+	at org.springframework.dao.support.PersistenceExceptionTranslationInterceptor.invoke(PersistenceExceptionTranslationInterceptor.java:152) ~[spring-tx-5.3.29.jar:5.3.29]
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:186) ~[spring-aop-5.3.29.jar:5.3.29]
+	at org.springframework.data.jpa.repository.support.CrudMethodMetadataPostProcessor$CrudMethodMetadataPopulatingMethodInterceptor.invoke(CrudMethodMetadataPostProcessor.java:145) ~[spring-data-jpa-2.7.15.jar:2.7.15]
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:186) ~[spring-aop-5.3.29.jar:5.3.29]
+	at org.springframework.aop.interceptor.ExposeInvocationInterceptor.invoke(ExposeInvocationInterceptor.java:97) ~[spring-aop-5.3.29.jar:5.3.29]
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:186) ~[spring-aop-5.3.29.jar:5.3.29]
+	at org.springframework.aop.framework.JdkDynamicAopProxy.invoke(JdkDynamicAopProxy.java:241) ~[spring-aop-5.3.29.jar:5.3.29]
+	at com.sun.proxy.$Proxy122.gaonAppSendDataSave(Unknown Source) ~[?:?]
+	at kr.or.kimsn.radardemo.service.QueryService.insGaonAppSendDataSave(QueryService.java:201) ~[main/:?]
+	at kr.or.kimsn.radardemo.process.StepTwoProcess.stepThree(StepTwoProcess.java:442) ~[main/:?]
+	at kr.or.kimsn.radardemo.process.StepTwoProcess.stepTwo(StepTwoProcess.java:329) ~[main/:?]
+	at kr.or.kimsn.radardemo.Scheduler.cronJobSch(Scheduler.java:91) ~[main/:?]
+	at kr.or.kimsn.radardemo.Scheduler$$FastClassBySpringCGLIB$$f3d36b2e.invoke(<generated>) ~[main/:?]
+	at org.springframework.cglib.proxy.MethodProxy.invoke(MethodProxy.java:218) ~[spring-core-5.3.29.jar:5.3.29]
+	at org.springframework.aop.framework.CglibAopProxy$CglibMethodInvocation.invokeJoinpoint(CglibAopProxy.java:793) ~[spring-aop-5.3.29.jar:5.3.29]
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:163) ~[spring-aop-5.3.29.jar:5.3.29]
+	at org.springframework.aop.framework.CglibAopProxy$CglibMethodInvocation.proceed(CglibAopProxy.java:763) ~[spring-aop-5.3.29.jar:5.3.29]
+	at org.springframework.aop.interceptor.AsyncExecutionInterceptor.lambda$invoke$0(AsyncExecutionInterceptor.java:115) ~[spring-aop-5.3.29.jar:5.3.29]
+	at java.util.concurrent.FutureTask.run(FutureTask.java:264) ~[?:?]
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1128) ~[?:?]
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:628) ~[?:?]
+	at java.lang.Thread.run(Thread.java:834) ~[?:?]
+Caused by: org.hibernate.exception.SQLGrammarException: could not execute statement
+	at org.hibernate.exception.internal.SQLExceptionTypeDelegate.convert(SQLExceptionTypeDelegate.java:63) ~[hibernate-core-5.6.15.Final.jar:5.6.15.Final]
+	at org.hibernate.exception.internal.StandardSQLExceptionConverter.convert(StandardSQLExceptionConverter.java:37) ~[hibernate-core-5.6.15.Final.jar:5.6.15.Final]
+	at org.hibernate.engine.jdbc.spi.SqlExceptionHelper.convert(SqlExceptionHelper.java:113) ~[hibernate-core-5.6.15.Final.jar:5.6.15.Final]
+	at org.hibernate.engine.jdbc.spi.SqlExceptionHelper.convert(SqlExceptionHelper.java:99) ~[hibernate-core-5.6.15.Final.jar:5.6.15.Final]
+	at org.hibernate.engine.jdbc.internal.ResultSetReturnImpl.executeUpdate(ResultSetReturnImpl.java:200) ~[hibernate-core-5.6.15.Final.jar:5.6.15.Final]
+	at org.hibernate.engine.query.spi.NativeSQLQueryPlan.performExecuteUpdate(NativeSQLQueryPlan.java:107) ~[hibernate-core-5.6.15.Final.jar:5.6.15.Final]
+	at org.hibernate.internal.SessionImpl.executeNativeUpdate(SessionImpl.java:1554) ~[hibernate-core-5.6.15.Final.jar:5.6.15.Final]
+	at org.hibernate.query.internal.NativeQueryImpl.doExecuteUpdate(NativeQueryImpl.java:299) ~[hibernate-core-5.6.15.Final.jar:5.6.15.Final]
+	at org.hibernate.query.internal.AbstractProducedQuery.executeUpdate(AbstractProducedQuery.java:1696) ~[hibernate-core-5.6.15.Final.jar:5.6.15.Final]
+	at org.springframework.data.jpa.repository.query.JpaQueryExecution$ModifyingExecution.doExecute(JpaQueryExecution.java:241) ~[spring-data-jpa-2.7.15.jar:2.7.15]
+	at org.springframework.data.jpa.repository.query.JpaQueryExecution.execute(JpaQueryExecution.java:90) ~[spring-data-jpa-2.7.15.jar:2.7.15]
+	at org.springframework.data.jpa.repository.query.AbstractJpaQuery.doExecute(AbstractJpaQuery.java:156) ~[spring-data-jpa-2.7.15.jar:2.7.15]
+	at org.springframework.data.jpa.repository.query.AbstractJpaQuery.execute(AbstractJpaQuery.java:144) ~[spring-data-jpa-2.7.15.jar:2.7.15]
+	at org.springframework.data.repository.core.support.RepositoryMethodInvoker.doInvoke(RepositoryMethodInvoker.java:137) ~[spring-data-commons-2.7.15.jar:2.7.15]
+	at org.springframework.data.repository.core.support.RepositoryMethodInvoker.invoke(RepositoryMethodInvoker.java:121) ~[spring-data-commons-2.7.15.jar:2.7.15]
+	at org.springframework.data.repository.core.support.QueryExecutorMethodInterceptor.doInvoke(QueryExecutorMethodInterceptor.java:160) ~[spring-data-commons-2.7.15.jar:2.7.15]
+	at org.springframework.data.repository.core.support.QueryExecutorMethodInterceptor.invoke(QueryExecutorMethodInterceptor.java:139) ~[spring-data-commons-2.7.15.jar:2.7.15]
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:186) ~[spring-aop-5.3.29.jar:5.3.29]
+	at org.springframework.data.projection.DefaultMethodInvokingMethodInterceptor.invoke(DefaultMethodInvokingMethodInterceptor.java:76) ~[spring-data-commons-2.7.15.jar:2.7.15]
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:186) ~[spring-aop-5.3.29.jar:5.3.29]
+	at org.springframework.transaction.interceptor.TransactionInterceptor$1.proceedWithInvocation(TransactionInterceptor.java:123) ~[spring-tx-5.3.29.jar:5.3.29]
+	at org.springframework.transaction.interceptor.TransactionAspectSupport.invokeWithinTransaction(TransactionAspectSupport.java:388) ~[spring-tx-5.3.29.jar:5.3.29]
+	at org.springframework.transaction.interceptor.TransactionInterceptor.invoke(TransactionInterceptor.java:119) ~[spring-tx-5.3.29.jar:5.3.29]
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:186) ~[spring-aop-5.3.29.jar:5.3.29]
+	at org.springframework.dao.support.PersistenceExceptionTranslationInterceptor.invoke(PersistenceExceptionTranslationInterceptor.java:137) ~[spring-tx-5.3.29.jar:5.3.29]
+	... 21 more
+Caused by: java.sql.SQLSyntaxErrorException: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '(select TEMPLATE_CODE from nuri.app_template_code atc where USE_BUTTON = 'Y')
+, ' at line 19
+	at com.mysql.cj.jdbc.exceptions.SQLError.createSQLException(SQLError.java:121) ~[mysql-connector-j-8.0.33.jar:8.0.33]
+	at com.mysql.cj.jdbc.exceptions.SQLExceptionsMapping.translateException(SQLExceptionsMapping.java:122) ~[mysql-connector-j-8.0.33.jar:8.0.33]
+	at com.mysql.cj.jdbc.ClientPreparedStatement.executeInternal(ClientPreparedStatement.java:916) ~[mysql-connector-j-8.0.33.jar:8.0.33]
+	at com.mysql.cj.jdbc.ClientPreparedStatement.executeUpdateInternal(ClientPreparedStatement.java:1061) ~[mysql-connector-j-8.0.33.jar:8.0.33]
+	at com.mysql.cj.jdbc.ClientPreparedStatement.executeUpdateInternal(ClientPreparedStatement.java:1009) ~[mysql-connector-j-8.0.33.jar:8.0.33]
+	at com.mysql.cj.jdbc.ClientPreparedStatement.executeLargeUpdate(ClientPreparedStatement.java:1320) ~[mysql-connector-j-8.0.33.jar:8.0.33]
+	at com.mysql.cj.jdbc.ClientPreparedStatement.executeUpdate(ClientPreparedStatement.java:994) ~[mysql-connector-j-8.0.33.jar:8.0.33]
+	at com.zaxxer.hikari.pool.ProxyPreparedStatement.executeUpdate(ProxyPreparedStatement.java:61) ~[HikariCP-4.0.3.jar:?]
+	at com.zaxxer.hikari.pool.HikariProxyPreparedStatement.executeUpdate(HikariProxyPreparedStatement.java) ~[HikariCP-4.0.3.jar:?]
+	at org.hibernate.engine.jdbc.internal.ResultSetReturnImpl.executeUpdate(ResultSetReturnImpl.java:197) ~[hibernate-core-5.6.15.Final.jar:5.6.15.Final]
+	at org.hibernate.engine.query.spi.NativeSQLQueryPlan.performExecuteUpdate(NativeSQLQueryPlan.java:107) ~[hibernate-core-5.6.15.Final.jar:5.6.15.Final]
+	at org.hibernate.internal.SessionImpl.executeNativeUpdate(SessionImpl.java:1554) ~[hibernate-core-5.6.15.Final.jar:5.6.15.Final]
+	at org.hibernate.query.internal.NativeQueryImpl.doExecuteUpdate(NativeQueryImpl.java:299) ~[hibernate-core-5.6.15.Final.jar:5.6.15.Final]
+	at org.hibernate.query.internal.AbstractProducedQuery.executeUpdate(AbstractProducedQuery.java:1696) ~[hibernate-core-5.6.15.Final.jar:5.6.15.Final]
+	at org.springframework.data.jpa.repository.query.JpaQueryExecution$ModifyingExecution.doExecute(JpaQueryExecution.java:241) ~[spring-data-jpa-2.7.15.jar:2.7.15]
+	at org.springframework.data.jpa.repository.query.JpaQueryExecution.execute(JpaQueryExecution.java:90) ~[spring-data-jpa-2.7.15.jar:2.7.15]
+	at org.springframework.data.jpa.repository.query.AbstractJpaQuery.doExecute(AbstractJpaQuery.java:156) ~[spring-data-jpa-2.7.15.jar:2.7.15]
+	at org.springframework.data.jpa.repository.query.AbstractJpaQuery.execute(AbstractJpaQuery.java:144) ~[spring-data-jpa-2.7.15.jar:2.7.15]
+	at org.springframework.data.repository.core.support.RepositoryMethodInvoker.doInvoke(RepositoryMethodInvoker.java:137) ~[spring-data-commons-2.7.15.jar:2.7.15]
+	at org.springframework.data.repository.core.support.RepositoryMethodInvoker.invoke(RepositoryMethodInvoker.java:121) ~[spring-data-commons-2.7.15.jar:2.7.15]
+	at org.springframework.data.repository.core.support.QueryExecutorMethodInterceptor.doInvoke(QueryExecutorMethodInterceptor.java:160) ~[spring-data-commons-2.7.15.jar:2.7.15]
+	at org.springframework.data.repository.core.support.QueryExecutorMethodInterceptor.invoke(QueryExecutorMethodInterceptor.java:139) ~[spring-data-commons-2.7.15.jar:2.7.15]
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:186) ~[spring-aop-5.3.29.jar:5.3.29]
+	at org.springframework.data.projection.DefaultMethodInvokingMethodInterceptor.invoke(DefaultMethodInvokingMethodInterceptor.java:76) ~[spring-data-commons-2.7.15.jar:2.7.15]
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:186) ~[spring-aop-5.3.29.jar:5.3.29]
+	at org.springframework.transaction.interceptor.TransactionInterceptor$1.proceedWithInvocation(TransactionInterceptor.java:123) ~[spring-tx-5.3.29.jar:5.3.29]
+	at org.springframework.transaction.interceptor.TransactionAspectSupport.invokeWithinTransaction(TransactionAspectSupport.java:388) ~[spring-tx-5.3.29.jar:5.3.29]
+	at org.springframework.transaction.interceptor.TransactionInterceptor.invoke(TransactionInterceptor.java:119) ~[spring-tx-5.3.29.jar:5.3.29]
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:186) ~[spring-aop-5.3.29.jar:5.3.29]
+	at org.springframework.dao.support.PersistenceExceptionTranslationInterceptor.invoke(PersistenceExceptionTranslationInterceptor.java:137) ~[spring-tx-5.3.29.jar:5.3.29]
+	... 21 more
+2023-10-30 17:37:55.030 [INFO ] [데몬 구분] : 대형
+2023-10-30 17:37:55.052 [INFO ] [========================= 관악산 접속 정보(connect, file, filesize) ===============================]
+2023-10-30 17:37:55.052 [INFO ] [관악산 port] : 22
+2023-10-30 17:37:55.052 [INFO ] [관악산 ip] : 190.1.56.113
+2023-10-30 17:37:55.052 [INFO ] [관악산 username] : root
+2023-10-30 17:37:55.053 [INFO ] [관악산 pwd] : test123
+2023-10-30 17:37:55.561 [INFO ] [========================= 백령도 접속 정보(connect, file, filesize) ===============================]
+2023-10-30 17:37:55.562 [INFO ] [백령도 port] : 22
+2023-10-30 17:37:55.562 [INFO ] [백령도 ip] : 190.1.11.103
+2023-10-30 17:37:55.562 [INFO ] [백령도 username] : root
+2023-10-30 17:37:55.562 [INFO ] [백령도 pwd] : test123
+2023-10-30 17:37:56.064 [INFO ] [========================= 광덕산 접속 정보(connect, file, filesize) ===============================]
+2023-10-30 17:37:56.064 [INFO ] [광덕산 port] : 22
+2023-10-30 17:37:56.064 [INFO ] [광덕산 ip] : 190.1.218.113
+2023-10-30 17:37:56.064 [INFO ] [광덕산 username] : root
+2023-10-30 17:37:56.064 [INFO ] [광덕산 pwd] : test123
+2023-10-30 17:37:56.567 [INFO ] [========================= 강릉 접속 정보(connect, file, filesize) ===============================]
+2023-10-30 17:37:56.568 [INFO ] [강릉 port] : 22
+2023-10-30 17:37:56.568 [INFO ] [강릉 ip] : 190.1.219.113
+2023-10-30 17:37:56.568 [INFO ] [강릉 username] : root
+2023-10-30 17:37:56.568 [INFO ] [강릉 pwd] : test123
+2023-10-30 17:37:57.073 [INFO ] [========================= 면봉산 접속 정보(connect, file, filesize) ===============================]
+2023-10-30 17:37:57.074 [INFO ] [면봉산 port] : 22
+2023-10-30 17:37:57.074 [INFO ] [면봉산 ip] : 190.1.126.113
+2023-10-30 17:37:57.074 [INFO ] [면봉산 username] : root
+2023-10-30 17:37:57.074 [INFO ] [면봉산 pwd] : test123
+2023-10-30 17:37:57.577 [INFO ] [========================= 구덕산 접속 정보(connect, file, filesize) ===============================]
+2023-10-30 17:37:57.577 [INFO ] [구덕산 port] : 22
+2023-10-30 17:37:57.577 [INFO ] [구덕산 ip] : 190.1.110.113
+2023-10-30 17:37:57.577 [INFO ] [구덕산 username] : root
+2023-10-30 17:37:57.577 [INFO ] [구덕산 pwd] : test123
+2023-10-30 17:37:58.080 [INFO ] [========================= 오성산 접속 정보(connect, file, filesize) ===============================]
+2023-10-30 17:37:58.080 [INFO ] [오성산 port] : 22
+2023-10-30 17:37:58.080 [INFO ] [오성산 ip] : 190.1.150.113
+2023-10-30 17:37:58.080 [INFO ] [오성산 username] : root
+2023-10-30 17:37:58.080 [INFO ] [오성산 pwd] : test123
+2023-10-30 17:37:58.585 [INFO ] [========================= 진도 접속 정보(connect, file, filesize) ===============================]
+2023-10-30 17:37:58.586 [INFO ] [진도 port] : 22
+2023-10-30 17:37:58.586 [INFO ] [진도 ip] : 190.1.137.113
+2023-10-30 17:37:58.586 [INFO ] [진도 username] : root
+2023-10-30 17:37:58.586 [INFO ] [진도 pwd] : test123
+2023-10-30 17:37:59.090 [INFO ] [========================= 고산 접속 정보(connect, file, filesize) ===============================]
+2023-10-30 17:37:59.090 [INFO ] [고산 port] : 22
+2023-10-30 17:37:59.090 [INFO ] [고산 ip] : 190.1.52.113
+2023-10-30 17:37:59.090 [INFO ] [고산 username] : root
+2023-10-30 17:37:59.090 [INFO ] [고산 pwd] : test123
+2023-10-30 17:37:59.605 [INFO ] [========================= 성산 접속 정보(connect, file, filesize) ===============================]
+2023-10-30 17:37:59.605 [INFO ] [성산 port] : 22
+2023-10-30 17:37:59.605 [INFO ] [성산 ip] : 190.1.54.113
+2023-10-30 17:37:59.605 [INFO ] [성산 username] : root
+2023-10-30 17:37:59.605 [INFO ] [성산 pwd] : test123
+2023-10-30 17:38:00.074 [INFO ] [관악산 접속 유무] : false
+2023-10-30 17:38:00.074 [INFO ] [관악산 접속 X]
+2023-10-30 17:38:00.074 [INFO ] [/// 관악산 ssh 접속 종료 /// ]
+2023-10-30 17:38:00.074 [INFO ] [관악산 파일 명] : 
+2023-10-30 17:38:00.074 [INFO ] [관악산 파일 size] : 0
+2023-10-30 17:38:00.074 [INFO ] [관악산 파일 recv] : RECV
+2023-10-30 17:38:00.074 [INFO ] [관악산 파일 recvDtl] : ok
+2023-10-30 17:38:00.074 [INFO ] [관악산 접속 실패 query insert - receive_data]
+2023-10-30 17:38:00.105 [INFO ] [========================= 용인 접속 정보(connect, file, filesize) ===============================]
+2023-10-30 17:38:00.105 [INFO ] [용인 port] : 22
+2023-10-30 17:38:00.105 [INFO ] [용인 ip] : 190.1.59.113
+2023-10-30 17:38:00.105 [INFO ] [용인 username] : root
+2023-10-30 17:38:00.105 [INFO ] [용인 pwd] : test123
+2023-10-30 17:38:00.590 [INFO ] [백령도 접속 유무] : false
+2023-10-30 17:38:00.590 [INFO ] [백령도 접속 X]
+2023-10-30 17:38:00.590 [INFO ] [/// 백령도 ssh 접속 종료 /// ]
+2023-10-30 17:38:00.590 [INFO ] [백령도 파일 명] : 
+2023-10-30 17:38:00.590 [INFO ] [백령도 파일 size] : 0
+2023-10-30 17:38:00.590 [INFO ] [백령도 파일 recv] : RECV
+2023-10-30 17:38:00.590 [INFO ] [백령도 파일 recvDtl] : ok
+2023-10-30 17:38:00.590 [INFO ] [백령도 접속 실패 query insert - receive_data]
+2023-10-30 17:38:01.076 [INFO ] [광덕산 접속 유무] : false
+2023-10-30 17:38:01.076 [INFO ] [광덕산 접속 X]
+2023-10-30 17:38:01.076 [INFO ] [/// 광덕산 ssh 접속 종료 /// ]
+2023-10-30 17:38:01.076 [INFO ] [광덕산 파일 명] : 
+2023-10-30 17:38:01.076 [INFO ] [광덕산 파일 size] : 0
+2023-10-30 17:38:01.077 [INFO ] [광덕산 파일 recv] : RECV
+2023-10-30 17:38:01.077 [INFO ] [광덕산 파일 recvDtl] : ok
+2023-10-30 17:38:01.077 [INFO ] [광덕산 접속 실패 query insert - receive_data]
+2023-10-30 17:38:01.597 [INFO ] [강릉 접속 유무] : false
+2023-10-30 17:38:01.597 [INFO ] [강릉 접속 X]
+2023-10-30 17:38:01.597 [INFO ] [/// 강릉 ssh 접속 종료 /// ]
+2023-10-30 17:38:01.597 [INFO ] [강릉 파일 명] : 
+2023-10-30 17:38:01.597 [INFO ] [강릉 파일 size] : 0
+2023-10-30 17:38:01.597 [INFO ] [강릉 파일 recv] : RECV
+2023-10-30 17:38:01.597 [INFO ] [강릉 파일 recvDtl] : ok
+2023-10-30 17:38:01.597 [INFO ] [강릉 접속 실패 query insert - receive_data]
+2023-10-30 17:38:02.101 [INFO ] [면봉산 접속 유무] : false
+2023-10-30 17:38:02.101 [INFO ] [면봉산 접속 X]
+2023-10-30 17:38:02.101 [INFO ] [/// 면봉산 ssh 접속 종료 /// ]
+2023-10-30 17:38:02.101 [INFO ] [면봉산 파일 명] : 
+2023-10-30 17:38:02.101 [INFO ] [면봉산 파일 size] : 0
+2023-10-30 17:38:02.101 [INFO ] [면봉산 파일 recv] : RECV
+2023-10-30 17:38:02.101 [INFO ] [면봉산 파일 recvDtl] : ok
+2023-10-30 17:38:02.101 [INFO ] [면봉산 접속 실패 query insert - receive_data]
+2023-10-30 17:38:02.604 [INFO ] [구덕산 접속 유무] : false
+2023-10-30 17:38:02.604 [INFO ] [구덕산 접속 X]
+2023-10-30 17:38:02.604 [INFO ] [/// 구덕산 ssh 접속 종료 /// ]
+2023-10-30 17:38:02.604 [INFO ] [구덕산 파일 명] : 
+2023-10-30 17:38:02.604 [INFO ] [구덕산 파일 size] : 0
+2023-10-30 17:38:02.604 [INFO ] [구덕산 파일 recv] : RECV
+2023-10-30 17:38:02.604 [INFO ] [구덕산 파일 recvDtl] : ok
+2023-10-30 17:38:02.604 [INFO ] [구덕산 접속 실패 query insert - receive_data]
+2023-10-30 17:38:03.094 [INFO ] [오성산 접속 유무] : false
+2023-10-30 17:38:03.094 [INFO ] [오성산 접속 X]
+2023-10-30 17:38:03.094 [INFO ] [/// 오성산 ssh 접속 종료 /// ]
+2023-10-30 17:38:03.094 [INFO ] [오성산 파일 명] : 
+2023-10-30 17:38:03.095 [INFO ] [오성산 파일 size] : 0
+2023-10-30 17:38:03.095 [INFO ] [오성산 파일 recv] : RECV
+2023-10-30 17:38:03.095 [INFO ] [오성산 파일 recvDtl] : ok
+2023-10-30 17:38:03.095 [INFO ] [오성산 접속 실패 query insert - receive_data]
+2023-10-30 17:38:03.612 [INFO ] [진도 접속 유무] : false
+2023-10-30 17:38:03.612 [INFO ] [진도 접속 X]
+2023-10-30 17:38:03.612 [INFO ] [/// 진도 ssh 접속 종료 /// ]
+2023-10-30 17:38:03.612 [INFO ] [진도 파일 명] : 
+2023-10-30 17:38:03.612 [INFO ] [진도 파일 size] : 0
+2023-10-30 17:38:03.612 [INFO ] [진도 파일 recv] : RECV
+2023-10-30 17:38:03.612 [INFO ] [진도 파일 recvDtl] : ok
+2023-10-30 17:38:03.613 [INFO ] [진도 접속 실패 query insert - receive_data]
+2023-10-30 17:38:04.115 [INFO ] [고산 접속 유무] : false
+2023-10-30 17:38:04.115 [INFO ] [고산 접속 X]
+2023-10-30 17:38:04.116 [INFO ] [/// 고산 ssh 접속 종료 /// ]
+2023-10-30 17:38:04.116 [INFO ] [고산 파일 명] : 
+2023-10-30 17:38:04.116 [INFO ] [고산 파일 size] : 0
+2023-10-30 17:38:04.116 [INFO ] [고산 파일 recv] : RECV
+2023-10-30 17:38:04.116 [INFO ] [고산 파일 recvDtl] : ok
+2023-10-30 17:38:04.116 [INFO ] [고산 접속 실패 query insert - receive_data]
+2023-10-30 17:38:04.629 [INFO ] [성산 접속 유무] : false
+2023-10-30 17:38:04.629 [INFO ] [성산 접속 X]
+2023-10-30 17:38:04.629 [INFO ] [/// 성산 ssh 접속 종료 /// ]
+2023-10-30 17:38:04.629 [INFO ] [성산 파일 명] : 
+2023-10-30 17:38:04.629 [INFO ] [성산 파일 size] : 0
+2023-10-30 17:38:04.629 [INFO ] [성산 파일 recv] : RECV
+2023-10-30 17:38:04.629 [INFO ] [성산 파일 recvDtl] : ok
+2023-10-30 17:38:04.629 [INFO ] [성산 접속 실패 query insert - receive_data]
+2023-10-30 17:38:05.132 [INFO ] [용인 접속 유무] : false
+2023-10-30 17:38:05.132 [INFO ] [용인 접속 X]
+2023-10-30 17:38:05.132 [INFO ] [/// 용인 ssh 접속 종료 /// ]
+2023-10-30 17:38:05.132 [INFO ] [용인 파일 명] : 
+2023-10-30 17:38:05.132 [INFO ] [용인 파일 size] : 0
+2023-10-30 17:38:05.132 [INFO ] [용인 파일 recv] : RECV
+2023-10-30 17:38:05.133 [INFO ] [용인 파일 recvDtl] : ok
+2023-10-30 17:38:05.133 [INFO ] [용인 접속 실패 query insert - receive_data]
+2023-10-30 17:38:20.615 [INFO ] [20초 후 다음] : 2023-10-30 17:38:20
+2023-10-30 17:38:20.615 [INFO ] [=================== 2번째 프로세스 ===================] 2023-10-30 17:38:20
+2023-10-30 17:38:20.782 [INFO ] [============ 관악산 정보 ==============]
+2023-10-30 17:38:20.782 [INFO ] dataKindStr : RDR
+2023-10-30 17:38:20.782 [INFO ] site_cd : KWK
+2023-10-30 17:38:20.782 [INFO ] data_type : NQC
+2023-10-30 17:38:20.782 [INFO ] currentTime : 2023-10-30 17:35
+2023-10-30 17:38:20.795 [INFO ] 최종 상태 : WARN
+2023-10-30 17:38:20.935 [INFO ] [결과] : RETR
+2023-10-30 17:38:20.936 [INFO ] [결과 상세] : file_ok
+2023-10-30 17:38:20.936 [INFO ] 관악산 별 최종상태 update
+2023-10-30 17:38:20.936 [INFO ] new_recv_condition ::: RETR
+2023-10-30 17:38:20.936 [INFO ] recv_con_dtl ::: file_ok
+2023-10-30 17:38:20.968 [INFO ] [============ 백령도 정보 ==============]
+2023-10-30 17:38:20.968 [INFO ] dataKindStr : RDR
+2023-10-30 17:38:20.968 [INFO ] site_cd : BRI
+2023-10-30 17:38:20.968 [INFO ] data_type : NQC
+2023-10-30 17:38:20.968 [INFO ] currentTime : 2023-10-30 17:35
+2023-10-30 17:38:20.978 [INFO ] 최종 상태 : ORDI
+2023-10-30 17:38:21.045 [INFO ] [결과] : 
+2023-10-30 17:38:21.045 [INFO ] [결과 상세] : 
+2023-10-30 17:38:21.045 [INFO ] [상태 안바뀜 - update 날짜는 바뀜]
+2023-10-30 17:38:21.075 [INFO ] [============ 광덕산 정보 ==============]
+2023-10-30 17:38:21.075 [INFO ] dataKindStr : RDR
+2023-10-30 17:38:21.075 [INFO ] site_cd : GDK
+2023-10-30 17:38:21.075 [INFO ] data_type : NQC
+2023-10-30 17:38:21.075 [INFO ] currentTime : 2023-10-30 17:35
+2023-10-30 17:38:21.085 [INFO ] 최종 상태 : WARN
+2023-10-30 17:38:21.228 [INFO ] [결과] : RETR
+2023-10-30 17:38:21.228 [INFO ] [결과 상세] : file_ok
+2023-10-30 17:38:21.228 [INFO ] 광덕산 별 최종상태 update
+2023-10-30 17:38:21.228 [INFO ] new_recv_condition ::: RETR
+2023-10-30 17:38:21.228 [INFO ] recv_con_dtl ::: file_ok
+2023-10-30 17:38:21.258 [INFO ] [============ 강릉 정보 ==============]
+2023-10-30 17:38:21.258 [INFO ] dataKindStr : RDR
+2023-10-30 17:38:21.258 [INFO ] site_cd : GNG
+2023-10-30 17:38:21.258 [INFO ] data_type : NQC
+2023-10-30 17:38:21.258 [INFO ] currentTime : 2023-10-30 17:35
+2023-10-30 17:38:21.269 [INFO ] 최종 상태 : WARN
+2023-10-30 17:38:21.410 [INFO ] [결과] : RETR
+2023-10-30 17:38:21.410 [INFO ] [결과 상세] : file_ok
+2023-10-30 17:38:21.410 [INFO ] 강릉 별 최종상태 update
+2023-10-30 17:38:21.410 [INFO ] new_recv_condition ::: RETR
+2023-10-30 17:38:21.410 [INFO ] recv_con_dtl ::: file_ok
+2023-10-30 17:38:21.442 [INFO ] [============ 면봉산 정보 ==============]
+2023-10-30 17:38:21.442 [INFO ] dataKindStr : RDR
+2023-10-30 17:38:21.442 [INFO ] site_cd : MYN
+2023-10-30 17:38:21.443 [INFO ] data_type : NQC
+2023-10-30 17:38:21.443 [INFO ] currentTime : 2023-10-30 17:35
+2023-10-30 17:38:21.457 [INFO ] 최종 상태 : WARN
+2023-10-30 17:38:21.596 [INFO ] [결과] : RETR
+2023-10-30 17:38:21.596 [INFO ] [결과 상세] : file_ok
+2023-10-30 17:38:21.596 [INFO ] 면봉산 별 최종상태 update
+2023-10-30 17:38:21.596 [INFO ] new_recv_condition ::: RETR
+2023-10-30 17:38:21.596 [INFO ] recv_con_dtl ::: file_ok
+2023-10-30 17:38:21.625 [INFO ] [============ 구덕산 정보 ==============]
+2023-10-30 17:38:21.625 [INFO ] dataKindStr : RDR
+2023-10-30 17:38:21.626 [INFO ] site_cd : PSN
+2023-10-30 17:38:21.626 [INFO ] data_type : NQC
+2023-10-30 17:38:21.626 [INFO ] currentTime : 2023-10-30 17:35
+2023-10-30 17:38:21.635 [INFO ] 최종 상태 : ORDI
+2023-10-30 17:38:21.694 [INFO ] [결과] : 
+2023-10-30 17:38:21.694 [INFO ] [결과 상세] : 
+2023-10-30 17:38:21.694 [INFO ] [상태 안바뀜 - update 날짜는 바뀜]
+2023-10-30 17:38:21.720 [INFO ] [============ 오성산 정보 ==============]
+2023-10-30 17:38:21.720 [INFO ] dataKindStr : RDR
+2023-10-30 17:38:21.720 [INFO ] site_cd : KSN
+2023-10-30 17:38:21.721 [INFO ] data_type : NQC
+2023-10-30 17:38:21.721 [INFO ] currentTime : 2023-10-30 17:35
+2023-10-30 17:38:21.730 [INFO ] 최종 상태 : WARN
+2023-10-30 17:38:21.872 [INFO ] [결과] : RETR
+2023-10-30 17:38:21.872 [INFO ] [결과 상세] : file_ok
+2023-10-30 17:38:21.872 [INFO ] 오성산 별 최종상태 update
+2023-10-30 17:38:21.872 [INFO ] new_recv_condition ::: RETR
+2023-10-30 17:38:21.872 [INFO ] recv_con_dtl ::: file_ok
+2023-10-30 17:38:21.908 [INFO ] [============ 진도 정보 ==============]
+2023-10-30 17:38:21.908 [INFO ] dataKindStr : RDR
+2023-10-30 17:38:21.908 [INFO ] site_cd : JNI
+2023-10-30 17:38:21.908 [INFO ] data_type : NQC
+2023-10-30 17:38:21.908 [INFO ] currentTime : 2023-10-30 17:35
+2023-10-30 17:38:21.919 [INFO ] 최종 상태 : WARN
+2023-10-30 17:38:22.056 [INFO ] [결과] : RETR
+2023-10-30 17:38:22.056 [INFO ] [결과 상세] : file_ok
+2023-10-30 17:38:22.056 [INFO ] 진도 별 최종상태 update
+2023-10-30 17:38:22.056 [INFO ] new_recv_condition ::: RETR
+2023-10-30 17:38:22.056 [INFO ] recv_con_dtl ::: file_ok
+2023-10-30 17:38:22.082 [INFO ] [============ 고산 정보 ==============]
+2023-10-30 17:38:22.082 [INFO ] dataKindStr : RDR
+2023-10-30 17:38:22.082 [INFO ] site_cd : GSN
+2023-10-30 17:38:22.082 [INFO ] data_type : NQC
+2023-10-30 17:38:22.082 [INFO ] currentTime : 2023-10-30 17:35
+2023-10-30 17:38:22.093 [INFO ] 최종 상태 : TORE
+2023-10-30 17:38:22.166 [INFO ] [결과] : ORDI
+2023-10-30 17:38:22.166 [INFO ] [결과 상세] : ok
+2023-10-30 17:38:22.166 [INFO ] 고산 별 최종상태 update
+2023-10-30 17:38:22.166 [INFO ] new_recv_condition ::: ORDI
+2023-10-30 17:38:22.166 [INFO ] recv_con_dtl ::: ok
+2023-10-30 17:38:22.195 [INFO ] [============ 성산 정보 ==============]
+2023-10-30 17:38:22.195 [INFO ] dataKindStr : RDR
+2023-10-30 17:38:22.195 [INFO ] site_cd : SSP
+2023-10-30 17:38:22.195 [INFO ] data_type : NQC
+2023-10-30 17:38:22.195 [INFO ] currentTime : 2023-10-30 17:35
+2023-10-30 17:38:22.209 [INFO ] 최종 상태 : TORE
+2023-10-30 17:38:22.282 [INFO ] [결과] : ORDI
+2023-10-30 17:38:22.282 [INFO ] [결과 상세] : ok
+2023-10-30 17:38:22.282 [INFO ] 성산 별 최종상태 update
+2023-10-30 17:38:22.282 [INFO ] new_recv_condition ::: ORDI
+2023-10-30 17:38:22.282 [INFO ] recv_con_dtl ::: ok
+2023-10-30 17:38:22.312 [INFO ] [============ 용인 정보 ==============]
+2023-10-30 17:38:22.312 [INFO ] dataKindStr : RDR
+2023-10-30 17:38:22.312 [INFO ] site_cd : YIT
+2023-10-30 17:38:22.312 [INFO ] data_type : NQC
+2023-10-30 17:38:22.312 [INFO ] currentTime : 2023-10-30 17:35
+2023-10-30 17:38:22.321 [INFO ] 최종 상태 : TORE
+2023-10-30 17:38:22.392 [INFO ] [결과] : ORDI
+2023-10-30 17:38:22.392 [INFO ] [결과 상세] : ok
+2023-10-30 17:38:22.392 [INFO ] 용인 별 최종상태 update
+2023-10-30 17:38:22.392 [INFO ] new_recv_condition ::: ORDI
+2023-10-30 17:38:22.392 [INFO ] recv_con_dtl ::: ok
+2023-10-30 17:38:22.432 [INFO ] ======================= 문자 전송 =================================
+2023-10-30 17:38:22.456 [INFO ] [============ 관악산 정보 ==============]
+2023-10-30 17:38:22.478 [INFO ] [code] : RETR
+2023-10-30 17:38:22.478 [INFO ] [codedtl] : file_ok
+2023-10-30 17:38:22.491 [INFO ] [복구 '3'회 체크]
+2023-10-30 17:38:22.500 [INFO ] [문자메시지 패턴] : (시범운영)
+관악산 자료 수신 복구 [2023-10-30 17:38:22]
+2023-10-30 17:38:22.511 [INFO ] recv_con ::: RETR
+2023-10-30 17:38:22.523 [INFO ] [문자 전송 app sequence] :317
+2023-10-30 17:38:22.566 [INFO ] [수신자명] : kimhaemi : 01031248577
+2023-10-30 17:38:22.584 [WARN ] SQL Error: 1064, SQLState: 42000
+2023-10-30 17:38:22.584 [ERROR] You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '(select TEMPLATE_CODE from nuri.app_template_code atc where USE_BUTTON = 'Y')
+, ' at line 19
+2023-10-30 17:38:22.597 [ERROR] Unexpected exception occurred invoking async method: public void kr.or.kimsn.radardemo.Scheduler.cronJobSch() throws java.lang.InterruptedException
+org.springframework.dao.InvalidDataAccessResourceUsageException: could not execute statement; SQL [n/a]; nested exception is org.hibernate.exception.SQLGrammarException: could not execute statement
+	at org.springframework.orm.jpa.vendor.HibernateJpaDialect.convertHibernateAccessException(HibernateJpaDialect.java:259) ~[spring-orm-5.3.29.jar:5.3.29]
+	at org.springframework.orm.jpa.vendor.HibernateJpaDialect.translateExceptionIfPossible(HibernateJpaDialect.java:233) ~[spring-orm-5.3.29.jar:5.3.29]
+	at org.springframework.orm.jpa.AbstractEntityManagerFactoryBean.translateExceptionIfPossible(AbstractEntityManagerFactoryBean.java:551) ~[spring-orm-5.3.29.jar:5.3.29]
+	at org.springframework.dao.support.ChainedPersistenceExceptionTranslator.translateExceptionIfPossible(ChainedPersistenceExceptionTranslator.java:61) ~[spring-tx-5.3.29.jar:5.3.29]
+	at org.springframework.dao.support.DataAccessUtils.translateIfNecessary(DataAccessUtils.java:242) ~[spring-tx-5.3.29.jar:5.3.29]
+	at org.springframework.dao.support.PersistenceExceptionTranslationInterceptor.invoke(PersistenceExceptionTranslationInterceptor.java:152) ~[spring-tx-5.3.29.jar:5.3.29]
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:186) ~[spring-aop-5.3.29.jar:5.3.29]
+	at org.springframework.data.jpa.repository.support.CrudMethodMetadataPostProcessor$CrudMethodMetadataPopulatingMethodInterceptor.invoke(CrudMethodMetadataPostProcessor.java:145) ~[spring-data-jpa-2.7.15.jar:2.7.15]
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:186) ~[spring-aop-5.3.29.jar:5.3.29]
+	at org.springframework.aop.interceptor.ExposeInvocationInterceptor.invoke(ExposeInvocationInterceptor.java:97) ~[spring-aop-5.3.29.jar:5.3.29]
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:186) ~[spring-aop-5.3.29.jar:5.3.29]
+	at org.springframework.aop.framework.JdkDynamicAopProxy.invoke(JdkDynamicAopProxy.java:241) ~[spring-aop-5.3.29.jar:5.3.29]
+	at com.sun.proxy.$Proxy122.gaonAppSendDataSave(Unknown Source) ~[?:?]
+	at kr.or.kimsn.radardemo.service.QueryService.insGaonAppSendDataSave(QueryService.java:201) ~[main/:?]
+	at kr.or.kimsn.radardemo.process.StepTwoProcess.stepThree(StepTwoProcess.java:618) ~[main/:?]
+	at kr.or.kimsn.radardemo.process.StepTwoProcess.stepTwo(StepTwoProcess.java:329) ~[main/:?]
+	at kr.or.kimsn.radardemo.Scheduler.cronJobSch(Scheduler.java:91) ~[main/:?]
+	at kr.or.kimsn.radardemo.Scheduler$$FastClassBySpringCGLIB$$f3d36b2e.invoke(<generated>) ~[main/:?]
+	at org.springframework.cglib.proxy.MethodProxy.invoke(MethodProxy.java:218) ~[spring-core-5.3.29.jar:5.3.29]
+	at org.springframework.aop.framework.CglibAopProxy$CglibMethodInvocation.invokeJoinpoint(CglibAopProxy.java:793) ~[spring-aop-5.3.29.jar:5.3.29]
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:163) ~[spring-aop-5.3.29.jar:5.3.29]
+	at org.springframework.aop.framework.CglibAopProxy$CglibMethodInvocation.proceed(CglibAopProxy.java:763) ~[spring-aop-5.3.29.jar:5.3.29]
+	at org.springframework.aop.interceptor.AsyncExecutionInterceptor.lambda$invoke$0(AsyncExecutionInterceptor.java:115) ~[spring-aop-5.3.29.jar:5.3.29]
+	at java.util.concurrent.FutureTask.run(FutureTask.java:264) ~[?:?]
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1128) ~[?:?]
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:628) ~[?:?]
+	at java.lang.Thread.run(Thread.java:834) ~[?:?]
+Caused by: org.hibernate.exception.SQLGrammarException: could not execute statement
+	at org.hibernate.exception.internal.SQLExceptionTypeDelegate.convert(SQLExceptionTypeDelegate.java:63) ~[hibernate-core-5.6.15.Final.jar:5.6.15.Final]
+	at org.hibernate.exception.internal.StandardSQLExceptionConverter.convert(StandardSQLExceptionConverter.java:37) ~[hibernate-core-5.6.15.Final.jar:5.6.15.Final]
+	at org.hibernate.engine.jdbc.spi.SqlExceptionHelper.convert(SqlExceptionHelper.java:113) ~[hibernate-core-5.6.15.Final.jar:5.6.15.Final]
+	at org.hibernate.engine.jdbc.spi.SqlExceptionHelper.convert(SqlExceptionHelper.java:99) ~[hibernate-core-5.6.15.Final.jar:5.6.15.Final]
+	at org.hibernate.engine.jdbc.internal.ResultSetReturnImpl.executeUpdate(ResultSetReturnImpl.java:200) ~[hibernate-core-5.6.15.Final.jar:5.6.15.Final]
+	at org.hibernate.engine.query.spi.NativeSQLQueryPlan.performExecuteUpdate(NativeSQLQueryPlan.java:107) ~[hibernate-core-5.6.15.Final.jar:5.6.15.Final]
+	at org.hibernate.internal.SessionImpl.executeNativeUpdate(SessionImpl.java:1554) ~[hibernate-core-5.6.15.Final.jar:5.6.15.Final]
+	at org.hibernate.query.internal.NativeQueryImpl.doExecuteUpdate(NativeQueryImpl.java:299) ~[hibernate-core-5.6.15.Final.jar:5.6.15.Final]
+	at org.hibernate.query.internal.AbstractProducedQuery.executeUpdate(AbstractProducedQuery.java:1696) ~[hibernate-core-5.6.15.Final.jar:5.6.15.Final]
+	at org.springframework.data.jpa.repository.query.JpaQueryExecution$ModifyingExecution.doExecute(JpaQueryExecution.java:241) ~[spring-data-jpa-2.7.15.jar:2.7.15]
+	at org.springframework.data.jpa.repository.query.JpaQueryExecution.execute(JpaQueryExecution.java:90) ~[spring-data-jpa-2.7.15.jar:2.7.15]
+	at org.springframework.data.jpa.repository.query.AbstractJpaQuery.doExecute(AbstractJpaQuery.java:156) ~[spring-data-jpa-2.7.15.jar:2.7.15]
+	at org.springframework.data.jpa.repository.query.AbstractJpaQuery.execute(AbstractJpaQuery.java:144) ~[spring-data-jpa-2.7.15.jar:2.7.15]
+	at org.springframework.data.repository.core.support.RepositoryMethodInvoker.doInvoke(RepositoryMethodInvoker.java:137) ~[spring-data-commons-2.7.15.jar:2.7.15]
+	at org.springframework.data.repository.core.support.RepositoryMethodInvoker.invoke(RepositoryMethodInvoker.java:121) ~[spring-data-commons-2.7.15.jar:2.7.15]
+	at org.springframework.data.repository.core.support.QueryExecutorMethodInterceptor.doInvoke(QueryExecutorMethodInterceptor.java:160) ~[spring-data-commons-2.7.15.jar:2.7.15]
+	at org.springframework.data.repository.core.support.QueryExecutorMethodInterceptor.invoke(QueryExecutorMethodInterceptor.java:139) ~[spring-data-commons-2.7.15.jar:2.7.15]
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:186) ~[spring-aop-5.3.29.jar:5.3.29]
+	at org.springframework.data.projection.DefaultMethodInvokingMethodInterceptor.invoke(DefaultMethodInvokingMethodInterceptor.java:76) ~[spring-data-commons-2.7.15.jar:2.7.15]
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:186) ~[spring-aop-5.3.29.jar:5.3.29]
+	at org.springframework.transaction.interceptor.TransactionInterceptor$1.proceedWithInvocation(TransactionInterceptor.java:123) ~[spring-tx-5.3.29.jar:5.3.29]
+	at org.springframework.transaction.interceptor.TransactionAspectSupport.invokeWithinTransaction(TransactionAspectSupport.java:388) ~[spring-tx-5.3.29.jar:5.3.29]
+	at org.springframework.transaction.interceptor.TransactionInterceptor.invoke(TransactionInterceptor.java:119) ~[spring-tx-5.3.29.jar:5.3.29]
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:186) ~[spring-aop-5.3.29.jar:5.3.29]
+	at org.springframework.dao.support.PersistenceExceptionTranslationInterceptor.invoke(PersistenceExceptionTranslationInterceptor.java:137) ~[spring-tx-5.3.29.jar:5.3.29]
+	... 21 more
+Caused by: java.sql.SQLSyntaxErrorException: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '(select TEMPLATE_CODE from nuri.app_template_code atc where USE_BUTTON = 'Y')
+, ' at line 19
+	at com.mysql.cj.jdbc.exceptions.SQLError.createSQLException(SQLError.java:121) ~[mysql-connector-j-8.0.33.jar:8.0.33]
+	at com.mysql.cj.jdbc.exceptions.SQLExceptionsMapping.translateException(SQLExceptionsMapping.java:122) ~[mysql-connector-j-8.0.33.jar:8.0.33]
+	at com.mysql.cj.jdbc.ClientPreparedStatement.executeInternal(ClientPreparedStatement.java:916) ~[mysql-connector-j-8.0.33.jar:8.0.33]
+	at com.mysql.cj.jdbc.ClientPreparedStatement.executeUpdateInternal(ClientPreparedStatement.java:1061) ~[mysql-connector-j-8.0.33.jar:8.0.33]
+	at com.mysql.cj.jdbc.ClientPreparedStatement.executeUpdateInternal(ClientPreparedStatement.java:1009) ~[mysql-connector-j-8.0.33.jar:8.0.33]
+	at com.mysql.cj.jdbc.ClientPreparedStatement.executeLargeUpdate(ClientPreparedStatement.java:1320) ~[mysql-connector-j-8.0.33.jar:8.0.33]
+	at com.mysql.cj.jdbc.ClientPreparedStatement.executeUpdate(ClientPreparedStatement.java:994) ~[mysql-connector-j-8.0.33.jar:8.0.33]
+	at com.zaxxer.hikari.pool.ProxyPreparedStatement.executeUpdate(ProxyPreparedStatement.java:61) ~[HikariCP-4.0.3.jar:?]
+	at com.zaxxer.hikari.pool.HikariProxyPreparedStatement.executeUpdate(HikariProxyPreparedStatement.java) ~[HikariCP-4.0.3.jar:?]
+	at org.hibernate.engine.jdbc.internal.ResultSetReturnImpl.executeUpdate(ResultSetReturnImpl.java:197) ~[hibernate-core-5.6.15.Final.jar:5.6.15.Final]
+	at org.hibernate.engine.query.spi.NativeSQLQueryPlan.performExecuteUpdate(NativeSQLQueryPlan.java:107) ~[hibernate-core-5.6.15.Final.jar:5.6.15.Final]
+	at org.hibernate.internal.SessionImpl.executeNativeUpdate(SessionImpl.java:1554) ~[hibernate-core-5.6.15.Final.jar:5.6.15.Final]
+	at org.hibernate.query.internal.NativeQueryImpl.doExecuteUpdate(NativeQueryImpl.java:299) ~[hibernate-core-5.6.15.Final.jar:5.6.15.Final]
+	at org.hibernate.query.internal.AbstractProducedQuery.executeUpdate(AbstractProducedQuery.java:1696) ~[hibernate-core-5.6.15.Final.jar:5.6.15.Final]
+	at org.springframework.data.jpa.repository.query.JpaQueryExecution$ModifyingExecution.doExecute(JpaQueryExecution.java:241) ~[spring-data-jpa-2.7.15.jar:2.7.15]
+	at org.springframework.data.jpa.repository.query.JpaQueryExecution.execute(JpaQueryExecution.java:90) ~[spring-data-jpa-2.7.15.jar:2.7.15]
+	at org.springframework.data.jpa.repository.query.AbstractJpaQuery.doExecute(AbstractJpaQuery.java:156) ~[spring-data-jpa-2.7.15.jar:2.7.15]
+	at org.springframework.data.jpa.repository.query.AbstractJpaQuery.execute(AbstractJpaQuery.java:144) ~[spring-data-jpa-2.7.15.jar:2.7.15]
+	at org.springframework.data.repository.core.support.RepositoryMethodInvoker.doInvoke(RepositoryMethodInvoker.java:137) ~[spring-data-commons-2.7.15.jar:2.7.15]
+	at org.springframework.data.repository.core.support.RepositoryMethodInvoker.invoke(RepositoryMethodInvoker.java:121) ~[spring-data-commons-2.7.15.jar:2.7.15]
+	at org.springframework.data.repository.core.support.QueryExecutorMethodInterceptor.doInvoke(QueryExecutorMethodInterceptor.java:160) ~[spring-data-commons-2.7.15.jar:2.7.15]
+	at org.springframework.data.repository.core.support.QueryExecutorMethodInterceptor.invoke(QueryExecutorMethodInterceptor.java:139) ~[spring-data-commons-2.7.15.jar:2.7.15]
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:186) ~[spring-aop-5.3.29.jar:5.3.29]
+	at org.springframework.data.projection.DefaultMethodInvokingMethodInterceptor.invoke(DefaultMethodInvokingMethodInterceptor.java:76) ~[spring-data-commons-2.7.15.jar:2.7.15]
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:186) ~[spring-aop-5.3.29.jar:5.3.29]
+	at org.springframework.transaction.interceptor.TransactionInterceptor$1.proceedWithInvocation(TransactionInterceptor.java:123) ~[spring-tx-5.3.29.jar:5.3.29]
+	at org.springframework.transaction.interceptor.TransactionAspectSupport.invokeWithinTransaction(TransactionAspectSupport.java:388) ~[spring-tx-5.3.29.jar:5.3.29]
+	at org.springframework.transaction.interceptor.TransactionInterceptor.invoke(TransactionInterceptor.java:119) ~[spring-tx-5.3.29.jar:5.3.29]
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:186) ~[spring-aop-5.3.29.jar:5.3.29]
+	at org.springframework.dao.support.PersistenceExceptionTranslationInterceptor.invoke(PersistenceExceptionTranslationInterceptor.java:137) ~[spring-tx-5.3.29.jar:5.3.29]
+	... 21 more
+2023-10-30 17:38:25.043 [INFO ] [데몬 구분] : 대형
+2023-10-30 17:38:25.065 [INFO ] [========================= 관악산 접속 정보(connect, file, filesize) ===============================]
+2023-10-30 17:38:25.065 [INFO ] [관악산 port] : 22
+2023-10-30 17:38:25.065 [INFO ] [관악산 ip] : 190.1.56.113
+2023-10-30 17:38:25.065 [INFO ] [관악산 username] : root
+2023-10-30 17:38:25.065 [INFO ] [관악산 pwd] : test123
+2023-10-30 17:38:25.574 [INFO ] [========================= 백령도 접속 정보(connect, file, filesize) ===============================]
+2023-10-30 17:38:25.574 [INFO ] [백령도 port] : 22
+2023-10-30 17:38:25.574 [INFO ] [백령도 ip] : 190.1.11.103
+2023-10-30 17:38:25.574 [INFO ] [백령도 username] : root
+2023-10-30 17:38:25.574 [INFO ] [백령도 pwd] : test123
+2023-10-30 17:38:26.082 [INFO ] [========================= 광덕산 접속 정보(connect, file, filesize) ===============================]
+2023-10-30 17:38:26.083 [INFO ] [광덕산 port] : 22
+2023-10-30 17:38:26.083 [INFO ] [광덕산 ip] : 190.1.218.113
+2023-10-30 17:38:26.083 [INFO ] [광덕산 username] : root
+2023-10-30 17:38:26.083 [INFO ] [광덕산 pwd] : test123
+2023-10-30 17:38:26.586 [INFO ] [========================= 강릉 접속 정보(connect, file, filesize) ===============================]
+2023-10-30 17:38:26.586 [INFO ] [강릉 port] : 22
+2023-10-30 17:38:26.586 [INFO ] [강릉 ip] : 190.1.219.113
+2023-10-30 17:38:26.586 [INFO ] [강릉 username] : root
+2023-10-30 17:38:26.586 [INFO ] [강릉 pwd] : test123
+2023-10-30 17:38:27.102 [INFO ] [========================= 면봉산 접속 정보(connect, file, filesize) ===============================]
+2023-10-30 17:38:27.102 [INFO ] [면봉산 port] : 22
+2023-10-30 17:38:27.103 [INFO ] [면봉산 ip] : 190.1.126.113
+2023-10-30 17:38:27.103 [INFO ] [면봉산 username] : root
+2023-10-30 17:38:27.103 [INFO ] [면봉산 pwd] : test123
+2023-10-30 17:38:27.605 [INFO ] [========================= 구덕산 접속 정보(connect, file, filesize) ===============================]
+2023-10-30 17:38:27.605 [INFO ] [구덕산 port] : 22
+2023-10-30 17:38:27.605 [INFO ] [구덕산 ip] : 190.1.110.113
+2023-10-30 17:38:27.605 [INFO ] [구덕산 username] : root
+2023-10-30 17:38:27.605 [INFO ] [구덕산 pwd] : test123
+2023-10-30 17:38:28.108 [INFO ] [========================= 오성산 접속 정보(connect, file, filesize) ===============================]
+2023-10-30 17:38:28.108 [INFO ] [오성산 port] : 22
+2023-10-30 17:38:28.108 [INFO ] [오성산 ip] : 190.1.150.113
+2023-10-30 17:38:28.108 [INFO ] [오성산 username] : root
+2023-10-30 17:38:28.108 [INFO ] [오성산 pwd] : test123
+2023-10-30 17:38:28.613 [INFO ] [========================= 진도 접속 정보(connect, file, filesize) ===============================]
+2023-10-30 17:38:28.614 [INFO ] [진도 port] : 22
+2023-10-30 17:38:28.614 [INFO ] [진도 ip] : 190.1.137.113
+2023-10-30 17:38:28.614 [INFO ] [진도 username] : root
+2023-10-30 17:38:28.614 [INFO ] [진도 pwd] : test123
+2023-10-30 17:38:29.113 [INFO ] [========================= 고산 접속 정보(connect, file, filesize) ===============================]
+2023-10-30 17:38:29.113 [INFO ] [고산 port] : 22
+2023-10-30 17:38:29.113 [INFO ] [고산 ip] : 190.1.52.113
+2023-10-30 17:38:29.113 [INFO ] [고산 username] : root
+2023-10-30 17:38:29.113 [INFO ] [고산 pwd] : test123
+2023-10-30 17:38:29.614 [INFO ] [========================= 성산 접속 정보(connect, file, filesize) ===============================]
+2023-10-30 17:38:29.614 [INFO ] [성산 port] : 22
+2023-10-30 17:38:29.614 [INFO ] [성산 ip] : 190.1.54.113
+2023-10-30 17:38:29.614 [INFO ] [성산 username] : root
+2023-10-30 17:38:29.614 [INFO ] [성산 pwd] : test123
+2023-10-30 17:38:30.086 [INFO ] [관악산 접속 유무] : false
+2023-10-30 17:38:30.086 [INFO ] [관악산 접속 X]
+2023-10-30 17:38:30.086 [INFO ] [/// 관악산 ssh 접속 종료 /// ]
+2023-10-30 17:38:30.086 [INFO ] [관악산 파일 명] : 
+2023-10-30 17:38:30.086 [INFO ] [관악산 파일 size] : 0
+2023-10-30 17:38:30.086 [INFO ] [관악산 파일 recv] : RECV
+2023-10-30 17:38:30.086 [INFO ] [관악산 파일 recvDtl] : ok
+2023-10-30 17:38:30.086 [INFO ] [관악산 접속 실패 query insert - receive_data]
+2023-10-30 17:38:30.117 [INFO ] [========================= 용인 접속 정보(connect, file, filesize) ===============================]
+2023-10-30 17:38:30.117 [INFO ] [용인 port] : 22
+2023-10-30 17:38:30.117 [INFO ] [용인 ip] : 190.1.59.113
+2023-10-30 17:38:30.117 [INFO ] [용인 username] : root
+2023-10-30 17:38:30.117 [INFO ] [용인 pwd] : test123
+2023-10-30 17:38:30.604 [INFO ] [백령도 접속 유무] : false
+2023-10-30 17:38:30.604 [INFO ] [백령도 접속 X]
+2023-10-30 17:38:30.604 [INFO ] [/// 백령도 ssh 접속 종료 /// ]
+2023-10-30 17:38:30.604 [INFO ] [백령도 파일 명] : 
+2023-10-30 17:38:30.604 [INFO ] [백령도 파일 size] : 0
+2023-10-30 17:38:30.604 [INFO ] [백령도 파일 recv] : RECV
+2023-10-30 17:38:30.604 [INFO ] [백령도 파일 recvDtl] : ok
+2023-10-30 17:38:30.604 [INFO ] [백령도 접속 실패 query insert - receive_data]
+2023-10-30 17:38:31.103 [INFO ] [광덕산 접속 유무] : false
+2023-10-30 17:38:31.103 [INFO ] [광덕산 접속 X]
+2023-10-30 17:38:31.103 [INFO ] [/// 광덕산 ssh 접속 종료 /// ]
+2023-10-30 17:38:31.103 [INFO ] [광덕산 파일 명] : 
+2023-10-30 17:38:31.103 [INFO ] [광덕산 파일 size] : 0
+2023-10-30 17:38:31.103 [INFO ] [광덕산 파일 recv] : RECV
+2023-10-30 17:38:31.103 [INFO ] [광덕산 파일 recvDtl] : ok
+2023-10-30 17:38:31.103 [INFO ] [광덕산 접속 실패 query insert - receive_data]
+2023-10-30 17:38:31.619 [INFO ] [강릉 접속 유무] : false
+2023-10-30 17:38:31.619 [INFO ] [강릉 접속 X]
+2023-10-30 17:38:31.619 [INFO ] [/// 강릉 ssh 접속 종료 /// ]
+2023-10-30 17:38:31.619 [INFO ] [강릉 파일 명] : 
+2023-10-30 17:38:31.619 [INFO ] [강릉 파일 size] : 0
+2023-10-30 17:38:31.619 [INFO ] [강릉 파일 recv] : RECV
+2023-10-30 17:38:31.619 [INFO ] [강릉 파일 recvDtl] : ok
+2023-10-30 17:38:31.619 [INFO ] [강릉 접속 실패 query insert - receive_data]
+2023-10-30 17:38:32.133 [INFO ] [면봉산 접속 유무] : false
+2023-10-30 17:38:32.133 [INFO ] [면봉산 접속 X]
+2023-10-30 17:38:32.133 [INFO ] [/// 면봉산 ssh 접속 종료 /// ]
+2023-10-30 17:38:32.133 [INFO ] [면봉산 파일 명] : 
+2023-10-30 17:38:32.133 [INFO ] [면봉산 파일 size] : 0
+2023-10-30 17:38:32.133 [INFO ] [면봉산 파일 recv] : RECV
+2023-10-30 17:38:32.133 [INFO ] [면봉산 파일 recvDtl] : ok
+2023-10-30 17:38:32.133 [INFO ] [면봉산 접속 실패 query insert - receive_data]
+2023-10-30 17:38:32.618 [INFO ] [구덕산 접속 유무] : false
+2023-10-30 17:38:32.618 [INFO ] [구덕산 접속 X]
+2023-10-30 17:38:32.618 [INFO ] [/// 구덕산 ssh 접속 종료 /// ]
+2023-10-30 17:38:32.618 [INFO ] [구덕산 파일 명] : 
+2023-10-30 17:38:32.618 [INFO ] [구덕산 파일 size] : 0
+2023-10-30 17:38:32.618 [INFO ] [구덕산 파일 recv] : RECV
+2023-10-30 17:38:32.618 [INFO ] [구덕산 파일 recvDtl] : ok
+2023-10-30 17:38:32.618 [INFO ] [구덕산 접속 실패 query insert - receive_data]
+2023-10-30 17:38:33.140 [INFO ] [오성산 접속 유무] : false
+2023-10-30 17:38:33.140 [INFO ] [오성산 접속 X]
+2023-10-30 17:38:33.140 [INFO ] [/// 오성산 ssh 접속 종료 /// ]
+2023-10-30 17:38:33.140 [INFO ] [오성산 파일 명] : 
+2023-10-30 17:38:33.140 [INFO ] [오성산 파일 size] : 0
+2023-10-30 17:38:33.140 [INFO ] [오성산 파일 recv] : RECV
+2023-10-30 17:38:33.140 [INFO ] [오성산 파일 recvDtl] : ok
+2023-10-30 17:38:33.140 [INFO ] [오성산 접속 실패 query insert - receive_data]
+2023-10-30 17:38:33.627 [INFO ] [진도 접속 유무] : false
+2023-10-30 17:38:33.627 [INFO ] [진도 접속 X]
+2023-10-30 17:38:33.627 [INFO ] [/// 진도 ssh 접속 종료 /// ]
+2023-10-30 17:38:33.627 [INFO ] [진도 파일 명] : 
+2023-10-30 17:38:33.627 [INFO ] [진도 파일 size] : 0
+2023-10-30 17:38:33.627 [INFO ] [진도 파일 recv] : RECV
+2023-10-30 17:38:33.627 [INFO ] [진도 파일 recvDtl] : ok
+2023-10-30 17:38:33.627 [INFO ] [진도 접속 실패 query insert - receive_data]
+2023-10-30 17:38:34.129 [INFO ] [고산 접속 유무] : false
+2023-10-30 17:38:34.129 [INFO ] [고산 접속 X]
+2023-10-30 17:38:34.129 [INFO ] [/// 고산 ssh 접속 종료 /// ]
+2023-10-30 17:38:34.129 [INFO ] [고산 파일 명] : 
+2023-10-30 17:38:34.129 [INFO ] [고산 파일 size] : 0
+2023-10-30 17:38:34.129 [INFO ] [고산 파일 recv] : RECV
+2023-10-30 17:38:34.129 [INFO ] [고산 파일 recvDtl] : ok
+2023-10-30 17:38:34.129 [INFO ] [고산 접속 실패 query insert - receive_data]
+2023-10-30 17:38:34.642 [INFO ] [성산 접속 유무] : false
+2023-10-30 17:38:34.642 [INFO ] [성산 접속 X]
+2023-10-30 17:38:34.642 [INFO ] [/// 성산 ssh 접속 종료 /// ]
+2023-10-30 17:38:34.642 [INFO ] [성산 파일 명] : 
+2023-10-30 17:38:34.642 [INFO ] [성산 파일 size] : 0
+2023-10-30 17:38:34.642 [INFO ] [성산 파일 recv] : RECV
+2023-10-30 17:38:34.642 [INFO ] [성산 파일 recvDtl] : ok
+2023-10-30 17:38:34.642 [INFO ] [성산 접속 실패 query insert - receive_data]
+2023-10-30 17:38:35.142 [INFO ] [용인 접속 유무] : false
+2023-10-30 17:38:35.142 [INFO ] [용인 접속 X]
+2023-10-30 17:38:35.142 [INFO ] [/// 용인 ssh 접속 종료 /// ]
+2023-10-30 17:38:35.142 [INFO ] [용인 파일 명] : 
+2023-10-30 17:38:35.142 [INFO ] [용인 파일 size] : 0
+2023-10-30 17:38:35.142 [INFO ] [용인 파일 recv] : RECV
+2023-10-30 17:38:35.142 [INFO ] [용인 파일 recvDtl] : ok
+2023-10-30 17:38:35.142 [INFO ] [용인 접속 실패 query insert - receive_data]
+2023-10-30 17:49:19.086 [INFO ] Starting RadardemoApplication using Java 11.0.18 on DESKTOP-BJ29IOC with PID 21284 (C:\000_dev\radardemo\build\classes\java\main started by haem in c:\000_dev\radardemo)
+2023-10-30 17:49:19.098 [DEBUG] Running with Spring Boot v2.7.15, Spring v5.3.29
+2023-10-30 17:49:19.102 [INFO ] No active profile set, falling back to 1 default profile: "default"
+2023-10-30 17:49:19.323 [INFO ] Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2023-10-30 17:49:23.213 [INFO ] Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2023-10-30 17:49:23.868 [INFO ] Finished Spring Data repository scanning in 604 ms. Found 10 JPA repository interfaces.
+2023-10-30 17:49:26.299 [INFO ] HikariPool-1 - Starting...
+2023-10-30 17:49:31.194 [INFO ] HikariPool-1 - Start completed.
+2023-10-30 17:49:31.486 [INFO ] HHH000204: Processing PersistenceUnitInfo [name: default]
+2023-10-30 17:49:31.729 [INFO ] HHH000412: Hibernate ORM core version 5.6.15.Final
+2023-10-30 17:49:32.662 [INFO ] HCANN000001: Hibernate Commons Annotations {5.1.2.Final}
+2023-10-30 17:49:33.195 [INFO ] HHH000400: Using dialect: org.hibernate.dialect.MySQL8Dialect
+2023-10-30 17:49:36.098 [INFO ] HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+2023-10-30 17:49:36.140 [INFO ] Initialized JPA EntityManagerFactory for persistence unit 'default'
+2023-10-30 17:49:39.180 [WARN ] Unable to start LiveReload server
+2023-10-30 17:49:39.236 [INFO ] Started RadardemoApplication in 21.304 seconds (JVM running for 23.76)
+2023-10-30 17:49:39.315 [INFO ] [데몬 구분] : 대형
+2023-10-30 17:49:40.123 [INFO ] [========================= 관악산 접속 정보(connect, file, filesize) ===============================]
+2023-10-30 17:49:40.136 [INFO ] [관악산 port] : 22
+2023-10-30 17:49:40.146 [INFO ] [관악산 ip] : 190.1.56.113
+2023-10-30 17:49:40.147 [INFO ] [관악산 username] : root
+2023-10-30 17:49:40.149 [INFO ] [관악산 pwd] : test123
+2023-10-30 17:49:40.620 [INFO ] [========================= 백령도 접속 정보(connect, file, filesize) ===============================]
+2023-10-30 17:49:40.621 [INFO ] [백령도 port] : 22
+2023-10-30 17:49:40.621 [INFO ] [백령도 ip] : 190.1.11.103
+2023-10-30 17:49:40.622 [INFO ] [백령도 username] : root
+2023-10-30 17:49:40.622 [INFO ] [백령도 pwd] : test123
+2023-10-30 17:49:41.126 [INFO ] [========================= 광덕산 접속 정보(connect, file, filesize) ===============================]
+2023-10-30 17:49:41.127 [INFO ] [광덕산 port] : 22
+2023-10-30 17:49:41.127 [INFO ] [광덕산 ip] : 190.1.218.113
+2023-10-30 17:49:41.127 [INFO ] [광덕산 username] : root
+2023-10-30 17:49:41.127 [INFO ] [광덕산 pwd] : test123
+2023-10-30 17:49:41.639 [INFO ] [========================= 강릉 접속 정보(connect, file, filesize) ===============================]
+2023-10-30 17:49:41.640 [INFO ] [강릉 port] : 22
+2023-10-30 17:49:41.640 [INFO ] [강릉 ip] : 190.1.219.113
+2023-10-30 17:49:41.640 [INFO ] [강릉 username] : root
+2023-10-30 17:49:41.640 [INFO ] [강릉 pwd] : test123
+2023-10-30 17:49:42.140 [INFO ] [========================= 면봉산 접속 정보(connect, file, filesize) ===============================]
+2023-10-30 17:49:42.140 [INFO ] [면봉산 port] : 22
+2023-10-30 17:49:42.140 [INFO ] [면봉산 ip] : 190.1.126.113
+2023-10-30 17:49:42.140 [INFO ] [면봉산 username] : root
+2023-10-30 17:49:42.140 [INFO ] [면봉산 pwd] : test123
+2023-10-30 17:49:42.654 [INFO ] [========================= 구덕산 접속 정보(connect, file, filesize) ===============================]
+2023-10-30 17:49:42.654 [INFO ] [구덕산 port] : 22
+2023-10-30 17:49:42.654 [INFO ] [구덕산 ip] : 190.1.110.113
+2023-10-30 17:49:42.654 [INFO ] [구덕산 username] : root
+2023-10-30 17:49:42.655 [INFO ] [구덕산 pwd] : test123
+2023-10-30 17:49:43.155 [INFO ] [========================= 오성산 접속 정보(connect, file, filesize) ===============================]
+2023-10-30 17:49:43.155 [INFO ] [오성산 port] : 22
+2023-10-30 17:49:43.155 [INFO ] [오성산 ip] : 190.1.150.113
+2023-10-30 17:49:43.155 [INFO ] [오성산 username] : root
+2023-10-30 17:49:43.155 [INFO ] [오성산 pwd] : test123
+2023-10-30 17:49:43.671 [INFO ] [========================= 진도 접속 정보(connect, file, filesize) ===============================]
+2023-10-30 17:49:43.672 [INFO ] [진도 port] : 22
+2023-10-30 17:49:43.672 [INFO ] [진도 ip] : 190.1.137.113
+2023-10-30 17:49:43.672 [INFO ] [진도 username] : root
+2023-10-30 17:49:43.672 [INFO ] [진도 pwd] : test123
+2023-10-30 17:49:44.171 [INFO ] [========================= 고산 접속 정보(connect, file, filesize) ===============================]
+2023-10-30 17:49:44.172 [INFO ] [고산 port] : 22
+2023-10-30 17:49:44.172 [INFO ] [고산 ip] : 190.1.52.113
+2023-10-30 17:49:44.172 [INFO ] [고산 username] : root
+2023-10-30 17:49:44.172 [INFO ] [고산 pwd] : test123
+2023-10-30 17:49:44.684 [INFO ] [========================= 성산 접속 정보(connect, file, filesize) ===============================]
+2023-10-30 17:49:44.685 [INFO ] [성산 port] : 22
+2023-10-30 17:49:44.685 [INFO ] [성산 ip] : 190.1.54.113
+2023-10-30 17:49:44.685 [INFO ] [성산 username] : root
+2023-10-30 17:49:44.685 [INFO ] [성산 pwd] : test123
+2023-10-30 17:49:45.200 [INFO ] [========================= 용인 접속 정보(connect, file, filesize) ===============================]
+2023-10-30 17:49:45.201 [INFO ] [용인 port] : 22
+2023-10-30 17:49:45.201 [INFO ] [용인 ip] : 190.1.59.113
+2023-10-30 17:49:45.201 [INFO ] [용인 username] : root
+2023-10-30 17:49:45.201 [INFO ] [용인 pwd] : test123
+2023-10-30 17:49:45.212 [INFO ] [관악산 접속 유무] : false
+2023-10-30 17:49:45.212 [INFO ] [관악산 접속 X]
+2023-10-30 17:49:45.213 [INFO ] [/// 관악산 ssh 접속 종료 /// ]
+2023-10-30 17:49:45.213 [INFO ] [관악산 파일 명] : 
+2023-10-30 17:49:45.213 [INFO ] [관악산 파일 size] : 0
+2023-10-30 17:49:45.213 [INFO ] [관악산 파일 recv] : RECV
+2023-10-30 17:49:45.213 [INFO ] [관악산 파일 recvDtl] : ok
+2023-10-30 17:49:45.213 [INFO ] [관악산 접속 실패 query insert - receive_data]
+2023-10-30 17:49:45.648 [INFO ] [백령도 접속 유무] : false
+2023-10-30 17:49:45.648 [INFO ] [백령도 접속 X]
+2023-10-30 17:49:45.648 [INFO ] [/// 백령도 ssh 접속 종료 /// ]
+2023-10-30 17:49:45.648 [INFO ] [백령도 파일 명] : 
+2023-10-30 17:49:45.648 [INFO ] [백령도 파일 size] : 0
+2023-10-30 17:49:45.649 [INFO ] [백령도 파일 recv] : RECV
+2023-10-30 17:49:45.649 [INFO ] [백령도 파일 recvDtl] : ok
+2023-10-30 17:49:45.649 [INFO ] [백령도 접속 실패 query insert - receive_data]
+2023-10-30 17:49:46.162 [INFO ] [광덕산 접속 유무] : false
+2023-10-30 17:49:46.162 [INFO ] [광덕산 접속 X]
+2023-10-30 17:49:46.162 [INFO ] [/// 광덕산 ssh 접속 종료 /// ]
+2023-10-30 17:49:46.162 [INFO ] [광덕산 파일 명] : 
+2023-10-30 17:49:46.163 [INFO ] [광덕산 파일 size] : 0
+2023-10-30 17:49:46.163 [INFO ] [광덕산 파일 recv] : RECV
+2023-10-30 17:49:46.163 [INFO ] [광덕산 파일 recvDtl] : ok
+2023-10-30 17:49:46.163 [INFO ] [광덕산 접속 실패 query insert - receive_data]
+2023-10-30 17:49:46.664 [INFO ] [강릉 접속 유무] : false
+2023-10-30 17:49:46.664 [INFO ] [강릉 접속 X]
+2023-10-30 17:49:46.664 [INFO ] [/// 강릉 ssh 접속 종료 /// ]
+2023-10-30 17:49:46.664 [INFO ] [강릉 파일 명] : 
+2023-10-30 17:49:46.664 [INFO ] [강릉 파일 size] : 0
+2023-10-30 17:49:46.664 [INFO ] [강릉 파일 recv] : RECV
+2023-10-30 17:49:46.664 [INFO ] [강릉 파일 recvDtl] : ok
+2023-10-30 17:49:46.664 [INFO ] [강릉 접속 실패 query insert - receive_data]
+2023-10-30 17:49:47.164 [INFO ] [면봉산 접속 유무] : false
+2023-10-30 17:49:47.164 [INFO ] [면봉산 접속 X]
+2023-10-30 17:49:47.165 [INFO ] [/// 면봉산 ssh 접속 종료 /// ]
+2023-10-30 17:49:47.165 [INFO ] [면봉산 파일 명] : 
+2023-10-30 17:49:47.165 [INFO ] [면봉산 파일 size] : 0
+2023-10-30 17:49:47.165 [INFO ] [면봉산 파일 recv] : RECV
+2023-10-30 17:49:47.165 [INFO ] [면봉산 파일 recvDtl] : ok
+2023-10-30 17:49:47.165 [INFO ] [면봉산 접속 실패 query insert - receive_data]
+2023-10-30 17:49:47.681 [INFO ] [구덕산 접속 유무] : false
+2023-10-30 17:49:47.681 [INFO ] [구덕산 접속 X]
+2023-10-30 17:49:47.681 [INFO ] [/// 구덕산 ssh 접속 종료 /// ]
+2023-10-30 17:49:47.681 [INFO ] [구덕산 파일 명] : 
+2023-10-30 17:49:47.682 [INFO ] [구덕산 파일 size] : 0
+2023-10-30 17:49:47.682 [INFO ] [구덕산 파일 recv] : RECV
+2023-10-30 17:49:47.682 [INFO ] [구덕산 파일 recvDtl] : ok
+2023-10-30 17:49:47.682 [INFO ] [구덕산 접속 실패 query insert - receive_data]
+2023-10-30 17:49:48.182 [INFO ] [오성산 접속 유무] : false
+2023-10-30 17:49:48.182 [INFO ] [오성산 접속 X]
+2023-10-30 17:49:48.182 [INFO ] [/// 오성산 ssh 접속 종료 /// ]
+2023-10-30 17:49:48.183 [INFO ] [오성산 파일 명] : 
+2023-10-30 17:49:48.183 [INFO ] [오성산 파일 size] : 0
+2023-10-30 17:49:48.183 [INFO ] [오성산 파일 recv] : RECV
+2023-10-30 17:49:48.183 [INFO ] [오성산 파일 recvDtl] : ok
+2023-10-30 17:49:48.183 [INFO ] [오성산 접속 실패 query insert - receive_data]
+2023-10-30 17:49:48.695 [INFO ] [진도 접속 유무] : false
+2023-10-30 17:49:48.695 [INFO ] [진도 접속 X]
+2023-10-30 17:49:48.695 [INFO ] [/// 진도 ssh 접속 종료 /// ]
+2023-10-30 17:49:48.696 [INFO ] [진도 파일 명] : 
+2023-10-30 17:49:48.696 [INFO ] [진도 파일 size] : 0
+2023-10-30 17:49:48.696 [INFO ] [진도 파일 recv] : RECV
+2023-10-30 17:49:48.696 [INFO ] [진도 파일 recvDtl] : ok
+2023-10-30 17:49:48.696 [INFO ] [진도 접속 실패 query insert - receive_data]
+2023-10-30 17:49:49.196 [INFO ] [고산 접속 유무] : false
+2023-10-30 17:49:49.196 [INFO ] [고산 접속 X]
+2023-10-30 17:49:49.196 [INFO ] [/// 고산 ssh 접속 종료 /// ]
+2023-10-30 17:49:49.196 [INFO ] [고산 파일 명] : 
+2023-10-30 17:49:49.196 [INFO ] [고산 파일 size] : 0
+2023-10-30 17:49:49.196 [INFO ] [고산 파일 recv] : RECV
+2023-10-30 17:49:49.196 [INFO ] [고산 파일 recvDtl] : ok
+2023-10-30 17:49:49.196 [INFO ] [고산 접속 실패 query insert - receive_data]
+2023-10-30 17:49:49.711 [INFO ] [성산 접속 유무] : false
+2023-10-30 17:49:49.711 [INFO ] [성산 접속 X]
+2023-10-30 17:49:49.711 [INFO ] [/// 성산 ssh 접속 종료 /// ]
+2023-10-30 17:49:49.711 [INFO ] [성산 파일 명] : 
+2023-10-30 17:49:49.711 [INFO ] [성산 파일 size] : 0
+2023-10-30 17:49:49.711 [INFO ] [성산 파일 recv] : RECV
+2023-10-30 17:49:49.711 [INFO ] [성산 파일 recvDtl] : ok
+2023-10-30 17:49:49.711 [INFO ] [성산 접속 실패 query insert - receive_data]
+2023-10-30 17:49:50.239 [INFO ] [용인 접속 유무] : false
+2023-10-30 17:49:50.239 [INFO ] [용인 접속 X]
+2023-10-30 17:49:50.239 [INFO ] [/// 용인 ssh 접속 종료 /// ]
+2023-10-30 17:49:50.239 [INFO ] [용인 파일 명] : 
+2023-10-30 17:49:50.239 [INFO ] [용인 파일 size] : 0
+2023-10-30 17:49:50.239 [INFO ] [용인 파일 recv] : RECV
+2023-10-30 17:49:50.239 [INFO ] [용인 파일 recvDtl] : ok
+2023-10-30 17:49:50.239 [INFO ] [용인 접속 실패 query insert - receive_data]
+2023-10-30 17:50:05.725 [INFO ] [20초 후 다음] : 2023-10-30 17:50:05
+2023-10-30 17:50:05.725 [INFO ] [=================== 2번째 프로세스 ===================] 2023-10-30 17:50:05
+2023-10-30 17:50:05.963 [INFO ] [============ 관악산 정보 ==============]
+2023-10-30 17:50:05.964 [INFO ] dataKindStr : RDR
+2023-10-30 17:50:05.964 [INFO ] site_cd : KWK
+2023-10-30 17:50:05.964 [INFO ] data_type : NQC
+2023-10-30 17:50:05.964 [INFO ] currentTime : 2023-10-30 17:50
+2023-10-30 17:50:05.977 [INFO ] 최종 상태 : TOTA
+2023-10-30 17:50:06.097 [INFO ] [결과] : 
+2023-10-30 17:50:06.097 [INFO ] [결과 상세] : 
+2023-10-30 17:50:06.097 [INFO ] [상태 안바뀜 - update 날짜는 바뀜]
+2023-10-30 17:50:06.129 [INFO ] [============ 백령도 정보 ==============]
+2023-10-30 17:50:06.129 [INFO ] dataKindStr : RDR
+2023-10-30 17:50:06.129 [INFO ] site_cd : BRI
+2023-10-30 17:50:06.129 [INFO ] data_type : NQC
+2023-10-30 17:50:06.129 [INFO ] currentTime : 2023-10-30 17:50
+2023-10-30 17:50:06.140 [INFO ] 최종 상태 : TOTA
+2023-10-30 17:50:06.277 [INFO ] [결과] : 
+2023-10-30 17:50:06.278 [INFO ] [결과 상세] : 
+2023-10-30 17:50:06.278 [INFO ] [상태 안바뀜 - update 날짜는 바뀜]
+2023-10-30 17:50:06.306 [INFO ] [============ 광덕산 정보 ==============]
+2023-10-30 17:50:06.306 [INFO ] dataKindStr : RDR
+2023-10-30 17:50:06.306 [INFO ] site_cd : GDK
+2023-10-30 17:50:06.306 [INFO ] data_type : NQC
+2023-10-30 17:50:06.306 [INFO ] currentTime : 2023-10-30 17:50
+2023-10-30 17:50:06.317 [INFO ] 최종 상태 : TOTA
+2023-10-30 17:50:06.441 [INFO ] [결과] : 
+2023-10-30 17:50:06.441 [INFO ] [결과 상세] : 
+2023-10-30 17:50:06.441 [INFO ] [상태 안바뀜 - update 날짜는 바뀜]
+2023-10-30 17:50:06.466 [INFO ] [============ 강릉 정보 ==============]
+2023-10-30 17:50:06.466 [INFO ] dataKindStr : RDR
+2023-10-30 17:50:06.466 [INFO ] site_cd : GNG
+2023-10-30 17:50:06.466 [INFO ] data_type : NQC
+2023-10-30 17:50:06.466 [INFO ] currentTime : 2023-10-30 17:50
+2023-10-30 17:50:06.475 [INFO ] 최종 상태 : TOTA
+2023-10-30 17:50:06.590 [INFO ] [결과] : 
+2023-10-30 17:50:06.590 [INFO ] [결과 상세] : 
+2023-10-30 17:50:06.590 [INFO ] [상태 안바뀜 - update 날짜는 바뀜]
+2023-10-30 17:50:06.619 [INFO ] [============ 면봉산 정보 ==============]
+2023-10-30 17:50:06.619 [INFO ] dataKindStr : RDR
+2023-10-30 17:50:06.619 [INFO ] site_cd : MYN
+2023-10-30 17:50:06.619 [INFO ] data_type : NQC
+2023-10-30 17:50:06.619 [INFO ] currentTime : 2023-10-30 17:50
+2023-10-30 17:50:06.629 [INFO ] 최종 상태 : TOTA
+2023-10-30 17:50:06.745 [INFO ] [결과] : 
+2023-10-30 17:50:06.745 [INFO ] [결과 상세] : 
+2023-10-30 17:50:06.745 [INFO ] [상태 안바뀜 - update 날짜는 바뀜]
+2023-10-30 17:50:06.774 [INFO ] [============ 구덕산 정보 ==============]
+2023-10-30 17:50:06.774 [INFO ] dataKindStr : RDR
+2023-10-30 17:50:06.774 [INFO ] site_cd : PSN
+2023-10-30 17:50:06.774 [INFO ] data_type : NQC
+2023-10-30 17:50:06.774 [INFO ] currentTime : 2023-10-30 17:50
+2023-10-30 17:50:06.783 [INFO ] 최종 상태 : TOTA
+2023-10-30 17:50:06.895 [INFO ] [결과] : 
+2023-10-30 17:50:06.895 [INFO ] [결과 상세] : 
+2023-10-30 17:50:06.895 [INFO ] [상태 안바뀜 - update 날짜는 바뀜]
+2023-10-30 17:50:06.925 [INFO ] [============ 오성산 정보 ==============]
+2023-10-30 17:50:06.925 [INFO ] dataKindStr : RDR
+2023-10-30 17:50:06.925 [INFO ] site_cd : KSN
+2023-10-30 17:50:06.925 [INFO ] data_type : NQC
+2023-10-30 17:50:06.925 [INFO ] currentTime : 2023-10-30 17:50
+2023-10-30 17:50:06.934 [INFO ] 최종 상태 : TOTA
+2023-10-30 17:50:07.042 [INFO ] [결과] : 
+2023-10-30 17:50:07.042 [INFO ] [결과 상세] : 
+2023-10-30 17:50:07.042 [INFO ] [상태 안바뀜 - update 날짜는 바뀜]
+2023-10-30 17:50:07.069 [INFO ] [============ 진도 정보 ==============]
+2023-10-30 17:50:07.069 [INFO ] dataKindStr : RDR
+2023-10-30 17:50:07.069 [INFO ] site_cd : JNI
+2023-10-30 17:50:07.069 [INFO ] data_type : NQC
+2023-10-30 17:50:07.070 [INFO ] currentTime : 2023-10-30 17:50
+2023-10-30 17:50:07.081 [INFO ] 최종 상태 : TOTA
+2023-10-30 17:50:07.187 [INFO ] [결과] : 
+2023-10-30 17:50:07.187 [INFO ] [결과 상세] : 
+2023-10-30 17:50:07.187 [INFO ] [상태 안바뀜 - update 날짜는 바뀜]
+2023-10-30 17:50:07.214 [INFO ] [============ 고산 정보 ==============]
+2023-10-30 17:50:07.214 [INFO ] dataKindStr : RDR
+2023-10-30 17:50:07.214 [INFO ] site_cd : GSN
+2023-10-30 17:50:07.214 [INFO ] data_type : NQC
+2023-10-30 17:50:07.214 [INFO ] currentTime : 2023-10-30 17:50
+2023-10-30 17:50:07.224 [INFO ] 최종 상태 : TOTA
+2023-10-30 17:50:07.329 [INFO ] [결과] : 
+2023-10-30 17:50:07.329 [INFO ] [결과 상세] : 
+2023-10-30 17:50:07.330 [INFO ] [상태 안바뀜 - update 날짜는 바뀜]
+2023-10-30 17:50:07.356 [INFO ] [============ 성산 정보 ==============]
+2023-10-30 17:50:07.356 [INFO ] dataKindStr : RDR
+2023-10-30 17:50:07.356 [INFO ] site_cd : SSP
+2023-10-30 17:50:07.356 [INFO ] data_type : NQC
+2023-10-30 17:50:07.356 [INFO ] currentTime : 2023-10-30 17:50
+2023-10-30 17:50:07.367 [INFO ] 최종 상태 : TOTA
+2023-10-30 17:50:07.482 [INFO ] [결과] : 
+2023-10-30 17:50:07.482 [INFO ] [결과 상세] : 
+2023-10-30 17:50:07.482 [INFO ] [상태 안바뀜 - update 날짜는 바뀜]
+2023-10-30 17:50:07.507 [INFO ] [============ 용인 정보 ==============]
+2023-10-30 17:50:07.507 [INFO ] dataKindStr : RDR
+2023-10-30 17:50:07.507 [INFO ] site_cd : YIT
+2023-10-30 17:50:07.507 [INFO ] data_type : NQC
+2023-10-30 17:50:07.507 [INFO ] currentTime : 2023-10-30 17:50
+2023-10-30 17:50:07.517 [INFO ] 최종 상태 : TOTA
+2023-10-30 17:50:07.634 [INFO ] [결과] : 
+2023-10-30 17:50:07.634 [INFO ] [결과 상세] : 
+2023-10-30 17:50:07.634 [INFO ] [상태 안바뀜 - update 날짜는 바뀜]
+2023-10-30 17:50:07.676 [INFO ] ======================= 문자 전송 =================================
+2023-10-30 17:50:07.712 [INFO ] [smsPetterns] :: 대형 (시범운영)
+네트워크 점검 요청 [2023-10-30 17:50:07]
+2023-10-30 17:50:07.725 [INFO ] [TOTA // 문자 전송 app sequence] :318
+2023-10-30 17:50:07.772 [INFO ] [수신자명] : kimhaemi : 01031248577
+2023-10-30 17:50:07.803 [INFO ] [수신자명] : 김성상 : 01047012513
+2023-10-30 17:50:07.835 [INFO ] [수신자명] : 김성원 : 01046585229
+2023-10-30 17:50:07.864 [INFO ] [수신자명] : 김용제 : 01096181205
+2023-10-30 17:50:07.893 [INFO ] [수신자명] : 김지훈 : 01042494214
+2023-10-30 17:50:07.923 [INFO ] [수신자명] : 나기생 : 01073539496
+2023-10-30 17:50:07.955 [INFO ] [수신자명] : 남호진 : 01046132205
+2023-10-30 17:50:07.996 [INFO ] [수신자명] : 노수명 : 01062776545
+2023-10-30 17:50:08.029 [INFO ] [수신자명] : 노준상 : 01085186240
+2023-10-30 17:50:08.061 [INFO ] [수신자명] : 박충신 : 01027387539
+2023-10-30 17:50:08.089 [INFO ] [수신자명] : 백승록 : 01066941364
+2023-10-30 17:50:08.117 [INFO ] [수신자명] : 서현옥 : 01037456629
+2023-10-30 17:50:08.149 [INFO ] [수신자명] : 신상창 : 01042647793
+2023-10-30 17:50:08.179 [INFO ] [수신자명] : 오윤석 : 01091387513
+2023-10-30 17:50:08.208 [INFO ] [수신자명] : 오창록 : 01046138677
+2023-10-30 17:50:08.240 [INFO ] [수신자명] : 유충길 : 01097740010
+2023-10-30 17:50:08.273 [INFO ] [수신자명] : 이승표 : 01091163178
+2023-10-30 17:50:08.301 [INFO ] [수신자명] : 이종환 : 01022157654
+2023-10-30 17:50:08.331 [INFO ] [수신자명] : 임덕빈 : 01082877357
+2023-10-30 17:50:08.360 [INFO ] [수신자명] : 임무승 : 01032706843
+2023-10-30 17:50:08.391 [INFO ] [수신자명] : 임병희 : 01027047408
+2023-10-30 17:50:08.421 [INFO ] [수신자명] : 장복수 : 01024792685
+2023-10-30 17:50:08.448 [INFO ] [수신자명] : 전종혁 : 01093162113
+2023-10-30 17:50:08.477 [INFO ] [수신자명] : 정시목 : 01033009365
+2023-10-30 17:50:08.509 [INFO ] [수신자명] : 정용철 : 01034696736
+2023-10-30 17:50:08.540 [INFO ] [수신자명] : 정준석 : 01088204829
+2023-10-30 17:50:08.569 [INFO ] [수신자명] : 조민호 : 01072241905
+2023-10-30 17:50:08.598 [INFO ] [수신자명] : 조수만 : 01072359365
+2023-10-30 17:50:08.626 [INFO ] [수신자명] : 조재욱 : 01087651276
+2023-10-30 17:50:08.657 [INFO ] [수신자명] : 최성호 : 01028607962
+2023-10-30 17:50:08.689 [INFO ] [수신자명] : 홍경화 : 01042087098
+2023-10-30 17:50:08.717 [INFO ] [수신자명] : 홍성 : 01050361643
+2023-10-30 17:50:08.743 [INFO ] [수신자명] : 황영대 : 01074307900
+2023-10-30 17:50:08.771 [INFO ] [문자 전송 여부 update]
+2023-10-30 17:50:08.778 [INFO ] 감시 해야할 시간 이전: 202310301744
+2023-10-30 17:50:08.778 [INFO ] 감시 해야할 시간 이후: 202310301740
+2023-10-30 17:50:08.805 [INFO ] [=================== end ===================]
+2023-10-30 17:50:09.282 [INFO ] [데몬 구분] : 대형
+2023-10-30 17:50:09.300 [INFO ] [========================= 관악산 접속 정보(connect, file, filesize) ===============================]
+2023-10-30 17:50:09.300 [INFO ] [관악산 port] : 22
+2023-10-30 17:50:09.300 [INFO ] [관악산 ip] : 190.1.56.113
+2023-10-30 17:50:09.300 [INFO ] [관악산 username] : root
+2023-10-30 17:50:09.300 [INFO ] [관악산 pwd] : test123
+2023-10-30 17:50:09.812 [INFO ] [========================= 백령도 접속 정보(connect, file, filesize) ===============================]
+2023-10-30 17:50:09.813 [INFO ] [백령도 port] : 22
+2023-10-30 17:50:09.813 [INFO ] [백령도 ip] : 190.1.11.103
+2023-10-30 17:50:09.813 [INFO ] [백령도 username] : root
+2023-10-30 17:50:09.813 [INFO ] [백령도 pwd] : test123
+2023-10-30 17:50:10.324 [INFO ] [========================= 광덕산 접속 정보(connect, file, filesize) ===============================]
+2023-10-30 17:50:10.324 [INFO ] [광덕산 port] : 22
+2023-10-30 17:50:10.324 [INFO ] [광덕산 ip] : 190.1.218.113
+2023-10-30 17:50:10.324 [INFO ] [광덕산 username] : root
+2023-10-30 17:50:10.324 [INFO ] [광덕산 pwd] : test123
+2023-10-30 17:50:10.837 [INFO ] [========================= 강릉 접속 정보(connect, file, filesize) ===============================]
+2023-10-30 17:50:10.837 [INFO ] [강릉 port] : 22
+2023-10-30 17:50:10.837 [INFO ] [강릉 ip] : 190.1.219.113
+2023-10-30 17:50:10.837 [INFO ] [강릉 username] : root
+2023-10-30 17:50:10.837 [INFO ] [강릉 pwd] : test123
+2023-10-30 17:50:11.350 [INFO ] [========================= 면봉산 접속 정보(connect, file, filesize) ===============================]
+2023-10-30 17:50:11.350 [INFO ] [면봉산 port] : 22
+2023-10-30 17:50:11.350 [INFO ] [면봉산 ip] : 190.1.126.113
+2023-10-30 17:50:11.350 [INFO ] [면봉산 username] : root
+2023-10-30 17:50:11.350 [INFO ] [면봉산 pwd] : test123
+2023-10-30 17:50:11.862 [INFO ] [========================= 구덕산 접속 정보(connect, file, filesize) ===============================]
+2023-10-30 17:50:11.862 [INFO ] [구덕산 port] : 22
+2023-10-30 17:50:11.863 [INFO ] [구덕산 ip] : 190.1.110.113
+2023-10-30 17:50:11.863 [INFO ] [구덕산 username] : root
+2023-10-30 17:50:11.863 [INFO ] [구덕산 pwd] : test123
+2023-10-30 17:50:12.376 [INFO ] [========================= 오성산 접속 정보(connect, file, filesize) ===============================]
+2023-10-30 17:50:12.376 [INFO ] [오성산 port] : 22
+2023-10-30 17:50:12.376 [INFO ] [오성산 ip] : 190.1.150.113
+2023-10-30 17:50:12.377 [INFO ] [오성산 username] : root
+2023-10-30 17:50:12.377 [INFO ] [오성산 pwd] : test123
+2023-10-30 17:50:12.878 [INFO ] [========================= 진도 접속 정보(connect, file, filesize) ===============================]
+2023-10-30 17:50:12.878 [INFO ] [진도 port] : 22
+2023-10-30 17:50:12.878 [INFO ] [진도 ip] : 190.1.137.113
+2023-10-30 17:50:12.879 [INFO ] [진도 username] : root
+2023-10-30 17:50:12.879 [INFO ] [진도 pwd] : test123
+2023-10-30 17:50:13.390 [INFO ] [========================= 고산 접속 정보(connect, file, filesize) ===============================]
+2023-10-30 17:50:13.390 [INFO ] [고산 port] : 22
+2023-10-30 17:50:13.391 [INFO ] [고산 ip] : 190.1.52.113
+2023-10-30 17:50:13.391 [INFO ] [고산 username] : root
+2023-10-30 17:50:13.391 [INFO ] [고산 pwd] : test123
+2023-10-30 17:50:13.906 [INFO ] [========================= 성산 접속 정보(connect, file, filesize) ===============================]
+2023-10-30 17:50:13.907 [INFO ] [성산 port] : 22
+2023-10-30 17:50:13.907 [INFO ] [성산 ip] : 190.1.54.113
+2023-10-30 17:50:13.907 [INFO ] [성산 username] : root
+2023-10-30 17:50:13.907 [INFO ] [성산 pwd] : test123
+2023-10-30 17:50:14.313 [INFO ] [관악산 접속 유무] : false
+2023-10-30 17:50:14.313 [INFO ] [관악산 접속 X]
+2023-10-30 17:50:14.313 [INFO ] [/// 관악산 ssh 접속 종료 /// ]
+2023-10-30 17:50:14.313 [INFO ] [관악산 파일 명] : 
+2023-10-30 17:50:14.313 [INFO ] [관악산 파일 size] : 0
+2023-10-30 17:50:14.313 [INFO ] [관악산 파일 recv] : RECV
+2023-10-30 17:50:14.313 [INFO ] [관악산 파일 recvDtl] : ok
+2023-10-30 17:50:14.313 [INFO ] [관악산 접속 실패 query insert - receive_data]
+2023-10-30 17:50:14.419 [INFO ] [========================= 용인 접속 정보(connect, file, filesize) ===============================]
+2023-10-30 17:50:14.419 [INFO ] [용인 port] : 22
+2023-10-30 17:50:14.420 [INFO ] [용인 ip] : 190.1.59.113
+2023-10-30 17:50:14.420 [INFO ] [용인 username] : root
+2023-10-30 17:50:14.420 [INFO ] [용인 pwd] : test123
+2023-10-30 17:50:14.856 [INFO ] [백령도 접속 유무] : false
+2023-10-30 17:50:14.856 [INFO ] [백령도 접속 X]
+2023-10-30 17:50:14.856 [INFO ] [/// 백령도 ssh 접속 종료 /// ]
+2023-10-30 17:50:14.856 [INFO ] [백령도 파일 명] : 
+2023-10-30 17:50:14.857 [INFO ] [백령도 파일 size] : 0
+2023-10-30 17:50:14.857 [INFO ] [백령도 파일 recv] : RECV
+2023-10-30 17:50:14.857 [INFO ] [백령도 파일 recvDtl] : ok
+2023-10-30 17:50:14.857 [INFO ] [백령도 접속 실패 query insert - receive_data]
+2023-10-30 17:50:15.338 [INFO ] [광덕산 접속 유무] : false
+2023-10-30 17:50:15.338 [INFO ] [광덕산 접속 X]
+2023-10-30 17:50:15.338 [INFO ] [/// 광덕산 ssh 접속 종료 /// ]
+2023-10-30 17:50:15.338 [INFO ] [광덕산 파일 명] : 
+2023-10-30 17:50:15.338 [INFO ] [광덕산 파일 size] : 0
+2023-10-30 17:50:15.338 [INFO ] [광덕산 파일 recv] : RECV
+2023-10-30 17:50:15.338 [INFO ] [광덕산 파일 recvDtl] : ok
+2023-10-30 17:50:15.338 [INFO ] [광덕산 접속 실패 query insert - receive_data]
+2023-10-30 17:50:15.866 [INFO ] [강릉 접속 유무] : false
+2023-10-30 17:50:15.866 [INFO ] [강릉 접속 X]
+2023-10-30 17:50:15.867 [INFO ] [/// 강릉 ssh 접속 종료 /// ]
+2023-10-30 17:50:15.867 [INFO ] [강릉 파일 명] : 
+2023-10-30 17:50:15.867 [INFO ] [강릉 파일 size] : 0
+2023-10-30 17:50:15.867 [INFO ] [강릉 파일 recv] : RECV
+2023-10-30 17:50:15.867 [INFO ] [강릉 파일 recvDtl] : ok
+2023-10-30 17:50:15.867 [INFO ] [강릉 접속 실패 query insert - receive_data]
+2023-10-30 17:50:16.382 [INFO ] [면봉산 접속 유무] : false
+2023-10-30 17:50:16.383 [INFO ] [면봉산 접속 X]
+2023-10-30 17:50:16.383 [INFO ] [/// 면봉산 ssh 접속 종료 /// ]
+2023-10-30 17:50:16.383 [INFO ] [면봉산 파일 명] : 
+2023-10-30 17:50:16.383 [INFO ] [면봉산 파일 size] : 0
+2023-10-30 17:50:16.383 [INFO ] [면봉산 파일 recv] : RECV
+2023-10-30 17:50:16.383 [INFO ] [면봉산 파일 recvDtl] : ok
+2023-10-30 17:50:16.384 [INFO ] [면봉산 접속 실패 query insert - receive_data]
+2023-10-30 17:50:16.881 [INFO ] [구덕산 접속 유무] : false
+2023-10-30 17:50:16.881 [INFO ] [구덕산 접속 X]
+2023-10-30 17:50:16.881 [INFO ] [/// 구덕산 ssh 접속 종료 /// ]
+2023-10-30 17:50:16.881 [INFO ] [구덕산 파일 명] : 
+2023-10-30 17:50:16.881 [INFO ] [구덕산 파일 size] : 0
+2023-10-30 17:50:16.881 [INFO ] [구덕산 파일 recv] : RECV
+2023-10-30 17:50:16.881 [INFO ] [구덕산 파일 recvDtl] : ok
+2023-10-30 17:50:16.881 [INFO ] [구덕산 접속 실패 query insert - receive_data]
+2023-10-30 17:50:17.394 [INFO ] [오성산 접속 유무] : false
+2023-10-30 17:50:17.394 [INFO ] [오성산 접속 X]
+2023-10-30 17:50:17.394 [INFO ] [/// 오성산 ssh 접속 종료 /// ]
+2023-10-30 17:50:17.394 [INFO ] [오성산 파일 명] : 
+2023-10-30 17:50:17.394 [INFO ] [오성산 파일 size] : 0
+2023-10-30 17:50:17.394 [INFO ] [오성산 파일 recv] : RECV
+2023-10-30 17:50:17.394 [INFO ] [오성산 파일 recvDtl] : ok
+2023-10-30 17:50:17.394 [INFO ] [오성산 접속 실패 query insert - receive_data]
+2023-10-30 17:50:17.894 [INFO ] [진도 접속 유무] : false
+2023-10-30 17:50:17.894 [INFO ] [진도 접속 X]
+2023-10-30 17:50:17.895 [INFO ] [/// 진도 ssh 접속 종료 /// ]
+2023-10-30 17:50:17.895 [INFO ] [진도 파일 명] : 
+2023-10-30 17:50:17.895 [INFO ] [진도 파일 size] : 0
+2023-10-30 17:50:17.895 [INFO ] [진도 파일 recv] : RECV
+2023-10-30 17:50:17.895 [INFO ] [진도 파일 recvDtl] : ok
+2023-10-30 17:50:17.895 [INFO ] [진도 접속 실패 query insert - receive_data]
+2023-10-30 17:50:18.423 [INFO ] [고산 접속 유무] : false
+2023-10-30 17:50:18.423 [INFO ] [고산 접속 X]
+2023-10-30 17:50:18.423 [INFO ] [/// 고산 ssh 접속 종료 /// ]
+2023-10-30 17:50:18.423 [INFO ] [고산 파일 명] : 
+2023-10-30 17:50:18.423 [INFO ] [고산 파일 size] : 0
+2023-10-30 17:50:18.423 [INFO ] [고산 파일 recv] : RECV
+2023-10-30 17:50:18.423 [INFO ] [고산 파일 recvDtl] : ok
+2023-10-30 17:50:18.423 [INFO ] [고산 접속 실패 query insert - receive_data]
+2023-10-30 17:50:18.939 [INFO ] [성산 접속 유무] : false
+2023-10-30 17:50:18.939 [INFO ] [성산 접속 X]
+2023-10-30 17:50:18.939 [INFO ] [/// 성산 ssh 접속 종료 /// ]
+2023-10-30 17:50:18.939 [INFO ] [성산 파일 명] : 
+2023-10-30 17:50:18.939 [INFO ] [성산 파일 size] : 0
+2023-10-30 17:50:18.939 [INFO ] [성산 파일 recv] : RECV
+2023-10-30 17:50:18.939 [INFO ] [성산 파일 recvDtl] : ok
+2023-10-30 17:50:18.939 [INFO ] [성산 접속 실패 query insert - receive_data]
+2023-10-30 17:50:19.438 [INFO ] [용인 접속 유무] : false
+2023-10-30 17:50:19.438 [INFO ] [용인 접속 X]
+2023-10-30 17:50:19.438 [INFO ] [/// 용인 ssh 접속 종료 /// ]
+2023-10-30 17:50:19.438 [INFO ] [용인 파일 명] : 
+2023-10-30 17:50:19.438 [INFO ] [용인 파일 size] : 0
+2023-10-30 17:50:19.438 [INFO ] [용인 파일 recv] : RECV
+2023-10-30 17:50:19.438 [INFO ] [용인 파일 recvDtl] : ok
+2023-10-30 17:50:19.438 [INFO ] [용인 접속 실패 query insert - receive_data]
+2023-10-30 17:50:34.937 [INFO ] [20초 후 다음] : 2023-10-30 17:50:34
+2023-10-30 17:50:34.937 [INFO ] [=================== 2번째 프로세스 ===================] 2023-10-30 17:50:34
+2023-10-30 17:50:35.126 [INFO ] [============ 관악산 정보 ==============]
+2023-10-30 17:50:35.126 [INFO ] dataKindStr : RDR
+2023-10-30 17:50:35.126 [INFO ] site_cd : KWK
+2023-10-30 17:50:35.126 [INFO ] data_type : NQC
+2023-10-30 17:50:35.126 [INFO ] currentTime : 2023-10-30 17:50
+2023-10-30 17:50:35.137 [INFO ] 최종 상태 : TOTA
+2023-10-30 17:50:35.253 [INFO ] [결과] : 
+2023-10-30 17:50:35.254 [INFO ] [결과 상세] : 
+2023-10-30 17:50:35.254 [INFO ] [상태 안바뀜 - update 날짜는 바뀜]
+2023-10-30 17:50:35.278 [INFO ] [============ 백령도 정보 ==============]
+2023-10-30 17:50:35.278 [INFO ] dataKindStr : RDR
+2023-10-30 17:50:35.278 [INFO ] site_cd : BRI
+2023-10-30 17:50:35.278 [INFO ] data_type : NQC
+2023-10-30 17:50:35.278 [INFO ] currentTime : 2023-10-30 17:50
+2023-10-30 17:50:35.287 [INFO ] 최종 상태 : TOTA
+2023-10-30 17:50:35.404 [INFO ] [결과] : 
+2023-10-30 17:50:35.404 [INFO ] [결과 상세] : 
+2023-10-30 17:50:35.404 [INFO ] [상태 안바뀜 - update 날짜는 바뀜]
+2023-10-30 17:50:35.430 [INFO ] [============ 광덕산 정보 ==============]
+2023-10-30 17:50:35.430 [INFO ] dataKindStr : RDR
+2023-10-30 17:50:35.430 [INFO ] site_cd : GDK
+2023-10-30 17:50:35.430 [INFO ] data_type : NQC
+2023-10-30 17:50:35.430 [INFO ] currentTime : 2023-10-30 17:50
+2023-10-30 17:50:35.452 [INFO ] 최종 상태 : TOTA
+2023-10-30 17:50:35.570 [INFO ] [결과] : 
+2023-10-30 17:50:35.570 [INFO ] [결과 상세] : 
+2023-10-30 17:50:35.570 [INFO ] [상태 안바뀜 - update 날짜는 바뀜]
+2023-10-30 17:50:35.596 [INFO ] [============ 강릉 정보 ==============]
+2023-10-30 17:50:35.596 [INFO ] dataKindStr : RDR
+2023-10-30 17:50:35.596 [INFO ] site_cd : GNG
+2023-10-30 17:50:35.596 [INFO ] data_type : NQC
+2023-10-30 17:50:35.596 [INFO ] currentTime : 2023-10-30 17:50
+2023-10-30 17:50:35.614 [INFO ] 최종 상태 : TOTA
+2023-10-30 17:50:35.742 [INFO ] [결과] : 
+2023-10-30 17:50:35.742 [INFO ] [결과 상세] : 
+2023-10-30 17:50:35.742 [INFO ] [상태 안바뀜 - update 날짜는 바뀜]
+2023-10-30 17:50:35.771 [INFO ] [============ 면봉산 정보 ==============]
+2023-10-30 17:50:35.771 [INFO ] dataKindStr : RDR
+2023-10-30 17:50:35.771 [INFO ] site_cd : MYN
+2023-10-30 17:50:35.771 [INFO ] data_type : NQC
+2023-10-30 17:50:35.771 [INFO ] currentTime : 2023-10-30 17:50
+2023-10-30 17:50:35.780 [INFO ] 최종 상태 : TOTA
+2023-10-30 17:50:35.901 [INFO ] [결과] : 
+2023-10-30 17:50:35.901 [INFO ] [결과 상세] : 
+2023-10-30 17:50:35.901 [INFO ] [상태 안바뀜 - update 날짜는 바뀜]
+2023-10-30 17:50:35.926 [INFO ] [============ 구덕산 정보 ==============]
+2023-10-30 17:50:35.926 [INFO ] dataKindStr : RDR
+2023-10-30 17:50:35.926 [INFO ] site_cd : PSN
+2023-10-30 17:50:35.926 [INFO ] data_type : NQC
+2023-10-30 17:50:35.926 [INFO ] currentTime : 2023-10-30 17:50
+2023-10-30 17:50:35.936 [INFO ] 최종 상태 : TOTA
+2023-10-30 17:50:36.050 [INFO ] [결과] : 
+2023-10-30 17:50:36.050 [INFO ] [결과 상세] : 
+2023-10-30 17:50:36.050 [INFO ] [상태 안바뀜 - update 날짜는 바뀜]
+2023-10-30 17:50:36.088 [INFO ] [============ 오성산 정보 ==============]
+2023-10-30 17:50:36.088 [INFO ] dataKindStr : RDR
+2023-10-30 17:50:36.088 [INFO ] site_cd : KSN
+2023-10-30 17:50:36.088 [INFO ] data_type : NQC
+2023-10-30 17:50:36.088 [INFO ] currentTime : 2023-10-30 17:50
+2023-10-30 17:50:36.097 [INFO ] 최종 상태 : TOTA
+2023-10-30 17:50:36.202 [INFO ] [결과] : 
+2023-10-30 17:50:36.202 [INFO ] [결과 상세] : 
+2023-10-30 17:50:36.202 [INFO ] [상태 안바뀜 - update 날짜는 바뀜]
+2023-10-30 17:50:36.239 [INFO ] [============ 진도 정보 ==============]
+2023-10-30 17:50:36.239 [INFO ] dataKindStr : RDR
+2023-10-30 17:50:36.240 [INFO ] site_cd : JNI
+2023-10-30 17:50:36.240 [INFO ] data_type : NQC
+2023-10-30 17:50:36.240 [INFO ] currentTime : 2023-10-30 17:50
+2023-10-30 17:50:36.249 [INFO ] 최종 상태 : TOTA
+2023-10-30 17:50:36.362 [INFO ] [결과] : 
+2023-10-30 17:50:36.362 [INFO ] [결과 상세] : 
+2023-10-30 17:50:36.362 [INFO ] [상태 안바뀜 - update 날짜는 바뀜]
+2023-10-30 17:50:36.388 [INFO ] [============ 고산 정보 ==============]
+2023-10-30 17:50:36.388 [INFO ] dataKindStr : RDR
+2023-10-30 17:50:36.388 [INFO ] site_cd : GSN
+2023-10-30 17:50:36.388 [INFO ] data_type : NQC
+2023-10-30 17:50:36.388 [INFO ] currentTime : 2023-10-30 17:50
+2023-10-30 17:50:36.398 [INFO ] 최종 상태 : TOTA
+2023-10-30 17:50:36.502 [INFO ] [결과] : 
+2023-10-30 17:50:36.503 [INFO ] [결과 상세] : 
+2023-10-30 17:50:36.503 [INFO ] [상태 안바뀜 - update 날짜는 바뀜]
+2023-10-30 17:50:36.528 [INFO ] [============ 성산 정보 ==============]
+2023-10-30 17:50:36.528 [INFO ] dataKindStr : RDR
+2023-10-30 17:50:36.528 [INFO ] site_cd : SSP
+2023-10-30 17:50:36.528 [INFO ] data_type : NQC
+2023-10-30 17:50:36.528 [INFO ] currentTime : 2023-10-30 17:50
+2023-10-30 17:50:36.542 [INFO ] 최종 상태 : TOTA
+2023-10-30 17:50:36.649 [INFO ] [결과] : 
+2023-10-30 17:50:36.649 [INFO ] [결과 상세] : 
+2023-10-30 17:50:36.649 [INFO ] [상태 안바뀜 - update 날짜는 바뀜]
+2023-10-30 17:50:36.676 [INFO ] [============ 용인 정보 ==============]
+2023-10-30 17:50:36.676 [INFO ] dataKindStr : RDR
+2023-10-30 17:50:36.676 [INFO ] site_cd : YIT
+2023-10-30 17:50:36.676 [INFO ] data_type : NQC
+2023-10-30 17:50:36.676 [INFO ] currentTime : 2023-10-30 17:50
+2023-10-30 17:50:36.686 [INFO ] 최종 상태 : TOTA
+2023-10-30 17:50:36.790 [INFO ] [결과] : 
+2023-10-30 17:50:36.791 [INFO ] [결과 상세] : 
+2023-10-30 17:50:36.791 [INFO ] [상태 안바뀜 - update 날짜는 바뀜]
+2023-10-30 17:50:36.823 [INFO ] ======================= 문자 전송 =================================
+2023-10-30 17:50:36.855 [INFO ] [smsPetterns] :: 
+2023-10-30 17:50:36.855 [INFO ] 설정값에 따른 문자메시지 패턴 다시 확인 on/off
+2023-10-30 17:50:36.855 [INFO ] [=================== end ===================]
+2023-10-30 17:50:39.285 [INFO ] [데몬 구분] : 대형
+2023-10-30 17:50:39.309 [INFO ] [========================= 관악산 접속 정보(connect, file, filesize) ===============================]
+2023-10-30 17:50:39.309 [INFO ] [관악산 port] : 22
+2023-10-30 17:50:39.310 [INFO ] [관악산 ip] : 190.1.56.113
+2023-10-30 17:50:39.310 [INFO ] [관악산 username] : root
+2023-10-30 17:50:39.310 [INFO ] [관악산 pwd] : test123
+2023-10-30 17:50:39.815 [INFO ] [========================= 백령도 접속 정보(connect, file, filesize) ===============================]
+2023-10-30 17:50:39.816 [INFO ] [백령도 port] : 22
+2023-10-30 17:50:39.816 [INFO ] [백령도 ip] : 190.1.11.103
+2023-10-30 17:50:39.816 [INFO ] [백령도 username] : root
+2023-10-30 17:50:39.816 [INFO ] [백령도 pwd] : test123
+2023-10-30 17:50:40.327 [INFO ] [========================= 광덕산 접속 정보(connect, file, filesize) ===============================]
+2023-10-30 17:50:40.327 [INFO ] [광덕산 port] : 22
+2023-10-30 17:50:40.327 [INFO ] [광덕산 ip] : 190.1.218.113
+2023-10-30 17:50:40.327 [INFO ] [광덕산 username] : root
+2023-10-30 17:50:40.327 [INFO ] [광덕산 pwd] : test123
+2023-10-30 17:50:40.836 [INFO ] [========================= 강릉 접속 정보(connect, file, filesize) ===============================]
+2023-10-30 17:50:40.837 [INFO ] [강릉 port] : 22
+2023-10-30 17:50:40.837 [INFO ] [강릉 ip] : 190.1.219.113
+2023-10-30 17:50:40.837 [INFO ] [강릉 username] : root
+2023-10-30 17:50:40.837 [INFO ] [강릉 pwd] : test123
+2023-10-30 17:50:41.338 [INFO ] [========================= 면봉산 접속 정보(connect, file, filesize) ===============================]
+2023-10-30 17:50:41.339 [INFO ] [면봉산 port] : 22
+2023-10-30 17:50:41.339 [INFO ] [면봉산 ip] : 190.1.126.113
+2023-10-30 17:50:41.339 [INFO ] [면봉산 username] : root
+2023-10-30 17:50:41.339 [INFO ] [면봉산 pwd] : test123
+2023-10-30 17:50:41.840 [INFO ] [========================= 구덕산 접속 정보(connect, file, filesize) ===============================]
+2023-10-30 17:50:41.840 [INFO ] [구덕산 port] : 22
+2023-10-30 17:50:41.840 [INFO ] [구덕산 ip] : 190.1.110.113
+2023-10-30 17:50:41.840 [INFO ] [구덕산 username] : root
+2023-10-30 17:50:41.840 [INFO ] [구덕산 pwd] : test123
+2023-10-30 17:50:42.352 [INFO ] [========================= 오성산 접속 정보(connect, file, filesize) ===============================]
+2023-10-30 17:50:42.352 [INFO ] [오성산 port] : 22
+2023-10-30 17:50:42.352 [INFO ] [오성산 ip] : 190.1.150.113
+2023-10-30 17:50:42.352 [INFO ] [오성산 username] : root
+2023-10-30 17:50:42.352 [INFO ] [오성산 pwd] : test123
+2023-10-30 17:50:42.855 [INFO ] [========================= 진도 접속 정보(connect, file, filesize) ===============================]
+2023-10-30 17:50:42.855 [INFO ] [진도 port] : 22
+2023-10-30 17:50:42.855 [INFO ] [진도 ip] : 190.1.137.113
+2023-10-30 17:50:42.855 [INFO ] [진도 username] : root
+2023-10-30 17:50:42.855 [INFO ] [진도 pwd] : test123
+2023-10-30 17:50:43.368 [INFO ] [========================= 고산 접속 정보(connect, file, filesize) ===============================]
+2023-10-30 17:50:43.368 [INFO ] [고산 port] : 22
+2023-10-30 17:50:43.368 [INFO ] [고산 ip] : 190.1.52.113
+2023-10-30 17:50:43.368 [INFO ] [고산 username] : root
+2023-10-30 17:50:43.369 [INFO ] [고산 pwd] : test123
+2023-10-30 17:50:43.882 [INFO ] [========================= 성산 접속 정보(connect, file, filesize) ===============================]
+2023-10-30 17:50:43.882 [INFO ] [성산 port] : 22
+2023-10-30 17:50:43.883 [INFO ] [성산 ip] : 190.1.54.113
+2023-10-30 17:50:43.883 [INFO ] [성산 username] : root
+2023-10-30 17:50:43.883 [INFO ] [성산 pwd] : test123
+2023-10-30 17:50:44.336 [INFO ] [관악산 접속 유무] : false
+2023-10-30 17:50:44.336 [INFO ] [관악산 접속 X]
+2023-10-30 17:50:44.336 [INFO ] [/// 관악산 ssh 접속 종료 /// ]
+2023-10-30 17:50:44.336 [INFO ] [관악산 파일 명] : 
+2023-10-30 17:50:44.336 [INFO ] [관악산 파일 size] : 0
+2023-10-30 17:50:44.336 [INFO ] [관악산 파일 recv] : RECV
+2023-10-30 17:50:44.336 [INFO ] [관악산 파일 recvDtl] : ok
+2023-10-30 17:50:44.336 [INFO ] [관악산 접속 실패 query insert - receive_data]
+2023-10-30 17:50:44.384 [INFO ] [========================= 용인 접속 정보(connect, file, filesize) ===============================]
+2023-10-30 17:50:44.384 [INFO ] [용인 port] : 22
+2023-10-30 17:50:44.384 [INFO ] [용인 ip] : 190.1.59.113
+2023-10-30 17:50:44.384 [INFO ] [용인 username] : root
+2023-10-30 17:50:44.384 [INFO ] [용인 pwd] : test123
+2023-10-30 17:50:44.838 [INFO ] [백령도 접속 유무] : false
+2023-10-30 17:50:44.838 [INFO ] [백령도 접속 X]
+2023-10-30 17:50:44.838 [INFO ] [/// 백령도 ssh 접속 종료 /// ]
+2023-10-30 17:50:44.838 [INFO ] [백령도 파일 명] : 
+2023-10-30 17:50:44.838 [INFO ] [백령도 파일 size] : 0
+2023-10-30 17:50:44.838 [INFO ] [백령도 파일 recv] : RECV
+2023-10-30 17:50:44.838 [INFO ] [백령도 파일 recvDtl] : ok
+2023-10-30 17:50:44.838 [INFO ] [백령도 접속 실패 query insert - receive_data]
+2023-10-30 17:50:45.352 [INFO ] [광덕산 접속 유무] : false
+2023-10-30 17:50:45.352 [INFO ] [광덕산 접속 X]
+2023-10-30 17:50:45.352 [INFO ] [/// 광덕산 ssh 접속 종료 /// ]
+2023-10-30 17:50:45.352 [INFO ] [광덕산 파일 명] : 
+2023-10-30 17:50:45.352 [INFO ] [광덕산 파일 size] : 0
+2023-10-30 17:50:45.352 [INFO ] [광덕산 파일 recv] : RECV
+2023-10-30 17:50:45.352 [INFO ] [광덕산 파일 recvDtl] : ok
+2023-10-30 17:50:45.352 [INFO ] [광덕산 접속 실패 query insert - receive_data]
+2023-10-30 17:50:45.864 [INFO ] [강릉 접속 유무] : false
+2023-10-30 17:50:45.864 [INFO ] [강릉 접속 X]
+2023-10-30 17:50:45.864 [INFO ] [/// 강릉 ssh 접속 종료 /// ]
+2023-10-30 17:50:45.864 [INFO ] [강릉 파일 명] : 
+2023-10-30 17:50:45.864 [INFO ] [강릉 파일 size] : 0
+2023-10-30 17:50:45.864 [INFO ] [강릉 파일 recv] : RECV
+2023-10-30 17:50:45.864 [INFO ] [강릉 파일 recvDtl] : ok
+2023-10-30 17:50:45.864 [INFO ] [강릉 접속 실패 query insert - receive_data]
+2023-10-30 17:50:46.359 [INFO ] [면봉산 접속 유무] : false
+2023-10-30 17:50:46.359 [INFO ] [면봉산 접속 X]
+2023-10-30 17:50:46.360 [INFO ] [/// 면봉산 ssh 접속 종료 /// ]
+2023-10-30 17:50:46.360 [INFO ] [면봉산 파일 명] : 
+2023-10-30 17:50:46.360 [INFO ] [면봉산 파일 size] : 0
+2023-10-30 17:50:46.360 [INFO ] [면봉산 파일 recv] : RECV
+2023-10-30 17:50:46.360 [INFO ] [면봉산 파일 recvDtl] : ok
+2023-10-30 17:50:46.360 [INFO ] [면봉산 접속 실패 query insert - receive_data]
+2023-10-30 17:50:46.874 [INFO ] [구덕산 접속 유무] : false
+2023-10-30 17:50:46.875 [INFO ] [구덕산 접속 X]
+2023-10-30 17:50:46.875 [INFO ] [/// 구덕산 ssh 접속 종료 /// ]
+2023-10-30 17:50:46.875 [INFO ] [구덕산 파일 명] : 
+2023-10-30 17:50:46.875 [INFO ] [구덕산 파일 size] : 0
+2023-10-30 17:50:46.875 [INFO ] [구덕산 파일 recv] : RECV
+2023-10-30 17:50:46.875 [INFO ] [구덕산 파일 recvDtl] : ok
+2023-10-30 17:50:46.875 [INFO ] [구덕산 접속 실패 query insert - receive_data]
+2023-10-30 17:50:47.375 [INFO ] [오성산 접속 유무] : false
+2023-10-30 17:50:47.375 [INFO ] [오성산 접속 X]
+2023-10-30 17:50:47.376 [INFO ] [/// 오성산 ssh 접속 종료 /// ]
+2023-10-30 17:50:47.376 [INFO ] [오성산 파일 명] : 
+2023-10-30 17:50:47.376 [INFO ] [오성산 파일 size] : 0
+2023-10-30 17:50:47.376 [INFO ] [오성산 파일 recv] : RECV
+2023-10-30 17:50:47.376 [INFO ] [오성산 파일 recvDtl] : ok
+2023-10-30 17:50:47.376 [INFO ] [오성산 접속 실패 query insert - receive_data]
+2023-10-30 17:50:47.872 [INFO ] [진도 접속 유무] : false
+2023-10-30 17:50:47.872 [INFO ] [진도 접속 X]
+2023-10-30 17:50:47.872 [INFO ] [/// 진도 ssh 접속 종료 /// ]
+2023-10-30 17:50:47.873 [INFO ] [진도 파일 명] : 
+2023-10-30 17:50:47.873 [INFO ] [진도 파일 size] : 0
+2023-10-30 17:50:47.873 [INFO ] [진도 파일 recv] : RECV
+2023-10-30 17:50:47.873 [INFO ] [진도 파일 recvDtl] : ok
+2023-10-30 17:50:47.873 [INFO ] [진도 접속 실패 query insert - receive_data]
+2023-10-30 17:50:48.387 [INFO ] [고산 접속 유무] : false
+2023-10-30 17:50:48.387 [INFO ] [고산 접속 X]
+2023-10-30 17:50:48.387 [INFO ] [/// 고산 ssh 접속 종료 /// ]
+2023-10-30 17:50:48.387 [INFO ] [고산 파일 명] : 
+2023-10-30 17:50:48.387 [INFO ] [고산 파일 size] : 0
+2023-10-30 17:50:48.387 [INFO ] [고산 파일 recv] : RECV
+2023-10-30 17:50:48.387 [INFO ] [고산 파일 recvDtl] : ok
+2023-10-30 17:50:48.387 [INFO ] [고산 접속 실패 query insert - receive_data]
+2023-10-30 17:50:48.902 [INFO ] [성산 접속 유무] : false
+2023-10-30 17:50:48.902 [INFO ] [성산 접속 X]
+2023-10-30 17:50:48.902 [INFO ] [/// 성산 ssh 접속 종료 /// ]
+2023-10-30 17:50:48.902 [INFO ] [성산 파일 명] : 
+2023-10-30 17:50:48.902 [INFO ] [성산 파일 size] : 0
+2023-10-30 17:50:48.902 [INFO ] [성산 파일 recv] : RECV
+2023-10-30 17:50:48.902 [INFO ] [성산 파일 recvDtl] : ok
+2023-10-30 17:50:48.902 [INFO ] [성산 접속 실패 query insert - receive_data]
+2023-10-30 17:50:49.403 [INFO ] [용인 접속 유무] : false
+2023-10-30 17:50:49.403 [INFO ] [용인 접속 X]
+2023-10-30 17:50:49.403 [INFO ] [/// 용인 ssh 접속 종료 /// ]
+2023-10-30 17:50:49.403 [INFO ] [용인 파일 명] : 
+2023-10-30 17:50:49.403 [INFO ] [용인 파일 size] : 0
+2023-10-30 17:50:49.403 [INFO ] [용인 파일 recv] : RECV
+2023-10-30 17:50:49.403 [INFO ] [용인 파일 recvDtl] : ok
+2023-10-30 17:50:49.403 [INFO ] [용인 접속 실패 query insert - receive_data]
+2023-10-30 17:51:04.888 [INFO ] [20초 후 다음] : 2023-10-30 17:51:04
+2023-10-30 17:51:04.888 [INFO ] [=================== 2번째 프로세스 ===================] 2023-10-30 17:51:04
+2023-10-30 17:51:05.041 [INFO ] [============ 관악산 정보 ==============]
+2023-10-30 17:51:05.041 [INFO ] dataKindStr : RDR
+2023-10-30 17:51:05.041 [INFO ] site_cd : KWK
+2023-10-30 17:51:05.041 [INFO ] data_type : NQC
+2023-10-30 17:51:05.041 [INFO ] currentTime : 2023-10-30 17:50
+2023-10-30 17:51:05.070 [INFO ] 최종 상태 : TOTA
+2023-10-30 17:51:05.163 [INFO ] 네트워크 복구(network_ok)
+2023-10-30 17:51:05.172 [INFO ] [결과] : TORE
+2023-10-30 17:51:05.172 [INFO ] [결과 상세] : network_ok
+2023-10-30 17:51:05.172 [INFO ] 관악산 별 최종상태 update
+2023-10-30 17:51:05.172 [INFO ] new_recv_condition ::: TORE
+2023-10-30 17:51:05.172 [INFO ] recv_con_dtl ::: network_ok
+2023-10-30 17:51:05.197 [INFO ] [============ 백령도 정보 ==============]
+2023-10-30 17:51:05.198 [INFO ] dataKindStr : RDR
+2023-10-30 17:51:05.198 [INFO ] site_cd : BRI
+2023-10-30 17:51:05.198 [INFO ] data_type : NQC
+2023-10-30 17:51:05.198 [INFO ] currentTime : 2023-10-30 17:50
+2023-10-30 17:51:05.207 [INFO ] 최종 상태 : TOTA
+2023-10-30 17:51:05.294 [INFO ] 네트워크 복구(network_ok)
+2023-10-30 17:51:05.302 [INFO ] [결과] : TORE
+2023-10-30 17:51:05.302 [INFO ] [결과 상세] : network_ok
+2023-10-30 17:51:05.302 [INFO ] 백령도 별 최종상태 update
+2023-10-30 17:51:05.302 [INFO ] new_recv_condition ::: TORE
+2023-10-30 17:51:05.303 [INFO ] recv_con_dtl ::: network_ok
+2023-10-30 17:51:05.327 [INFO ] [============ 광덕산 정보 ==============]
+2023-10-30 17:51:05.327 [INFO ] dataKindStr : RDR
+2023-10-30 17:51:05.327 [INFO ] site_cd : GDK
+2023-10-30 17:51:05.327 [INFO ] data_type : NQC
+2023-10-30 17:51:05.327 [INFO ] currentTime : 2023-10-30 17:50
+2023-10-30 17:51:05.336 [INFO ] 최종 상태 : TOTA
+2023-10-30 17:51:05.438 [INFO ] 네트워크 복구(network_ok)
+2023-10-30 17:51:05.455 [INFO ] [결과] : TORE
+2023-10-30 17:51:05.455 [INFO ] [결과 상세] : network_ok
+2023-10-30 17:51:05.455 [INFO ] 광덕산 별 최종상태 update
+2023-10-30 17:51:05.455 [INFO ] new_recv_condition ::: TORE
+2023-10-30 17:51:05.455 [INFO ] recv_con_dtl ::: network_ok
+2023-10-30 17:51:05.480 [INFO ] [============ 강릉 정보 ==============]
+2023-10-30 17:51:05.480 [INFO ] dataKindStr : RDR
+2023-10-30 17:51:05.480 [INFO ] site_cd : GNG
+2023-10-30 17:51:05.480 [INFO ] data_type : NQC
+2023-10-30 17:51:05.480 [INFO ] currentTime : 2023-10-30 17:50
+2023-10-30 17:51:05.489 [INFO ] 최종 상태 : TOTA
+2023-10-30 17:51:05.589 [INFO ] 네트워크 복구(network_ok)
+2023-10-30 17:51:05.600 [INFO ] [결과] : TORE
+2023-10-30 17:51:05.601 [INFO ] [결과 상세] : network_ok
+2023-10-30 17:51:05.601 [INFO ] 강릉 별 최종상태 update
+2023-10-30 17:51:05.601 [INFO ] new_recv_condition ::: TORE
+2023-10-30 17:51:05.601 [INFO ] recv_con_dtl ::: network_ok
+2023-10-30 17:51:05.628 [INFO ] [============ 면봉산 정보 ==============]
+2023-10-30 17:51:05.628 [INFO ] dataKindStr : RDR
+2023-10-30 17:51:05.628 [INFO ] site_cd : MYN
+2023-10-30 17:51:05.628 [INFO ] data_type : NQC
+2023-10-30 17:51:05.628 [INFO ] currentTime : 2023-10-30 17:50
+2023-10-30 17:51:05.637 [INFO ] 최종 상태 : TOTA
+2023-10-30 17:51:05.730 [INFO ] 네트워크 복구(network_ok)
+2023-10-30 17:51:05.739 [INFO ] [결과] : TORE
+2023-10-30 17:51:05.739 [INFO ] [결과 상세] : network_ok
+2023-10-30 17:51:05.739 [INFO ] 면봉산 별 최종상태 update
+2023-10-30 17:51:05.739 [INFO ] new_recv_condition ::: TORE
+2023-10-30 17:51:05.739 [INFO ] recv_con_dtl ::: network_ok
+2023-10-30 17:51:05.765 [INFO ] [============ 구덕산 정보 ==============]
+2023-10-30 17:51:05.765 [INFO ] dataKindStr : RDR
+2023-10-30 17:51:05.766 [INFO ] site_cd : PSN
+2023-10-30 17:51:05.766 [INFO ] data_type : NQC
+2023-10-30 17:51:05.766 [INFO ] currentTime : 2023-10-30 17:50
+2023-10-30 17:51:05.777 [INFO ] 최종 상태 : TOTA
+2023-10-30 17:51:05.869 [INFO ] 네트워크 복구(network_ok)
+2023-10-30 17:51:05.878 [INFO ] [결과] : TORE
+2023-10-30 17:51:05.878 [INFO ] [결과 상세] : network_ok
+2023-10-30 17:51:05.878 [INFO ] 구덕산 별 최종상태 update
+2023-10-30 17:51:05.878 [INFO ] new_recv_condition ::: TORE
+2023-10-30 17:51:05.878 [INFO ] recv_con_dtl ::: network_ok
+2023-10-30 17:51:05.903 [INFO ] [============ 오성산 정보 ==============]
+2023-10-30 17:51:05.903 [INFO ] dataKindStr : RDR
+2023-10-30 17:51:05.903 [INFO ] site_cd : KSN
+2023-10-30 17:51:05.903 [INFO ] data_type : NQC
+2023-10-30 17:51:05.903 [INFO ] currentTime : 2023-10-30 17:50
+2023-10-30 17:51:05.913 [INFO ] 최종 상태 : TOTA
+2023-10-30 17:51:06.009 [INFO ] 네트워크 복구(network_ok)
+2023-10-30 17:51:06.019 [INFO ] [결과] : TORE
+2023-10-30 17:51:06.019 [INFO ] [결과 상세] : network_ok
+2023-10-30 17:51:06.019 [INFO ] 오성산 별 최종상태 update
+2023-10-30 17:51:06.019 [INFO ] new_recv_condition ::: TORE
+2023-10-30 17:51:06.019 [INFO ] recv_con_dtl ::: network_ok
+2023-10-30 17:51:06.048 [INFO ] [============ 진도 정보 ==============]
+2023-10-30 17:51:06.048 [INFO ] dataKindStr : RDR
+2023-10-30 17:51:06.048 [INFO ] site_cd : JNI
+2023-10-30 17:51:06.048 [INFO ] data_type : NQC
+2023-10-30 17:51:06.048 [INFO ] currentTime : 2023-10-30 17:50
+2023-10-30 17:51:06.060 [INFO ] 최종 상태 : TOTA
+2023-10-30 17:51:06.154 [INFO ] 네트워크 복구(network_ok)
+2023-10-30 17:51:06.163 [INFO ] [결과] : TORE
+2023-10-30 17:51:06.163 [INFO ] [결과 상세] : network_ok
+2023-10-30 17:51:06.163 [INFO ] 진도 별 최종상태 update
+2023-10-30 17:51:06.163 [INFO ] new_recv_condition ::: TORE
+2023-10-30 17:51:06.163 [INFO ] recv_con_dtl ::: network_ok
+2023-10-30 17:51:06.193 [INFO ] [============ 고산 정보 ==============]
+2023-10-30 17:51:06.193 [INFO ] dataKindStr : RDR
+2023-10-30 17:51:06.193 [INFO ] site_cd : GSN
+2023-10-30 17:51:06.193 [INFO ] data_type : NQC
+2023-10-30 17:51:06.193 [INFO ] currentTime : 2023-10-30 17:50
+2023-10-30 17:51:06.202 [INFO ] 최종 상태 : TOTA
+2023-10-30 17:51:06.294 [INFO ] 네트워크 복구(network_ok)
+2023-10-30 17:51:06.302 [INFO ] [결과] : TORE
+2023-10-30 17:51:06.302 [INFO ] [결과 상세] : network_ok
+2023-10-30 17:51:06.302 [INFO ] 고산 별 최종상태 update
+2023-10-30 17:51:06.302 [INFO ] new_recv_condition ::: TORE
+2023-10-30 17:51:06.302 [INFO ] recv_con_dtl ::: network_ok
+2023-10-30 17:51:06.331 [INFO ] [============ 성산 정보 ==============]
+2023-10-30 17:51:06.331 [INFO ] dataKindStr : RDR
+2023-10-30 17:51:06.331 [INFO ] site_cd : SSP
+2023-10-30 17:51:06.331 [INFO ] data_type : NQC
+2023-10-30 17:51:06.331 [INFO ] currentTime : 2023-10-30 17:50
+2023-10-30 17:51:06.341 [INFO ] 최종 상태 : TOTA
+2023-10-30 17:51:06.457 [INFO ] 네트워크 복구(network_ok)
+2023-10-30 17:51:06.467 [INFO ] [결과] : TORE
+2023-10-30 17:51:06.467 [INFO ] [결과 상세] : network_ok
+2023-10-30 17:51:06.467 [INFO ] 성산 별 최종상태 update
+2023-10-30 17:51:06.467 [INFO ] new_recv_condition ::: TORE
+2023-10-30 17:51:06.467 [INFO ] recv_con_dtl ::: network_ok
+2023-10-30 17:51:06.493 [INFO ] [============ 용인 정보 ==============]
+2023-10-30 17:51:06.493 [INFO ] dataKindStr : RDR
+2023-10-30 17:51:06.493 [INFO ] site_cd : YIT
+2023-10-30 17:51:06.493 [INFO ] data_type : NQC
+2023-10-30 17:51:06.493 [INFO ] currentTime : 2023-10-30 17:50
+2023-10-30 17:51:06.509 [INFO ] 최종 상태 : TOTA
+2023-10-30 17:51:06.600 [INFO ] 네트워크 복구(network_ok)
+2023-10-30 17:51:06.609 [INFO ] [결과] : TORE
+2023-10-30 17:51:06.609 [INFO ] [결과 상세] : network_ok
+2023-10-30 17:51:06.609 [INFO ] 용인 별 최종상태 update
+2023-10-30 17:51:06.609 [INFO ] new_recv_condition ::: TORE
+2023-10-30 17:51:06.609 [INFO ] recv_con_dtl ::: network_ok
+2023-10-30 17:51:06.643 [INFO ] ======================= 문자 전송 =================================
+2023-10-30 17:51:06.672 [INFO ] [smsPetterns] :: 대형 (시범운영)
+네트워크 복구  [2023-10-30 17:51:06]
+2023-10-30 17:51:06.681 [INFO ] [TORE // 문자 전송 app sequence] :319
+2023-10-30 17:51:06.723 [INFO ] [수신자명] : kimhaemi : 01031248577
+2023-10-30 17:51:06.752 [INFO ] [수신자명] : 김성상 : 01047012513
+2023-10-30 17:51:06.780 [INFO ] [수신자명] : 김성원 : 01046585229
+2023-10-30 17:51:06.807 [INFO ] [수신자명] : 김용제 : 01096181205
+2023-10-30 17:51:06.835 [INFO ] [수신자명] : 김지훈 : 01042494214
+2023-10-30 17:51:06.860 [INFO ] [수신자명] : 나기생 : 01073539496
+2023-10-30 17:51:06.919 [INFO ] [수신자명] : 남호진 : 01046132205
+2023-10-30 17:51:06.944 [INFO ] [수신자명] : 노수명 : 01062776545
+2023-10-30 17:51:06.975 [INFO ] [수신자명] : 노준상 : 01085186240
+2023-10-30 17:51:07.002 [INFO ] [수신자명] : 박충신 : 01027387539
+2023-10-30 17:51:07.028 [INFO ] [수신자명] : 백승록 : 01066941364
+2023-10-30 17:51:07.054 [INFO ] [수신자명] : 서현옥 : 01037456629
+2023-10-30 17:51:07.080 [INFO ] [수신자명] : 신상창 : 01042647793
+2023-10-30 17:51:07.114 [INFO ] [수신자명] : 오윤석 : 01091387513
+2023-10-30 17:51:07.140 [INFO ] [수신자명] : 오창록 : 01046138677
+2023-10-30 17:51:07.167 [INFO ] [수신자명] : 유충길 : 01097740010
+2023-10-30 17:51:07.192 [INFO ] [수신자명] : 이승표 : 01091163178
+2023-10-30 17:51:07.221 [INFO ] [수신자명] : 이종환 : 01022157654
+2023-10-30 17:51:07.249 [INFO ] [수신자명] : 임덕빈 : 01082877357
+2023-10-30 17:51:07.275 [INFO ] [수신자명] : 임무승 : 01032706843
+2023-10-30 17:51:07.302 [INFO ] [수신자명] : 임병희 : 01027047408
+2023-10-30 17:51:07.329 [INFO ] [수신자명] : 장복수 : 01024792685
+2023-10-30 17:51:07.356 [INFO ] [수신자명] : 전종혁 : 01093162113
+2023-10-30 17:51:07.383 [INFO ] [수신자명] : 정시목 : 01033009365
+2023-10-30 17:51:07.409 [INFO ] [수신자명] : 정용철 : 01034696736
+2023-10-30 17:51:07.436 [INFO ] [수신자명] : 정준석 : 01088204829
+2023-10-30 17:51:07.462 [INFO ] [수신자명] : 조민호 : 01072241905
+2023-10-30 17:51:07.490 [INFO ] [수신자명] : 조수만 : 01072359365
+2023-10-30 17:51:07.516 [INFO ] [수신자명] : 조재욱 : 01087651276
+2023-10-30 17:51:07.543 [INFO ] [수신자명] : 최성호 : 01028607962
+2023-10-30 17:51:07.572 [INFO ] [수신자명] : 홍경화 : 01042087098
+2023-10-30 17:51:07.600 [INFO ] [수신자명] : 홍성 : 01050361643
+2023-10-30 17:51:07.627 [INFO ] [수신자명] : 황영대 : 01074307900
+2023-10-30 17:51:07.655 [INFO ] [문자 전송 여부 update]
+2023-10-30 17:51:07.661 [INFO ] 감시 해야할 시간 이전: 202310301745
+2023-10-30 17:51:07.661 [INFO ] 감시 해야할 시간 이후: 202310301740
+2023-10-30 17:51:07.683 [INFO ] [=================== end ===================]
+2023-10-30 17:51:09.299 [INFO ] [데몬 구분] : 대형
+2023-10-30 17:51:09.317 [INFO ] [========================= 관악산 접속 정보(connect, file, filesize) ===============================]
+2023-10-30 17:51:09.317 [INFO ] [관악산 port] : 22
+2023-10-30 17:51:09.317 [INFO ] [관악산 ip] : 190.1.56.113
+2023-10-30 17:51:09.317 [INFO ] [관악산 username] : root
+2023-10-30 17:51:09.317 [INFO ] [관악산 pwd] : test123
+2023-10-30 17:51:09.819 [INFO ] [========================= 백령도 접속 정보(connect, file, filesize) ===============================]
+2023-10-30 17:51:09.820 [INFO ] [백령도 port] : 22
+2023-10-30 17:51:09.820 [INFO ] [백령도 ip] : 190.1.11.103
+2023-10-30 17:51:09.820 [INFO ] [백령도 username] : root
+2023-10-30 17:51:09.820 [INFO ] [백령도 pwd] : test123
+2023-10-30 17:51:10.331 [INFO ] [========================= 광덕산 접속 정보(connect, file, filesize) ===============================]
+2023-10-30 17:51:10.331 [INFO ] [광덕산 port] : 22
+2023-10-30 17:51:10.331 [INFO ] [광덕산 ip] : 190.1.218.113
+2023-10-30 17:51:10.331 [INFO ] [광덕산 username] : root
+2023-10-30 17:51:10.331 [INFO ] [광덕산 pwd] : test123
+2023-10-30 17:51:10.843 [INFO ] [========================= 강릉 접속 정보(connect, file, filesize) ===============================]
+2023-10-30 17:51:10.843 [INFO ] [강릉 port] : 22
+2023-10-30 17:51:10.843 [INFO ] [강릉 ip] : 190.1.219.113
+2023-10-30 17:51:10.843 [INFO ] [강릉 username] : root
+2023-10-30 17:51:10.843 [INFO ] [강릉 pwd] : test123
+2023-10-30 17:51:11.354 [INFO ] [========================= 면봉산 접속 정보(connect, file, filesize) ===============================]
+2023-10-30 17:51:11.354 [INFO ] [면봉산 port] : 22
+2023-10-30 17:51:11.354 [INFO ] [면봉산 ip] : 190.1.126.113
+2023-10-30 17:51:11.354 [INFO ] [면봉산 username] : root
+2023-10-30 17:51:11.354 [INFO ] [면봉산 pwd] : test123
+2023-10-30 17:51:11.861 [INFO ] [========================= 구덕산 접속 정보(connect, file, filesize) ===============================]
+2023-10-30 17:51:11.861 [INFO ] [구덕산 port] : 22
+2023-10-30 17:51:11.861 [INFO ] [구덕산 ip] : 190.1.110.113
+2023-10-30 17:51:11.861 [INFO ] [구덕산 username] : root
+2023-10-30 17:51:11.861 [INFO ] [구덕산 pwd] : test123
+2023-10-30 17:51:12.374 [INFO ] [========================= 오성산 접속 정보(connect, file, filesize) ===============================]
+2023-10-30 17:51:12.375 [INFO ] [오성산 port] : 22
+2023-10-30 17:51:12.375 [INFO ] [오성산 ip] : 190.1.150.113
+2023-10-30 17:51:12.375 [INFO ] [오성산 username] : root
+2023-10-30 17:51:12.375 [INFO ] [오성산 pwd] : test123
+2023-10-30 17:51:12.877 [INFO ] [========================= 진도 접속 정보(connect, file, filesize) ===============================]
+2023-10-30 17:51:12.877 [INFO ] [진도 port] : 22
+2023-10-30 17:51:12.877 [INFO ] [진도 ip] : 190.1.137.113
+2023-10-30 17:51:12.877 [INFO ] [진도 username] : root
+2023-10-30 17:51:12.877 [INFO ] [진도 pwd] : test123
+2023-10-30 17:51:13.379 [INFO ] [========================= 고산 접속 정보(connect, file, filesize) ===============================]
+2023-10-30 17:51:13.379 [INFO ] [고산 port] : 22
+2023-10-30 17:51:13.379 [INFO ] [고산 ip] : 190.1.52.113
+2023-10-30 17:51:13.379 [INFO ] [고산 username] : root
+2023-10-30 17:51:13.379 [INFO ] [고산 pwd] : test123
+2023-10-30 17:51:13.880 [INFO ] [========================= 성산 접속 정보(connect, file, filesize) ===============================]
+2023-10-30 17:51:13.880 [INFO ] [성산 port] : 22
+2023-10-30 17:51:13.880 [INFO ] [성산 ip] : 190.1.54.113
+2023-10-30 17:51:13.880 [INFO ] [성산 username] : root
+2023-10-30 17:51:13.880 [INFO ] [성산 pwd] : test123
+2023-10-30 17:51:14.334 [INFO ] [관악산 접속 유무] : false
+2023-10-30 17:51:14.334 [INFO ] [관악산 접속 X]
+2023-10-30 17:51:14.334 [INFO ] [/// 관악산 ssh 접속 종료 /// ]
+2023-10-30 17:51:14.334 [INFO ] [관악산 파일 명] : 
+2023-10-30 17:51:14.334 [INFO ] [관악산 파일 size] : 0
+2023-10-30 17:51:14.334 [INFO ] [관악산 파일 recv] : RECV
+2023-10-30 17:51:14.334 [INFO ] [관악산 파일 recvDtl] : ok
+2023-10-30 17:51:14.334 [INFO ] [관악산 접속 실패 query insert - receive_data]
+2023-10-30 17:51:14.383 [INFO ] [========================= 용인 접속 정보(connect, file, filesize) ===============================]
+2023-10-30 17:51:14.384 [INFO ] [용인 port] : 22
+2023-10-30 17:51:14.384 [INFO ] [용인 ip] : 190.1.59.113
+2023-10-30 17:51:14.384 [INFO ] [용인 username] : root
+2023-10-30 17:51:14.384 [INFO ] [용인 pwd] : test123
+2023-10-30 17:51:14.851 [INFO ] [백령도 접속 유무] : false
+2023-10-30 17:51:14.851 [INFO ] [백령도 접속 X]
+2023-10-30 17:51:14.851 [INFO ] [/// 백령도 ssh 접속 종료 /// ]
+2023-10-30 17:51:14.851 [INFO ] [백령도 파일 명] : 
+2023-10-30 17:51:14.851 [INFO ] [백령도 파일 size] : 0
+2023-10-30 17:51:14.851 [INFO ] [백령도 파일 recv] : RECV
+2023-10-30 17:51:14.851 [INFO ] [백령도 파일 recvDtl] : ok
+2023-10-30 17:51:14.851 [INFO ] [백령도 접속 실패 query insert - receive_data]
+2023-10-30 17:51:15.413 [INFO ] [광덕산 접속 유무] : false
+2023-10-30 17:51:15.413 [INFO ] [광덕산 접속 X]
+2023-10-30 17:51:15.413 [INFO ] [/// 광덕산 ssh 접속 종료 /// ]
+2023-10-30 17:51:15.413 [INFO ] [광덕산 파일 명] : 
+2023-10-30 17:51:15.413 [INFO ] [광덕산 파일 size] : 0
+2023-10-30 17:51:15.413 [INFO ] [광덕산 파일 recv] : RECV
+2023-10-30 17:51:15.413 [INFO ] [광덕산 파일 recvDtl] : ok
+2023-10-30 17:51:15.413 [INFO ] [광덕산 접속 실패 query insert - receive_data]
+2023-10-30 17:51:15.882 [INFO ] [강릉 접속 유무] : false
+2023-10-30 17:51:15.882 [INFO ] [강릉 접속 X]
+2023-10-30 17:51:15.882 [INFO ] [/// 강릉 ssh 접속 종료 /// ]
+2023-10-30 17:51:15.882 [INFO ] [강릉 파일 명] : 
+2023-10-30 17:51:15.882 [INFO ] [강릉 파일 size] : 0
+2023-10-30 17:51:15.882 [INFO ] [강릉 파일 recv] : RECV
+2023-10-30 17:51:15.882 [INFO ] [강릉 파일 recvDtl] : ok
+2023-10-30 17:51:15.882 [INFO ] [강릉 접속 실패 query insert - receive_data]
+2023-10-30 17:51:16.385 [INFO ] [면봉산 접속 유무] : false
+2023-10-30 17:51:16.385 [INFO ] [면봉산 접속 X]
+2023-10-30 17:51:16.385 [INFO ] [/// 면봉산 ssh 접속 종료 /// ]
+2023-10-30 17:51:16.385 [INFO ] [면봉산 파일 명] : 
+2023-10-30 17:51:16.385 [INFO ] [면봉산 파일 size] : 0
+2023-10-30 17:51:16.385 [INFO ] [면봉산 파일 recv] : RECV
+2023-10-30 17:51:16.386 [INFO ] [면봉산 파일 recvDtl] : ok
+2023-10-30 17:51:16.386 [INFO ] [면봉산 접속 실패 query insert - receive_data]
+2023-10-30 17:51:16.875 [INFO ] [구덕산 접속 유무] : false
+2023-10-30 17:51:16.875 [INFO ] [구덕산 접속 X]
+2023-10-30 17:51:16.875 [INFO ] [/// 구덕산 ssh 접속 종료 /// ]
+2023-10-30 17:51:16.875 [INFO ] [구덕산 파일 명] : 
+2023-10-30 17:51:16.875 [INFO ] [구덕산 파일 size] : 0
+2023-10-30 17:51:16.875 [INFO ] [구덕산 파일 recv] : RECV
+2023-10-30 17:51:16.875 [INFO ] [구덕산 파일 recvDtl] : ok
+2023-10-30 17:51:16.875 [INFO ] [구덕산 접속 실패 query insert - receive_data]
+2023-10-30 17:51:17.463 [INFO ] [오성산 접속 유무] : false
+2023-10-30 17:51:17.463 [INFO ] [오성산 접속 X]
+2023-10-30 17:51:17.463 [INFO ] [/// 오성산 ssh 접속 종료 /// ]
+2023-10-30 17:51:17.463 [INFO ] [오성산 파일 명] : 
+2023-10-30 17:51:17.463 [INFO ] [오성산 파일 size] : 0
+2023-10-30 17:51:17.463 [INFO ] [오성산 파일 recv] : RECV
+2023-10-30 17:51:17.463 [INFO ] [오성산 파일 recvDtl] : ok
+2023-10-30 17:51:17.463 [INFO ] [오성산 접속 실패 query insert - receive_data]
+2023-10-30 17:51:17.950 [INFO ] [진도 접속 유무] : false
+2023-10-30 17:51:17.950 [INFO ] [진도 접속 X]
+2023-10-30 17:51:17.950 [INFO ] [/// 진도 ssh 접속 종료 /// ]
+2023-10-30 17:51:17.950 [INFO ] [진도 파일 명] : 
+2023-10-30 17:51:17.950 [INFO ] [진도 파일 size] : 0
+2023-10-30 17:51:17.950 [INFO ] [진도 파일 recv] : RECV
+2023-10-30 17:51:17.950 [INFO ] [진도 파일 recvDtl] : ok
+2023-10-30 17:51:17.950 [INFO ] [진도 접속 실패 query insert - receive_data]
+2023-10-30 17:51:18.451 [INFO ] [고산 접속 유무] : false
+2023-10-30 17:51:18.451 [INFO ] [고산 접속 X]
+2023-10-30 17:51:18.451 [INFO ] [/// 고산 ssh 접속 종료 /// ]
+2023-10-30 17:51:18.451 [INFO ] [고산 파일 명] : 
+2023-10-30 17:51:18.451 [INFO ] [고산 파일 size] : 0
+2023-10-30 17:51:18.451 [INFO ] [고산 파일 recv] : RECV
+2023-10-30 17:51:18.451 [INFO ] [고산 파일 recvDtl] : ok
+2023-10-30 17:51:18.451 [INFO ] [고산 접속 실패 query insert - receive_data]
+2023-10-30 17:51:18.910 [INFO ] [성산 접속 유무] : false
+2023-10-30 17:51:18.910 [INFO ] [성산 접속 X]
+2023-10-30 17:51:18.910 [INFO ] [/// 성산 ssh 접속 종료 /// ]
+2023-10-30 17:51:18.910 [INFO ] [성산 파일 명] : 
+2023-10-30 17:51:18.910 [INFO ] [성산 파일 size] : 0
+2023-10-30 17:51:18.910 [INFO ] [성산 파일 recv] : RECV
+2023-10-30 17:51:18.910 [INFO ] [성산 파일 recvDtl] : ok
+2023-10-30 17:51:18.911 [INFO ] [성산 접속 실패 query insert - receive_data]
+2023-10-30 17:51:19.415 [INFO ] [용인 접속 유무] : false
+2023-10-30 17:51:19.415 [INFO ] [용인 접속 X]
+2023-10-30 17:51:19.415 [INFO ] [/// 용인 ssh 접속 종료 /// ]
+2023-10-30 17:51:19.415 [INFO ] [용인 파일 명] : 
+2023-10-30 17:51:19.415 [INFO ] [용인 파일 size] : 0
+2023-10-30 17:51:19.415 [INFO ] [용인 파일 recv] : RECV
+2023-10-30 17:51:19.415 [INFO ] [용인 파일 recvDtl] : ok
+2023-10-30 17:51:19.415 [INFO ] [용인 접속 실패 query insert - receive_data]
+2023-10-30 17:58:35.447 [INFO ] Starting RadardemoApplication using Java 11.0.18 on DESKTOP-BJ29IOC with PID 1088 (C:\000_dev\radardemo\build\classes\java\main started by haem in c:\000_dev\radardemo)
+2023-10-30 17:58:35.453 [DEBUG] Running with Spring Boot v2.7.15, Spring v5.3.29
+2023-10-30 17:58:35.456 [INFO ] No active profile set, falling back to 1 default profile: "default"
+2023-10-30 17:58:35.571 [INFO ] Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2023-10-30 17:58:38.095 [INFO ] Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2023-10-30 17:58:38.629 [INFO ] Finished Spring Data repository scanning in 491 ms. Found 10 JPA repository interfaces.
+2023-10-30 17:58:40.469 [INFO ] HikariPool-1 - Starting...
+2023-10-30 17:58:44.090 [ERROR] HikariPool-1 - Exception during pool initialization.
+java.sql.SQLException: Access denied for user 'root'@'localhost' (using password: YES)
+	at com.mysql.cj.jdbc.exceptions.SQLError.createSQLException(SQLError.java:130) ~[mysql-connector-j-8.0.33.jar:8.0.33]
+	at com.mysql.cj.jdbc.exceptions.SQLExceptionsMapping.translateException(SQLExceptionsMapping.java:122) ~[mysql-connector-j-8.0.33.jar:8.0.33]
+	at com.mysql.cj.jdbc.ConnectionImpl.createNewIO(ConnectionImpl.java:825) ~[mysql-connector-j-8.0.33.jar:8.0.33]
+	at com.mysql.cj.jdbc.ConnectionImpl.<init>(ConnectionImpl.java:446) ~[mysql-connector-j-8.0.33.jar:8.0.33]
+	at com.mysql.cj.jdbc.ConnectionImpl.getInstance(ConnectionImpl.java:239) ~[mysql-connector-j-8.0.33.jar:8.0.33]
+	at com.mysql.cj.jdbc.NonRegisteringDriver.connect(NonRegisteringDriver.java:188) ~[mysql-connector-j-8.0.33.jar:8.0.33]
+	at com.zaxxer.hikari.util.DriverDataSource.getConnection(DriverDataSource.java:138) ~[HikariCP-4.0.3.jar:?]
+	at com.zaxxer.hikari.pool.PoolBase.newConnection(PoolBase.java:364) ~[HikariCP-4.0.3.jar:?]
+	at com.zaxxer.hikari.pool.PoolBase.newPoolEntry(PoolBase.java:206) ~[HikariCP-4.0.3.jar:?]
+	at com.zaxxer.hikari.pool.HikariPool.createPoolEntry(HikariPool.java:476) ~[HikariCP-4.0.3.jar:?]
+	at com.zaxxer.hikari.pool.HikariPool.checkFailFast(HikariPool.java:561) ~[HikariCP-4.0.3.jar:?]
+	at com.zaxxer.hikari.pool.HikariPool.<init>(HikariPool.java:115) ~[HikariCP-4.0.3.jar:?]
+	at com.zaxxer.hikari.HikariDataSource.getConnection(HikariDataSource.java:112) ~[HikariCP-4.0.3.jar:?]
+	at org.springframework.jdbc.datasource.DataSourceUtils.fetchConnection(DataSourceUtils.java:160) ~[spring-jdbc-5.3.29.jar:5.3.29]
+	at org.springframework.jdbc.datasource.DataSourceUtils.doGetConnection(DataSourceUtils.java:118) ~[spring-jdbc-5.3.29.jar:5.3.29]
+	at org.springframework.jdbc.datasource.DataSourceUtils.getConnection(DataSourceUtils.java:81) ~[spring-jdbc-5.3.29.jar:5.3.29]
+	at org.springframework.jdbc.core.JdbcTemplate.execute(JdbcTemplate.java:332) ~[spring-jdbc-5.3.29.jar:5.3.29]
+	at org.springframework.boot.jdbc.EmbeddedDatabaseConnection.isEmbedded(EmbeddedDatabaseConnection.java:164) ~[spring-boot-2.7.15.jar:2.7.15]
+	at org.springframework.boot.autoconfigure.orm.jpa.HibernateDefaultDdlAutoProvider.getDefaultDdlAuto(HibernateDefaultDdlAutoProvider.java:42) ~[spring-boot-autoconfigure-2.7.15.jar:2.7.15]
+	at org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaConfiguration.lambda$getVendorProperties$1(HibernateJpaConfiguration.java:130) ~[spring-boot-autoconfigure-2.7.15.jar:2.7.15]
+	at org.springframework.boot.autoconfigure.orm.jpa.HibernateSettings.getDdlAuto(HibernateSettings.java:41) ~[spring-boot-autoconfigure-2.7.15.jar:2.7.15]
+	at org.springframework.boot.autoconfigure.orm.jpa.HibernateProperties.determineDdlAuto(HibernateProperties.java:143) ~[spring-boot-autoconfigure-2.7.15.jar:2.7.15]
+	at org.springframework.boot.autoconfigure.orm.jpa.HibernateProperties.getAdditionalProperties(HibernateProperties.java:103) ~[spring-boot-autoconfigure-2.7.15.jar:2.7.15]
+	at org.springframework.boot.autoconfigure.orm.jpa.HibernateProperties.determineHibernateProperties(HibernateProperties.java:95) ~[spring-boot-autoconfigure-2.7.15.jar:2.7.15]
+	at org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaConfiguration.getVendorProperties(HibernateJpaConfiguration.java:131) ~[spring-boot-autoconfigure-2.7.15.jar:2.7.15]
+	at org.springframework.boot.autoconfigure.orm.jpa.JpaBaseConfiguration.entityManagerFactory(JpaBaseConfiguration.java:132) ~[spring-boot-autoconfigure-2.7.15.jar:2.7.15]
+	at jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method) ~[?:?]
+	at jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62) ~[?:?]
+	at jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43) ~[?:?]
+	at java.lang.reflect.Method.invoke(Method.java:566) ~[?:?]
+	at org.springframework.beans.factory.support.SimpleInstantiationStrategy.instantiate(SimpleInstantiationStrategy.java:154) ~[spring-beans-5.3.29.jar:5.3.29]
+	at org.springframework.beans.factory.support.ConstructorResolver.instantiate(ConstructorResolver.java:653) ~[spring-beans-5.3.29.jar:5.3.29]
+	at org.springframework.beans.factory.support.ConstructorResolver.instantiateUsingFactoryMethod(ConstructorResolver.java:638) ~[spring-beans-5.3.29.jar:5.3.29]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.instantiateUsingFactoryMethod(AbstractAutowireCapableBeanFactory.java:1352) ~[spring-beans-5.3.29.jar:5.3.29]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBeanInstance(AbstractAutowireCapableBeanFactory.java:1195) ~[spring-beans-5.3.29.jar:5.3.29]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:582) ~[spring-beans-5.3.29.jar:5.3.29]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:542) ~[spring-beans-5.3.29.jar:5.3.29]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:335) ~[spring-beans-5.3.29.jar:5.3.29]
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:234) ~[spring-beans-5.3.29.jar:5.3.29]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:333) ~[spring-beans-5.3.29.jar:5.3.29]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:208) ~[spring-beans-5.3.29.jar:5.3.29]
+	at org.springframework.context.support.AbstractApplicationContext.getBean(AbstractApplicationContext.java:1157) ~[spring-context-5.3.29.jar:5.3.29]
+	at org.springframework.context.support.AbstractApplicationContext.finishBeanFactoryInitialization(AbstractApplicationContext.java:911) ~[spring-context-5.3.29.jar:5.3.29]
+	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:583) ~[spring-context-5.3.29.jar:5.3.29]
+	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:731) ~[spring-boot-2.7.15.jar:2.7.15]
+	at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:408) ~[spring-boot-2.7.15.jar:2.7.15]
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:307) ~[spring-boot-2.7.15.jar:2.7.15]
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1303) ~[spring-boot-2.7.15.jar:2.7.15]
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1292) ~[spring-boot-2.7.15.jar:2.7.15]
+	at kr.or.kimsn.radardemo.RadardemoApplication.main(RadardemoApplication.java:14) ~[main/:?]
+	at jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method) ~[?:?]
+	at jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62) ~[?:?]
+	at jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43) ~[?:?]
+	at java.lang.reflect.Method.invoke(Method.java:566) ~[?:?]
+	at org.springframework.boot.devtools.restart.RestartLauncher.run(RestartLauncher.java:50) ~[spring-boot-devtools-2.7.15.jar:2.7.15]
+2023-10-30 17:58:44.145 [INFO ] HHH000204: Processing PersistenceUnitInfo [name: default]
+2023-10-30 17:58:44.219 [INFO ] HHH000412: Hibernate ORM core version 5.6.15.Final
+2023-10-30 17:58:44.459 [INFO ] HCANN000001: Hibernate Commons Annotations {5.1.2.Final}
+2023-10-30 17:58:44.612 [INFO ] HikariPool-1 - Starting...

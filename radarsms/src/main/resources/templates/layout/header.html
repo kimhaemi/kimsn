@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+    <th:block th:fragment="headerFragment">
+        <script th:inline="javascript">
+			/* <![C DATA[ */
+            var menuList = /*[[${list.menuList}]]*/
+            console.log("menuList", menuList);
+            var site = /*[[${list.stationList}]]*/
+            console.log(site);
+            /* ]]> */
+            </script>
+        <script type="text/javascript">
+            var menuList;
+            // var stationList;
+            $(document).ready(function () {
+
+                // menuData();
+
+                var path = window.location.pathname;
+                
+                $(".navi > div > li").each(function () {
+                    var url = $(this).find("a").attr("href");
+                    if (url == path) {
+                        $(this).addClass("on");
+                    }
+                });
+
+                $(".sub > li").each(function () {
+                    var url = $(this).find("a").attr("href");
+                    if (url == path) {
+                        $(this).addClass("on");
+                    }
+                });
+
+                $(".header h1").on("click", function () {
+                    location.href = "/";
+                    return false;
+                });
+
+                $(".header h1").hover(function () {
+                    $(this).css("cursor", "pointer");
+                });
+
+                $('.navi > div > li').on({
+                    mouseenter: function () {
+                        var sub = $(this).children('.sub');
+                        sub.stop();
+                        sub.slideDown();
+                    },
+                    mouseleave: function () {
+                        var sub = $(this).children('.sub');
+                        sub.stop();
+                        sub.slideUp();
+                    }
+                });
+            });
+
+            //menu List
+            function menuData() {    
+                $.ajax({
+                    type: "GET",
+                    url: "/getMenuData",
+                    contentType : 'application/json; charset=utf-8',
+                    dataType : 'json',
+                    success: function (data) {
+                        console.log(data);
+                        // menuList = data.menuList;
+                        
+                        // $(".data").replaceWith(data);
+                    },
+                    error :function (request, status, error) {
+                        console.log("error");
+                        console.log(error);
+                    }
+                });
+            }
+
+        </script>
+
+        <div class="header">
+            <div class="gnb_wrap max_width">
+                <h1 style="cursor: pointer;">
+                    <!-- <a href="/"><b>자료 수신 모니터링 시스템</b></a> -->
+                    <a href="/"><b>기상레이더 장애 문자 전송 시스템</b></a>
+                </h1>
+                <ul class="logout">
+                    <li><a href="/logout" class="btn ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only">Logout</a></li>
+                    <li>
+                        <div >
+                            <!-- <button class="btn_hambuger" toggle_menu="">
+                                <span class="ico">메뉴</span>
+                            </button> -->
+                        </div>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="lnb">
+                <div class="lnb_wrap">
+                    <ul class="navi">
+                        <div th:each="mList : ${list.menuList}" th:if="${mList.depth == 1}">
+                            <li>
+                                <a th:href="${mList.path}" th:text="${mList.menuName}"></a><!-- 대메뉴 -->
+                                <ul th:if="${mList.id != 1000 && mList.id != 6000}"
+                                    class="sub" style="display: none; height: 450px; padding-top: 0px; margin-top: 0px; padding-bottom: 0px; margin-bottom: 0px;">
+                                    <li class="subTitle" th:if="${mList.id} != '5000'">대형</li>
+                                    <li th:each="sList : ${list.stationList}" th:if="${sList.gubun == 1}">
+                                        <a th:if="${mList.id} == '2000'" th:href="${'/station/'+sList.siteCd}" th:text="${sList.name_kr}"></a>
+                                        <a th:if="${mList.id} == '3000'" th:href="${'/station/hist/'+sList.siteCd}" th:text="${sList.name_kr}"></a>
+                                        <a th:if="${mList.id} == '4000'" th:href="${'/stat/'+sList.siteCd}" th:text="${sList.name_kr}"></a>
+                                    </li>
+                                    <li class="subTitle" th:if="${mList.id}!= '5000'">소형</li>
+                                    <li th:each="sList : ${list.stationList}" th:if="${sList.gubun == 2}">
+                                        <a th:if="${mList.id} == '2000'" th:href="${'/station/'+sList.siteCd}" th:text="${sList.name_kr}"></a>
+                                        <a th:if="${mList.id} == '3000'" th:href="${'/station/hist/'+sList.siteCd}" th:text="${sList.name_kr}"></a>
+                                        <a th:if="${mList.id} == '4000'" th:href="${'/stat/'+sList.siteCd}" th:text="${sList.name_kr}"></a>
+                                    </li>
+                                    <li class="subTitle" th:if="${mList.id}!= '5000'">공항</li>
+                                    <li th:each="sList : ${list.stationList}" th:if="${sList.gubun == 3}">
+                                        <a th:if="${mList.id} == '2000'" th:href="${'/station/'+sList.siteCd}" th:text="${sList.name_kr}"></a>
+                                        <a th:if="${mList.id} == '3000'" th:href="${'/station/hist/'+sList.siteCd}" th:text="${sList.name_kr}"></a>
+                                        <a th:if="${mList.id} == '4000'" th:href="${'/stat/'+sList.siteCd}" th:text="${sList.name_kr}"></a>
+                                    </li>
+    
+                                    <li th:if="${mList.id == 5000 && subList.depth == 2}" th:each="subList : ${list.menuList}">
+                                        <a th:href="'/manage'+${subList.path}" th:text="${subList.menuName}"></a>
+                                    </li>
+                                </ul>
+                            </li>
+                        </div>
+                    </ul>
+                </div>
+            </div>
+    </th:block>
+</html>

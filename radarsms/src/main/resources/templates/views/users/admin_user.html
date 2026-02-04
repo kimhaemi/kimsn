@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/default_layout}"
+      th:with="metaTitle='사용자 관리'">
+
+    <th:block layout:fragment="content">
+        <script th:inline="javascript">
+            /* <![CDATA[ */
+                var membersList = /*[[${membersList}]]*/
+                console.log(membersList);
+                var loginUser = /*[[${loginUser}]]*/
+                console.log(loginUser);
+                $(document).ready(function (){
+                    if(loginUser.memberClass != 'A'){
+                        $("#newuserbtn").hide();
+                    }
+                });
+                
+            /* ]]> */
+        </script>
+        <div id="contentMain">
+            <table class="noticeTbl settingSeries">
+                <thead>
+                <tr>
+                    <th class="left">
+                        관리 &gt; 사용자 관리
+                    </th>
+                    <th class="right">
+                        <input type="hidden" name="mode" value="I">
+                        <!-- <div id="newuserbtn">dfsfsdfsfsfsd</div> -->
+                        <button id="newuserbtn" type="button" 
+                            class="btn ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" 
+                            th:onclick="| location.href='@{/users/admin_user_form}' |">새로운 사용자</button>
+                    </th>
+                </tr>
+                </thead>
+            </table>
+            
+            <!-- <table class="mainTbl settingSeries" summary=""> -->
+            <table class="table subTbl table-hover" summary="">
+                <caption class="hidden">사용자 관리</caption>
+                <thead class="subThead">
+                    <tr>
+                        <th scope="col">ID</th>
+                        <th scope="col">성명</th>
+                        <th scope="col">등급</th>
+                        <th scope="col">직책</th>
+                        <th scope="col">부서</th>
+                        <th scope="col">소속</th>
+                        <th scope="col">연락처</th>
+                        <th scope="col">E-Mail</th>
+                        <th scope="col">관리</th>
+                    </tr>
+                </thead>
+                <tbody class="table-group-divider">
+                    <tr th:each="mlist : ${membersList}">
+                        <td th:text="${mlist.memberId}"></td><!-- id -->
+                        <td th:text="${mlist.memberName}"></td><!-- 성명 -->
+                        <td th:text="${mlist.memberClass == 'A' ? '관리자' : '사용자'}"></td><!-- 등급 -->
+                        <td ></td><!-- 직책 -->
+                        <td ></td><!-- 부서 -->
+                        <td ></td><!-- 소속 -->
+                        <td ></td><!-- 연락처 -->
+                        <td ></td><!-- e-mail -->
+                        <td>
+                            <th:block th:if="${loginUser.memberClass == 'A'}">
+                                <button type="button" class="btn ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" th:onclick="| location.href='@{/users/admin_user_form(id=${mlist.id})}' |" id="">관리</button>
+                            </th:block>
+                            <th:block th:if="${loginUser.memberClass == 'U' && mlist.memberId == loginUser.memberId}">
+                                <button type="button" class="btn ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" th:onclick="| location.href='@{/users/admin_user_form(id=${mlist.id})}' |" id="">관리</button>
+                            </th:block>
+                            </a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            
+        </div>
+    </th:block>
+</html>
