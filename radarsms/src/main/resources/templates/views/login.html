@@ -14,23 +14,37 @@
     <!-- 나의 스타일 추가 -->
     <link rel="stylesheet" href="/css/login.css">
     <script type="text/javascript">
+
+      window.onload = function(){
+        const userId = window.localStorage.getItem("id");
+
+        if( userId === "" || userId === null || userId === undefined ){
+          $("#userId").focus();
+        } else {
+          //id가 있으면 비밀번호에 focus
+          $("#userId").val(userId);
+          $("#pwd").focus();
+        }
+      };
       
       function fnLogin(){
         let userId = $("#userId").val();
         let password = $("#pwd").val();
         
-        if( userId == "" || userId == null || userId == undefined ){
+        if( userId === "" || userId === null || userId === undefined ){
           alert("ID를 입력하세요.");
           // $("#idIsNull").css("display", "block");
           $("#userId").focus();
           return false;
         }
-        if( pwd == "" || pwd == null || pwd == undefined ){
+        if( password === "" || password === null || password === undefined ){
           alert("password를 입력하세요.");
           // $("#pwdIsNull").css("display", "block");
           $("#pwd").focus();
           return false;
         }
+
+        window.localStorage.setItem("id", userId);
 
         $('#loginForm').submit();
       }

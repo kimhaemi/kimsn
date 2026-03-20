@@ -12,6 +12,8 @@ public interface SmsTargetMemberRepository extends JpaRepository<SmsTargetMember
 
     List<SmsTargetMemberDto> findByOrderByName();
 
+    List<SmsTargetMemberDto> findByActivationOrderByOrganizationAscNameAsc(Integer activation);
+
     @Query(
         nativeQuery = true,
         value=

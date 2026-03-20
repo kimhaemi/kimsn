@@ -120,26 +120,39 @@ public interface SmsSendNuri2Repository extends JpaRepository<SmsSendNuri2Dto, L
 						 + "        , ALT_COUNTRY_CODE   -- 국가코드 : 기본 값 82, 해외 카톡 발송시 해당국가코드 입력\n"
 						 + "        , PHONE              -- 수신번호(숫자형태의 문자, 11~12자리),     [*][중요]반드시 휴대폰 번호 형식으로만 입력, 01X0000XXXX\n"
 						 + "        , CALLBACK           -- 발신번호(숫자형태의 문자, 지역번호 필수), [*][중요]휴대폰번호 사용시에는 발신도용 해제 여부 필요, 스미싱 악용 방지용 '번호도용 차단서비스' 가입자는 해제 후 설정가능 합니다.\n"
+						 + " -- 첫번째 컨텐츠\n"
 						 + "        , MSG_TYPE_1         -- [대분류] :SMS:단문 메시지, MMS:멀티메시지(장문, 첨부), ALT:카카오 알림톡 메시지, RCS: 안심문자\n"
 						 + "        , CONTENTS_TYPE_1    -- [소분류] :SMS:단문 메시지, LMS:장문, MMS:멀티메시지(장문+첨부, 첨부), ALT:카카오 알림톡 메시지, RCS: 안심문자\n"
 						 + "        , ALT_SENDER_KEY     -- 발송키(발신 프로필키), 발송키는 채널을 의미합니다. 채널이 다르면 다른 발송키를 설정\n"
 						 + "        , ALT_TEMPLATE_CODE  -- 템플릿코드\n"
 						 + "        , ALT_JSON           -- 발송할 내용을 JSON 형태(한줄로입력)로 직접 입력, '{\"text\":\"모바일메시지서비스 운영 및 발송 가이드 안내\\n\\n카카오톡\\n모바일메시지 테스트입니다\\n\\n042-250-5537\\n감사합니다.\"}'\n"
 						 + "                             -- 전체 1000자리(Length), 줄바꿈 치환 필수 '\\n'(1 Length로 계산), 실제로 1줄로 입력처리 일부db에서 '\\n'만 입력하게되면 줄바꿈처리로 에러, 실제 줄바꿈 기호를 메시지를 db에 입력시 '\\\\n' 처리해서 입력(db 마다 다를수 있음)\n"
+						 + "-- 두번째 컨텐츠(첫번째 컨텐츠 실패시 수행) \n"
+						 + "        , MSG_TYPE_2         -- [대분류] :SMS:단문 메시지, MMS:멀티메시지(장문, 첨부), ALT:카카오 알림톡 메시지, RCS: 안심문자 \n"
+						 + "        , CONTENTS_TYPE_2    -- [소분류] :SMS:단문 메시지, LMS:장문, MMS:멀티메시지(장문+첨부, 첨부), ALT:카카오 알림톡 메시지, RCS: 안심문자 \n"
+						 + "        , XMS_SUBJECT        -- LMS에서만 사용 최대 30Byte 이하 한글(2Byte)로 계산, 줄바꿈은 '\n' 처리 1Byte 처리, 1Byte로 계산 \n"
+						 + "        , XMS_TEXT           -- SMS: 90byte 까지 입력(줄바꿈은 '\n' 처리 1Byte 처리, 1Byte로 계산), LMS:2000 Byte 이하 \n"
+
 						 + ") VALUES(\n"
 						 + "          nuri2.msg_nextval()\n"
 						 + "        , 1 -- 1:전송대기,  3:전송수집중(QUE 수집), 5:전송완료(결과대기), 6:결과처리 완료(결과회신)\n"
 						 + "        , DATE_FORMAT(now(), '%Y%m%d%H%i%s') -- 날짜형식 : YYYYMMDDHH24MISS, 날짜 포멧으로 입력 권장\n"
 						 + "        , DATE_FORMAT(:res_date, '%Y%m%d%H%i%s') -- 발송요청시간, 예약전송:미래시간, 즉시전송: now()\n"
-						 + "        , '82' -- 국가코드 : 기본 값 82, 해외 카톡 발송시 해당국가코드 입력\n"
+						 + "        , 82 -- 국가코드 : 기본 값 82, 해외 카톡 발송시 해당국가코드 입력\n"
 						 + "        , :call_to -- 수신번호(숫자형태의 문자, 11~12자리),     [*][중요]반드시 휴대폰 번호 형식으로만 입력, 01X0000XXXX\n"
 						 + "        , :call_from -- 발신번호(숫자형태의 문자, 지역번호 필수), [*][중요]휴대폰번호 사용시에는 발신도용 해제 여부 필요, 스미싱 악용 방지용 '번호도용 차단서비스' 가입자는 해제 후 설정가능 합니다.\n"
+						 + " -- 첫번째 컨텐츠\n"
 						 + "        , 'ALT' -- [대분류] :SMS:단문 메시지, MMS:멀티메시지(장문, 첨부), ALT:카카오 알림톡 메시지, RCS: 안심문자\n"
 						 + "        , 'ALT' -- [소분류] :SMS:단문 메시지, LMS:장문, MMS:멀티메시지(장문+첨부, 첨부), ALT:카카오 알림톡 메시지, RCS: 안심문자\n"
 						 + "        , 'abcdefghijklmnopqrstuvwxyzabcdefghijklmn' -- [필수] -- 발송키(발신 프로필키), 발송키는 채널을 의미합니다. 채널이 다르면 다른 발송키를 설정\n"
 						 + "        , :templateCode  -- [필수] -- KR001~3 템플릿은 사전등록(예약) 기관만 사용 가능합니다, 센터에 문의 필요.\n"
 						 + "        , :altJson \n"
-						 + ") \n"
+						 + "-- 두번째 컨텐츠(첫번째 컨텐츠 실패시 수행) \n"
+						 + "        , 'SMS' -- SMS/MMS/ALT/RCS 만 있음 \n"
+						 + "        , 'SMS' -- SMS(1~90byte), LMS(91~2000byte)로 처리 해야함, 메시지 내용을 바이트(Byte)로 계산하여 SMS/MMM(LMS)로 처리 해야함 \n"
+						 + "        , :smsTitle -- 제목30바이트 이하: 생략 가능 \n"
+						 + "        , :smsText \n"
+			+ ") \n"
 				 )
 	@Transactional
 	@Modifying
@@ -149,7 +162,9 @@ public interface SmsSendNuri2Repository extends JpaRepository<SmsSendNuri2Dto, L
 			@Param("call_to") String call_to,
 			@Param("call_from") String call_from,
 			@Param("templateCode") String templateCode,
-			@Param("altJson") String altJson
+			@Param("altJson") String altJson,
+			@Param("smsTitle") String smsTitle,
+			@Param("smsText") String smsText
 	);
 
 }

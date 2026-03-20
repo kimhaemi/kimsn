@@ -153,9 +153,19 @@ public class ManageGetService {
         return smsTargetMemberRepository.getSmsTargetGroupsMemberIdNot(gid);
     }
 
+    // 선택된 문자 수신 그룹 수신자
+    public List<SmsTargetGroupMemberDto.SmsTargetGroupMember> getSmsTargetGroupsMemberSelected(List<String> gIds) {
+        System.out.println("gIds: " + gIds);
+        return smsTargetGroupMemberRepository.getSmsTargetGroupsMemberSelected(gIds);
+    }
+
     // 문자 수신자 관리
     public List<SmsTargetMemberDto> getSmsTargetMemberList() {
         return smsTargetMemberRepository.findByOrderByName();
+    }
+
+    public List<SmsTargetMemberDto> getSmsTargetMemberAllList() {
+        return smsTargetMemberRepository.findByActivationOrderByOrganizationAscNameAsc(1);
     }
 
     // 템플릿 코드정보

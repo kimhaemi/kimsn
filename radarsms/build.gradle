@@ -43,6 +43,9 @@ dependencies {
 
  	implementation 'com.googlecode.json-simple:json-simple:1.1.1'
 
+	// 경고 해결을 위한 jsr305 추가
+//	implementation 'com.google.code.findbugs:jsr305:3.0.2'
+
 	/*logback 의존성 추가*/
 	implementation 'org.springframework.boot:spring-boot-starter-log4j2'
 	implementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-yaml'
@@ -52,8 +55,10 @@ dependencies {
     // implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310'
     implementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-xml'
     implementation 'org.modelmapper:modelmapper:2.3.9'
+//	implementation 'com.mysql:mysql-connector-j:9.2.0'
 	
 	runtimeOnly 'mysql:mysql-connector-java:8.0.33'
+
 	compileOnly 'org.projectlombok:lombok'
 	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'

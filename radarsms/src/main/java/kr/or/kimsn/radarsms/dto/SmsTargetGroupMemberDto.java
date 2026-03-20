@@ -29,4 +29,21 @@ public class SmsTargetGroupMemberDto {
     private Integer retr;
     private Integer sms;
 
+    private String groupName;
+
+    private String status;
+
+    public interface SmsTargetGroupMember {
+        Long getMid();
+        String getName();
+        String getOrganization();
+        String getDepartment();
+        String getPosition();
+        String getPhoneNum();
+        String getActivation();
+        Long getGid();
+        String getGroupName();
+        Integer getStatus();
+    }
+
 }

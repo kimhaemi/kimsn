@@ -23,7 +23,7 @@ public class SmsTargetMemberDto {
     private String organization;
     private String department;
     private String position;
-    private String phone_num;
+    private String phoneNum;
     private Integer activation;
 
 }

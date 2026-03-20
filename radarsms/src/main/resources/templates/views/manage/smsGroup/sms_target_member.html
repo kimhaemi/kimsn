@@ -19,7 +19,7 @@
                     organization: $("#organization_"+mid).val(),
                     department: $("#department_"+mid).val(),
                     position: $("#position_"+mid).val(),
-                    phone_num: $("#phone_num_"+mid).val(),
+                    phoneNum: $("#phoneNum_"+mid).val(),
                     activation: $("#activation_"+mid).is(":checked") ? 1 : 0
                 }
                 if(confirm("수정 하겠습니까?")){
@@ -55,7 +55,7 @@
                     organization: $("#add_organization").val(),
                     department: $("#add_department").val(),
                     position: $("#add_position").val(),
-                    phone_num: $("#add_phone_num").val(),
+                    phoneNum: $("#add_phone_num").val(),
                     activation: $("#add_activation").is(":checked") ? 1 : 0
                 }
                 console.log(params);
@@ -121,7 +121,7 @@
                         <input type="text" name="organization" th:id="${'organization_'+tmList.id}" size="16" th:value="${tmList.organization }"/>
                     </td>
                     <td>
-                        <input type="text" name="phone_num" th:id="${'phone_num_'+tmList.id}" size="16" th:value="${tmList.phone_num }"/>
+                        <input type="text" name="phone_num" th:id="${'phone_num_'+tmList.id}" size="16" th:value="${tmList.phoneNum }"/>
                     </td>
                     <td>
                         <label class="a8z-toggle-switch" data-size="sm" style="--a8z-ts-width: 60px;">

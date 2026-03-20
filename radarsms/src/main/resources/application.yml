@@ -18,6 +18,8 @@ spring:
     # real
     url: jdbc:mysql://localhost:3308/watchdog
     password: qpalzm11!
+#    url: jdbc:mysql://65.75.57.11:23307/watchdog
+#    password: Test123~!@
 
 # query
   jpa:
@@ -25,7 +27,7 @@ spring:
     # show-sql: true # true 설정시 JPA 쿼리문 확인 가능
     # format-sql: true # query 보기 예쁘게
     use_sql_comments: true
-    # hibernate: 
+    # hibernate: c
     #   ddl-auto: none # DDL(create, alter, drop, none) 정의시 DB의 고유 기능을 사용할 수 있다.
 
 # JPA의 구현체인 Hibernate가 동작하면서 발생한 SQL의 가독성을 높여준다.

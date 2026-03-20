@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import kr.or.kimsn.radarsms.dto.SmsSendNuri2Dto;
+import kr.or.kimsn.radarsms.dto.SmsTargetMemberDto;
 import lombok.ToString.Include;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -227,17 +228,25 @@ public class SmsController {
         model.addAttribute("nowDate", date.format(today));
         model.addAttribute("nowTime", time.format(today));
 
+        // 템플릿 코드정보
+        List<AppTemplateCodeDto> tempCodeList = manageGetService.getAppTemplateCodeDtoList();
+        model.addAttribute("tempCodeList", tempCodeList);
+
         // 문자 수신 그룹
         List<SmsTargetGroupDto> groups = manageGetService.getSmsTargetGroupList();
         model.addAttribute("groups", groups);
 
-        // 문자 수신 그룹 멤버
+        // 선택된 문자 수신 그룹 수신자 all
+        List<SmsTargetGroupMemberDto.SmsTargetGroupMember> memberAllList = manageGetService.getSmsTargetGroupsMemberSelected(null);
+        model.addAttribute("memberAllList", memberAllList);
+
+        //* 문자 수신 그룹 멤버
         List<SmsTargetGroupMemberDto> memberList = manageGetService.getSmsTargetGroupMemberList();
         model.addAttribute("memberList", memberList);
 
-        // 템플릿 코드정보
-        List<AppTemplateCodeDto> tempCodeList = manageGetService.getAppTemplateCodeDtoList();
-        model.addAttribute("tempCodeList", tempCodeList);
+        //* member All
+//        List<SmsTargetMemberDto> memberAllList = manageGetService.getSmsTargetMemberAllList();
+//        model.addAttribute("memberAllList", memberAllList);
 
         return "views/manage/sms/sms_send_nuri2";
     }

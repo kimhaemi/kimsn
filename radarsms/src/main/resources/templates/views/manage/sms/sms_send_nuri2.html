@@ -20,6 +20,9 @@
             var tempCodeList = /*[[${tempCodeList}]]*/
             console.log("tempCodeList :: ", tempCodeList);
 
+            let membersAll = /*[[${memberAllList}]]*/
+            console.log("membersAll : ", membersAll);
+
         /* ]]> */
 
         </script>
@@ -59,6 +62,9 @@
                 $("#check_groups_all").click(function(){
                     if($("#check_groups_all").prop("checked")){
                         $("input[name=groups]").prop("checked",true);
+
+                        $("tr#targetMembers>td").html("");
+                        memberAllCheck(membersAll);
                     }else{
                         $("input[name=groups]").prop("checked",false);
                         if($("#check_groups_member").prop("checked")){
@@ -68,8 +74,22 @@
                         }
                     }
                 });
-                
+
                 $("#groupsCell input[name='groups']").click(function(e){
+                    const checkeds = $("#groupsCell input[name='groups']:checked");
+
+                    //문자 수신 그룹 활성화 상태이고 사용중이고 admin 제외
+                    const statusGroups = groups.filter(filter => filter.activation == 1 && filter.status == 1 && filter.id > 1);
+                    console.log("statusGroups: ", statusGroups.length);
+                    console.log("checkeds: ", checkeds.length);
+
+                    if( statusGroups.length == checkeds.length){
+                        $("#check_groups_all").prop("checked",true);
+                    } else {
+                        //체크박스가 하나라도 해제되면 그룹 전체 선택 해제
+                        $("#check_groups_all").prop("checked",false);
+                    }
+
                     if($("#check_groups_member").prop("checked")){
                         if( e.target.checked ){
                             setGroupsMembers();
@@ -92,8 +112,13 @@
                 $("#check_groups_member").click(function(){
                     
                     if($("#check_groups_member").prop("checked")){
-                        if($("input[name=groups]:checked").length>0){
+                        if($("input[name='groups']:checked").length>0){
                             $("tr#targetMembers").show();
+                            if($("#check_groups_all").prop("checked")){
+                                memberAllCheck(membersAll);
+                            } else {
+                                setGroupsMembers();
+                            }
                             //전체선택 check box
                             // var html = '<span style="margin-right:10px;white-space: nowrap;">'
                             //     + '<input type="checkbox" id="membersAll" name="membersAll" onchange="fnMembersAll()"" checked/>'
@@ -101,7 +126,7 @@
                             //     + '전체 선택'
                             //     + '</label></span><br />';
                             // $("tr#targetMembers>td").append(html);
-                            setGroupsMembers();
+                            // setGroupsMembers();
                         }
                         else{
                             alert("선택된 그룹이 없습니다.");
@@ -145,15 +170,32 @@
                     $("input[name=members]").prop("checked",false);
                 }
             }
+
+            //그룹 멤버 전체 선택
+            function memberAllCheck(members){
+                let uniqueMembers = members.filter((item, index, self) =>
+                    index === self.findIndex((t) => t.phoneNum === item.phoneNum)
+                );
+                console.log("memberAllList : ", uniqueMembers);
+
+                uniqueMembers.forEach((item) => {
+                    let html = '<span id="member_'+ item.id +'" style="margin-right:10px;white-space: nowrap;">'
+                        + '<input type="checkbox" id="members_'+ item.id +'" name="members" value="'+ item.phoneNum +'" onchange="fnMembersChk()" checked/>'
+                        + '<label for="members_'+ item.id + '" style="margin-right:10px" > '
+                        + item.name + ' ' + item.phoneNum + ' (' +item.organization + ' ' + item.position +')'
+                        + '</label></span><br />';
+                    $("tr#targetMembers>td").append(html);
+                });
+            }
             
             //지점별 그룹선택
             function setGroupsMembers(){
-                var groups = $("input[name='groups']:checked");
+                let groups = $("input[name='groups']:checked");
                 let params = new Array();
                 for(let i=0; i<groups.length; i++){
                     params.push(groups.eq(i).val());
 
-                    for(var j=0; j<mems.length; j++){
+                    for(let j=0; j<mems.length; j++){
                         if( groups.eq(i).val() == mems[j][0] ){
                             // console.log("mems :: ", mems[j]);
                             makeGroupsMember(mems[j]);
@@ -393,9 +435,9 @@
                     <td class="left" id="groupsCell">
                         <input type="hidden" name="check_groups" id="check_groups" value="" />
                         <th:block th:each="groups, groupsStat : ${groups}" th:if="${groups.id > 1}">
-                            <span id="" style="margin-right:10px;white-space: nowrap;" th:if="${groups.status != '0' && groups.activation == '1'}">
+                            <span id="" style="margin-right:10px;white-space: nowrap;" th:if="${groups.status == '1' && groups.activation == '1'}">
                                 <input type="checkbox" th:id="${'groups_'+groups.id}" name="groups" th:value="${groups.id}" />
-                                <label th:id="${'groups_'+groups.id}" style="margin-right:10px;vertical-align: middle;" th:text="${groups.name}"></label>
+                                <label th:for="${'groups_'+groups.id}" style="margin-right:10px;vertical-align: middle;" th:text="${groups.name}"></label>
                             </span>
                         </th:block>
                     </td>

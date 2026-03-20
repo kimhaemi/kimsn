@@ -2,6 +2,9 @@ package kr.or.kimsn.radarsms.restApiController;
 
 import java.util.List;
 
+import kr.or.kimsn.radarsms.dto.SmsTargetGroupMemberDto.SmsTargetGroupMember;
+import kr.or.kimsn.radarsms.dto.SmsTargetMemberDto;
+import kr.or.kimsn.radarsms.service.SmsService;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -18,6 +21,8 @@ import lombok.RequiredArgsConstructor;
 public class GetController {
 
     private final MenuService menuService;
+    private final SmsService smsService;
+
     private final ManageGetService manageGetService;
 
     // 메뉴 리스트
@@ -37,5 +42,10 @@ public class GetController {
     @GetMapping("/manage/sms_memberList")
     public List<SmsTargetGroupMemberDto> smsMemberList(@RequestParam List<String> gId) {
         return manageGetService.getSmsTargetGroupsMemberId2(gId);
+    }
+
+    @GetMapping("/manage/sms/targetgroup/memberList")
+    public List<SmsTargetGroupMember> smsTargetGroupMemberList(@RequestParam List<String> gIds) {
+        return manageGetService.getSmsTargetGroupsMemberSelected(gIds);
     }
 }

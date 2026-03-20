@@ -2,6 +2,7 @@ package kr.or.kimsn.radarsms.repository;
 
 import java.util.List;
 
+import kr.or.kimsn.radarsms.dto.SmsTargetMemberDto;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -80,4 +81,29 @@ public interface SmsTargetGroupMemberRepository extends JpaRepository<SmsTargetG
                         "  and T2.gid in (:gid) \n" +
                         "order by T2.gid, T1.mid, T1.organization, T1.name")
         List<SmsTargetGroupMemberDto> getSmsTargetGroupsMemberId2(@Param("gid") List<String> gid);
+
+        // 선택된 문자 수신 그룹 수신자
+        @Query(
+            nativeQuery = true,
+            value = "select\n"
+                + "    stm.mid as mid\n"
+                + "  , stm.name as name\n"
+                + "  , stm.organization as organization \n"
+                + "  , stm.department as department\n"
+                + "  , stm.`position`as position\n"
+                + "  , stm.phone_num as phone_num \n"
+                + "  , stm.activation as activation\n"
+                + "  , stml.gid as gid\n"
+                + "  , stg.name as group_name\n"
+                + "  , stg.status as status\n"
+                + "from watchdog.sms_target_member_link stml \n"
+                + "left join watchdog.sms_target_member stm on stm.mid = stml.mid\n"
+                + "left join watchdog.sms_target_group stg on stml.gid = stg.gid \n"
+                + "where 1=1\n"
+                + "  and stm.activation = 1 -- 활성화\n"
+                + "  and stm.mid is not null \n"
+                + "  and (stml.gid is null or stml.gid in ( :gIds ))\n"
+                + "  order by stml.gid, stm.organization, stm.`position`, stm.name"
+        )
+        List<SmsTargetGroupMemberDto.SmsTargetGroupMember> getSmsTargetGroupsMemberSelected(@Param("gIds") List<String> gIds);
 }

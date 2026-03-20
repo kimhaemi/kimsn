@@ -2,6 +2,7 @@ package kr.or.kimsn.radarsms.repository;
 
 import java.util.List;
 
+import kr.or.kimsn.radarsms.dto.SmsTargetMemberDto;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -32,5 +33,4 @@ public interface SmsTargetGroupRepository extends JpaRepository<SmsTargetGroupDt
         @Param("id") Long id,
         @Param("activation") String activation
     );
-    
 }
