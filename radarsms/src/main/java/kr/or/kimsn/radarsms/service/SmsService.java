@@ -1,8 +1,10 @@
 package kr.or.kimsn.radarsms.service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import java.util.stream.Collectors;
 import javax.transaction.Transactional;
 
 import kr.or.kimsn.radarsms.dto.SmsSendNuri2Dto;
@@ -132,11 +134,15 @@ public class SmsService {
     public String smsSendNuri2Save(List<Map<String, Object>> dto) {
         String result = "";
 
+        String templateCode = dto.get(0).get("templateCode").toString();
+        AppTemplateCodeDto templateCodeDto = appTemplateCodeRepository.findByTemplateCode(templateCode);
+        String smsTitle = templateCodeDto.getHead();
         String smsText = dto.get(0).get("sms_txt").toString();
+        String titleAndText = smsTitle + "\n"+ smsText;
         // json data
         JSONObject jsonObject = new JSONObject();
 //        jsonObject.put("text", smsText.replaceAll("\n", "\\\\n"));
-        jsonObject.put("text", smsText);
+        jsonObject.put("text", titleAndText);
 
         //json to string
         String jsonToString = "";
@@ -144,25 +150,39 @@ public class SmsService {
 
         log.info("jsonToString smsText: " + jsonToString);
 
+        List<Map<String, Object>> distinctList = new ArrayList<>();
+        distinctList.addAll(dto.stream()
+            .collect(Collectors.toMap(
+                map -> map.get("call_to"), // "call_to" 키를 기준으로 중복 검사
+                map -> map,
+                (existing, replacement) -> existing // 중복 시 기존 것 유지
+            ))
+            .values());
+
+        System.out.println("distinctList: " + distinctList.size());
+        System.out.println("dto: " + dto.size());
         try {
             int count = 0;
             // 카카오톡 발송
-            for (Map<String, Object> smsDto : dto) {
+            for (Map<String, Object> smsDto : distinctList) {
                 count++;
+//                Long msgKey = smsSendNuri2Repository.getMsgNextval();
                 String call_from = "027337365";
                 String call_to = smsDto.get("call_to").toString().replaceAll("-", "");
                 String res_date = smsDto.get("req_date").toString().replace(".", "").replace(":", "")+"00";
-                String templateCode = smsDto.get("templateCode").toString();
 
                 log.info("call_from: " + call_from);
                 log.info("call_to: " + call_to);
                 log.info("res_date: " + res_date);
                 log.info("templateCode: " + templateCode);
+                log.info("smsTitle: " + smsTitle);
+                log.info("smsText: " + smsText);
+                log.info("titleAndText: " + titleAndText);
 
                 // 카카오톡 발송(전화번호)
-                Integer sendResult = smsSendNuri2Repository.nuri2SendContentsSave(res_date, call_to, call_from, templateCode, jsonToString);
+                Integer sendResult = smsSendNuri2Repository.nuri2SendContentsSave(res_date, call_to, call_from, templateCode, jsonToString, smsTitle, titleAndText);
                 log.info("[카카오톡 발송 insert: " + count + "] " + sendResult);
-                log.info("========================================================================");
+                log.info("==="+count+"=====================================================================");
             }
         } catch (Exception e) {
             result = "sms insert error : " + e;

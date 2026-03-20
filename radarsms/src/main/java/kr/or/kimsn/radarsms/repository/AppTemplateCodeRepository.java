@@ -10,6 +10,8 @@ import kr.or.kimsn.radarsms.dto.AppTemplateCodeDto;
 
 public interface AppTemplateCodeRepository extends JpaRepository<AppTemplateCodeDto, String> {
 
+    AppTemplateCodeDto findByTemplateCode(String templateCode);
+
     @Query(nativeQuery = true, value = "INSERT INTO nuri.app_template_code \n" +
             " (APP_GUBUN, TEMPLATE_CODE, USE_BUTTON, HEAD, FOOT, TITLE)\n" +
             "VALUES ( \n" +
