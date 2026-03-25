@@ -1,8 +1,6 @@
 package kr.or.kimsn.radarsms.repository;
 
-import groovyjarjarantlr4.v4.runtime.atn.SemanticContext.OR;
 import javax.transaction.Transactional;
-import kr.or.kimsn.radarsms.dto.SmsSendDto;
 import kr.or.kimsn.radarsms.dto.SmsSendNuri2Dto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -19,6 +17,14 @@ public interface SmsSendNuri2Repository extends JpaRepository<SmsSendNuri2Dto, L
 	Long getMsgNextval();
 
 	@Query(nativeQuery = true,
+			   value = "SELECT COUNT(*) as cnt \n"
+				  		 + "FROM information_schema.tables \n"
+					  	 + "WHERE table_schema = 'nuri2' \n"
+						   + "AND TABLE_NAME LIKE concat('%', :yearMonth, '%')"
+	      )
+	Long getShowTableYn(@Param("yearMonth") String yearMonth);
+
+	@Query(nativeQuery = true,
 				 countQuery =
 						"SELECT count(*) as cnt \n"
 						+ "FROM ( \n"
@@ -27,7 +33,7 @@ public interface SmsSendNuri2Repository extends JpaRepository<SmsSendNuri2Dto, L
 						+ "			SELECT * FROM nuri2.NURI2_NRMSG_DATA \n"
 						+ "      WHERE RES_DATE between DATE_FORMAT(:startDate, '%Y%m01000000') and DATE_FORMAT(LAST_DAY(:startDate), '%Y%m%d235959') \n"
 						+ "			UNION ALL\n"
-						+ "			SELECT * FROM nuri2.NURI2_NRMSG_LOG \n"
+						+ "			SELECT * FROM nuri2.NURI2_NRMSG_LOG_:yearMonth \n"
 						+ "      WHERE RES_DATE between DATE_FORMAT(:startDate, '%Y%m01000000') and DATE_FORMAT(LAST_DAY(:startDate), '%Y%m%d235959') \n"
 						+ "    ) MT \n"
 						+ "  WHERE 1=1 \n"
@@ -49,7 +55,8 @@ public interface SmsSendNuri2Repository extends JpaRepository<SmsSendNuri2Dto, L
 						+ "      WHEN MT.MSG_STATE = 3 THEN '전송수집중' \n"
 						+ "      WHEN MT.MSG_STATE = 5 THEN '전송' \n"
 						+ "      WHEN MT.MSG_STATE = 6 THEN '처리완료' \n"
-						+ "      ELSE '' END) as MSG_STATE_NAME \n"
+						+ "      ELSE '' "
+						+ "     END) as MSG_STATE_NAME \n"
 						+ "-- 처리별 날짜 \n"
 						+ "  , INPUT_DATE as INPUT_DATE          -- # '메시지 입력시간', 실제로 메시지를 입력한 시간 \n"
 						+ "  , RES_DATE as RES_DATE            -- # '메시지 예약일시', 미래시간, 과거시간(3시간이내 입력시간데이터 조회,  실시간 발송처리 함) 가능 \n"
@@ -61,33 +68,38 @@ public interface SmsSendNuri2Repository extends JpaRepository<SmsSendNuri2Dto, L
 						+ "      ELSE '실패' END) as RSLT_CODE_NAME \n"
 						+ "  , RSLT_NET as REST_NET            -- # '*결과처리 통신사', SKT, KT, LGU, KKO=KAKAO \n"
 						+ "  , RSLT_TYPE as RSLT_TYPE           -- # '*결과처리 된 메시지 유형', XMS(또는 MMS,SMS), ALT, RCS \n"
-						+ "  , (case \n"
-						+ "      when MSG_TYPE_1 = 'ALT' then '카카오' \n"
-						+ "      when MSG_TYPE_1 = 'SMS' then '단문' \n"
-						+ "      when MSG_TYPE_1 = 'MMS' then '장문' \n"
-						+ "      else '기타' \n"
-						+ "    end) as RSLT_TYPE_NAME \n"
-						+ "  , (SELECT RSLT_EXPLA FROM NURI2.nuri2_nrmsg_rslt r where r.RSLT_CODE=MT.RSLT_CODE and r.RSLT_TYPE = mt.RSLT_TYPE) AS RSLT_EXPLA -- '결과코드 상세내용' \n"
+						+ "  , (CASE \n"
+						+ "      WHEN MSG_TYPE_1 = 'ALT' THEN '카카오' \n"
+						+ "      WHEN MSG_TYPE_1 = 'SMS' THEN '단문' \n"
+						+ "      WHEN MSG_TYPE_1 = 'MMS' THEN '장문' \n"
+						+ "      ELSE '기타' \n"
+						+ "    END) as RSLT_TYPE_NAME \n"
+						+ "  , (CASE \n"
+						+ "      WHEN MSG_TYPE_2 = 'ALT' THEN '카카오' \n"
+						+ "      WHEN MSG_TYPE_2 = 'SMS' THEN '단문' \n"
+						+ "      WHEN MSG_TYPE_2 = 'MMS' THEN '장문' \n"
+						+ "      ELSE '기타' \n"
+						+ "    END) AS RSLT_TYPE_NAME_2"
+						+ "  , (SELECT RSLT_EXPLA FROM NURI2.nuri2_nrmsg_rslt r where r.RSLT_CODE=MT.ALT_RSLT_CODE and r.RSLT_TYPE IN ('ALT', 'COM')) AS ALT_RSLT_EXPLA -- 'kakao 결과코드 상세내용' \n"
+						+ "  , (SELECT RSLT_EXPLA FROM NURI2.nuri2_nrmsg_rslt r where binary r.RSLT_CODE=MT.XMS_RSLT_CODE and r.RSLT_TYPE IN ('XMS', 'COM')) AS XMS_RSLT_EXPLA -- 'sms 결과코드 상세내용' \n"
+						+ "  , (SELECT RSLT_EXPLA FROM NURI2.nuri2_nrmsg_rslt r where binary r.RSLT_CODE=MT.RSLT_CODE and r.RSLT_TYPE = mt.RSLT_TYPE) AS RSLT_EXPLA -- '결과코드 상세내용' \n"
 						+ "  , PHONE as PHONE               -- # '수신 번호', [*][중요]반드시 휴대폰 번호 형식으로만 입력, 01X0000XXXX \n"
 						+ "-- 메시지유형 전송 우선순위 설정:  메시지 우선 순위를 ALT 또는 RCS로 하고 마지막 처리 순서로 문자(XMS)로 설정, 만약 문자(xMS)먼저 입력하면 문자로 바로 처리하고 종료 됨 \n"
 						+ "-- , MSG_TYPE_1='ALT' , CONTENTS_TYPE_1='ALT' \n"
 						+ "-- , MSG_TYPE_2='SMS' , CONTENTS_TYPE_2='SMS' -- 또는  MSG_TYPE_3='MMS' , CONTENTS_TYPE_3='LMS' \n"
-						+ "  , MSG_TYPE_1 as MSG_TYPE          -- # '발송 타입 1번째'  SMS:단문 메시지, MMS:멀티메시지(장문, 첨부), ALT:카카오 알림톡 메시지, RCS: 안심문자 \n"
+						+ "  , MSG_TYPE_1 as MSG_TYPE_1          -- # '발송 타입 1번째'  SMS:단문 메시지, MMS:멀티메시지(장문, 첨부), ALT:카카오 알림톡 메시지, RCS: 안심문자 \n"
 						+ "  , CONTENTS_TYPE_1 as CONTENTS_TYPE_1     -- # '메시지 내용에 대한 타입 1번째' SMS:단문 메시지, LMS:장문, MMS:멀티메시지(장문+첨부, 첨부), ALT:카카오 알림톡 메시지, RCS: 안심문자 \n"
+						+ "  , MSG_TYPE_2 as MSG_TYPE_2          -- # '발송 타입 1번째'  SMS:단문 메시지, MMS:멀티메시지(장문, 첨부), ALT:카카오 알림톡 메시지, RCS: 안심문자 \n"
+						+ "  , CONTENTS_TYPE_2 as CONTENTS_TYPE_2     -- # '메시지 내용에 대한 타입 1번째' SMS:단문 메시지, LMS:장문, MMS:멀티메시지(장문+첨부, 첨부), ALT:카카오 알림톡 메시지, RCS: 안심문자 \n"
 			      + "-- 메시지 내용 입력 \n"
 						+ "  , XMS_SUBJECT as XMS_SUBJECT         -- # '메시지 타이틀(LMS/MMS)' \n"
 						+ "  , XMS_TEXT as XMS_TEXT           -- # '메시지 본문(SMS/LMS/MMS)' \n"
 						+ "  , ALT_JSON as ALT_JSON            -- # '메시지 본문(ALT,ALI)', JSON 형식, --, 필수 형식 '{'text':'입력 할 메시지 내용'}' \n"
-						+ "  , (case \n"
-//						+ "      when RSLT_TYPE = 'ALT' then ALT_JSON \n"
-						+ "      when MSG_TYPE_1 = 'ALT' then replace(JSON_EXTRACT(ALT_JSON, '$.text'), '\"', '') \n"
-						+ "      else XMS_TEXT \n"
-						+ "    end) AS SMS_TEXT \n"
 						+ "FROM ( \n"
 						+ "			SELECT * FROM nuri2.NURI2_NRMSG_DATA \n"
 						+ "      WHERE RES_DATE between DATE_FORMAT(:startDate, '%Y%m01000000') and DATE_FORMAT(LAST_DAY(:startDate), '%Y%m%d235959') \n"
 						+ "			UNION ALL\n"
-						+ "			SELECT * FROM nuri2.NURI2_NRMSG_LOG \n"
+						+ "			SELECT * FROM nuri2.NURI2_NRMSG_LOG_:yearMonth \n"
 						+ "      WHERE RES_DATE between DATE_FORMAT(:startDate, '%Y%m01000000') and DATE_FORMAT(LAST_DAY(:startDate), '%Y%m%d235959') \n"
 						+ "     ) MT \n"
 						+ "WHERE 1=1 \n"
@@ -103,7 +115,7 @@ public interface SmsSendNuri2Repository extends JpaRepository<SmsSendNuri2Dto, L
 			Pageable pageable,
 			// @Param("limitStart") Integer limitStart,
 			// @Param("pageSize") Integer pageSize,
-//			@Param("yearMonth") Integer yearMonth,
+			@Param("yearMonth") Integer yearMonth,
 //			@Param("smsSUC") String smsSUC,
 //			@Param("smsFail") String smsFail,
 			@Param("startDate" ) String startDate,
@@ -146,7 +158,7 @@ public interface SmsSendNuri2Repository extends JpaRepository<SmsSendNuri2Dto, L
 						 + "        , 'ALT' -- [소분류] :SMS:단문 메시지, LMS:장문, MMS:멀티메시지(장문+첨부, 첨부), ALT:카카오 알림톡 메시지, RCS: 안심문자\n"
 						 + "        , 'abcdefghijklmnopqrstuvwxyzabcdefghijklmn' -- [필수] -- 발송키(발신 프로필키), 발송키는 채널을 의미합니다. 채널이 다르면 다른 발송키를 설정\n"
 						 + "        , :templateCode  -- [필수] -- KR001~3 템플릿은 사전등록(예약) 기관만 사용 가능합니다, 센터에 문의 필요.\n"
-						 + "        , :altJson \n"
+						 + "        , JSON_OBJECT(\"text\", :smsText) \n"
 						 + " -- 두번째 컨텐츠(첫번째 컨텐츠 실패시 수행) \n"
 						 + "        , 'SMS' -- SMS/MMS/ALT/RCS 만 있음 \n"
 						 + "        , 'SMS' -- SMS(1~90byte), LMS(91~2000byte)로 처리 해야함, 메시지 내용을 바이트(Byte)로 계산하여 SMS/MMM(LMS)로 처리 해야함 \n"
@@ -163,7 +175,7 @@ public interface SmsSendNuri2Repository extends JpaRepository<SmsSendNuri2Dto, L
 			@Param("call_to") String call_to,
 			@Param("call_from") String call_from,
 			@Param("templateCode") String templateCode,
-			@Param("altJson") String altJson,
+//			@Param("altJson") String altJson,
 			@Param("smsTitle") String smsTitle,
 			@Param("smsText") String smsText
 	);

@@ -34,10 +34,11 @@ public class SecurityConfig {
 
         http.csrf().disable()
                 .authorizeRequests()
-                .antMatchers("/").authenticated()
-                .antMatchers("/manage/**").authenticated()
-                .antMatchers("/station/**").authenticated()
-                .antMatchers("/stat/**").authenticated()
+//                .antMatchers("/manage/sms_send_result_nuri2").permitAll() //허용 경로
+                .antMatchers("/").authenticated() //인증
+                .antMatchers("/manage/**").authenticated() //인증
+                .antMatchers("/station/**").authenticated() //인증
+                .antMatchers("/stat/**").authenticated() //인증
                 .anyRequest().permitAll()
                 .and()
                 .formLogin()

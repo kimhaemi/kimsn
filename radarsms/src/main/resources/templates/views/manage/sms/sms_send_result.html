@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layout/default_layout}"
-      th:with="metaTitle='문자 발송 내역'">
+      th:with="metaTitle='문자 발송 내역 Old'">
 
 	<th:block layout:fragment="content">
         <script th:inline="javascript">
@@ -83,11 +83,11 @@
             <thead>
             <tr>
                 <th class="left">
-                    관리 &gt; 문자 발송 내역 
+                    관리 &gt; 문자 발송 내역 Old
                 </th>
                 <th class="right">
-                    <button class="btn ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only"
-                     onclick="location.href='/manage/sms_send'">문자 보내기</button>
+<!--                    <button class="btn ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only"-->
+<!--                     onclick="location.href='/manage/sms_send'">문자 보내기</button>-->
                 </th>
             </tr>
             </thead>

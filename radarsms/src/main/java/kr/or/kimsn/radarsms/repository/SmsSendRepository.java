@@ -18,6 +18,14 @@ public interface SmsSendRepository extends JpaRepository<SmsSendDto, Long> {
 	)
 	Long getAppContentNextval();
 
+	@Query(nativeQuery = true,
+			value = "SELECT COUNT(*) as cnt \n"
+					+ "FROM information_schema.tables \n"
+					+ "WHERE table_schema = 'nuri' \n"
+					+ "AND TABLE_NAME LIKE concat('%', :yearMonth, '%')"
+	)
+	Long getShowTableYn(@Param("yearMonth") String yearMonth);
+
 	@Query(nativeQuery = true, value = "SELECT count(*) as cnt \n" +
 			"FROM (\n" +
 			"  SELECT\n" +

@@ -29,7 +29,8 @@ public class MenuService {
 
     // 메뉴조회
     public List<MenuDto> getMenuList() {
-        return menuRepository.findAll(Sort.by("order"));
+//        return menuRepository.findAll(Sort.by("order"));
+        return menuRepository.findByStatusOrderByOrder(true);
     }
 
     // 지점조회

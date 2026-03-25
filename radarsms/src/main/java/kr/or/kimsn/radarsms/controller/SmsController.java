@@ -1,7 +1,9 @@
 package kr.or.kimsn.radarsms.controller;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -13,6 +15,9 @@ import javax.servlet.http.HttpServletResponse;
 
 import kr.or.kimsn.radarsms.dto.SmsSendNuri2Dto;
 import lombok.ToString.Include;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -52,43 +57,43 @@ public class SmsController {
     private final ManageGetService manageGetService;
 
     // 문자 발송
-    @GetMapping("/manage/sms_send")
-    public String sms_send(@CookieValue(name = "userId", required = false) String userId, ModelMap model) {
-
-        if (userId == null) {
-            return "views/login";
-        }
-
-        Map<String, Object> map = new HashMap<>();
-
-        List<MenuDto> menuList = menuService.getMenuList();
-        List<StationDto> stationList = menuService.getStationList();
-        map.put("menuList", menuList);
-        map.put("stationList", stationList);
-
-        model.addAttribute("list", map);
-
-        Date today = new Date();
-        SimpleDateFormat date = new SimpleDateFormat("yyyy.MM.dd");
-        SimpleDateFormat time = new SimpleDateFormat("HH:mm");
-
-        model.addAttribute("nowDate", date.format(today));
-        model.addAttribute("nowTime", time.format(today));
-
-        // 문자 수신 그룹
-        List<SmsTargetGroupDto> groups = manageGetService.getSmsTargetGroupList();
-        model.addAttribute("groups", groups);
-
-        // 문자 수신 그룹 멤버
-        List<SmsTargetGroupMemberDto> memberList = manageGetService.getSmsTargetGroupMemberList();
-        model.addAttribute("memberList", memberList);
-
-        // 템플릿 코드정보
-        List<AppTemplateCodeDto> tempCodeList = manageGetService.getAppTemplateCodeDtoList();
-        model.addAttribute("tempCodeList", tempCodeList);
-
-        return "views/manage/sms/sms_send";
-    }
+//    @GetMapping("/manage/sms_send")
+//    public String sms_send(@CookieValue(name = "userId", required = false) String userId, ModelMap model) {
+//
+//        if (userId == null) {
+//            return "views/login";
+//        }
+//
+//        Map<String, Object> map = new HashMap<>();
+//
+//        List<MenuDto> menuList = menuService.getMenuList();
+//        List<StationDto> stationList = menuService.getStationList();
+//        map.put("menuList", menuList);
+//        map.put("stationList", stationList);
+//
+//        model.addAttribute("list", map);
+//
+//        Date today = new Date();
+//        SimpleDateFormat date = new SimpleDateFormat("yyyy.MM.dd");
+//        SimpleDateFormat time = new SimpleDateFormat("HH:mm");
+//
+//        model.addAttribute("nowDate", date.format(today));
+//        model.addAttribute("nowTime", time.format(today));
+//
+//        // 문자 수신 그룹
+//        List<SmsTargetGroupDto> groups = manageGetService.getSmsTargetGroupList();
+//        model.addAttribute("groups", groups);
+//
+//        // 문자 수신 그룹 멤버
+//        List<SmsTargetGroupMemberDto> memberList = manageGetService.getSmsTargetGroupMemberList();
+//        model.addAttribute("memberList", memberList);
+//
+//        // 템플릿 코드정보
+//        List<AppTemplateCodeDto> tempCodeList = manageGetService.getAppTemplateCodeDtoList();
+//        model.addAttribute("tempCodeList", tempCodeList);
+//
+//        return "views/manage/sms/sms_send";
+//    }
 
     // 템플릿 화면
     @GetMapping("/manage/sms_template")
@@ -192,9 +197,18 @@ public class SmsController {
         // String yearMonth = DateUtil.formatDate("yyyyMM", sDt);
         // System.out.println("yearMonth ::::: " + yearMonth);
 
-        // app 발송 내역
-        Page<SmsSendDto> smsRsultList = smsService.getAppSendData(pageable, Integer.parseInt(sDt), termStart,
+        // table 존재 유무
+        Long showTableYn = smsService.getShowTableYn("nuri", Integer.parseInt(sDt));
+        model.addAttribute("showTableYn", showTableYn);
+
+        Page<SmsSendDto> smsRsultList = Page.empty(pageable);
+
+        //logtable이 있을때
+        if(showTableYn == 1 ){
+            // app 발송 내역
+            smsRsultList = smsService.getAppSendData(pageable, Integer.parseInt(sDt), termStart,
                 termClose, smsSUC, smsFail);
+        }
         model.addAttribute("smsRsultList", smsRsultList);
 
         List<AppErrorCodeDto> appErrorCodeList = smsService.getAppErrorCode();
@@ -313,9 +327,42 @@ public class SmsController {
         // String yearMonth = DateUtil.formatDate("yyyyMM", sDt);
         // System.out.println("yearMonth ::::: " + yearMonth);
 
-        // 문자 발송 내역
-        Page<SmsSendNuri2Dto> smsRsultList = smsService.getSmsSendNuri2List(pageable, Integer.parseInt(sDt), termStart, termClose, smsResult);
-        System.out.println("smsRsultList: " + smsRsultList);
+        // table 존재 유무
+        Long showTableYn = smsService.getShowTableYn("nuri2", Integer.parseInt(sDt));
+        model.addAttribute("showTableYn", showTableYn);
+
+        System.out.println("showTableYn: "+ showTableYn);
+
+        Page<SmsSendNuri2Dto> smsRsultList = Page.empty(pageable);
+
+        //logtable이 있을때
+        if(showTableYn == 1 ){
+            // 문자 발송 내역
+            smsRsultList = smsService.getSmsSendNuri2List(pageable, Integer.parseInt(sDt), termStart, termClose, smsResult);
+            for(SmsSendNuri2Dto smsNuri2 : smsRsultList){
+                String jsonStr = smsNuri2.getALT_JSON();
+                System.out.println("alt json: "+ jsonStr);
+                JSONParser parser = new JSONParser();
+                try {
+                    Object obj = parser.parse(jsonStr);
+                    JSONObject jsonObj = (JSONObject) obj;
+                    System.out.println(jsonObj.get("text"));
+
+                    String text = (String) jsonObj.get("text");
+
+                    System.out.println("text replaceAll: "+ text.replaceAll("\n", "<br />"));
+
+                    smsNuri2.setALT_JSON(text.replaceAll("\n", "<br />"));
+                } catch (ParseException pe) {
+                    System.err.println("JSON 파싱 에러 위치: " + pe.getPosition());
+                    pe.printStackTrace();
+                } catch (Exception e) {
+//                System.err.println("파싱 에러: " + e);
+//                e.printStackTrace();
+                }
+            }
+        }
+
         model.addAttribute("smsRsultList", smsRsultList);
 
         List<AppErrorCodeDto> appErrorCodeList = smsService.getAppErrorCode();

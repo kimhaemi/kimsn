@@ -1,6 +1,9 @@
 package kr.or.kimsn.radarsms.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -138,7 +141,9 @@ public class SmsService {
         AppTemplateCodeDto templateCodeDto = appTemplateCodeRepository.findByTemplateCode(templateCode);
         String smsTitle = templateCodeDto.getHead();
         String smsText = dto.get(0).get("sms_txt").toString();
-        String titleAndText = smsTitle + "\n"+ smsText;
+        String titleAndText = smsTitle + "\n\n"+ smsText;
+
+        /*
         // json data
         JSONObject jsonObject = new JSONObject();
 //        jsonObject.put("text", smsText.replaceAll("\n", "\\\\n"));
@@ -149,6 +154,22 @@ public class SmsService {
         jsonToString = jsonObject.toJSONString().replaceAll("\"", "\\\"");
 
         log.info("jsonToString smsText: " + jsonToString);
+
+        ObjectMapper mapper = new ObjectMapper();
+        Map<String, String> tst = new HashMap<>();
+        String jsonString = "";
+
+        try {
+            tst.put("text", titleAndText);
+            jsonString = mapper.writeValueAsString(tst);
+        } catch (JsonProcessingException jpe) {
+            System.out.println("JsonProcessingException: " + jpe);
+        }
+
+        System.out.println("---------------------------------------------------");
+        System.out.println("jsonString: "+ jsonString);
+        System.out.println("---------------------------------------------------");
+        */
 
         List<Map<String, Object>> distinctList = new ArrayList<>();
         distinctList.addAll(dto.stream()
@@ -180,7 +201,7 @@ public class SmsService {
                 log.info("titleAndText: " + titleAndText);
 
                 // 카카오톡 발송(전화번호)
-                Integer sendResult = smsSendNuri2Repository.nuri2SendContentsSave(res_date, call_to, call_from, templateCode, jsonToString, smsTitle, titleAndText);
+                Integer sendResult = smsSendNuri2Repository.nuri2SendContentsSave(res_date, call_to, call_from, templateCode, smsTitle, titleAndText);
                 log.info("[카카오톡 발송 insert: " + count + "] " + sendResult);
                 log.info("==="+count+"=====================================================================");
             }
@@ -249,11 +270,24 @@ public class SmsService {
 
     public Page<SmsSendNuri2Dto> getSmsSendNuri2List(Pageable pageable, Integer yearMonth, String startDate, String endDate, String smsResult) {
 
+        log.info("nuri2 yearMonth: " + yearMonth);
         log.info("nuri2 startDate: " + startDate);
         log.info("nuri2 endDate: " + endDate);
         log.info("nuri2 smsResult: " + smsResult);
 
-        return smsSendNuri2Repository.getSmsSendNuri2List(pageable, startDate, smsResult);
+        return smsSendNuri2Repository.getSmsSendNuri2List(pageable, yearMonth, startDate, smsResult);
+    }
+
+    // table 존재 유무
+    public Long getShowTableYn(String gubun, Integer yearMonth) {
+        if(gubun.equals("nuri")){
+            return smsSendRepository.getShowTableYn(yearMonth.toString());
+        }
+        if(gubun.equals("nuri2")){
+            return smsSendNuri2Repository.getShowTableYn(yearMonth.toString());
+        }
+
+        return 0L;
     }
 
 }

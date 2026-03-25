@@ -1,6 +1,10 @@
 # server
 server:
-  port: 8700
+  port: 80
+  
+# environment (dev, prod)
+app:
+  env: prod # prod환경일 때 로그 숨김
   
 spring:
 # 콘솔 색상
@@ -18,15 +22,15 @@ spring:
     # real
 #    url: jdbc:mysql://localhost:3308/watchdog
 #    password: qpalzm11!
-    url: jdbc:mysql://61.75.57.11:23307/watchdog
+    url: jdbc:mysql://61.75.57.11:23307/watchdog?&characterEncoding=UTF-8
     password: Test123~!@
 
 # query
   jpa:
     open-in-view: false #spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
-    show-sql: true # true 설정시 JPA 쿼리문 확인 가능
-    format-sql: true # query 보기 예쁘게
-    use_sql_comments: true
+#    show-sql: true # true 설정시 JPA 쿼리문 확인 가능
+#    format-sql: true # query 보기 예쁘게
+#    use_sql_comments: true
     # hibernate: 
     #   ddl-auto: none # DDL(create, alter, drop, none) 정의시 DB의 고유 기능을 사용할 수 있다.
 
@@ -57,11 +61,11 @@ logging:
   level: # 각 package 별로 로깅 레벨을 지정할 수 있다.
     '[kr.or.kimsn.radarsms]': DEBUG
     # '[kr.or.kimsn.radarsms.restApiController.SaveController]': debug
-    # org:
-    #   hibernate:
-    #     type:
-    #       descriptor:
-    #         sql: trace #query에 어떤 값이 들어갔는지 확인
+#     org:
+#       hibernate:
+#         type:
+#           descriptor:
+#             sql: trace #query에 어떤 값이 들어갔는지 확인
   # file:
   #   # name: ${user.dir}/log/test.log  # 로깅 파일 위치이다.
   #   name: ./logs/radarsms.log  # 로깅 파일 위치이다.
