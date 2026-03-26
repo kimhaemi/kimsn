@@ -3,7 +3,6 @@ package kr.or.kimsn.radardemo;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
-import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -14,10 +13,8 @@ import org.springframework.stereotype.Component;
 
 import kr.or.kimsn.radardemo.common.DataCommon;
 import kr.or.kimsn.radardemo.dto.StationDto;
-import kr.or.kimsn.radardemo.process.StepOneProcess;
 import kr.or.kimsn.radardemo.process.StepOneProcessTwo;
 import kr.or.kimsn.radardemo.process.StepTwoProcess;
-// import kr.or.kimsn.radardemo.process.StepThreeProcess;
 import kr.or.kimsn.radardemo.service.QueryService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -42,7 +39,7 @@ public class Scheduler {
     @Async
     public void cronJobSch() throws InterruptedException {
 
-        int PauseTime = Integer.parseInt(DataCommon.getInfoConf("ipInfo", "PauseTime"));
+        final Long pauseTime = Long.parseLong(DataCommon.getInfoConf("ipInfo", "PauseTime"));
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         String mode = DataCommon.getInfoConf("siteInfo", "mode");
         int gubun = Integer.parseInt(DataCommon.getInfoConf("siteInfo", "gubun"));
@@ -72,24 +69,24 @@ public class Scheduler {
 
         for (int a = 0; a < srCnt; a++) {
             int cnt = a;
-            Runnable task = new Runnable() {
-                public void run() {
-                    stepone.stepOne(mode, gubun, srDto.get(cnt));
-
-                }
-            };
+            //lambda식으로 변경
+            Runnable task = () -> stepone.stepOne(mode, gubun, srDto.get(cnt));
+//            Runnable task = new Runnable() {
+//                public void run() {
+//                    stepone.stepOne(mode, gubun, srDto.get(cnt));
+//                }
+//            };
             // exec.execute(task);
             exec.submit(task);
             Thread.sleep(500);
         }
         exec.shutdown();
 
-        Thread.sleep(PauseTime * 1000); // 20초
-        log.info("[" + PauseTime + "초 후 다음] : " + LocalDateTime.now().format(dtf));
+        Thread.sleep(pauseTime * 1000); // 20초
+        log.info("[" + pauseTime + "초 후 다음] : " + LocalDateTime.now().format(dtf));
         log.info("[=================== 2번째 프로세스 ===================] " + LocalDateTime.now().format(dtf));
         StepTwoProcess twoProc = new StepTwoProcess(queryService);
         twoProc.stepTwo(gubunStr);
-        twoProc = null;
         log.info("[=================== end ===================]");
     }
 

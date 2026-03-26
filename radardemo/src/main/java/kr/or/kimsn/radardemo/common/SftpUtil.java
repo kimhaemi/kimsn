@@ -27,8 +27,6 @@ public class SftpUtil {
 
     // sftp 서버 연결
     public boolean open(String host, String id, String password, int port) {
-        boolean result = false;
-
         int connectTimeOut = Integer.parseInt(DataCommon.getInfoConf("ipInfo", "connectTimeOut"));
         int sessionTimeOut = Integer.parseInt(DataCommon.getInfoConf("ipInfo", "sessionTimeOut"));
 
@@ -54,18 +52,17 @@ public class SftpUtil {
             // sftp 채널 열기 및 접속
             channel = session.openChannel("sftp");
             channel.connect(connectTimeOut * 1000); // 10초
-            result = true;
 
             // 채널을 FTP 용 채널 객체로 캐스팅
             channelSftp = (ChannelSftp) channel;
 
         } catch (JSchException e) {
-            result = false;
+            return false;
             // e.printStackTrace();
             // log.info("SFTP: server connect failed.");
         }
 
-        return result;
+        return true;
     }
 
     // sftp 서버 연결 종료

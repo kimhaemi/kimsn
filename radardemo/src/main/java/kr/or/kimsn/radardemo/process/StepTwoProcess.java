@@ -6,7 +6,7 @@ import java.util.List;
 
 import javax.transaction.Transactional;
 
-import org.json.simple.JSONObject;
+import kr.or.kimsn.radardemo.dto.AppTemplateCodeDto;
 import org.springframework.stereotype.Service;
 
 import kr.or.kimsn.radardemo.common.DataCommon;
@@ -23,8 +23,8 @@ import kr.or.kimsn.radardemo.service.QueryService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-@Slf4j
 @Service
+@Slf4j
 @RequiredArgsConstructor
 public class StepTwoProcess {
     private final QueryService queryService;
@@ -34,8 +34,9 @@ public class StepTwoProcess {
     @Transactional
     public void stepTwo(String gubunStr) {
         String mode = DataCommon.getInfoConf("siteInfo", "mode");
-        String currentTime = FormatDateUtil.formatDate("yyyy-MM-dd HH:mm", new Date());
         int gubun = Integer.parseInt(DataCommon.getInfoConf("siteInfo", "gubun"));
+
+        String currentTime = FormatDateUtil.formatDate("yyyy-MM-dd HH:mm", new Date());
         String dataKindStr = "";
         int srCnt = 0; // site
 
@@ -293,12 +294,12 @@ public class StepTwoProcess {
                 // ReceiveConditionDto rcDto = queryService.getReceiveCondition(dataKindStr,
                 // "NQC", site_cd);
                 // log.info("[최종상태 조회] : " + rcDto);
-                int sms_send = 0;
+                int smsSend = 0;
                 if (rcDto.getRecv_condition().equals(new_recv_condition)) {
-                    sms_send = rcDto.getSms_send();
+                    smsSend = rcDto.getSms_send();
                     apply_time = rcDto.getApply_time();
                 } else {
-                    sms_send = 0;
+                    smsSend = 0;
                     // apply_time = FormatDateUtil.formatDate("yyyy-MM-dd HH:mm:ss", new Date());
                     //
                     // 일
@@ -310,7 +311,7 @@ public class StepTwoProcess {
                 log.info("new_recv_condition ::: " + new_recv_condition);
                 log.info("recv_con_dtl ::: " + recv_con_dtl);
                 queryService.updateReceiveCondition(apply_time, new_recv_condition,
-                        recv_con_dtl, sms_send,
+                        recv_con_dtl, smsSend,
                         old_recv_condition, site_cd, dataKindStr, "NQC");
             } else {
                 log.info("[상태 안바뀜 - update 날짜는 바뀜]");
@@ -338,6 +339,12 @@ public class StepTwoProcess {
 
         log.info("======================= 문자 전송 =================================");
 
+        String callFrom = DataCommon.getInfoConf("siteInfo", "call_from");
+        String templateCode = DataCommon.getInfoConf("siteInfo", "template_code");
+        AppTemplateCodeDto templateCodeDto = queryService.getTemplateCode(templateCode);
+        System.out.println("templateCodeDto: "+ templateCodeDto);
+        String smsTitle = templateCodeDto.getHead();
+
         // 전 사이트 장애/복구 메시지는 1번씩만
         List<ReceiveConditionDto> rcDtoAll = queryService.getReceiveConditionList(dataKindStr, "NQC");
         // 지점별 운영상태가 정상일 때만
@@ -349,7 +356,7 @@ public class StepTwoProcess {
         int recvTore = 0; // 복구
         String recvCode = "";
         String recvCodeDtl = "";
-        List<ReceiveConditionDto> rcActiveList = new ArrayList<ReceiveConditionDto>();
+        List<ReceiveConditionDto> rcActiveList = new ArrayList<>();
         for (ReceiveConditionDto rc : rcDtoAll) {
             // 전 지점 문자 발송 설정 on
             if (rc.getSms_send_activation() > 0) {
@@ -404,17 +411,7 @@ public class StepTwoProcess {
             }
             log.info("[smsPetterns] :: " + smsPetterns);
 
-            String callFrom = DataCommon.getInfoConf("siteInfo", "call_from");
-            String templateCode = DataCommon.getInfoConf("siteInfo", "template_code");
-
-            // json data
-            JSONObject jsonObject = new JSONObject();
-//        jsonObject.put("text", smsText.replaceAll("\n", "\\\\n"));
-            jsonObject.put("text", smsPetterns);
-
-            //json to string
-            String jsonToString = "";
-            jsonToString = jsonObject.toJSONString().replaceAll("\"", "\\\"");
+            String titleAndText = smsTitle.replaceAll("\n", "") + "\n\n"+ smsPetterns;
 
             String resDate = FormatDateUtil.formatDate("yyyyMMddHHmmss", new Date());
 
@@ -425,8 +422,7 @@ public class StepTwoProcess {
                 // if (rcList.getSms_send() == 0) {
 
                 // site 수신그룹 담당자에게 문자 전송
-                List<SmsSendMemberDto> smsMembersDto = queryService
-                        .getSmsSendMemberList(dataKindStr, null);
+                List<SmsSendMemberDto> smsMembersDto = queryService.getSmsSendMemberList(dataKindStr, null);
                 // log.info("[담당자] : " + smsDto);
 
                 for (SmsSendMemberDto dto : smsMembersDto) {
@@ -444,12 +440,13 @@ public class StepTwoProcess {
                             log.info("[수신자/번호]: " + dto.getName() + ": " + callTo);
                             log.info("[발신번호]: " + callTo);
                             log.info("[템플릿코드]: " + templateCode);
-                            log.info("[문자내용]: " + jsonToString);
+                            log.info("[템플릿제목]: " + smsTitle);
+                            log.info("[문자내용]: " + titleAndText);
 
                             // 문자 전송 insert
                             // 전화번호가 아니면 안되있는건 보낼 필요가 없지..
                             if (!callTo.equals("") && callTo.matches("[0-9]+")) {
-                                queryService.intNuri2Save(resDate, callTo, callFrom, templateCode, jsonToString);
+                                queryService.intNuri2Save(resDate, callTo, callFrom, templateCode, smsTitle, titleAndText);
                             } else {
                                 log.info("[수신번호 확인] : " + callTo);
                             }
@@ -458,45 +455,23 @@ public class StepTwoProcess {
                 }
 
                 log.info("[문자 전송 여부 update]");
-                // sms_send = 1;
                 int second = 60 * 4 + 30;
                 String previousTime = queryService.getPreviousTime(second);
                 log.info("감시 해야할 시간 이전: " + previousTime);
 
-                if (Integer.parseInt(
-                        previousTime.substring(previousTime.length() - 1, previousTime.length())) <= 5)
+                if (Integer.parseInt(previousTime.substring(previousTime.length() - 1, previousTime.length())) <= 5)
                     previousTime = previousTime.substring(0, previousTime.length() - 1) + "0";
-                if (Integer.parseInt(
-                        previousTime.substring(previousTime.length() - 1, previousTime.length())) > 5)
+                if (Integer.parseInt(previousTime.substring(previousTime.length() - 1, previousTime.length())) > 5)
                     previousTime = previousTime.substring(0, previousTime.length() - 1) + "5";
 
                 log.info("감시 해야할 시간 이후: " + previousTime);
 
                 // update
                 queryService.updateReceiveConditionSms(1, null, null, dataKindStr, "NQC");
-                // } else {
-                // log.info("[이미 문자 전송했으므로 안해도 됨]");
-                // }
-                // } else {
-                // log.info("[문자 전송 체크 - 기준자료] : " + rccDto.getCriterion());
-                // log.info("[문자 전송 체크 - data cnt] : " + rdCnt);
-                // log.info("문자 전송 안해도 됨");
-                // }
             } else {
                 log.info("설정값에 따른 문자메시지 패턴 다시 확인 on/off");
             }
         }
-
-        // Iterator<String> jspList = jsonSmsPettern.keySet().iterator();
-        // if (jsonSmsPettern.length() > 0) {
-        // while (jspList.hasNext()) {
-        // String site = jspList.next();
-        // String pattern = (String) jsonSmsPettern.get(site);
-        // System.out.println(site + " //// " + jsonSmsPettern.get(site));
-
-        // }
-
-        // }
 
         if (recvCode.equals("")) {
             for (int a = 0; a < srCnt; a++) {
@@ -521,11 +496,11 @@ public class StepTwoProcess {
                         && !rcDto.getRecv_condition().equals("TOTA") && !rcDto.getRecv_condition().equals("TORE")) {
                     String code = rcDto.getRecv_condition();
                     String codedtl = rcDto.getCodedtl();
-                    int sms_send = rcDto.getSms_send();
+                    int smsSend = rcDto.getSms_send();
 
                     // log.info("[gubun] : " + gubun);
                     log.info("[code] : " + code);
-                    log.info("[codedtl] : " + codedtl);
+                    log.info("[code-dtl] : " + codedtl);
 
                     // 경고 기준 (횟수 - criterion)
                     ReceiveConditionCriteriaDto rccDto = queryService.getReceiveConditionCriteria(gubun, code, codedtl);
@@ -548,19 +523,16 @@ public class StepTwoProcess {
                             }
                         }
 
-                        smsPettern = smsPettern.replace("%SITE%", siteStr).replace("%TIME%",
-                                dateTime);
+                        smsPettern = smsPettern.replace("%SITE%", siteStr).replace("%TIME%", dateTime);
 
                     }
                     log.info("[문자메시지 패턴] : " + smsPettern);
 
                     // 이력 조회
-                    List<ReceiveDataDto> rdDto = queryService.getReceiveDataList(site_cd,
-                            dataKindStr, criterion);
-                    // List<ReceiveDataDto> rdDto = queryService.getReceiveDataList(site_cd,
-                    // dataKindStr, criterion);
+                    List<ReceiveDataDto> rdDto = queryService.getReceiveDataList(site_cd, dataKindStr, criterion);
+                    // List<ReceiveDataDto> rdDto = queryService.getReceiveDataList(site_cd, dataKindStr, criterion);
                     int cnt = 0; // 최종이력상태와 결과 값 같은것
-                    String recv_con = "";
+                    String recvCon = "";
                     for (ReceiveDataDto rd : rdDto) {
                         // log.info("[이력 조회] : " + rd);
                         // ORDI 정상 0 정상 1 ok
@@ -571,35 +543,33 @@ public class StepTwoProcess {
                         // WARN 경고 7 자료 크기가 기준파일크기보다 연속으로 N회 이상 작을때 1 filesize_no
                         // WARN 경고 6 자료가 연속으로 N회 이상 자료 미수신일 때 1 file_no
                         if (rd.getRecv_condition().equals("RECV"))
-                            recv_con = "ORDI"; // 정상
+                            recvCon = "ORDI"; // 정상
                         if (rd.getRecv_condition().equals("MISS"))
-                            recv_con = "WARN"; // 경고
+                            recvCon = "WARN"; // 경고
                         if (rd.getRecv_condition().equals("RETR"))
-                            recv_con = "RETR"; // 복구 - 자료 미수신, 사이즈 복구
+                            recvCon = "RETR"; // 복구 - 자료 미수신, 사이즈 복구
                         // if (rd.getRecv_condition().equals("TORE"))
                         // recv_con = "TORE"; // 복구 - 네트워크 복구
                         // if (rd.getRecv_condition().equals("TOTA"))
                         // recv_con = "TOTA"; // 네트워크장애
 
-                        if (recv_con.equals(code) && criterion == rdDto.size()
+                        if (recvCon.equals(code) && criterion == rdDto.size()
                                 && rccDto.getCodedtl().equals(rd.getCodedtl())) {
                             cnt++;
                         }
                     }
-                    log.info("recv_con ::: " + recv_con);
+                    log.info("recv_con ::: " + recvCon);
                     // log.info("[cnt] : " + cnt);
+
+                    String titleAndText = smsTitle.replace("\n", "") + "\n\n"+ smsPettern;
+
+                    String resDate = FormatDateUtil.formatDate("yyyyMMddHHmmss", new Date());
 
                     // 문자메시지 패턴 정보가 없으면 못보냄.
                     if (!smsPettern.equals("")) {
                         if (rccDto.getCriterion() == cnt) {
                             // 최종 결과의 문자 전송 상태가 0일때만 문자 전송
-                            if (sms_send == 0) {
-                                // app sequence
-                                Long appSeq = queryService.getAppContentNextval();
-                                log.info("[문자 전송 app sequence] :" + appSeq);
-                                // 문자 전송(app_send_contents) insert
-                                queryService.intGaonAppSendContentsSave(appSeq, smsPettern);
-
+                            if (smsSend == 0) {
                                 // site 수신그룹 담당자에게 문자 전송
                                 List<SmsSendMemberDto> smsDto = queryService.getSmsSendMemberList(dataKindStr, site_cd);
                                 // log.info("[담당자] : " + smsDto);
@@ -610,47 +580,45 @@ public class StepTwoProcess {
                                     // private int sms; //문자 발송 여부
                                     // private int tota; //네트워크 오류
                                     if (dto.getWarn() == 1) { // 문자발송 여부
-                                        if ((code.equals("WARN") && dto.getWarn() == 1) // 장애
-                                                || (code.equals("RETR") && dto.getWarn() == 1) // 복구
-                                                || (code.equals("TOTA") && dto.getWarn() == 1) // 네트워크 오류
+                                        if (code.equals("WARN") // 장애
+                                                || code.equals("RETR") // 복구
+                                                || code.equals("TOTA") // 네트워크 오류
                                         ) {
-                                            String call_to = dto.getPhone_num().replaceAll("-", "");
-                                            String call_from = DataCommon.getInfoConf("siteInfo", "call_from");
+                                            String callTo = dto.getPhone_num().replace("-", "");
 
-                                            log.info("[수신자명] : " + dto.getName() + " : " + call_to);
-                                            // log.info("[수신번호] : " + call_to);
-                                            // log.info("[발신번호] : " + call_from);
+                                            log.info("===================================== 588 line =================================");
+                                            log.info("[날짜]: " + resDate);
+                                            log.info("[수신자/번호]: " + dto.getName() + ": " + callTo);
+                                            log.info("[발신번호]: " + callFrom);
+                                            log.info("[템플릿코드]: " + templateCode);
+                                            log.info("[템플릿제목]: " + smsTitle);
+                                            log.info("[문자내용]: " + titleAndText);
+                                            log.info("===================================== 596 line =================================");
 
-                                            // 문자 전송(app_send_data) insert
-                                            if (!call_to.equals("") && call_to.matches("[0-9]+")) { // 전화번호가 아니면 안되있는건
-                                                // 보낼 필요가 없지..
-                                                queryService.insGaonAppSendDataSave(appSeq, call_to, call_from); // 템플릿
-                                                // 코드
-                                                // 넣어야함.
+                                            // 문자 전송 insert
+                                            // 전화번호가 아니면 안되있는건 보낼 필요가 없지..
+                                            if (!callTo.equals("") && callTo.matches("[0-9]+")) {
+                                                queryService.intNuri2Save(resDate, callTo, callFrom, templateCode, smsTitle, titleAndText);
                                             } else {
-                                                log.info("[수신번호 확인] : " + call_to);
+                                                log.info("[수신번호 확인] : " + callTo);
                                             }
                                         }
                                     }
                                 }
 
                                 log.info("[문자 전송 여부 update]");
-                                sms_send = 1;
+                                smsSend = 1;
                                 int second = 60 * 4 + 30;
                                 String previousTime = queryService.getPreviousTime(second);
                                 log.info("감시 해야할 시간 이전: " + previousTime);
 
-                                if (Integer.parseInt(
-                                        previousTime.substring(previousTime.length() - 1, previousTime.length())) <= 5)
+                                if (Integer.parseInt(previousTime.substring(previousTime.length() - 1, previousTime.length())) <= 5)
                                     previousTime = previousTime.substring(0, previousTime.length() - 1) + "0";
-                                if (Integer.parseInt(
-                                        previousTime.substring(previousTime.length() - 1, previousTime.length())) > 5)
+                                if (Integer.parseInt(previousTime.substring(previousTime.length() - 1, previousTime.length())) > 5)
                                     previousTime = previousTime.substring(0, previousTime.length() - 1) + "5";
                                 log.info("감시 해야할 시간 이후: " + previousTime);
 
-                                queryService.updateReceiveCondition(previousTime + "00", code, codedtl,
-                                        sms_send, code,
-                                        site_cd, dataKindStr, "NQC");
+                                queryService.updateReceiveCondition(previousTime + "00", code, codedtl, smsSend, code, site_cd, dataKindStr, "NQC");
                             } else {
                                 log.info("[이미 문자 전송했음]");
                             }
@@ -665,9 +633,6 @@ public class StepTwoProcess {
                 } else {
                     log.info("[" + siteStr + " 최종상태 문자 발송 기능 off]");
                 }
-                // } else {
-                // log.info("[" + siteStr + "는 유지보수 상태여서 문자 전송 안됨]");
-                // }
             }
         }
     }

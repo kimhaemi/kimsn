@@ -2,7 +2,8 @@ package kr.or.kimsn.radardemo.service;
 
 import java.util.List;
 
-import kr.or.kimsn.radardemo.dto.repository.SmsSendNuri2Repository;
+import kr.or.kimsn.radardemo.dto.AppTemplateCodeDto;
+import kr.or.kimsn.radardemo.dto.repository.AppTemplateCodeRepository;
 import org.springframework.stereotype.Service;
 
 import kr.or.kimsn.radardemo.dto.ReceiveConditionCriteriaDto;
@@ -24,6 +25,7 @@ import kr.or.kimsn.radardemo.dto.repository.SmsSendPatternRepository;
 import kr.or.kimsn.radardemo.dto.repository.SmsSendRepository;
 import kr.or.kimsn.radardemo.dto.repository.StationRepository;
 import kr.or.kimsn.radardemo.dto.repository.StationStatusRepository;
+import kr.or.kimsn.radardemo.repository.SmsSendNuri2Repository;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
@@ -44,6 +46,8 @@ public class QueryService {
 
     private final ReceiveConditionRepository receiveConditionRepository; // 최종
     private final ReceiveDataRepository receiveDataRepository; // 이력
+
+    private final AppTemplateCodeRepository appTemplateCodeRepository; //템플릿
 
     // site 조회
     public List<StationDto> getStation(int gubun) {
@@ -210,8 +214,8 @@ public class QueryService {
     }
 
     // 문자 전송(NURI2_NRMSG_DATA) insert
-    public void intNuri2Save(String resDate, String callTo, String callFrom, String templateCode, String altJson) {
-        smsSendNuri2Repository.nuri2SendContentsSave(resDate, callTo, callFrom, templateCode, altJson);
+    public void intNuri2Save(String resDate, String callTo, String callFrom, String templateCode, String smsTitle, String titleAndText) {
+        smsSendNuri2Repository.nuri2SendContentsSave(resDate, callTo, callFrom, templateCode, smsTitle, titleAndText);
     }
 
     // 특정 시간 구하기
@@ -227,5 +231,9 @@ public class QueryService {
     // 지점별 운영상태
     public StationStatusDto getStationStatus(String sitecd) {
         return stationStatusRepository.findBySiteCd(sitecd);
+    }
+
+    public AppTemplateCodeDto getTemplateCode(String templateCode) {
+        return appTemplateCodeRepository.findByTemplateCode(templateCode);
     }
 }

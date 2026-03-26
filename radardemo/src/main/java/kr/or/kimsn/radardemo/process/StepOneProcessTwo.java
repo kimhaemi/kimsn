@@ -14,27 +14,22 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @RequiredArgsConstructor
 public class StepOneProcessTwo {
-    // public class StepOneProcess implements Runnable {
 
     private final QueryService queryService;
-
-    // private List<StationDto> srDto;
 
     public void stepOne(String mode, int gubun, StationDto srDto) {
         try {
             String dataKindStr = ""; // 데이터 종류
             String dataType = "NQC"; // 데이터 타입
 
-            String currentTime = FormatDateUtil.formatDate("yyyy-MM-dd HH:mm:ss", new Date());
-            String data_time = FormatDateUtil.formatDate("yyyy-MM-dd HH:mm:ss",
-                    FormatDateUtil.changeKstToUtc(new Date()));
-            // String data_kst = FormatDateUtil.formatDate("yyyyMMddHHmm", new Date());
-            String data_kst = currentTime;
-            String recv_condition_check_time = currentTime;
-            String recv_condition_data = "";
+            final String currentTime = FormatDateUtil.formatDate("yyyy-MM-dd HH:mm:ss", new Date());
+            final String dataTime = FormatDateUtil.formatDate("yyyy-MM-dd HH:mm:ss", FormatDateUtil.changeKstToUtc(new Date()));
+            String dataKst = currentTime;
+            String recvConditionCheckTime = currentTime;
+            String recvConditionData = "";
             String codedtl = "";
-            String file_name = "";
-            Long file_size = 0L;
+            String fileName = "";
+            Long fileSize = 0L;
             String errStrData = "";
 
             if (gubun == 1)
@@ -45,60 +40,65 @@ public class StepOneProcessTwo {
                 dataKindStr = "TDWR";
 
             if (gubun == 1 || gubun == 3) { // 대형, 공항 4분 30초 전
-                if (Integer.parseInt(data_kst.substring(data_kst.length() - 4, data_kst.length() - 3)) <= 5)
-                    data_kst = data_kst.substring(0, data_kst.length() - 4) + "0:00";
-                if (Integer.parseInt(data_kst.substring(data_kst.length() - 4, data_kst.length() - 3)) > 5)
-                    data_kst = data_kst.substring(0, data_kst.length() - 4) + "5:00";
+                if (Integer.parseInt(dataKst.substring(dataKst.length() - 4, dataKst.length() - 3)) <= 5)
+                    dataKst = dataKst.substring(0, dataKst.length() - 4) + "0:00";
+                if (Integer.parseInt(dataKst.substring(dataKst.length() - 4, dataKst.length() - 3)) > 5)
+                    dataKst = dataKst.substring(0, dataKst.length() - 4) + "5:00";
             }
             if (gubun == 2) { // 소형
-                data_kst = data_kst.substring(0, data_kst.length() - 2) + "00";
+                dataKst = dataKst.substring(0, dataKst.length() - 2) + "00";
             }
 
-            System.out.println("data_kst :::: " + data_kst);
+            System.out.println("data_kst :::: " + dataKst);
 
             // site 접속
             SftpUtil sftp = new SftpUtil();
 
-            String site_cd = srDto.getSiteCd();
+            String siteCd = srDto.getSiteCd();
             String siteStr = srDto.getName_kr();
             try {
 
                 int port = Integer.parseInt(DataCommon.getInfoConf("ipInfo", "PORT"));
-                String site_ip = DataCommon.getInfoConf("ipInfo", site_cd + "_IP");
-                String site_username = DataCommon.getInfoConf("ipInfo", site_cd + "_ID");
-                String site_pwd = DataCommon.getInfoConf("ipInfo", site_cd + "_PASSWORD");
+                String siteIp = DataCommon.getInfoConf("ipInfo", siteCd + "_IP");
+                String siteUsername = DataCommon.getInfoConf("ipInfo", siteCd + "_ID");
+                String sitePwd = DataCommon.getInfoConf("ipInfo", siteCd + "_PASSWORD");
                 if (gubun == 2)
-                    site_pwd = DataCommon.getInfoConf("ipInfo", site_cd + "_PASSWORD") + "#";
+                    sitePwd = DataCommon.getInfoConf("ipInfo", siteCd + "_PASSWORD") + "#";
 
-                log.info("[========================= " + siteStr
-                        + " 접속 정보(connect, file, filesize) ===============================]");
+                log.info("[========================= " + siteStr + " 접속 정보(connect, file, filesize) ===============================]");
                 log.info("[" + siteStr + " port] : " + port);
-                log.info("[" + siteStr + " ip] : " + site_ip);
-                log.info("[" + siteStr + " username] : " + site_username);
-                log.info("[" + siteStr + " pwd] : " + site_pwd);
+                log.info("[" + siteStr + " ip] : " + siteIp);
+                log.info("[" + siteStr + " username] : " + siteUsername);
+                log.info("[" + siteStr + " pwd] : " + sitePwd);
 
                 ReceiveSettingDto rsDto = queryService.getrRceiveSetting(dataKindStr);
-                // System.out.println("rsDto ::: " + rsDto);
+                System.out.println("rsDto ::: " + rsDto.getPermittedWatch());
 
                 // 자료감시 설정 on
                 if (rsDto.getPermittedWatch() == 1) {
-                    // log.info("[자료감시 설정 on]");
+                     log.info("[자료감시 설정 on]");
+
+                    boolean sftpConnect = false;
+
+                    try {
+                        sftpConnect = sftp.open(siteIp, siteUsername, sitePwd, port);
+                    } catch (Exception ce) {
+                        System.out.println("접속오류: "+ ce);
+                    }
 
                     // site 접속
-                    // SftpUtil sftp = new SftpUtil();
-                    boolean sftpConnect = sftp.open(site_ip, site_username, site_pwd, port);
-
+//                    boolean sftpConnect = sftp.open(siteIp, siteUsername, sitePwd, port);
                     log.info("[" + siteStr + " 접속 유무] : " + sftpConnect);
 
                     // 접속 O
                     if (sftpConnect) {
-                        String file_path = DataCommon.getInfoConf("siteInfo", "rdr_path");
+                        String filePath = DataCommon.getInfoConf("siteInfo", "rdr_path");
                         if (gubun == 2) { // 소형폴더는 조합이 다르네..
                             String yearmonth = FormatDateUtil.formatDate("yyyyMM", new Date()); // 연월
                             String day = FormatDateUtil.formatDate("dd", new Date()); // 일
-                            file_path = file_path.replace("%yyyyMM%", yearmonth).replace("%dd%", day);
+                            filePath = filePath.replace("%yyyyMM%", yearmonth).replace("%dd%", day);
                         }
-                        log.info("[" + siteStr + " file_path] : " + file_path);
+                        log.info("[" + siteStr + " file_path] : " + filePath);
 
                         String filePattern = rsDto.getFilename_pattern();
                         String timeZone = rsDto.getTime_zone();
@@ -114,13 +114,9 @@ public class StepOneProcessTwo {
 
                             log.info("[" + siteStr + " 감시 해야할 시간 이전: " + previousTime);
 
-                            if (Integer.parseInt(
-                                    previousTime.substring(previousTime.length() - 1,
-                                            previousTime.length())) <= 5)
+                            if (Integer.parseInt(previousTime.substring(previousTime.length() - 1, previousTime.length())) <= 5)
                                 previousTime = previousTime.substring(0, previousTime.length() - 1) + "0";
-                            if (Integer.parseInt(
-                                    previousTime.substring(previousTime.length() - 1,
-                                            previousTime.length())) > 5)
+                            if (Integer.parseInt(previousTime.substring(previousTime.length() - 1, previousTime.length())) > 5)
                                 previousTime = previousTime.substring(0, previousTime.length() - 1) + "5";
                             log.info("[" + siteStr + " 감시 해야할 시간 이후: " + previousTime);
                         }
@@ -131,61 +127,70 @@ public class StepOneProcessTwo {
                         }
 
                         // 파일 패턴으로 파일명 찾기
-                        file_name = filePattern.replace("%site%", site_cd).replace("%yyyyMMddHHmm%", previousTime);
+                        fileName = filePattern.replace("%site%", siteCd).replace("%yyyyMMddHHmm%", previousTime);
                         log.info("[" + siteStr + " 파일 패턴] : " + filePattern);
-                        log.info("[" + siteStr + " 파일 명] : " + file_name);
+                        log.info("[" + siteStr + " 파일 명] : " + fileName);
 
-                        boolean file_exists = sftp.fileExists(file_path, file_name, site_cd, dataKindStr, filePattern,
-                                timeZone);
-                        log.info("[" + siteStr + " 파일존재유무] : " + file_exists);
+                        try {
+                            boolean fileExists = sftp.fileExists(filePath, fileName, siteCd, dataKindStr, filePattern, timeZone);
+                            log.info("[" + siteStr + " 파일존재유무] : " + fileExists);
 
-                        // 파일 O (ORDI - file_ok)
-                        if (file_exists) {
-                            log.info("[" + siteStr + " 파일 O]");
-                            Long file_size_min = Long.parseLong(DataCommon.getInfoConf("siteInfo", "file_size_min"));
-                            Long file_size_max = 0L; // 23.09.15 wl
-                            // Long.parseLong(DataCommon.getInfoConf("siteInfo", "file_size_max"));
+                            // 파일 O (ORDI - file_ok)
+                            if (fileExists) {
+                                log.info("[" + siteStr + " 파일 O]");
+                                Long fileSizeMin = Long.parseLong(DataCommon.getInfoConf("siteInfo", "file_size_min"));
+                                Long fileSizeMax = 0L; // 23.09.15 wl
+                                // Long.parseLong(DataCommon.getInfoConf("siteInfo", "file_size_max"));
 
-                            file_size = sftp.fileSize(file_path, file_name, file_size_min, file_size_max);
-                            log.info("[" + siteStr + " file size] : " + file_size);
+                                fileSize = sftp.fileSize(filePath, fileName, fileSizeMin, fileSizeMax);
+                                log.info("[" + siteStr + " file size] : " + fileSize);
 
-                            Long kb = file_size / 1024;
-                            log.info("[" + siteStr + " kb] : " + kb);
+                                Long kb = fileSize / 1024;
+                                log.info("[" + siteStr + " kb] : " + kb);
 
-                            // 파일 품질 정상 (ORDI - filesize_ok)
-                            if (kb > file_size_min) {
-                                codedtl = "ok";
-                                // recv_condition = "ORDI";
-                                recv_condition_data = "RECV";
-                                errStrData = "[" + siteStr + " [자료 수신 (ORDI - filesize_ok) query insert receive_data]";
+                                // 파일 품질 정상 (ORDI - filesize_ok)
+                                if (kb > fileSizeMin) {
+                                    codedtl = "ok";
+                                    // recvCondition = "ORDI";
+                                    recvConditionData = "RECV";
+                                    errStrData = "[" + siteStr + " [자료 수신 (ORDI - filesize_ok) query insert receive_data]";
+
+                                } else {
+                                    // 파일 품질 이상 (WARN - filesize_no)
+                                    // recvCondition = "WARN";
+                                    codedtl = "filesize_no";
+                                    recvConditionData = "MISS";
+                                    errStrData = "[" + siteStr
+                                        + " 파일 품질 이상 (WARN - filesize_no) query insert - receive_data]";
+                                }
 
                             } else {
-                                // 파일 품질 이상 (WARN - filesize_no)
-                                // recv_condition = "WARN";
-                                codedtl = "filesize_no";
-                                recv_condition_data = "MISS";
-                                errStrData = "[" + siteStr
-                                        + " 파일 품질 이상 (WARN - filesize_no) query insert - receive_data]";
+                                // 파일 X (WARN - file_no)
+                                // recvCondition = "WARN";
+                                log.info("[" + siteStr + " 파일 X]");
+                                fileName = "";
+                                fileSize = 0L;
+                                codedtl = "file_no";
+                                recvConditionData = "MISS";
+                                errStrData = "[" + siteStr + " 자료 미수신 (WARN - file_no) query insert - receive_data]";
                             }
-
-                        } else {
-                            // 파일 X (WARN - file_no)
-                            // recv_condition = "WARN";
-                            log.info("[" + siteStr + " 파일 X]");
-                            file_name = "";
-                            file_size = 0L;
+                        } catch (Exception fe) {
+                            log.info("[" + siteStr + " 파일 접속X]: "+ fe);
+                            fileName = "";
+                            fileSize = 0L;
                             codedtl = "file_no";
-                            recv_condition_data = "MISS";
-                            errStrData = "[" + siteStr + " 자료 미수신 (WARN - file_no) query insert - receive_data]";
+                            recvConditionData = "MISS";
+                            errStrData = "[" + siteStr + " 파일 접속 오류 (TOTA - network_no) query insert - receive_data]";
                         }
+
                     } else {
                         // 접속 X (WARN - MISS)
-                        // recv_condition = "WARN";
+                        // recvCondition = "WARN";
                         // codedtl = "siteconnect_no";
 
                         log.info("[" + siteStr + " 접속 X]");
                         codedtl = "file_no";
-                        recv_condition_data = "MISS";
+                        recvConditionData = "MISS";
 
                         // test
                         // codedtl = "ok";
@@ -206,14 +211,13 @@ public class StepOneProcessTwo {
                     log.info("[" + siteStr + " 자료감시 설정 off]");
                 }
 
-                log.info("[" + siteStr + " 파일 명] : " + file_name);
-                log.info("[" + siteStr + " 파일 size] : " + file_size);
-                log.info("[" + siteStr + " 파일 recv] : " + recv_condition_data);
+                log.info("[" + siteStr + " 파일 명] : " + fileName);
+                log.info("[" + siteStr + " 파일 size] : " + fileSize);
+                log.info("[" + siteStr + " 파일 recv] : " + recvConditionData);
                 log.info("[" + siteStr + " 파일 recvDtl] : " + codedtl);
                 log.info(errStrData);
 
-                queryService.insReceiveData(dataKindStr, site_cd, dataType, data_time, data_kst, currentTime,
-                        recv_condition_data, recv_condition_check_time, file_name, file_size, codedtl);
+                queryService.insReceiveData(dataKindStr, siteCd, dataType, dataTime, dataKst, currentTime, recvConditionData, recvConditionCheckTime, fileName, fileSize, codedtl);
             } catch (Exception e) {
                 sftp.close();
                 // log.info("error : " + e);
