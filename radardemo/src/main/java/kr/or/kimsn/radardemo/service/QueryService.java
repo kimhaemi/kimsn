@@ -25,7 +25,7 @@ import kr.or.kimsn.radardemo.dto.repository.SmsSendPatternRepository;
 import kr.or.kimsn.radardemo.dto.repository.SmsSendRepository;
 import kr.or.kimsn.radardemo.dto.repository.StationRepository;
 import kr.or.kimsn.radardemo.dto.repository.StationStatusRepository;
-import kr.or.kimsn.radardemo.repository.SmsSendNuri2Repository;
+import kr.or.kimsn.radardemo.dto.repository.SmsSendNuri2Repository;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
