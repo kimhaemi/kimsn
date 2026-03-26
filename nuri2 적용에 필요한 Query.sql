@@ -54,6 +54,8 @@ CREATE TABLE IF NOT EXISTS `nuri2`.`nuri2_sequence` (
 
 select * from nuri2.nuri2_sequence;
 
+commit;
+
 
 /* 
  * FUNCTION nuri2 Sequence 만들기
@@ -72,6 +74,24 @@ BEGIN
 	RETURN @v_current_value;
 END $$
 DELIMITER ;
+
+-- function 만들기 실패시
+CREATE FUNCTION nuri2.msg_nextval()
+	RETURNS BIGINT UNSIGNED
+	MODIFIES SQL DATA
+	SQL SECURITY INVOKER
+BEGIN
+	INSERT INTO `nuri2_sequence`
+	SET seq_name = 'nuri2', seq_currval=(@v_current_value:=1)
+	ON DUPLICATE KEY
+	UPDATE seq_currval=(@v_current_value:=seq_currval+1);
+	RETURN @v_current_value;
+END
+
+-- rock 확인
+show processlist;
+-- rock 해제
+kill 202;
 
 -- function 삭제
 -- DROP FUNCTION msg_nextval ;
@@ -214,3 +234,101 @@ where MSG_KEY = 1500
 
 commit;
 
+select nuri2.msg_nextval();
+
+select nuri.nextval();
+
+select * from nuri2.NURI2_NRMSG_DATA
+where 1=1
+-- and msg_key = 4
+order by  msg_key desc;
+
+SELECT nuri2.msg_nextval() from dual;
+select * from nuri2.nuri2_sequence;
+
+INSERT INTO nuri2.NURI2_NRMSG_DATA (
+          MSG_KEY            -- 숫자 11자리, 메시지 일련번호, 반드시 고유값, 중복시 발송실패, 시퀀스(시리얼번호사용)
+        , MSG_STATE          -- 1:전송대기,  3:전송수집중(QUE 수집), 5:전송완료(결과대기), 6:결과처리 완료(결과회신)
+        , INPUT_DATE         -- DB 입력시간(DB서버 시간 기준)
+        , RES_DATE           -- 발송요청시간, 예약전송:미래시간, 즉시전송: now()
+        , ALT_COUNTRY_CODE   -- 국가코드 : 기본 값 82, 해외 카톡 발송시 해당국가코드 입력
+        , PHONE              -- 수신번호(숫자형태의 문자, 11~12자리),     [*][중요]반드시 휴대폰 번호 형식으로만 입력, 01X0000XXXX
+        , CALLBACK           -- 발신번호(숫자형태의 문자, 지역번호 필수), [*][중요]휴대폰번호 사용시에는 발신도용 해제 여부 필요, 스미싱 악용 방지용 '번호도용 차단서비스' 가입자는 해제 후 설정가능 합니다.
+        -- 첫번째 컨텐츠(1차): 카카오
+        , MSG_TYPE_1         -- [대분류] :SMS:단문 메시지, MMS:멀티메시지(장문, 첨부), ALT:카카오 알림톡 메시지, RCS: 안심문자
+        , CONTENTS_TYPE_1    -- [소분류] :SMS:단문 메시지, LMS:장문, MMS:멀티메시지(장문+첨부, 첨부), ALT:카카오 알림톡 메시지, RCS: 안심문자
+        , ALT_SENDER_KEY     -- 발송키(발신 프로필키), 발송키는 채널을 의미합니다. 채널이 다르면 다른 발송키를 설정
+        , ALT_TEMPLATE_CODE  -- 템플릿코드
+        , ALT_JSON           -- 발송할 내용을 JSON 형태(한줄로입력)로 직접 입력, '{"text":"모바일메시지서비스 운영 및 발송 가이드 안내\n\n카카오톡\n모바일메시지 테스트입니다\n\n042-250-5537\n감사합니다."}'
+                             -- 전체 1000자리(Length), 줄바꿈 치환 필수 '\r\n' ▶ '\n'(1 Length로 계산), 실제로 1줄로 입력처리 일부db에서 '\n'만 입력하게되면 줄바꿈처리로 에러, 실제 줄바꿈 기호를 메시지를 db에 입력시 '\\n' 처리해서 입력(db 마다 다를수 있음)
+        -- 두번째 컨텐츠(첫번째 컨텐츠 실패시 수행)(2차): 문자
+        , MSG_TYPE_2         -- [대분류] :SMS:단문 메시지, MMS:멀티메시지(장문, 첨부), ALT:카카오 알림톡 메시지, RCS: 안심문자
+        , CONTENTS_TYPE_2    -- [소분류] :SMS:단문 메시지, LMS:장문, MMS:멀티메시지(장문+첨부, 첨부), ALT:카카오 알림톡 메시지, RCS: 안심문자
+        , XMS_SUBJECT        -- 생략가능, LMS에서만 사용 최대 30Byte 이하 한글(2Byte)로 계산, 줄바꿈은 '\n' 처리 1Byte 처리, 1Byte로 계산
+        , XMS_TEXT           -- SMS: 90byte 까지 입력(줄바꿈은 '\n' 처리 1Byte 처리, 1Byte로 계산), LMS:2000 Byte 이하
+) VALUES(
+          nuri2.msg_nextval()
+        , 1
+        , DATE_FORMAT(now(), '%Y%m%d%H%i%s') -- 날짜형식 : YYYYMMDDHH24MISS, 날짜 포멧으로 입력 권장
+        , DATE_FORMAT(now(), '%Y%m%d%H%i%s') -- 날짜형식 : YYYYMMDDHH24MISS, 날짜 포멧으로 입력 권장
+        , '82'
+        , '01031248577'
+        , '027337365'
+        -- 첫번째 컨텐츠
+        , 'ALT'
+        , 'ALT'
+        , 'abcdefghijklmnopqrstuvwxyzabcdefghijklmn'
+        , 'radar_0001'   --  KR001~3 템플릿은 등록기관만 사용 가능
+        -- , '{"text":"' 메시지내용   '"}' ,  '{"text":"'|| '메시지내용을 입력' ||'"}'
+        , '{"text":"기상레이더 장애 알림\n\n안녕하세요\n홍길동님\n반갑습니다"}'
+	-- 두번째 컨텐츠(첫번째 컨텐츠 실패시 수행)
+        , 'SMS' -- SMS/MMS/ALT/RCS 만 있음
+        , 'SMS' -- SMS(1~90byte), LMS(91~2000byte)로 처리 해야함, 메시지 내용을 바이트(Byte)로 계산하여 SMS/MMM(LMS)로 처리 해야함
+        , '기상레이더 장애 알림' -- 제목30바이트 이하: 생략 가능
+        , '기상레이더 장애 알림
+
+안녕하세요
+홍길동님
+반갑습니다'
+);
+
+commit;
+
+select nuri2.msg_nextval();
+
+
+GRANT ALL PRIVILEGES ON nuri2.* TO 'root'@'localhost';
+
+FLUSH PRIVILEGES;
+
+show databases;
+
+show grants for 'root'@'localhost';
+
+select user, host from mysql.user;
+
+
+GRANT all privileges ON *.* TO 'root'@'localhost';
+
+
+SELECT * FROM mysql.user;
+
+
+SHOW GRANTS FOR 'nuri2'@'%';
+
+
+SHOW GRANTS;
+
+SHOW GRANTS FOR CURRENT_USER;
+
+use mysql;
+
+SELECT user, host, super_priv, Grant_priv FROM user WHERE user = 'root';
+
+SHOW GRANTS FOR 'nuri'@'localhost';
+
+CREATE USER 'nuri2'@'%' IDENTIFIED BY 'Nuri2~!@';
+
+GRANT ALL PRIVILEGES ON nuri2.* TO 'nuri2'@'%';
+
+select * from nuri.app_template_code atc ;
