@@ -1,20 +1,20 @@
 package kr.or.kimsn.radar.daemon.config;
 
-import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.env.Environment;
 
 @Configuration
-@ConfigurationProperties(prefix = "radar.config")
 public class RadarConfigProperties {
 
-  private String siteInfoPath;
-  private String ipInfoPath;
-  private String cronExpression; // 크론식 주입용 변수 추가
+  private final Environment environment;
 
-  public String getSiteInfoPath() { return siteInfoPath; }
-  public void setSiteInfoPath(String siteInfoPath) { this.siteInfoPath = siteInfoPath; }
-  public String getIpInfoPath() { return ipInfoPath; }
-  public void setIpInfoPath(String ipInfoPath) { this.ipInfoPath = ipInfoPath; }
-  public String getCronExpression() { return cronExpression; }
-  public void setCronExpression(String cronExpression) { this.cronExpression = cronExpression; }
+  public RadarConfigProperties(Environment environment) {
+    this.environment = environment;
+  }
+
+  // environment.getProperty를 통해 호출 시점에 가장 최신의 실시간 YML 값을 반환합니다.
+  public String getSiteInfoPath() { return environment.getProperty("radar.config.site-info-path"); }
+  public String getIpInfoPath() { return environment.getProperty("radar.config.ip-info-path"); }
+  public String getCronExpression() { return environment.getProperty("radar.config.cron-expression", "0 * * * * *"); }
+  public String getLogName() { return environment.getProperty("radar.config.log-name", "radarCommon"); }
 }

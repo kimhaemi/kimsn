@@ -19,8 +19,8 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class StepTwoProcess {
 
-    private final QueryService queryService;
-    private final SmsNotificationService smsNotificationService;
+    private QueryService queryService;
+    private SmsNotificationService smsNotificationService;
     private List<StationDto> srDto;
 
     @Transactional

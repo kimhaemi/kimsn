@@ -118,7 +118,7 @@ public class Scheduler {
             // [📊 3단계: StepTwo - 데이터 최종 가공 및 후처리 DB 적재]
             // ----------------------------------------------------------------
             log.info("[=================== ▶️ StepTwo 프로세스 시작 (ID: [{}]) ===================]", cycleId);
-            StepTwoProcess twoProc = new StepTwoProcess(queryService);
+            StepTwoProcess twoProc = new StepTwoProcess();
 
             // 35초 타임아웃 덕분에 정상적으로 수집 완료가 찍힌 데이터들만 안전하게 마저 정산 처리합니다.
             twoProc.stepTwo(gubunStr, cycleId, cycleId);
