@@ -2,6 +2,7 @@ package kr.or.kimsn.radar.daemon.process;
 
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
+import kr.or.kimsn.radar.daemon.enums.RadarTypeEnum;
 import kr.or.kimsn.radar.daemon.service.QueryService;
 import kr.or.kimsn.radar.daemon.config.DataCommon;
 import kr.or.kimsn.radar.data.common.util.DateUtil;
@@ -24,14 +25,10 @@ public class StepOneProcess {
         // finally 블록에서 접근할 수 있도록 try 밖에서 선언 및 초기화
         SftpUtil sftp = null;
 
+        RadarTypeEnum radarType = RadarTypeEnum.find(gubun);
+
         try {
-            String dataKindStr = switch (gubun) {
-                case 1 -> "RDR";
-                case 2 -> "SDR";
-                case 3 -> "TDWR";
-                default -> "";
-            };
-            String dataKindStr = ""; // 데이터 종류
+            String dataKindStr = radarType.getCode(); // 데이터 종류
             String dataType = "NQC"; // 데이터 타입
 
             int connectTimeOut = Integer.parseInt(DataCommon.getInfoConf("ipInfo", "connectTimeOut", siteInfo, ipInfo));
@@ -47,12 +44,7 @@ public class StepOneProcess {
             Long fileSize = 0L;
             String errStrData = "";
 
-            if (gubun == 1)
-                dataKindStr = "RDR";
-            if (gubun == 2)
-                dataKindStr = "SDR";
-            if (gubun == 3)
-                dataKindStr = "TDWR";
+
 
             if (gubun == 1 || gubun == 3) { // 대형, 공항 4분 30초 전
                 if (Integer.parseInt(dataKst.substring(dataKst.length() - 4, dataKst.length() - 3)) <= 5)
@@ -67,7 +59,7 @@ public class StepOneProcess {
             System.out.println("data_kst :::: " + dataKst);
 
             // site 접속
-            SftpUtil sftp = new SftpUtil();
+            sftp = new SftpUtil();
 
             String siteCd = srDto.getSiteCd();
             String siteStr = srDto.getName_kr();

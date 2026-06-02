@@ -3,7 +3,7 @@ package kr.or.kimsn.radar.daemon.enums;
 /**
  * 데이터 종류
  */
-public enum DataKind {
+public enum DataKindEnum {
   RDR(1, "RDR"),
   SDR(2, "SDR"),
   TDWR(3, "TDWR"),
@@ -13,7 +13,7 @@ public enum DataKind {
   private final String description;
 
   // 생성자
-  DataKind(int gubun, String description) {
+  DataKindEnum(int gubun, String description) {
     this.gubun = gubun;
     this.description = description;
   }
@@ -24,7 +24,7 @@ public enum DataKind {
 
   // 기존 switch 문을 대체하는 static 메소드
   public static String getDescriptionByGubun(int gubun) {
-    for (DataKind kind : values()) {
+    for (DataKindEnum kind : values()) {
       if (kind.getGubun() == gubun) {
         return kind.getDescription();
       }

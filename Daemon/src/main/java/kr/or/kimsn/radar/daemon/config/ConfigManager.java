@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.util.Map;
 import java.util.Properties;
 import java.util.concurrent.ConcurrentHashMap;
+import kr.or.kimsn.radar.daemon.enums.ConfigFileEnum;
 
 public class ConfigManager {
 
@@ -30,10 +31,9 @@ public class ConfigManager {
       }
       int gubunValue = Integer.parseInt(initialProps.getProperty("gubun", "0"));
 
-      // gubun에 맞는 고정 경로 획득
-      ConfigFile config = ConfigFile.findByGubun(gubunValue);
-      targetSiteInfoPath = config.getSiteInfoPath();
-      targetIpInfoPath = config.getIpInfoPath();
+      // [변경 포인트] 보유하신 ConfigFile.getPath(gubun, type) 표준 메서드 규격에 맞게 경로 획득
+      targetSiteInfoPath = ConfigFileEnum.getPath(gubunValue, "SITE_INFO");
+      targetIpInfoPath = ConfigFileEnum.getPath(gubunValue, "IP_INFO");
 
       // 최초 데이터 로드
       checkAndReload();

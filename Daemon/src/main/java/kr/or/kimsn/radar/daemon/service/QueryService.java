@@ -109,7 +109,7 @@ public class QueryService {
 
     // app sequence
     public Long getAppContentNextval() {
-        return Long.parseLong(smsSendRepository.getAppContentNextval());
+        return smsSendRepository.getAppContentNextval();
     }
 
     // 최종결과 문자발송 update
