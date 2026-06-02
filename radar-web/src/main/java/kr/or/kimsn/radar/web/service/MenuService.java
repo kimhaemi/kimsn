@@ -49,7 +49,7 @@ public class MenuService {
                 if (sr.getSiteCd().equals(rc.getSite())) {
                     ReceiveConditionJoinStationRdrDto rcDto = new ReceiveConditionJoinStationRdrDto();
                     rcDto.setSite(rc.getSite());
-                    rcDto.setDataKind(rc.getData_kind());
+                    rcDto.setDataKind(rc.getDataKind());
                     rcDto.setDataType(rc.getDataType());
                     rcDto.setRecv_condition(rc.getRecv_condition());
                     rcDto.setApply_time(rc.getApply_time());
