@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+
+<!-- 📌 1. 정석적인 head 태그를 명시해 줍니다 -->
+<head>
+  <!-- 📌 2. configFragment 조각이 head 태그를 포함하고 있으므로 th:replace로 완전히 갈아끼웁니다 -->
+  <th:block th:replace="layout/config :: configFragment"></th:block>
+</head>
+
+<body style="zoom: 1;">
+
+<!-- header -->
+<div class="wrap">
+  <th:block th:replace="layout/header :: headerFragment"></th:block>
+</div>
+
+<div id="wrap">
+  <div class="container">
+    <div id="contents" class="wide">
+      <div class="cont">
+        <!-- content -->
+        <!-- 📌 3. 서브 콘텐츠 메인 페이지 화면들이 결합되는 핵심 영역 -->
+        <th:block layout:fragment="content"></th:block>
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

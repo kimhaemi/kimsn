@@ -1,0 +1,149 @@
+2026-05-28 14:59:32.268 [INFO ] Starting RadarWebApplication using Java 11.0.2 on haems with PID 24336 (C:\0003_kimsn\radar_new\radar-web\build\classes\java\main started by imeahmik in C:\0003_kimsn\radar_new)
+2026-05-28 14:59:32.281 [DEBUG] Running with Spring Boot v2.7.12, Spring v5.3.27
+2026-05-28 14:59:32.283 [INFO ] No active profile set, falling back to 1 default profile: "default"
+2026-05-28 14:59:32.720 [INFO ] Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2026-05-28 14:59:32.720 [INFO ] For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2026-05-28 14:59:33.865 [INFO ] Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-05-28 14:59:34.160 [INFO ] Finished Spring Data repository scanning in 270 ms. Found 23 JPA repository interfaces.
+2026-05-28 14:59:35.597 [INFO ] Tomcat initialized with port(s): 8700 (http)
+2026-05-28 14:59:35.663 [INFO ] Initializing ProtocolHandler ["http-nio-8700"]
+2026-05-28 14:59:35.664 [INFO ] Starting service [Tomcat]
+2026-05-28 14:59:35.665 [INFO ] Starting Servlet engine: [Apache Tomcat/9.0.75]
+2026-05-28 14:59:36.001 [INFO ] Initializing Spring embedded WebApplicationContext
+2026-05-28 14:59:36.002 [INFO ] Root WebApplicationContext: initialization completed in 3281 ms
+2026-05-28 14:59:36.148 [INFO ] HikariPool-1 - Starting...
+2026-05-28 14:59:36.880 [INFO ] HikariPool-1 - Start completed.
+2026-05-28 14:59:37.020 [INFO ] HHH000204: Processing PersistenceUnitInfo [name: default]
+2026-05-28 14:59:37.170 [INFO ] HHH000412: Hibernate ORM core version 5.6.15.Final
+2026-05-28 14:59:37.501 [INFO ] HCANN000001: Hibernate Commons Annotations {5.1.2.Final}
+2026-05-28 14:59:37.980 [INFO ] HHH000400: Using dialect: org.hibernate.dialect.MySQL8Dialect
+2026-05-28 14:59:40.487 [INFO ] HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+2026-05-28 14:59:40.521 [INFO ] Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-05-28 14:59:43.246 [INFO ] Will secure any request with [org.springframework.security.web.session.DisableEncodeUrlFilter@6d9b73b1, org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@4b1e6ea4, org.springframework.security.web.context.SecurityContextPersistenceFilter@2fbb91c2, org.springframework.security.web.header.HeaderWriterFilter@58d78613, org.springframework.security.web.authentication.logout.LogoutFilter@6a63100c, org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter@15088e00, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@642b0496, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@6ab95c2e, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@1ab79149, org.springframework.security.web.session.SessionManagementFilter@574d3e86, org.springframework.security.web.access.ExceptionTranslationFilter@3563b9d8, org.springframework.security.web.access.intercept.FilterSecurityInterceptor@71a5abba]
+2026-05-28 14:59:43.529 [WARN ] spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2026-05-28 14:59:44.685 [INFO ] LiveReload server is running on port 35729
+2026-05-28 14:59:44.734 [INFO ] Tomcat started on port(s): 8700 (http) with context path ''
+2026-05-28 14:59:44.748 [INFO ] Started RadarWebApplication in 13.362 seconds (JVM running for 16.09)
+2026-05-28 14:59:44.997 [INFO ] Closing JPA EntityManagerFactory for persistence unit 'default'
+2026-05-28 14:59:45.000 [INFO ] HikariPool-1 - Shutdown initiated...
+2026-05-28 14:59:45.004 [INFO ] HikariPool-1 - Shutdown completed.
+2026-05-28 15:00:21.318 [INFO ] Starting RadarWebApplication using Java 11.0.2 on haems with PID 22784 (C:\0003_kimsn\radar_new\radar-web\build\classes\java\main started by imeahmik in C:\0003_kimsn\radar_new)
+2026-05-28 15:00:21.338 [DEBUG] Running with Spring Boot v2.7.12, Spring v5.3.27
+2026-05-28 15:00:21.339 [INFO ] No active profile set, falling back to 1 default profile: "default"
+2026-05-28 15:00:21.680 [INFO ] Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2026-05-28 15:00:21.680 [INFO ] For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2026-05-28 15:00:22.978 [INFO ] Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-05-28 15:00:23.249 [INFO ] Finished Spring Data repository scanning in 257 ms. Found 23 JPA repository interfaces.
+2026-05-28 15:00:24.583 [INFO ] Tomcat initialized with port(s): 8700 (http)
+2026-05-28 15:00:24.614 [INFO ] Initializing ProtocolHandler ["http-nio-8700"]
+2026-05-28 15:00:24.615 [INFO ] Starting service [Tomcat]
+2026-05-28 15:00:24.615 [INFO ] Starting Servlet engine: [Apache Tomcat/9.0.75]
+2026-05-28 15:00:24.829 [INFO ] Initializing Spring embedded WebApplicationContext
+2026-05-28 15:00:24.829 [INFO ] Root WebApplicationContext: initialization completed in 3148 ms
+2026-05-28 15:00:24.981 [INFO ] HikariPool-1 - Starting...
+2026-05-28 15:00:25.897 [INFO ] HikariPool-1 - Start completed.
+2026-05-28 15:00:26.066 [INFO ] HHH000204: Processing PersistenceUnitInfo [name: default]
+2026-05-28 15:00:26.160 [INFO ] HHH000412: Hibernate ORM core version 5.6.15.Final
+2026-05-28 15:00:26.442 [INFO ] HCANN000001: Hibernate Commons Annotations {5.1.2.Final}
+2026-05-28 15:00:26.772 [INFO ] HHH000400: Using dialect: org.hibernate.dialect.MySQL8Dialect
+2026-05-28 15:00:28.155 [INFO ] HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+2026-05-28 15:00:28.178 [INFO ] Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-05-28 15:00:29.688 [INFO ] Will secure any request with [org.springframework.security.web.session.DisableEncodeUrlFilter@241314e2, org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@4e9dc709, org.springframework.security.web.context.SecurityContextPersistenceFilter@41246024, org.springframework.security.web.header.HeaderWriterFilter@6653bc04, org.springframework.security.web.authentication.logout.LogoutFilter@2801b28a, org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter@4a97546b, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@7720e662, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@659e0e83, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@3ed9f6bd, org.springframework.security.web.session.SessionManagementFilter@56f919fd, org.springframework.security.web.access.ExceptionTranslationFilter@581e54f3, org.springframework.security.web.access.intercept.FilterSecurityInterceptor@5bda9f9]
+2026-05-28 15:00:29.873 [WARN ] spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2026-05-28 15:00:31.082 [INFO ] LiveReload server is running on port 35729
+2026-05-28 15:00:31.111 [INFO ] Starting ProtocolHandler ["http-nio-8700"]
+2026-05-28 15:00:31.140 [INFO ] Tomcat started on port(s): 8700 (http) with context path ''
+2026-05-28 15:00:31.150 [INFO ] Started RadarWebApplication in 10.646 seconds (JVM running for 13.058)
+2026-05-28 15:01:23.527 [INFO ] Closing JPA EntityManagerFactory for persistence unit 'default'
+2026-05-28 15:01:23.530 [INFO ] HikariPool-1 - Shutdown initiated...
+2026-05-28 15:01:23.533 [INFO ] HikariPool-1 - Shutdown completed.
+2026-05-28 15:01:43.741 [INFO ] Starting RadarWebApplication using Java 11.0.2 on haems with PID 20024 (C:\0003_kimsn\radar_new\radar-web\build\classes\java\main started by imeahmik in C:\0003_kimsn\radar_new)
+2026-05-28 15:01:43.753 [DEBUG] Running with Spring Boot v2.7.12, Spring v5.3.27
+2026-05-28 15:01:43.754 [INFO ] No active profile set, falling back to 1 default profile: "default"
+2026-05-28 15:01:44.063 [INFO ] Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2026-05-28 15:01:44.063 [INFO ] For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2026-05-28 15:01:45.079 [INFO ] Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-05-28 15:01:45.297 [INFO ] Finished Spring Data repository scanning in 206 ms. Found 23 JPA repository interfaces.
+2026-05-28 15:01:46.482 [INFO ] Tomcat initialized with port(s): 8700 (http)
+2026-05-28 15:01:46.505 [INFO ] Initializing ProtocolHandler ["http-nio-8700"]
+2026-05-28 15:01:46.505 [INFO ] Starting service [Tomcat]
+2026-05-28 15:01:46.505 [INFO ] Starting Servlet engine: [Apache Tomcat/9.0.75]
+2026-05-28 15:01:46.670 [INFO ] Initializing Spring embedded WebApplicationContext
+2026-05-28 15:01:46.670 [INFO ] Root WebApplicationContext: initialization completed in 2606 ms
+2026-05-28 15:01:46.779 [INFO ] HikariPool-1 - Starting...
+2026-05-28 15:01:47.381 [INFO ] HikariPool-1 - Start completed.
+2026-05-28 15:01:47.510 [INFO ] HHH000204: Processing PersistenceUnitInfo [name: default]
+2026-05-28 15:01:47.605 [INFO ] HHH000412: Hibernate ORM core version 5.6.15.Final
+2026-05-28 15:01:47.843 [INFO ] HCANN000001: Hibernate Commons Annotations {5.1.2.Final}
+2026-05-28 15:01:48.137 [INFO ] HHH000400: Using dialect: org.hibernate.dialect.MySQL8Dialect
+2026-05-28 15:01:49.558 [INFO ] HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+2026-05-28 15:01:49.578 [INFO ] Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-05-28 15:01:50.964 [INFO ] Will secure any request with [org.springframework.security.web.session.DisableEncodeUrlFilter@3059feda, org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@1d8e1a82, org.springframework.security.web.context.SecurityContextPersistenceFilter@53846e48, org.springframework.security.web.header.HeaderWriterFilter@59db8709, org.springframework.security.web.authentication.logout.LogoutFilter@72a9c03d, org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter@eef973f, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@48f61c82, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@2ada9a76, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@6faa3063, org.springframework.security.web.session.SessionManagementFilter@379f5cef, org.springframework.security.web.access.ExceptionTranslationFilter@361176d8, org.springframework.security.web.access.intercept.FilterSecurityInterceptor@45cddbd9]
+2026-05-28 15:01:51.194 [WARN ] spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2026-05-28 15:01:52.222 [INFO ] LiveReload server is running on port 35729
+2026-05-28 15:01:52.245 [INFO ] Starting ProtocolHandler ["http-nio-8700"]
+2026-05-28 15:01:52.272 [INFO ] Tomcat started on port(s): 8700 (http) with context path ''
+2026-05-28 15:01:52.285 [INFO ] Started RadarWebApplication in 9.158 seconds (JVM running for 11.295)
+2026-05-28 15:02:38.443 [INFO ] Closing JPA EntityManagerFactory for persistence unit 'default'
+2026-05-28 15:02:38.446 [INFO ] HikariPool-1 - Shutdown initiated...
+2026-05-28 15:02:38.450 [INFO ] HikariPool-1 - Shutdown completed.
+2026-05-28 15:03:03.256 [INFO ] Starting RadarWebApplication using Java 11.0.2 on haems with PID 7500 (C:\0003_kimsn\radar_new\radar-web\build\classes\java\main started by imeahmik in C:\0003_kimsn\radar_new)
+2026-05-28 15:03:03.269 [DEBUG] Running with Spring Boot v2.7.12, Spring v5.3.27
+2026-05-28 15:03:03.270 [INFO ] No active profile set, falling back to 1 default profile: "default"
+2026-05-28 15:03:03.628 [INFO ] Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2026-05-28 15:03:03.628 [INFO ] For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2026-05-28 15:03:04.898 [INFO ] Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-05-28 15:03:05.212 [INFO ] Finished Spring Data repository scanning in 298 ms. Found 23 JPA repository interfaces.
+2026-05-28 15:03:06.798 [INFO ] Tomcat initialized with port(s): 8700 (http)
+2026-05-28 15:03:06.841 [INFO ] Initializing ProtocolHandler ["http-nio-8700"]
+2026-05-28 15:03:06.843 [INFO ] Starting service [Tomcat]
+2026-05-28 15:03:06.843 [INFO ] Starting Servlet engine: [Apache Tomcat/9.0.75]
+2026-05-28 15:03:07.177 [INFO ] Initializing Spring embedded WebApplicationContext
+2026-05-28 15:03:07.177 [INFO ] Root WebApplicationContext: initialization completed in 3547 ms
+2026-05-28 15:03:07.353 [INFO ] HikariPool-1 - Starting...
+2026-05-28 15:03:08.055 [INFO ] HikariPool-1 - Start completed.
+2026-05-28 15:03:08.246 [INFO ] HHH000204: Processing PersistenceUnitInfo [name: default]
+2026-05-28 15:03:08.366 [INFO ] HHH000412: Hibernate ORM core version 5.6.15.Final
+2026-05-28 15:03:08.839 [INFO ] HCANN000001: Hibernate Commons Annotations {5.1.2.Final}
+2026-05-28 15:03:09.421 [INFO ] HHH000400: Using dialect: org.hibernate.dialect.MySQL8Dialect
+2026-05-28 15:03:11.920 [INFO ] HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+2026-05-28 15:03:11.947 [INFO ] Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-05-28 15:03:13.955 [INFO ] Will secure any request with [org.springframework.security.web.session.DisableEncodeUrlFilter@7dcd59a4, org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@495d116, org.springframework.security.web.context.SecurityContextPersistenceFilter@1737fe46, org.springframework.security.web.header.HeaderWriterFilter@7fbba1d3, org.springframework.security.web.authentication.logout.LogoutFilter@526aaabe, org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter@383524b8, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@1ec5e357, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@41fe7cdb, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@151425d8, org.springframework.security.web.session.SessionManagementFilter@7a365504, org.springframework.security.web.access.ExceptionTranslationFilter@2b1fec84, org.springframework.security.web.access.intercept.FilterSecurityInterceptor@478607f4]
+2026-05-28 15:03:14.182 [WARN ] spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2026-05-28 15:03:15.242 [INFO ] LiveReload server is running on port 35729
+2026-05-28 15:03:15.261 [INFO ] Starting ProtocolHandler ["http-nio-8700"]
+2026-05-28 15:03:15.287 [INFO ] Tomcat started on port(s): 8700 (http) with context path ''
+2026-05-28 15:03:15.300 [INFO ] Started RadarWebApplication in 12.846 seconds (JVM running for 15.275)
+2026-05-28 15:03:21.461 [INFO ] Closing JPA EntityManagerFactory for persistence unit 'default'
+2026-05-28 15:03:21.464 [INFO ] HikariPool-1 - Shutdown initiated...
+2026-05-28 15:03:21.467 [INFO ] HikariPool-1 - Shutdown completed.
+2026-05-28 15:04:07.080 [INFO ] Starting RadarWebApplication using Java 11.0.2 on haems with PID 12812 (C:\0003_kimsn\radar_new\radar-web\build\classes\java\main started by imeahmik in C:\0003_kimsn\radar_new)
+2026-05-28 15:04:07.097 [DEBUG] Running with Spring Boot v2.7.12, Spring v5.3.27
+2026-05-28 15:04:07.098 [INFO ] No active profile set, falling back to 1 default profile: "default"
+2026-05-28 15:04:07.605 [INFO ] Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2026-05-28 15:04:07.605 [INFO ] For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2026-05-28 15:04:09.014 [INFO ] Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-05-28 15:04:09.396 [INFO ] Finished Spring Data repository scanning in 363 ms. Found 23 JPA repository interfaces.
+2026-05-28 15:04:12.240 [INFO ] Tomcat initialized with port(s): 8700 (http)
+2026-05-28 15:04:12.274 [INFO ] Initializing ProtocolHandler ["http-nio-8700"]
+2026-05-28 15:04:12.275 [INFO ] Starting service [Tomcat]
+2026-05-28 15:04:12.275 [INFO ] Starting Servlet engine: [Apache Tomcat/9.0.75]
+2026-05-28 15:04:12.535 [INFO ] Initializing Spring embedded WebApplicationContext
+2026-05-28 15:04:12.535 [INFO ] Root WebApplicationContext: initialization completed in 4929 ms
+2026-05-28 15:04:12.687 [INFO ] HikariPool-1 - Starting...
+2026-05-28 15:04:13.642 [INFO ] HikariPool-1 - Start completed.
+2026-05-28 15:04:13.833 [INFO ] HHH000204: Processing PersistenceUnitInfo [name: default]
+2026-05-28 15:04:13.925 [INFO ] HHH000412: Hibernate ORM core version 5.6.15.Final
+2026-05-28 15:04:14.239 [INFO ] HCANN000001: Hibernate Commons Annotations {5.1.2.Final}
+2026-05-28 15:04:14.592 [INFO ] HHH000400: Using dialect: org.hibernate.dialect.MySQL8Dialect
+2026-05-28 15:04:16.006 [INFO ] HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+2026-05-28 15:04:16.043 [INFO ] Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-05-28 15:04:17.747 [INFO ] Will secure any request with [org.springframework.security.web.session.DisableEncodeUrlFilter@602c47d6, org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@7e3a1ac3, org.springframework.security.web.context.SecurityContextPersistenceFilter@13dfca1a, org.springframework.security.web.header.HeaderWriterFilter@1baeb16e, org.springframework.security.web.authentication.logout.LogoutFilter@629792b3, org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter@2cf25f05, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@3443b025, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@286b5256, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@400e6876, org.springframework.security.web.session.SessionManagementFilter@d40ef7a, org.springframework.security.web.access.ExceptionTranslationFilter@66edf456, org.springframework.security.web.access.intercept.FilterSecurityInterceptor@5d99ef72]
+2026-05-28 15:04:18.136 [WARN ] spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2026-05-28 15:04:19.216 [INFO ] LiveReload server is running on port 35729
+2026-05-28 15:04:19.244 [INFO ] Starting ProtocolHandler ["http-nio-8700"]
+2026-05-28 15:04:19.275 [INFO ] Tomcat started on port(s): 8700 (http) with context path ''
+2026-05-28 15:04:19.286 [INFO ] Started RadarWebApplication in 13.153 seconds (JVM running for 15.548)
+2026-05-28 15:19:42.869 [INFO ] Closing JPA EntityManagerFactory for persistence unit 'default'
+2026-05-28 15:19:42.871 [INFO ] HikariPool-1 - Shutdown initiated...
+2026-05-28 15:19:42.874 [INFO ] HikariPool-1 - Shutdown completed.

@@ -1,0 +1,63 @@
+# server
+server:
+  port: 8700
+
+# environment (dev, prod)
+#app:
+#  env: prod # prod환경일 때 로그 숨김
+
+spring:
+  # 콘솔 색상
+  output:
+    ansi:
+      enabled: always
+
+  application:
+    name: radar-web
+
+  config:
+    use-legacy-processing: true
+    import:
+      optional:
+        classpath:common-data.yml
+# View
+  # mvc:
+  # view:
+  #  prefix: /WEB-INF/views/
+  #  suffix: .jsp
+
+  #JSP와 같이 사용할 경우 뷰 구분을 위해 컨트롤러가 뷰 이름을 반환할때 thymeleaf/ 로 시작하면 타임리프로 처리하도록 view-names 지정
+  mvc:
+    view:
+      # thymeleaf:
+      prefix: classpath:templates/
+      suffix: .html
+  # thymeleaf를 사용하다 수정 사항이 생길 때 수정을 하면 재시작을 해줘야 한다. 이를 무시하고 브라우저 새로고침시 수정사항 반영을 취해 cache=false 설정(운영시는 true)
+  thymeleaf:
+    cache: false
+    check-template-location: true
+
+# 디버그
+logging:
+  config:
+    classpath: log4j2.yml
+  level: # 각 package 별로 로깅 레벨을 지정할 수 있다.
+    '[kr.or.kimsn.radar.web]': DEBUG
+    # '[kr.or.kimsn.radarsms.restApiController.SaveController]': debug
+    #     org:
+    #       hibernate:
+    #         type:
+    #           descriptor:
+    #             sql: trace #query에 어떤 값이 들어갔는지 확인
+    # file:
+    #   # name: ${user.dir}/log/test.log  # 로깅 파일 위치이다.
+    #   name: ./logs/radarsms.log  # 로깅 파일 위치이다.
+    #   max-history: 7 # 로그 파일 삭제 주기이다. 7일 이후 로그는 삭제한다.
+    # max-size: 10MB  # 로그 파일 하나당 최대 파일 사이즈이다.
+  #   # logging.level.org.springframework.security=DEBUG
+  #  로그 패턴 설정
+  pattern:
+    console: "%-5level [%d{yyyy-MM-dd HH:mm:ss}] - %msg%n"
+    file: "%-5level [%d{yyyy-MM-dd HH:mm:ss}] - %msg%n"
+    # logging.pattern.console=%-5level %d{yyyy-MM-dd HH:mm:ss}[%thread] [%F - %M] [%logger{0}:%line] - %msg%n
+    # logging.pattern.file= %-5level %d{yyyy-MM-dd HH:mm:ss}[%thread] [%F - %M] [%logger{0}:%line] - %msg%n
