@@ -18,7 +18,7 @@ public interface SmsSendRepository extends JpaRepository<SmsSendDto, Long> {
 	@Query(nativeQuery = true, value = "SELECT nuri.appContentNextval() from dual"
 			// value = "select seq_currval+1 as seq from nuri.app_contents_sequence"
 	)
-	String getAppContentNextval();
+	Long getAppContentNextval();
 
 	@Query(nativeQuery = true,
 			value = "SELECT COUNT(*) as cnt \n"

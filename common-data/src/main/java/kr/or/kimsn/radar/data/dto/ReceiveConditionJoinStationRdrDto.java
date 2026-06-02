@@ -25,9 +25,9 @@ public class ReceiveConditionJoinStationRdrDto {
     private String recv_condition;
     private String apply_time;
     private String last_check_time;
-    private String sms_send;
-    private String sms_send_activation;
-    private Integer status;
+    private int sms_send;
+    private int sms_send_activation;
+    private int status;
     private String name_kr;
 	private Integer gubun;
 	private Integer permitted_watch ;
