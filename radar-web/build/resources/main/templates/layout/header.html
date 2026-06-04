@@ -223,7 +223,7 @@
                                   <!-- [CASE B] 시스템 관리 메뉴 (5000번 일 때) -->
                                   <th:block th:if="${mList.id == 5000}">
                                     <li th:if="${subList.depth == 2}" th:each="subList : ${list.menuList}">
-                                      <a th:href="'/manage'+${subList.path}" th:text="${subList.menuName}"></a>
+                                      <a th:href="'/manage'+${subList.path}" th:text="${subList.menuName}" style="margin-left: 50px;"></a>
                                     </li>
                                   </th:block>
 

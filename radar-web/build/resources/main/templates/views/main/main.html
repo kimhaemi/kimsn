@@ -17,15 +17,28 @@
 			  window.setInterval(function(){
 				$("#nowTime").text(nowTime());
 			  },1000);
-			  // window.setInterval(function(){
-				// //alertCheck2();
-				// //f5Station();
-				// location.href = "/";
-			  // },30000);
+			  window.setInterval(function(){
+				//alertCheck2();
+				//f5Station();
+				location.href = "/";
+			  },30000);
 			  alertToggle=$('.toggle').data('toggles');
 			});
-			
-		  </script>
+
+			function toggleTab(selected) {
+				const kmaTab = document.getElementById('btn-kma');
+				const mceeTab = document.getElementById('btn-mcee');
+
+				if (selected === 'kma') {
+					kmaTab.classList.add('active');
+					mceeTab.classList.remove('active');
+				} else {
+					mceeTab.classList.add('active');
+					kmaTab.classList.remove('active');
+				}
+			}
+
+		</script>
 
 		<table class="noticeTbl mainSeries">
 			<colgroup>
@@ -55,7 +68,7 @@
 				</tr>
 			</thead>
 		</table>
-	
+
 		<div id="f5content" class="mainSeries">
 			<div class="alertMap">
 				<div class="map"><img src="/images/map.png" alt="지도"></div>
@@ -79,6 +92,13 @@
 			</div>
 
 			<div class="alertTbls">
+
+				<div class="toggle-container">
+					<!-- Default state: 기상청 is active (background-color: #3498db), 기후부 is off -->
+					<div id="btn-kma" class="tab active" onclick="toggleTab('kma')">기상청</div>
+					<div id="btn-mcee" class="tab" onclick="toggleTab('mcee')">기후부</div>
+				</div>
+
 				<table class="table subTbl table-hover" summary="">
 					<colgroup>
 						<col width="150px">
