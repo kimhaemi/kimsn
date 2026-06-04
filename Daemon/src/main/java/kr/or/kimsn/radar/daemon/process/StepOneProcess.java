@@ -62,7 +62,7 @@ public class StepOneProcess {
             sftp = new SftpUtil();
 
             String siteCd = srDto.getSiteCd();
-            String siteStr = srDto.getName_kr();
+            String siteStr = srDto.getNameKr();
             try {
 
                 int port = Integer.parseInt(DataCommon.getInfoConf("ipInfo", "PORT", siteInfo, ipInfo));

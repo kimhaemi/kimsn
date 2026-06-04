@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/default_layout}"
+      th:with="metaTitle='문자 발송 기능 ON/OFF 설정'">
+
+    <th:block layout:fragment="content">
+        <script th:inline="javascript">
+            /* <![CDATA[ */
+                var mData = /*[[${onOffData}]]*/
+                console.log(mData);
+            /* ]]> */
+        </script>
+        <script type="text/javascript">
+            $(function() {
+                $("#configSave").on("click", function(){
+                    let list = new Array();
+                    $("input[name=config]").each(function(idx, item){
+                        let jObj = new Object();
+                        mData.forEach(e => {
+                            // console.log(e);
+                            if(e.code == item.id){
+                                jObj.code=e.code;
+                                jObj.value=$(item).is(":checked") ? 1 : 0;
+                                list.push(jObj);
+                            }
+                        });
+                    });
+
+                    console.log(list);
+
+                    if(confirm("저장 하겠습니까?")){
+                        let result = fnCall('post', '/manage/sms_send_onoff_modify', JSON.stringify(list));
+                        
+                        console.log("result :: "+ result.status);
+                        if(result.status == "success"){
+                            alert("저장되었습니다.");
+                            location.href="/manage/sms_send_onoff"; //다시 로딩
+                        } else {
+                            alert("저장에 실패하였습니다. \n" + result.data);
+                        }
+                    }
+                });
+            });
+        </script>
+    
+    <!-- <form action="sms_send_onoff_action.do" method="post" target="_self" id="searchDate" > -->
+        <table class="noticeTbl searchSeries" >
+            <thead>
+            <tr>
+                <th class="left">
+                    관리 > 문자 발송 기능 ON/OFF 설정
+                </th>
+                <th class="right">
+                    <input type="submit" id="configSave" class="btn ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" value="설정저장">
+                </th>
+            </tr>
+            </thead>
+        </table>
+        
+        <table class="table subTbl table-hover" summary="">
+            <caption class="hidden">문자 발송 기능 ON/OFF 설정</caption>
+            <colgroup>
+                <col style="width:33%" />
+                <col style="width:33%" />
+                <col />
+            </colgroup>
+            <thead class="subThead">
+                <tr>
+                    <th>설정 대상</th>
+                    <th>발신 여부</th>
+                </tr>
+            </thead>
+            <tbody class="table-group-divider">
+                <tr th:each="onOff : ${onOffData}">
+                    <td>
+                        <div th:if="${onOff.code} == 'STOPSMS'">장애 발생 시 문자 발송 기능 </div>
+                        <div th:if="${onOff.code} == 'SCHEDUL'">서버 상태 확인 일일 정기 발송 기능 </div>
+                    </td>
+                    <td>
+                        <label class="a8z-toggle-switch" data-size="sm" style="--a8z-ts-width: 200px;">
+                            <input type="checkbox" th:name="config" 
+                                th:id="${onOff.code}"
+                                th:checked="${onOff.value}"
+                            />
+                            <span class="toggle">
+                                <span class="switch"></span>
+                            </span>
+                        </label>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </th:block>
+</html>

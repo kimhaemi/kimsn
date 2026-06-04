@@ -21,22 +21,32 @@ public class StationDto {
     @Id
     @Column(name = "site_cd")
     private String siteCd;
-    private String site_num;
-    private String name_kr;
-    private String name_en;
+    @Column(name = "site_num")
+    private Long siteNum;
+    @Column(name = "name_kr")
+    private String nameKr;
+    @Column(name = "name_en")
+    private String nameEn;
     private String height;
-    private String max_range;
-    private String gate_size;
+    @Column(name = "max_range")
+    private String maxRange;
+    @Column(name = "gate_size")
+    private String gateSize;
     private String gates;
-    private String rain_intensity;
+    @Column(name = "rain_intensity")
+    private String rainIntensity;
     private String addr;
     private String model;
-    private String install_date;
-    private String prod_company;
-    private String prod_country;
-    private Integer permitted_watch;
+    @Column(name = "install_date")
+    private String installDate;
+    @Column(name = "prod_company")
+    private String prodCompany;
+    @Column(name = "prod_country")
+    private String prodCountry;
+    @Column(name = "permitted_watch")
+    private Integer permittedWatch;
     @Column(name = "sort_order")
-    private String sortOrder;
+    private Integer sortOrder;
     private Integer gubun;
     // private String ip;
     // private String user_id;

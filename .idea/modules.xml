@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/Daemon/radar_new.Daemon.main.iml" filepath="$PROJECT_DIR$/.idea/modules/Daemon/radar_new.Daemon.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/common-data/radar_new.common-data.main.iml" filepath="$PROJECT_DIR$/.idea/modules/common-data/radar_new.common-data.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/radar-api/radar_new.radar-api.main.iml" filepath="$PROJECT_DIR$/.idea/modules/radar-api/radar_new.radar-api.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/radar-web/radar_new.radar-web.main.iml" filepath="$PROJECT_DIR$/.idea/modules/radar-web/radar_new.radar-web.main.iml" />
+    </modules>
+  </component>
+</project>

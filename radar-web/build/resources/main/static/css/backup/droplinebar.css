@@ -1,0 +1,84 @@
+.droplinebar{
+overflow: hidden;
+padding-left: 60px;
+width:600px;
+}
+
+.droplinebar ul{
+margin: 0;
+padding: 0;
+float: left;
+font-family: gulim, verdana;
+font-weight: bold;
+font-size: 13px;
+/*background-color: #0A6ecd; /* #0064cd */
+border-radius: 0px;
+/* background: url(../images/gnb_bar.png) ;  */
+}
+
+.droplinebar ul li{
+display: inline;
+}
+
+.droplinebar ul li a{
+float: left;
+color: #006FBB;
+padding: 9px 11px 4px;
+text-decoration: none;
+}
+/*
+.droplinebar ul li a:visited{
+color: #efefef;
+}
+*/
+.droplinebar ul li a:hover, .droplinebar ul li .current{ /*background of main menu bar links onMouseover*/
+color: #01AFEA;
+/*
+background: #288cd2;
+margin: 5px 5px 0px 5px;
+padding : 4px 6px 9px 6px;
+border-radius: 4px;
+/* background: transparent url(../images/blueactive.gif) center center repeat-x; */
+}
+
+/* Sub level menus*/
+.droplinebar ul li ul{
+position: absolute;
+z-index: 100;
+left: 0;
+top: 0;
+/* background: url(../images/gnb_sub_bar.png); */
+/* background-position-x: 5px; */
+/* background-position-y: 0px; */
+/* background-repeat: no-repeat; */
+/*
+background: url(http://211.42.44.21/new/img/menu/bg_gnb.jpg);
+background-position-y: -35px;
+background-position-x: -15px;
+/*background-color: #efefef;*/
+/* background: #303c76; /*sub menu background color */
+/* background: url(../images/gnb_sub_bar.png) center center; */
+/* background: #288cd2;
+/* background-position-x: 0px;
+background-position-y: -1px; */
+visibility: hidden;
+}
+
+/* Sub level menu links style */
+.droplinebar ul li ul li a{
+font: normal 13px gulim,Verdana;
+padding: 6px;
+padding-right: 8px;
+margin: 0;
+color: #3c3c3c;
+/* border-bottom: 1px solid navy; */
+}
+
+.droplinebar ul li ul li a:visited{
+color: #3c3c3c;
+}
+
+.droplinebar ul li ul li a:hover{ /*sub menu links' background color onMouseover */
+color: #0D67B8;
+font-weight: bold;
+}

@@ -58,9 +58,9 @@ public class MenuService {
                     rcDto.setSms_send_activation(rc.getSms_send_activation());
                     rcDto.setStatus(rc.getStatus());
 
-                    rcDto.setName_kr(sr.getName_kr());
+                    rcDto.setName_kr(sr.getNameKr());
                     rcDto.setGubun(sr.getGubun());
-                    rcDto.setPermitted_watch(sr.getPermitted_watch());
+                    rcDto.setPermitted_watch(sr.getPermittedWatch());
 
                     rcToRdr.add(rcDto);
                 }

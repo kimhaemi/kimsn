@@ -70,7 +70,7 @@ public class StationController {
 
         // 지점별 감시
         StationDto stationDtl = stationService.getStationDetail(site);
-        model.addAttribute("siteName", stationDtl.getName_kr());
+        model.addAttribute("siteName", stationDtl.getNameKr());
         model.addAttribute("siteCd", stationDtl.getSiteCd());
 
         Date now = new Date();
@@ -168,7 +168,7 @@ public class StationController {
         // if (dataKind.equals("RDR")) {
         // 지점별 감시
         StationDto stationDtl = stationService.getStationDetail(site);
-        model.addAttribute("siteName", stationDtl.getName_kr());
+        model.addAttribute("siteName", stationDtl.getNameKr());
 
         ReceiveSettingDto rdrList = stationService.getReceiveSetting(dataKind, 1);
         String data_type = rdrList.getDataType();

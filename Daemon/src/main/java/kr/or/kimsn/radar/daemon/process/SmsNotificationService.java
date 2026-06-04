@@ -81,7 +81,7 @@ public class SmsNotificationService {
     // 파트 B: 개별 사이트 단독 지점별 문자 발송
     if (recvCode.isEmpty()) {
       for (int a = 0; a < srCnt; a++) {
-        String siteCd = srDto.get(a).getSiteCd(), siteStr = srDto.get(a).getName_kr();
+        String siteCd = srDto.get(a).getSiteCd(), siteStr = srDto.get(a).getNameKr();
         StationStatusDto siteStatus = queryService.getStationStatus(siteCd);
         ReceiveConditionDto rcDto = queryService.getReceiveCondition(dataKindStr, "NQC", siteCd);
 

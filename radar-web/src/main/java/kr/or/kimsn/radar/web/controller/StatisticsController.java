@@ -85,7 +85,7 @@ public class StatisticsController {
         }
         for (StationDto sdto : stationList) {
             if (sdto.getSiteCd().equals(site)) {
-                model.addAttribute("siteName", sdto.getName_kr());
+                model.addAttribute("siteName", sdto.getNameKr());
                 model.addAttribute("siteCd", sdto.getSiteCd());
             }
         }

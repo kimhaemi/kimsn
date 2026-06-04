@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/default_layout}"
+      th:with="metaTitle='지점별 통계'">
+
+    <th:block layout:fragment="content">
+
+        <link rel="stylesheet" type="text/css" href="/css/jquery.jqplot.css">
+        <script type="text/javascript" src="/js/plugins/jquery.jqplot.min.js"></script>
+        <script type="text/javascript" src="/js/plugins/jqplot.canvasTextRenderer.min.js"></script>
+        <script type="text/javascript" src="/js/plugins/jqplot.canvasAxisLabelRenderer.min.js"></script>
+        <script type="text/javascript" src="/js/plugins/jqplot.categoryAxisRenderer.min.js"></script>
+        <script type="text/javascript" src="/js/plugins/jqplot.canvasAxisTickRenderer.min.js"></script>
+        <script type="text/javascript" src="/js/plugins/jqplot.enhancedLegendRenderer.min.js"></script>
+        <!-- <link rel="stylesheet" href="/css/radar/jquery-spinner.min.css" />
+        <script src="/js/radar/jquery-spinner.min.js"></script> -->
+        <script th:inline="javascript">
+			/* <![CDATA[ */
+                var nowYear = /*[[${nowYear}]]*/
+                console.log("nowYear", nowYear);
+                var recvMap = /*[[${recvMap}]]*/
+                console.log("recvMap", recvMap);
+                var retrMap = /*[[${retrMap}]]*/
+                console.log("retrMap", retrMap);
+                var missMap = /*[[${missMap}]]*/
+                console.log("missMap", missMap);
+                var rdrSet = /*[[${rdrSet}]]*/
+                console.log("rdrSet", rdrSet);
+                
+            /* ]]> */
+            </script>
+        
+        
+        <script type="text/javascript">
+            var dataType = rdrSet.dataType;
+            
+            let recvArray = new Array();
+            let retrArray = new Array();
+            let missArray = new Array();
+
+            for(let a=0; a<12; a++){
+                recvArray.push(recvMap[a].cnt);
+                retrArray.push(retrMap[a].cnt);
+                missArray.push(missMap[a].cnt);
+            }
+
+            var sColor = [ "#F7B9D9", "#FFCCCC", "#FFDDA6", "#CCD1FF", "#B8F3B8", "#A9E2C5", "#2ED7D2", "#EBDBC4"];
+            var sValue = [];
+            var sLabel = ["수신자료","지연수신","수신누락"];
+            var sTicks = ['1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월'];
+            
+            var sVal = {
+                "NQC" : [
+                recvArray,
+                retrArray,
+                missArray ]
+            };
+            
+            var getMonthStat = function(){
+                // var url = "month_rdr_kwk.do?statYear="+$("#statYear :selected").val();
+                // $(location).attr('href',url);
+                console.log($("#statYear :selected").val());
+                location.href="/stat/KWK?statYear="+$("#statYear :selected").val();
+            }
+            var drawPlot = function(){
+                $("#monthLine").empty();
+                sValue=sVal[$("#statType :selected").val()];
+                var plot1 = $.jqplot('monthLine', sValue, 
+                        {
+                            axes: {
+                                xaxis: {
+                                    renderer:$.jqplot.CategoryAxisRenderer, 
+                                    ticks:sTicks,
+                                    tickRenderer: $.jqplot.CanvasAxisTickRenderer,
+                                    pad: 0
+                                },
+                                yaxis: {
+                                    label: "건수",
+                                    pad: 0
+                                }
+                            },
+                            seriesDefaults: {
+                                lineWidth:1, 
+                                markerOptions: { style:'circle', size:3 },
+                                rendererOptions: {
+                                    smooth: true
+                                }
+                            },
+                            series:[
+                            ],
+                            legend: {
+                                renderer: $.jqplot.EnhancedLegendRenderer,
+                                placement: 'outsideGrid',
+                                labels: sLabel,
+                                marginTop: 0,
+                                show: true,
+                                location: 'e',
+                                rendererOptions: {
+                                    seriesToggle: false,
+                                    disableIEFading: true
+                                }
+                            },
+                            seriesColors: sColor 
+                        }
+                    );
+            }
+        
+        $(document).ready(function(){
+            // var spinner = new jQuerySpinner({
+            //     parentId: 'container'
+            // });
+            // spinner.show();
+
+            // setTimeout(() => {
+            //     spinner.hide();
+            // }, 500);
+
+            drawPlot();
+        });
+        </script>
+        
+        <form action="" method="post" target="_self" id="searchDate">
+        <input type="hidden" name="termStart" id="termStart">
+        <input type="hidden" name="termClose" id="termClose">
+
+        <table class="noticeTbl searchSeries">
+        <!-- <colgroup>
+            <col style="width:auto;">
+            <col style="width:100px;">
+            <col style="width:34px;">
+            <col style="width:205px;">
+            <col style="width:34px;">
+        </colgroup> -->
+            <thead>
+            <tr>
+                <th class="phead">
+                    지점별 통계 &gt; <span class="radar" th:text="${siteName + ' 레이더'}"></span>
+                </th>
+                <th class="ptail">
+                    <select name="statYear" id="statYear" class="">
+                        <th:block th:each="year : ${#numbers.sequence(2023, nowYear)}">
+                            <option th:value="${year}" th:text="${year + '년도'}" th:selected="${#strings.toString(year) == statYear}"></option>    
+                        </th:block>
+                    </select>
+                    
+                    <!-- <input type="button" onclick="getMonthStat()" value="조회" style="height:18px;/*line-height: 12px;*/" /> -->
+                    <button class="btn ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" id="btnMonthSearch"
+                    onclick="getMonthStat()">조회</button>
+                    
+                    <select name="statType" id="statType" class="">
+                        <th:block th:each="rs : ${rdrSet }">
+                            <option th:value="${rs.dataType }" th:text="${rs.data_name}"></option>
+                        </th:block>
+                    </select>
+                    <button class="btn ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" id="btnDrawSearch"
+                    onclick="drawPlot()">조회</button>
+                </th>
+            </tr>
+            </thead>
+        </table>
+        </form>
+        
+        <div class="monthLine" id="monthLine" ></div>	
+        
+        <div class="monthTable">
+        
+            <table class="table subTbl table-hover" summary="">
+                <caption class="hidden">월간 수신률</caption>
+                    <colgroup>
+                        <col class="title">
+                        <col class="month">
+                        <col class="month">
+                        <col class="month">
+                        <col class="month">
+                        <col class="month">
+                        <col class="month">
+                        <col class="month">
+                        <col class="month">
+                        <col class="month">
+                        <col class="month">
+                        <col class="month">
+                        <col class="month">
+                        <col class="month">
+                    </colgroup>
+                
+                <thead class="subThead">
+                    <tr>
+                        <th rowspan="2" colspan="2">항목</th>
+                        <th colspan="12"><span th:text="${siteName + ' 레이더'}"></span></th>
+                    </tr>
+                    <tr>
+                        <th th:each="month : ${#numbers.sequence(1, 12)}" th:text="${month + '월'}"> </th>
+                    </tr>
+                </thead>
+                <tbody class="table-group-divider">
+						<tr th:each="rdr : ${rdrSet}">
+							<td rowspan="3">
+                                <span th:text="${rdr.data_name}"></span>
+							</td>
+							<td>수신자료</td>
+                            <th:block th:each="month, monthStat : ${#numbers.sequence(1, 12)}">
+                                <td>
+                                    <th:block th:each="rcDt : ${recvMap}">
+                                        <th:block th:if="${rcDt.stat_month == month}">
+                                            <div th:text="${rcDt.cnt}"></div>
+                                            <div th:text="${'('+rcDt.percent+'%)'}"></div>
+                                        </th:block>
+                                        <!-- <th:block th:if="${rtDt.stat_month != month && rtDt.cnt != null}">
+                                            <span>-</span>
+                                        </th:block> -->
+                                    </th:block>
+                                </td>
+                            </th:block>
+						</tr>
+						<tr>
+							<td>지연수신</td>
+                            <th:block th:each="month, monthStat : ${#numbers.sequence(1, 12)}">
+                                <td>
+                                    <th:block th:each="rtDt : ${retrMap}">
+                                        <th:block th:if="${rtDt.stat_month == month}">
+                                            <div th:text="${rtDt.cnt}"></div>
+                                            <div th:text="${'('+rtDt.percent+'%)'}"></div>
+                                        </th:block>
+                                        <!-- <th:block th:if="${rtDt.stat_month != month && rtDt.cnt != null}">
+                                            <span>-</span>
+                                        </th:block> -->
+                                    </th:block>
+                                </td>
+                            </th:block>
+						</tr>
+						<tr>
+							<td>수신누락</td>
+                            <th:block th:each="month, monthStat : ${#numbers.sequence(1, 12)}">
+                                <td>
+                                    <th:block th:each="missDt : ${missMap}">
+                                        <th:block th:if="${missDt.stat_month == month}">
+                                            <div th:text="${missDt.cnt}"></div>
+                                            <div th:text="${'('+missDt.percent+'%)'}"></div>
+                                        </th:block>
+                                        <!-- <th:block th:if="${missDt.stat_month != month && missDt.cnt != null}">
+                                            <span>-</span>
+                                        </th:block> -->
+                                    </th:block>
+                                </td>
+                            </th:block>
+						</tr>
+					<!-- </c:forEach> -->
+                </tbody>
+            </table>
+        </div>
+
+        <!-- <div id="container">
+            Any Content Here
+        </div> -->
+    </th:block>
+</html>

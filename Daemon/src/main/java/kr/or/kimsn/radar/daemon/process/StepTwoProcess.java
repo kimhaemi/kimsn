@@ -46,7 +46,7 @@ public class StepTwoProcess {
         List<ReceiveConditionCriteriaDto> rccDtoList = queryService.getReceiveConditionCriteriaList(gubun);
 
         for (int a = 0; a < srCnt; a++) {
-            String siteCd = srDto.get(a).getSiteCd(), siteStr = srDto.get(a).getName_kr();
+            String siteCd = srDto.get(a).getSiteCd(), siteStr = srDto.get(a).getNameKr();
             String newCond = "", newDtl = "", applyTime = "";
 
             log.info("[{}] [============ {} 정보 정산 ==============]", cycleId, siteStr);
