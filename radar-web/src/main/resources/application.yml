@@ -45,7 +45,7 @@ logging:
   config:
     classpath: log4j2.yml
   level: # 각 package 별로 로깅 레벨을 지정할 수 있다.
-    '[kr.or.kimsn.radar.web]': DEBUG
+    '[kr.or.kimsn.radar.web]': INFO # DEBUG
     # '[kr.or.kimsn.radarsms.restApiController.SaveController]': debug
     #     org:
     #       hibernate:

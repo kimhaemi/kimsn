@@ -16,7 +16,7 @@ div.top_link{position:absolute;right:10px;top:40px;}
 #web_gif{display: block;}
 .max_width{width:1000px;margin:0 auto;text-align:left;padding:0 10px;}
 .wrap{height:auto;padding-top:80px;box-sizing:border-box;}
-.cont{position:relative;min-height:calc(100% - 182px); overflow:hidden;margin-top:5px;}
+.cont{position:relative;min-height:calc(100% - 182px); overflow:hidden;margin-top:10px;}
 .content{float:right;width:calc(100% - 215px);min-height:100%;text-align:left;padding-bottom:20px;}
 
 .logout{float:right;position:relative;top:6px;margin: 0 auto;}
@@ -79,12 +79,21 @@ div.top_link{position:absolute;right:10px;top:40px;}
 		border-left:4px solid transparent;
 }
 .sub a:hover{color:#1000f7;}
-.sub .on a{color:#1000f7;border-left-color:#1000f7;font-weight: bold;}
+/*.sub .on a{color:#1000f7;border-left-color:#1000f7;font-weight: bold;}*/
+
+/* 서브 메뉴 내부의 활성화된 지점/메뉴 텍스트 스타일 */
+.navi .sub a.on {
+	color: #007bff !important;       /* 💡 원하는 강조 색상 (예: 파란색) */
+	font-weight: bold !important;    /* 💡 글자 두껍게 */
+	font-size: 16px;
+	text-decoration: underline !important; /* (선택) 밑줄 추가 효과 */
+}
 
 .subTitle {
 	height: 30px;
 	font-weight: bold;
   background-color: #3498db;
+	color: #fff;
 	/*margin-top: 10px;*/
 	margin-bottom: 10px;
 

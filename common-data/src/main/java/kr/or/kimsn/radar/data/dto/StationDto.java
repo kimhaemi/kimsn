@@ -48,8 +48,8 @@ public class StationDto {
     @Column(name = "sort_order")
     private Integer sortOrder;
     private Integer gubun;
-    // private String ip;
-    // private String user_id;
-    // private String pwd;
+
+    @Column(name = "agency_cd")
+    private String agencyCd;
 
 }

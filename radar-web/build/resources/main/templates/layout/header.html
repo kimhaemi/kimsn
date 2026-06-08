@@ -140,7 +140,7 @@
                                 <a th:href="${mList.path}" th:text="${mList.menuName}"></a><!-- 대메뉴 -->
 
                                 <!-- 서브 메뉴 레이어 -->
-                                <ul th:if="${mList.id != 1000 && mList.id != 6000}" class="sub" style="display: none; height: auto; padding-top: 0px; margin-top: 0px; padding-bottom: 0px; margin-bottom: 0px;">
+                                <ul th:if="${mList.id != 1000 && mList.id != 6000}" class="sub" style="display: none; height: auto; padding-top: 0px; margin-top: 0px; padding-bottom: 10px; margin-bottom: 10px;">
 
                                   <!-- [CASE A] 레이더 지점 모니터링 메뉴들 (2000, 3000, 4000) -->
                                   <th:block th:if="${mList.id != 5000}">
