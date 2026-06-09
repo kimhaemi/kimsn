@@ -52,4 +52,7 @@ public class StationDto {
     @Column(name = "agency_cd")
     private String agencyCd;
 
+    @Column(name = "style_attr")
+    private String styleAttr;
+
 }

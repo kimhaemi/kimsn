@@ -14,13 +14,13 @@ import kr.or.kimsn.radar.data.dto.ReceiveConditionDto;
 @Repository
 public interface ReceiveConditionRepository extends JpaRepository<ReceiveConditionDto, String> {
 
-    List<ReceiveConditionDto> findByDataTypeOrderBySite(String data_type);
+    List<ReceiveConditionDto> findByDataTypeOrderBySite(String dataType);
 
-    List<ReceiveConditionDto> findBySiteAndDataType(String site, String data_type);
+    List<ReceiveConditionDto> findBySiteAndDataType(String site, String dataType);
 
-  List<ReceiveConditionDto> findByDataKindAndDataType(String data_kind, String data_type);
+  List<ReceiveConditionDto> findByDataKindAndDataType(String dataKind, String dataType);
 
-  ReceiveConditionDto findByDataKindAndDataTypeAndSite(String data_kind, String data_type, String Site);
+  ReceiveConditionDto findByDataKindAndDataTypeAndSite(String dataKind, String dataType, String Site);
 
   @Query(nativeQuery = true, value = "update watchdog.receive_condition set\n" +
       // " apply_time = DATE_FORMAT(:apply_time, '%Y-%m-%d %H:%i:%S'), \n" +

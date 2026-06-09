@@ -4,18 +4,68 @@ SHOW PROCESSLIST;
 SELECT * 
 FROM information_schema.innodb_trx;
 
-KILL 368;
+KILL 478;
 
 commit;
 
 -- 기후부 등록 query
-ALTER TABLE watchdog.station_rdr modify agency_cd varchar(4) NULL COMMENT '소속기관코드 (KMA:기상청, MCEE:기후부)';
-
+ALTER TABLE watchdog.station_rdr add agency_cd varchar(4) NULL COMMENT '소속기관코드 (KMA:기상청, MCEE:기후부)';
 -- update watchdog.station_rdr set
 -- agency_cd = 'KMA'
 -- agency_cd = 'MCEE'
 select * from watchdog.station_rdr sr
 where site_num > 60000;
+
+-- 2. 현재 웹 화면 배치용 데이터 (현재 UI 유지보수 제로화용)
+ALTER TABLE `station_rdr` ADD `style_attr` VARCHAR(255) DEFAULT NULL COMMENT '화면 배치 CSS 스타일';
+
+-- 기상청: 대형
+UPDATE watchdog.station_rdr
+SET style_attr = CASE site_cd
+    -- [기상청 대형]
+    WHEN 'KWK' THEN 'top:170px; left:250px; background-size: 70% 70%;'
+    WHEN 'BRI' THEN 'top:100px; left:25px; background-size: 70% 70%;'
+    WHEN 'GDK' THEN 'top:90px; left:260px; background-size: 70% 70%;'
+    WHEN 'GNG' THEN 'top:130px; left:370px; background-size: 70% 70%;'
+    WHEN 'MYN' THEN 'top:320px; left:380px; background-size: 70% 70%;'
+    WHEN 'PSN' THEN 'top:420px; left:390px; background-size: 70% 70%;'
+    WHEN 'KSN' THEN 'top:340px; left:180px; background-size: 70% 70%;'
+    WHEN 'JNI' THEN 'top:470px; left:160px; background-size: 70% 70%;'
+    WHEN 'GSN' THEN 'top:565px; left:120px; background-size: 70% 70%;'
+    WHEN 'SSP' THEN 'top:565px; left:230px; background-size: 70% 70%;'
+    WHEN 'YIT' THEN 'top:210px; left:270px; background-size: 70% 70%;'
+    -- [기상청 공항]
+    WHEN 'IIA' THEN 'top:160px; left:180px; background-size: 70% 70%;'
+    -- [기상청 소형]
+    WHEN 'MIL' THEN 'top:250px; left:200px; background-size: 35% 35%;'
+    WHEN 'SRI' THEN 'top:210px; left:230px; background-size: 35% 35%;'
+    WHEN 'DJK' THEN 'top:210px; left:150px; background-size: 35% 35%;'
+    -- [기후부 대형]
+    WHEN 'BSL' THEN 'top:340px; left:350px; background-size: 70% 70%;'
+    WHEN 'SBS' THEN 'top:200px; left:350px; background-size: 70% 70%;'
+    WHEN 'GRS' THEN 'top:70px; left:290px; background-size: 70% 70%;'
+    WHEN 'YBS' THEN 'top:100px; left:250px; background-size: 70% 70%;'
+    WHEN 'GAS' THEN 'top:40px; left:150px; background-size: 70% 70%;'
+    WHEN 'SDS' THEN 'top:300px; left:270px; background-size: 70% 70%;'
+    WHEN 'MHS' THEN 'top:410px; left:250px; background-size: 70% 70%;'
+    -- [기후부 소형]
+    WHEN 'SAC' THEN 'top:200px; left:410px; background-size: 35% 35%;'
+    WHEN 'TGS' THEN 'top:250px; left:410px; background-size: 35% 35%;'
+    WHEN 'TSB' THEN 'top:50px; left:220px; background-size: 35% 35%;'    
+    -- 데이터가 비어있던 나머지 소형 레이더(광주, 부산, 세종, 울산 등)의 예외 처리 기본값 정의
+    ELSE 
+        CASE WHEN gubun = 2 THEN 'top:170px; left:250px; background-size: 35% 35%;'
+             ELSE 'top:170px; left:250px; background-size: 70% 70%;'
+        END
+END;
+
+
+select
+sr.site_cd , sr.site_num, sr.name_kr , SR.style_attr
+from watchdog.station_rdr sr
+-- where site_cd = 'KWK'
+order by sr.sort_order 
+;
 
 commit;
 
@@ -83,3 +133,97 @@ commit;
 
 select * from watchdog.station_rdr sr order by sort_order, site_num;
 
+select * from watchdog.receive_condition rc where rc.data_type = 'NQC' and rc.agency_cd = 'KMA';
+
+-- 기후부 등록 query
+ALTER TABLE watchdog.receive_condition add agency_cd varchar(4) NULL COMMENT '소속기관코드 (KMA:기상청, MCEE:기후부)';
+
+-- update watchdog.receive_condition set
+-- agency_cd = 'KMA'
+-- agency_cd = 'MCEE'
+select * from watchdog.receive_condition rc
+where data_type = 'NQC'
+and site in (
+	select site_cd from watchdog.station_rdr sr
+where site_num < 60000
+);
+
+commit;
+
+
+/**
+ * receive_condition: 기후부 대형
+ */
+-- 비슬산
+INSERT INTO watchdog.receive_condition
+(site, data_kind, data_type, recv_condition, apply_time, last_check_time, sms_send, sms_send_activation, status, codedtl, agency_cd)
+VALUES('BSL', 'RDR', 'NQC', 'ORDI', now(), now(), 0, 1, 1, '', 'MCEE');
+-- 소백산
+INSERT INTO watchdog.receive_condition
+(site, data_kind, data_type, recv_condition, apply_time, last_check_time, sms_send, sms_send_activation, status, codedtl, agency_cd)
+VALUES('SBS', 'RDR', 'NQC', 'ORDI', now(), now(), 0, 1, 1, '', 'MCEE');
+-- 가리산
+INSERT INTO watchdog.receive_condition
+(site, data_kind, data_type, recv_condition, apply_time, last_check_time, sms_send, sms_send_activation, status, codedtl, agency_cd)
+VALUES('GRS', 'RDR', 'NQC', 'ORDI', now(), now(), 0, 1, 1, '', 'MCEE');
+-- 예봉산
+INSERT INTO watchdog.receive_condition
+(site, data_kind, data_type, recv_condition, apply_time, last_check_time, sms_send, sms_send_activation, status, codedtl, agency_cd)
+VALUES('YBS', 'RDR', 'NQC', 'ORDI', now(), now(), 0, 1, 1, '', 'MCEE');
+-- 감악산
+INSERT INTO watchdog.receive_condition
+(site, data_kind, data_type, recv_condition, apply_time, last_check_time, sms_send, sms_send_activation, status, codedtl, agency_cd)
+VALUES('GAS', 'RDR', 'NQC', 'ORDI', now(), now(), 0, 1, 1, '', 'MCEE');
+-- 서대산
+INSERT INTO watchdog.receive_condition
+(site, data_kind, data_type, recv_condition, apply_time, last_check_time, sms_send, sms_send_activation, status, codedtl, agency_cd)
+VALUES('SDS', 'RDR', 'NQC', 'ORDI', now(), now(), 0, 1, 1, '', 'MCEE');
+-- 모후산
+INSERT INTO watchdog.receive_condition
+(site, data_kind, data_type, recv_condition, apply_time, last_check_time, sms_send, sms_send_activation, status, codedtl, agency_cd)
+VALUES('MHS', 'RDR', 'NQC', 'ORDI', now(), now(), 0, 1, 1, '', 'MCEE');
+
+/**
+ * receive_condition: 기후부 소형
+ */
+-- 삼척
+INSERT INTO watchdog.receive_condition
+(site, data_kind, data_type, recv_condition, apply_time, last_check_time, sms_send, sms_send_activation, status, codedtl, agency_cd)
+VALUES('SAC', 'SDR', 'NQC', 'ORDI', now(), now(), 0, 1, 1, '', 'MCEE');
+-- 통고산
+INSERT INTO watchdog.receive_condition
+(site, data_kind, data_type, recv_condition, apply_time, last_check_time, sms_send, sms_send_activation, status, codedtl, agency_cd)
+VALUES('TGS', 'SDR', 'NQC', 'ORDI', now(), now(), 0, 1, 1, '', 'MCEE');
+
+-- 광주
+INSERT INTO watchdog.receive_condition
+(site, data_kind, data_type, recv_condition, apply_time, last_check_time, sms_send, sms_send_activation, status, codedtl, agency_cd)
+VALUES('', 'SDR', 'NQC', 'ORDI', now(), now(), 0, 1, 1, '', 'MCEE');
+-- 부산
+INSERT INTO watchdog.receive_condition
+(site, data_kind, data_type, recv_condition, apply_time, last_check_time, sms_send, sms_send_activation, status, codedtl, agency_cd)
+VALUES('', 'SDR', 'NQC', 'ORDI', now(), now(), 0, 1, 1, '', 'MCEE');
+-- 부산EDC
+INSERT INTO watchdog.receive_condition
+(site, data_kind, data_type, recv_condition, apply_time, last_check_time, sms_send, sms_send_activation, status, codedtl, agency_cd)
+VALUES('', 'SDR', 'NQC', 'ORDI', now(), now(), 0, 1, 1, '', 'MCEE');
+-- 세종
+INSERT INTO watchdog.receive_condition
+(site, data_kind, data_type, recv_condition, apply_time, last_check_time, sms_send, sms_send_activation, status, codedtl, agency_cd)
+VALUES('', 'SDR', 'NQC', 'ORDI', now(), now(), 0, 1, 1, '', 'MCEE');
+-- 전주
+INSERT INTO watchdog.receive_condition
+(site, data_kind, data_type, recv_condition, apply_time, last_check_time, sms_send, sms_send_activation, status, codedtl, agency_cd)
+VALUES('', 'SDR', 'NQC', 'ORDI', now(), now(), 0, 1, 1, '', 'MCEE');
+-- 울산
+INSERT INTO watchdog.receive_condition
+(site, data_kind, data_type, recv_condition, apply_time, last_check_time, sms_send, sms_send_activation, status, codedtl, agency_cd)
+VALUES('', 'SDR', 'NQC', 'ORDI', now(), now(), 0, 1, 1, '', 'MCEE');
+-- 임진강
+INSERT INTO watchdog.receive_condition
+(site, data_kind, data_type, recv_condition, apply_time, last_check_time, sms_send, sms_send_activation, status, codedtl, agency_cd)
+VALUES('TSB', 'SDR', 'NQC', 'ORDI', now(), now(), 0, 1, 1, '', 'MCEE');
+-- 청주
+INSERT INTO watchdog.receive_condition
+(site, data_kind, data_type, recv_condition, apply_time, last_check_time, sms_send, sms_send_activation, status, codedtl, agency_cd)
+VALUES('', 'SDR', 'NQC', 'ORDI', now(), now(), 0, 1, 1, '', 'MCEE');

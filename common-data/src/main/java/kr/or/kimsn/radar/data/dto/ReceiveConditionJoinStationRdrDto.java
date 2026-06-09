@@ -21,15 +21,25 @@ public class ReceiveConditionJoinStationRdrDto {
     @Id
     @Column(name = "data_type")
     private String dataType;
-    
-    private String recv_condition;
-    private String apply_time;
-    private String last_check_time;
-    private int sms_send;
-    private int sms_send_activation;
+
+    @Column(name = "recv_Condition")
+    private String recvCondition;
+    @Column(name = "apply_time")
+    private String applyTime;
+    @Column(name = "last_check_time")
+    private String lastCheckTime;
+    @Column(name = "sms_send")
+    private int smsSend;
+    @Column(name = "sms_send_activa")
+    private int smsSendActiva;
     private int status;
-    private String name_kr;
-	private Integer gubun;
-	private Integer permitted_watch ;
-    
+    @Column(name = "name_kr")
+    private String nameKr;
+	  private Integer gubun;
+    @Column(name = "permitted_watch")
+	  private Integer permittedWatch ;
+    @Column(name = "agency_cd")
+    private String agencyCd;
+    @Column(name = "style_attr")
+    private String styleAttr;
 }

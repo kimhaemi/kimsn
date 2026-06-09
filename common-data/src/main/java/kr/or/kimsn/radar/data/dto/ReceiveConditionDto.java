@@ -16,12 +16,21 @@ public class ReceiveConditionDto {
     private String site;
     @Column(name = "data_kind")
     private String dataKind;
-    @Column(name = "data_type") private String dataType;
-    private String recv_condition;
-    private String apply_time;
-    private String last_check_time;
-    private int sms_send;
-    private int sms_send_activation;
+    @Column(name = "data_type")
+    private String dataType;
+    @Column(name = "recv_condition")
+    private String recvCondition;
+    @Column(name = "apply_time")
+    private String applyTime;
+    @Column(name = "last_check_time")
+    private String lastCheckTime;
+    @Column(name = "sms_send")
+    private int smsSend;
+    @Column(name = "sms_send_activation")
+    private int smsSendActivation;
     private int status;
     private String codedtl;
+
+    @Column(name = "agency_cd")
+    private String agencyCd;
 }

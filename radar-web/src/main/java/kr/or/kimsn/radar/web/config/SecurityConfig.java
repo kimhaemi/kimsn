@@ -47,12 +47,12 @@ public class SecurityConfig {
             .csrf().disable()
             .authorizeRequests()
 //                .antMatchers("/manage/sms_send_result_nuri2").permitAll() //허용 경로
-            .antMatchers("/static/**").permitAll() //허용 경로
-            .antMatchers("/").permitAll()
+//            .antMatchers("/static/**").permitAll() //허용 경로
+            .antMatchers("/**").permitAll()
 //            .antMatchers("/").authenticated() //인증
-            .antMatchers("/manage/**").authenticated() //인증
-            .antMatchers("/station/**").authenticated() //인증
-            .antMatchers("/stat/**").authenticated() //인증
+//            .antMatchers("/manage/**").authenticated() //인증
+//            .antMatchers("/station/**").authenticated() //인증
+//            .antMatchers("/stat/**").authenticated() //인증
             .anyRequest().permitAll()
             .and()
             .formLogin()

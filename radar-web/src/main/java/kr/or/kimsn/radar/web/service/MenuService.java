@@ -51,16 +51,18 @@ public class MenuService {
                     rcDto.setSite(rc.getSite());
                     rcDto.setDataKind(rc.getDataKind());
                     rcDto.setDataType(rc.getDataType());
-                    rcDto.setRecv_condition(rc.getRecv_condition());
-                    rcDto.setApply_time(rc.getApply_time());
-                    rcDto.setLast_check_time(rc.getLast_check_time());
-                    rcDto.setSms_send(rc.getSms_send());
-                    rcDto.setSms_send_activation(rc.getSms_send_activation());
+                    rcDto.setRecvCondition(rc.getRecvCondition());
+                    rcDto.setApplyTime(rc.getApplyTime());
+                    rcDto.setLastCheckTime(rc.getLastCheckTime());
+                    rcDto.setSmsSend(rc.getSmsSend());
+                    rcDto.setSmsSendActiva(rc.getSmsSendActivation());
                     rcDto.setStatus(rc.getStatus());
 
-                    rcDto.setName_kr(sr.getNameKr());
+                    rcDto.setNameKr(sr.getNameKr());
                     rcDto.setGubun(sr.getGubun());
-                    rcDto.setPermitted_watch(sr.getPermittedWatch());
+                    rcDto.setPermittedWatch(sr.getPermittedWatch());
+                    rcDto.setAgencyCd(sr.getAgencyCd());
+                    rcDto.setStyleAttr(sr.getStyleAttr());
 
                     rcToRdr.add(rcDto);
                 }

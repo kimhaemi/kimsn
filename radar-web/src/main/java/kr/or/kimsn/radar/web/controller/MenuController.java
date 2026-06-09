@@ -66,8 +66,7 @@ public class MenuController {
         model.addAttribute("list", map);
 
         // 최종수신상태
-        List<ReceiveConditionJoinStationRdrDto> rcState = menuService
-                .getReceiveConditionJoinStationRdrList(stationList);
+        List<ReceiveConditionJoinStationRdrDto> rcState = menuService.getReceiveConditionJoinStationRdrList(stationList);
         model.addAttribute("rcState", rcState);
 
         Date now = new Date();
