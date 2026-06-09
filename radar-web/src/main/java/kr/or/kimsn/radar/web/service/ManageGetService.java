@@ -61,15 +61,11 @@ public class ManageGetService {
 
     // 지점/자료별 문자 발송 설정 조회(자료 수신 상태)
     public List<SmsSetRcDto> getReceiveConditionList() {
-        // List<ReceiveDto> result =
-        // mapper.map(receiveConditionRepository.findReceiveConditionStationRdrReceiveSetting(),
-        // ReceiveDto.class);
         return smsSetRcRepository.findReceiveConditionStationRdrReceiveSetting();
     }
 
     // 경고 기준 설정
     public List<ReceiveConditionCriteriaDto> getReceiveConditionCriteriaList() {
-        // return receiveConditionCriteriaRepository.findAll();
         return receiveConditionCriteriaRepository.findByOrderByGubunAscSortAsc();
     }
 
@@ -91,7 +87,6 @@ public class ManageGetService {
         }
 
         return map;
-        // return smsSendPatternRepository.findByOrderByCodeAscModeDesc();
     }
 
     // 그룹관리 > 그룹 감시 자료 설정
@@ -124,7 +119,6 @@ public class ManageGetService {
 
     // 문자 수신 그룹 관리
     public List<SmsTargetGroupDto> getSmsTargetGroupList() {
-        // return smsTargetGroupRepository.findAll();
         return smsTargetGroupRepository.findByOrderBySortOrderAsc();
     }
 

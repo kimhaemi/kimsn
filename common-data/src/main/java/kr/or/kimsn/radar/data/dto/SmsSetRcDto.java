@@ -25,4 +25,5 @@ public class SmsSetRcDto {
     private Integer gubun;
     private Integer sort_order;
 
+    private String agency_cd;
 }
