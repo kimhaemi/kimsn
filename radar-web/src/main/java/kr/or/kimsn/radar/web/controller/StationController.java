@@ -93,6 +93,28 @@ public class StationController {
         log.info("keySet ::::::: " + keySet);
         model.addAttribute("keySet", keySet);
 
+        // 5분 단위 정각으로 Key를 맞춘 Map 생성
+        Map<String, ReceiveDataDto> dataMapByTime = new HashMap<>();
+        for (ReceiveDataDto dto : rdrMap) {
+            if (dto.getData_time() != null) {
+                // "2026-06-10 15:16:00" -> 연.월.일 추출 ("2026.06.10")
+                String datePart = dto.getData_time().substring(0, 10).replace("-", ".");
+                String hourPart = dto.getData_time().substring(11, 13); // "15"
+                int minute = Integer.parseInt(dto.getData_time().substring(14, 16)); // 16
+
+                // [수정된 매칭 로직] 16분->15분, 11분->10분, 36분->35분으로 강제 가공
+                int roundedMinute = (minute / 5) * 5;
+
+                // keySet과 정확히 일치하는 포맷으로 Key 생성 ("2026.06.10_15:15")
+                String timeKey = String.format("%s_%s:%02d", datePart, hourPart, roundedMinute);
+
+                dataMapByTime.put(timeKey, dto);
+            }
+        }
+        // 반드시 "dataMapByTime" 이라는 이름으로 모델에 담아주셔야 합니다.
+        model.addAttribute("dataMapByTime", dataMapByTime);
+
+
         // receive_condition
 
         model.addAttribute("list", map);

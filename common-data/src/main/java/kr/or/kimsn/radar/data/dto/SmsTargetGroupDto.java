@@ -11,7 +11,7 @@ import lombok.Data;
 
 @Data
 @Entity
-@Table(name = "sms_target_group")
+@Table(name = "sms_target_group", catalog = "watchdog")
 public class SmsTargetGroupDto {
     
     @Id
@@ -24,5 +24,9 @@ public class SmsTargetGroupDto {
     private String status;
     @Column(name="sort_order")
     private Integer sortOrder;
+
+    private int gubun;
+    @Column(name="agency_cd")
+    private String agencyCd;
 
 }

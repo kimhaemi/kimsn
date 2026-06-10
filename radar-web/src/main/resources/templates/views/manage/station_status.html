@@ -7,7 +7,7 @@
         <script th:inline="javascript">
             /* <![CDATA[ */
                 var mData = /*[[${stationStatusList}]]*/
-                console.log(mData);
+                console.log("stationStatusList: ", mData);
             /* ]]> */
         </script>
         <script type="text/javascript">
@@ -56,46 +56,174 @@
             </tr>
             </thead>
         </table>
-        
-        <table class="table subTbl table-hover" summary="">
-            <caption class="hidden">지점별 운영상태 </caption>
-            <colgroup>
-                <col>
-                <col>
-            </colgroup>
-            <thead class="subThead">
-                <tr>
-                    <th>지점</th>
-                    <th>운영상태</th>
-                </tr>
-            </thead>
-            <tbody class="table-group-divider" th:each="stationStatusList : ${stationStatusList}" th:if="${stationStatusList.status == '1'}">
-                <tr class="subThead">
-                    <td colspan="2" th:if="${stationStatusList.gubun == '1' && stationStatusList.sortOrder == '1'}">
-                        대형 레이더
-                    </td>
-                    <td colspan="2" th:if="${stationStatusList.gubun == '2' && stationStatusList.sortOrder == '20'}">
-                        소형 레이더
-                    </td>
-                    <td colspan="2" th:if="${stationStatusList.gubun == '3' && stationStatusList.sortOrder == '30'}">
-                        공항 레이더
-                    </td>
-                </tr>
-                <tr >
-                    <td><span th:text="${stationStatusList.siteName +'('+ stationStatusList.siteCd +')'}"></span><!-- 백령도 ( BRI ) --></td>
-                    <td>
-                        <label class="a8z-toggle-switch" data-size="sm" style="--a8z-ts-input-checked-content:'정상운영'; --a8z-ts-input-unchecked-content: '유지보수'; --a8z-ts-width: 200px;">
-                            <input type="checkbox" name="config" 
-                                th:id="${stationStatusList.siteCd}"
-                                th:checked="${stationStatusList.siteStatus == 'RUN'}"
-                            />
-                            <span class="toggle">
-                                <span class="switch"></span>
-                            </span>
-                        </label>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
+
+      <!-- 두 테이블을 좌우로 나란히 배치하기 위한 플렉스 컨테이너 -->
+      <div style="display: flex; gap: 20px; align-items: flex-start; width: 100%;">
+
+          <!-- ========================================================================= -->
+          <!-- 1. 왼쪽: 기상청 (KMA) 전용 테이블 -->
+          <!-- ========================================================================= -->
+          <div style="flex: 1; min-width: 0;">
+              <h3 style="font-size: 16px; font-weight: bold; margin-bottom: 10px; color: #1e293b;">기상청</h3>
+              <table class="table subTbl table-hover" summary="">
+                  <caption class="hidden">지점별 운영상태 </caption>
+                  <colgroup>
+                      <col>
+                      <col>
+                  </colgroup>
+                  <thead class="subThead">
+                  <tr>
+                      <th>지점</th>
+                      <th>운영상태</th>
+                  </tr>
+                  </thead>
+                  <tbody class="table-group-divider">
+                  <tr class="subThead">
+                      <td colspan="2" style="font-weight: bold; text-align: center;">대형 레이더</td>
+                  </tr>
+                  <th:block th:each="ssList : ${stationStatusList}">
+                      <tr th:if="${ssList.gubun == 1 && ssList.status == 1 && ssList.agencyCd == 'KMA'}">
+                          <td><span th:text="${ssList.siteName +'('+ ssList.siteCd +')'}"></span><!-- 백령도 ( BRI ) --></td>
+                          <td>
+                              <label class="a8z-toggle-switch" data-size="sm" style="--a8z-ts-input-checked-content:'정상운영'; --a8z-ts-input-unchecked-content: '유지보수'; --a8z-ts-width: 200px;">
+                                  <input type="checkbox" name="config"
+                                         th:id="${ssList.siteCd}"
+                                         th:checked="${ssList.siteStatus == 'RUN'}"
+                                  />
+                                  <span class="toggle">
+                                    <span class="switch"></span>
+                                </span>
+                              </label>
+                          </td>
+                      </tr>
+                  </th:block>
+
+                  <tr class="subThead">
+                      <td colspan="2" style="font-weight: bold; text-align: center;">소형 레이더</td>
+                  </tr>
+                  <th:block th:each="ssList : ${stationStatusList}">
+                      <tr th:if="${ssList.gubun == 2 && ssList.status == 1 && ssList.agencyCd == 'KMA'}">
+                          <td><span th:text="${ssList.siteName +'('+ ssList.siteCd +')'}"></span><!-- 백령도 ( BRI ) --></td>
+                          <td>
+                              <label class="a8z-toggle-switch" data-size="sm" style="--a8z-ts-input-checked-content:'정상운영'; --a8z-ts-input-unchecked-content: '유지보수'; --a8z-ts-width: 200px;">
+                                  <input type="checkbox" name="config"
+                                         th:id="${ssList.siteCd}"
+                                         th:checked="${ssList.siteStatus == 'RUN'}"
+                                  />
+                                  <span class="toggle">
+                                    <span class="switch"></span>
+                                </span>
+                              </label>
+                          </td>
+                      </tr>
+                  </th:block>
+
+                  <tr class="subThead">
+                      <td colspan="2" style="font-weight: bold; text-align: center;">공항 레이더</td>
+                  </tr>
+                  <th:block th:each="ssList : ${stationStatusList}">
+                      <tr th:if="${ssList.gubun == 3 && ssList.status == 1 && ssList.agencyCd == 'KMA'}">
+                          <td><span th:text="${ssList.siteName +'('+ ssList.siteCd +')'}"></span><!-- 백령도 ( BRI ) --></td>
+                          <td>
+                              <label class="a8z-toggle-switch" data-size="sm" style="--a8z-ts-input-checked-content:'정상운영'; --a8z-ts-input-unchecked-content: '유지보수'; --a8z-ts-width: 200px;">
+                                  <input type="checkbox" name="config"
+                                         th:id="${ssList.siteCd}"
+                                         th:checked="${ssList.siteStatus == 'RUN'}"
+                                  />
+                                  <span class="toggle">
+                                    <span class="switch"></span>
+                                </span>
+                              </label>
+                          </td>
+                      </tr>
+                  </th:block>
+
+                  </tbody>
+              </table>
+          </div>
+
+          <!-- ========================================================================= -->
+          <!-- 2. 오른쪽: 기후부 (MCEE) 전용 테이블 -->
+          <!-- ========================================================================= -->
+          <div style="flex: 1; min-width: 0;">
+              <h3 style="font-size: 16px; font-weight: bold; margin-bottom: 10px; color: #1e293b;">기후부</h3>
+              <table class="table subTbl table-hover" summary="">
+                  <caption class="hidden">지점별 운영상태 </caption>
+                  <colgroup>
+                      <col>
+                      <col>
+                  </colgroup>
+                  <thead class="subThead">
+                  <tr>
+                      <th>지점</th>
+                      <th>운영상태</th>
+                  </tr>
+                  </thead>
+                  <tbody class="table-group-divider">
+                  <tr class="subThead">
+                      <td colspan="2" style="font-weight: bold; text-align: center;">대형 레이더</td>
+                  </tr>
+                  <th:block th:each="ssList : ${stationStatusList}">
+                      <tr th:if="${ssList.gubun == 1 && ssList.status == 1 && ssList.agencyCd == 'MCEE'}">
+                          <td><span th:text="${ssList.siteName +'('+ ssList.siteCd +')'}"></span><!-- 백령도 ( BRI ) --></td>
+                          <td>
+                              <label class="a8z-toggle-switch" data-size="sm" style="--a8z-ts-input-checked-content:'정상운영'; --a8z-ts-input-unchecked-content: '유지보수'; --a8z-ts-width: 200px;">
+                                  <input type="checkbox" name="config"
+                                         th:id="${ssList.siteCd}"
+                                         th:checked="${ssList.siteStatus == 'RUN'}"
+                                  />
+                                  <span class="toggle">
+                                    <span class="switch"></span>
+                                </span>
+                              </label>
+                          </td>
+                      </tr>
+                  </th:block>
+
+                  <tr class="subThead">
+                      <td colspan="2" style="font-weight: bold; text-align: center;">소형 레이더</td>
+                  </tr>
+                  <th:block th:each="ssList : ${stationStatusList}">
+                      <tr th:if="${ssList.gubun == 2 && ssList.status == 1 && ssList.agencyCd == 'MCEE'}">
+                          <td><span th:text="${ssList.siteName +'('+ ssList.siteCd +')'}"></span><!-- 백령도 ( BRI ) --></td>
+                          <td>
+                              <label class="a8z-toggle-switch" data-size="sm" style="--a8z-ts-input-checked-content:'정상운영'; --a8z-ts-input-unchecked-content: '유지보수'; --a8z-ts-width: 200px;">
+                                  <input type="checkbox" name="config"
+                                         th:id="${ssList.siteCd}"
+                                         th:checked="${ssList.siteStatus == 'RUN'}"
+                                  />
+                                  <span class="toggle">
+                                    <span class="switch"></span>
+                                </span>
+                              </label>
+                          </td>
+                      </tr>
+                  </th:block>
+
+<!--                  <tr class="subThead">-->
+<!--                      <td colspan="2" style="font-weight: bold; text-align: center;">공항 레이더</td>-->
+<!--                  </tr>-->
+<!--                  <th:block th:each="ssList : ${stationStatusList}">-->
+<!--                      <tr th:if="${ssList.gubun == 3 && ssList.status == 1 && ssList.agencyCd == 'MCEE'}">-->
+<!--                          <td><span th:text="${ssList.siteName +'('+ ssList.siteCd +')'}"></span>&lt;!&ndash; 백령도 ( BRI ) &ndash;&gt;</td>-->
+<!--                          <td>-->
+<!--                              <label class="a8z-toggle-switch" data-size="sm" style="&#45;&#45;a8z-ts-input-checked-content:'정상운영'; &#45;&#45;a8z-ts-input-unchecked-content: '유지보수'; &#45;&#45;a8z-ts-width: 200px;">-->
+<!--                                  <input type="checkbox" name="config"-->
+<!--                                         th:id="${ssList.siteCd}"-->
+<!--                                         th:checked="${ssList.siteStatus == 'RUN'}"-->
+<!--                                  />-->
+<!--                                  <span class="toggle">-->
+<!--                                    <span class="switch"></span>-->
+<!--                                </span>-->
+<!--                              </label>-->
+<!--                          </td>-->
+<!--                      </tr>-->
+<!--                  </th:block>-->
+
+                  </tbody>
+              </table>
+          </div>
+      </div>
+
     </th:block>
 </html>

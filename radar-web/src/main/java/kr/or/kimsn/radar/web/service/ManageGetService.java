@@ -119,7 +119,8 @@ public class ManageGetService {
 
     // 문자 수신 그룹 관리
     public List<SmsTargetGroupDto> getSmsTargetGroupList() {
-        return smsTargetGroupRepository.findByOrderBySortOrderAsc();
+        return smsTargetGroupRepository.findAllByOrderByAgencyCdAscGubunAscSortOrderAsc();
+//        return smsTargetGroupRepository.findByOrderBySortOrderAsc();
     }
 
     // 문자 수신 그룹 > [ *** ] 그룹 관리

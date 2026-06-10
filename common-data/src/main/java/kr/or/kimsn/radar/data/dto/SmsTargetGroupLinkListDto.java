@@ -1,5 +1,6 @@
 package kr.or.kimsn.radar.data.dto;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 
@@ -16,4 +17,7 @@ public class SmsTargetGroupLinkListDto {
 
     private String name_kr;
     private String data_name;
+
+    @Column(name="agency_cd")
+    private String agencyCd;
 }

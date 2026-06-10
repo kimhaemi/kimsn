@@ -18,7 +18,8 @@ public interface SmsTargetGroupLinkListRepository extends JpaRepository<SmsTarge
             "  T1.data_type as data_type, \n" +
             "  T1.group_id as group_id,\n" +
             "  T2.name_kr as name_kr, \n" +
-            "  T3.data_name as data_name\n" +
+            "  T3.data_name as data_name,\n" +
+            "  T2.agency_cd as agency_cd \n" +
             "from\n" +
             "  sms_target_group_link T1\n" +
             "left outer join\n" +

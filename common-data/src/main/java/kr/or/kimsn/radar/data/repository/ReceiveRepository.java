@@ -17,7 +17,8 @@ public interface ReceiveRepository extends JpaRepository<ReceiveDto, String> {
             "  T1.data_type as data_type, \n" +
             "  T3.data_name as data_name,\n" +
             "  T1.sms_send_activation as sms_send_activation, \n" +
-            "  T1.status as status \n" +
+            "  T1.status as status, \n" +
+            "  T2.agency_cd as agency_cd \n" +
             "from\n" +
             "  receive_condition T1\n" +
             "left outer join station_rdr T2\n" +
@@ -29,8 +30,14 @@ public interface ReceiveRepository extends JpaRepository<ReceiveDto, String> {
             "  T1.data_kind=T3.data_kind and\n" +
             "  T1.data_type=T3.data_type\n" +
             "order by\n" +
-            "  T1.data_kind asc,\n" +
-            "  name_kr asc,\n" +
-            "  T1.data_type asc")
+            "   T2.agency_cd asc,\n" +
+            " T2.sort_order ,\n" +
+            " T1.data_kind asc,\n" +
+            " name_kr asc,\n" +
+            " T1.data_type asc"
+//            "  T1.data_kind asc,\n" +
+//            "  name_kr asc,\n" +
+//            "  T1.data_type asc"
+    )
     List<ReceiveDto> getReceiveTableJoin();
 }

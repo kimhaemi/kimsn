@@ -7,11 +7,11 @@
         <script th:inline="javascript">
             /* <![CDATA[ */
                 var group = /*[[${smsTargetGroup}]]*/
-                console.log(group);
+                console.log("smsTargetGroup: ", group);
                 var links = /*[[${links}]]*/
-                console.log(links);
+                console.log("links: ", links);
                 var notlinks = /*[[${notlinks}]]*/
-                console.log(notlinks);
+                console.log("notlinks: ", notlinks);
             /* ]]> */
         </script>
         <script type="text/javascript">
@@ -78,7 +78,7 @@
             <thead class="subThead">
                 <tr>
                     <th colspan="5">
-                        <span th:text="${smsTargetGroup.name}+' 그룹에게 문자가 통보되는 지점별 데이터 목록'"></span>
+                        <span th:text="'[ '+${smsTargetGroup.name}+' ] 그룹에게 문자가 통보되는 지점별 데이터 목록'"></span>
                     </th>
                 </tr>
                 <tr>
@@ -125,7 +125,7 @@
             <thead class="subThead">
                 <tr>
                     <th colspan="5">
-                        <spen th:text="${smsTargetGroup.name}+' 그룹에게 문자가 통보되도록 추가할 수 있는 지점별 데이터 목록'"></spen>
+                        <spen th:text="'[ '+${smsTargetGroup.name}+' ] 그룹에게 문자가 통보되도록 추가할 수 있는 지점별 데이터 목록'"></spen>
                     </th>
                 </tr>
                 <tr>

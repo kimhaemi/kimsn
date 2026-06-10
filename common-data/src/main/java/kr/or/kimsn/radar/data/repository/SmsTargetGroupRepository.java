@@ -16,6 +16,8 @@ public interface SmsTargetGroupRepository extends JpaRepository<SmsTargetGroupDt
 
     List<SmsTargetGroupDto> findByOrderBySortOrderAsc();
 
+    List<SmsTargetGroupDto> findAllByOrderByAgencyCdAscGubunAscSortOrderAsc();
+
     // List<SmsTargetGroupDto> findByGid(Long gid);
     List<SmsTargetGroupDto> findByIdLessThan(Long gid);
 

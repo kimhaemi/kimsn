@@ -85,7 +85,7 @@ div.top_link{position:absolute;right:10px;top:40px;}
 .navi .sub a.on {
 	color: #007bff !important;       /* 💡 원하는 강조 색상 (예: 파란색) */
 	font-weight: bold !important;    /* 💡 글자 두껍게 */
-	font-size: 16px;
+	font-size: 14px;
 	text-decoration: underline !important; /* (선택) 밑줄 추가 효과 */
 }
 

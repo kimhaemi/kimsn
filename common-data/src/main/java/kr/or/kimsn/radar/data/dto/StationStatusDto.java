@@ -16,8 +16,9 @@ public class StationStatusDto {
     @Column(name = "site_cd")     private String siteCd;
     @Column(name = "site_name")   private String siteName;
     @Column(name = "site_status") private String siteStatus;
-    @Column(name = "sort_order")  private String sortOrder;
+    @Column(name = "sort_order")  private int sortOrder;
     private int gubun;
     private int status;
+    @Column(name = "agency_cd")  private String agencyCd;
 
 }

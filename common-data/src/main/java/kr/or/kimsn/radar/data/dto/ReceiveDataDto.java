@@ -29,6 +29,6 @@ public class ReceiveDataDto {
     private String recv_condition_check_time;
     private String file_name;
     private Long file_size;
-    private String codedtl;
+//    private String codedtl;
 
 }

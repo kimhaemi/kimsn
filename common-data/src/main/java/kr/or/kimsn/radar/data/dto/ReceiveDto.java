@@ -26,5 +26,7 @@ public class ReceiveDto {
     private String data_name;
     private String sms_send_activation;
     private Integer status;
-    
+
+    @Column(name="agency_cd")
+    private String agencyCd;
 }

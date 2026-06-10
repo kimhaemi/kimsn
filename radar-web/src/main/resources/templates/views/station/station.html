@@ -14,6 +14,8 @@
 			console.log("keySet", keySet);
       var rdrMap = /*[[${rdrMap}]]*/
 			console.log("rdrMap", rdrMap);
+      var dataMapByTime = /*[[${dataMapByTime}]]*/
+      console.log("dataMapByTime: ", dataMapByTime);
       
       /* ]]> */
     </script>
@@ -97,60 +99,68 @@
         <tbody class="table-group-divider">
           <tr th:each="rcSite : ${rcState}">
             <td><div th:text="${now}"></div></td>
-            <td><div th:classappend="${'status ' + rcSite.recv_condition}" ></div></td>
+            <td><div th:classappend="${'status ' + rcSite.recvCondition}" ></div></td>
             <!-- <td><span th:text="${rcSite.apply_time}"></span></td> -->
-            <td><span th:text="${rcSite.last_check_time}"></span></td>
+            <td><span th:text="${rcSite.lastCheckTime}"></span></td>
           </tr>
         </tbody>
       </table>
-      
+
+
+
+
       <table class="table subTbl table-hover" summary="">
         <caption class="hidden">1</caption>
         <thead class="subThead">
-          <tr>
-            <th th:colspan="3">최근 자료 수신현황</th>
-          </tr>
-          <tr>
-            <th rowspan="2" style="width:125px;">시간</th>
-            <th:block th:each="rdrs : ${rdrSet}">
-              <th colspan="2"><span th:text="${rdrs.dataType}"></span></th>
-            </th:block>
-          </tr>
-          <tr>
-            <th:block th:each="rdrs : ${rdrSet}">
-              <th style="width: 100px;">상태</th>
-              <th>수신시간</th>
-            </th:block>
-          </tr>
+        <tr>
+          <th colspan="3">최근 자료 수신현황</th>
+        </tr>
+        <tr>
+          <th rowspan="2" style="width:125px;">시간</th>
+          <th colspan="2"><span th:text="${rdrSet.dataType}"></span></th>
+        </tr>
+        <tr>
+          <th style="width: 100px;">상태</th>
+          <th>수신시간</th>
+        </tr>
         </thead>
-        
+
         <tbody class="table-group-divider">
-					<tr th:each="datatime, datatimeStat : ${keySet[rdrSet.dataType]}">
-						<td>
-              <span th:text="${datatime.replace('_', ' ')}"></span>
-						</td>
-            <td>
-              <th:block th:if="${rdrMap.size() > datatimeStat.index}">
-                <!-- <th:block th:if="${datatime.replace('.', '').replace('_', '').replace(':', '')
-                == rdrMap[datatimeStat.index].recv_time.replace('-', '').replace(':', '').replace(' ', '').substring(0, rdrMap[datatimeStat.index].recv_time.replace('-', '').replace(':', '').replace(' ', '').length -2)}"> -->
-                  <span th:classappend="${'recv ' + rdrMap[datatimeStat.index].recv_condition}" ></span>
-                <!-- </th:block> -->
-              </th:block>
-              <th:block th:if="${rdrMap.size() <= datatimeStat.index}">
-                <span> - </span>
-              </th:block>
-            </td>
-            <td>
-              <th:block th:if="${rdrMap.size() > datatimeStat.index}">
-                <span th:text="${rdrMap[datatimeStat.index].recv_time}"></span>
-              </th:block>
-              <th:block th:if="${rdrMap.size() <= datatimeStat.index}">
-                <span> - </span>
-              </th:block>
-            </td>
-					</tr>
+        <!-- 36개 타임라인 정각 배열 순회 ("2026.06.10_15:30" 등) -->
+        <tr th:each="datatime : ${keySet[rdrSet.dataType]}">
+          <td>
+            <!-- 화면에는 "2026.06.10 15:30" 형태로 출력 -->
+            <span th:text="${datatime.replace('_', ' ')}"></span>
+          </td>
+
+          <!-- 생성한 맵에서 타임라인 문자열을 Key로 지정해 바로 꺼냄 -->
+          <th:block th:with="matchedItem=${dataMapByTime.get(datatime)}">
+
+            <!-- 데이터가 존재하는 경우 (수신 완료) -->
+            <th:block th:if="${matchedItem != null}">
+              <td>
+                <!-- 로그 데이터에 맞춘 recv_condition 필드명 반영 -->
+                <span th:classappend="${'recv ' + matchedItem.recv_condition}"></span>
+              </td>
+              <td>
+                <!-- 로그 데이터에 맞춘 recv_time 필드명 반영 -->
+                <span th:text="${matchedItem.recv_time}"></span>
+              </td>
+            </th:block>
+
+            <!-- 데이터가 없는 경우 (미수신 공백 처리) -->
+            <th:block th:if="${matchedItem == null}">
+              <td><span> - </span></td>
+              <td><span> - </span></td>
+            </th:block>
+
+          </th:block>
+        </tr>
         </tbody>
       </table>
+
+
+
     </div>
   </th:block>
   <!-- <audio class="alarmAudio" controls="" preload="auto" loop=""><source src="/sounds/Electronic_Chime.mp3" type="audio/mpeg"></audio> -->
