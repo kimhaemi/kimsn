@@ -1,6 +1,0 @@
-rootProject.name = 'radar_new'
-
-// 모든 하위 모듈 등록
-include 'common-data'
-include 'radar-web'
-include 'Daemon'
