@@ -1,0 +1,13 @@
+# 빌드 결과물
+build/
+dist/
+
+# 의존성 패키지
+node_modules/
+
+# 환경 변수 및 설정
+.env
+
+# 운영체제 생성 파일
+.DS_Store
+Thumbs.db

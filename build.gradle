@@ -66,6 +66,8 @@ subprojects {
         implementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-xml'
         implementation 'org.modelmapper:modelmapper:2.3.9'
 
+        implementation 'com.google.code.findbugs:jsr305:3.0.2'
+
         // 💡 Lombok 의존성 정상 주입
         compileOnly 'org.projectlombok:lombok'
         annotationProcessor 'org.projectlombok:lombok'

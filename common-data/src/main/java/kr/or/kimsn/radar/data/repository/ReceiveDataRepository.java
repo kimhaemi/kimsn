@@ -118,7 +118,8 @@ public interface ReceiveDataRepository extends JpaRepository<ReceiveDataDto, Rec
             "    recv_condition,  \n" +
             "    recv_condition_check_time,  \n" +
             "    file_name,  \n" +
-            "    file_size  \n" +
+            "    file_size,  \n" +
+            "    codedtl  \n" +
             "from receive_data \n" +
             "where 1=1 \n" +
             "  and data_kst <= :now \n" +
