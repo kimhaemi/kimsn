@@ -15,5 +15,9 @@ Thumbs.db
 .gradle/
 .idea/
 logs/
-./radar-web/build
-./common-data/build
+gradle/
+./radar-web/build/
+./common-data/build/
+
+gradlew
+.gitignore
