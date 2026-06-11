@@ -1,0 +1,16 @@
+spring:
+# 콘솔 색상
+  output:
+    ansi:
+      enabled: always
+
+# 디버그
+logging:
+  config: 
+    classpath: log4j2.yml
+  level:
+    root: info
+    '[kr.or.kimsn.radardemo]': DEBUG
+  pattern:
+    console: "%-5level [%d{yyyy-MM-dd HH:mm:ss}] - %msg%n"
+    file: "%-5level [%d{yyyy-MM-dd HH:mm:ss}] - %msg%n"

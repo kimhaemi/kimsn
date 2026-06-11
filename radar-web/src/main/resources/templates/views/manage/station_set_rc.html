@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/default_layout}"
+      th:with="metaTitle='지점별 문자 발송 설정'">
+
+	<th:block layout:fragment="content">
+      <script th:inline="javascript">
+          /* <![CDATA[ */
+          // 백엔드에서 단일 리스트로 넘겼으므로 receiveList는 그대로 유지됩니다.
+          var receiveList = /*[[${receiveList}]]*/
+              console.log(receiveList);
+          /* ]]> */
+      </script>
+
+      <script type="text/javascript">
+          $(function() {
+              $("#configSave").on("click", function(){
+                  let list = new Array();
+
+                  $("input[name=config]").each(function(idx, item){
+                      let jObj = new Object();
+
+                      // ==========================================
+                      // [수정 핵심 1] ID가 "KMA-site-dataType" 형태로 바뀌었으므로 3개로 파싱합니다.
+                      // ==========================================
+                      let idParts = item.id.split("-");
+                      let agencyCd = idParts[0];   // 'KMA' 또는 'MCEE'
+                      let site = idParts[1];       // 기존의 site
+                      let dataType = idParts[2];   // 기존의 dataType
+
+                      receiveList.forEach(e => {
+                          // ==========================================
+                          // [수정 핵심 2] 비교 조건에 agencyCd(agency_cd)를 추가하여 정확한 대상을 찾습니다.
+                          // ==========================================
+                          let matchAgency = (e.agencyCd == agencyCd || e.agency_cd == agencyCd);
+
+                          if(matchAgency && e.site == site && e.dataType == dataType){
+                              jObj.site = e.site;
+                              jObj.dataKind = e.dataKind;
+                              jObj.dataType = e.dataType;
+                              jObj.data_name = e.data_name;
+                              jObj.sms_send_activation = $(item).is(":checked") ? 1 : 0;
+                              jObj.status = e.status;
+
+                              // ==========================================
+                              // [수정 핵심 3] 서버 DTO에도 agency_cd가 들어가야 하므로 데이터를 세팅합니다.
+                              // DTO 필드명(agencyCd 또는 agency_cd)에 맞춰서 보내주세요.
+                              // ==========================================
+                              jObj.agencyCd = agencyCd;
+                              jObj.agency_cd = agencyCd;
+
+                              list.push(jObj);
+                          }
+                      });
+                  });
+
+                  if(confirm("저장 하겠습니까?")){
+                      let result = fnCall('post', '/manage/station_set_rc_modify', JSON.stringify(list));
+
+                      console.log("result :: "+ result.status);
+                      if(result.status == "success"){
+                          alert("저장되었습니다.");
+                          location.href="/manage/station_set_rc"; //다시 로딩
+                      } else {
+                          alert("저장에 실패하였습니다. \n" + result.data);
+                      }
+                  }
+              });
+          });
+      </script>
+
+      <input type="hidden" name="termStart" id="termStart">
+        <input type="hidden" name="termClose" id="termClose">
+        <table class="noticeTbl searchSeries">
+            <thead>
+            <tr>
+                <th class="left">
+                    관리 &gt; 지점별 문자 발송 설정
+                </th>
+                <th class="right">
+                    <input type="submit" id="configSave" class="btn ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" value="설정저장">
+                </th>
+            </tr>
+            </thead>
+        </table>
+
+      <!-- 두 테이블을 좌우로 나란히 배치하기 위한 플렉스 컨테이너 -->
+      <div style="display: flex; gap: 20px; align-items: flex-start; width: 100%;">
+
+          <!-- ========================================================================= -->
+          <!-- 1. 왼쪽: 기상청 (KMA) 전용 테이블 -->
+          <!-- ========================================================================= -->
+          <div style="flex: 1; min-width: 0;">
+              <h3 style="font-size: 16px; font-weight: bold; margin-bottom: 10px; color: #1e293b;">기상청</h3>
+              <table class="table subTbl table-hover" summary="기상청 지점/자료별 문자 발송 설정">
+                  <caption class="hidden">기상청 지점/자료별 문자 발송 설정</caption>
+                  <colgroup>
+                      <col><col><col>
+                  </colgroup>
+                  <thead class="subThead">
+                  <tr>
+                      <th>지점</th>
+                      <th colspan="2">자료 종류</th>
+                      <th>문자 발송 설정</th>
+                  </tr>
+                  </thead>
+                  <tbody class="table-group-divider">
+
+                  <!-- ------------------------------------------------------------- -->
+                  <!-- [기상청 - 대형 레이더 섹션 (gubun == 1)] -->
+                  <!-- ------------------------------------------------------------- -->
+                  <tr class="subThead">
+                      <td colspan="4" style="font-weight: bold; text-align: center;">대형 레이더</td>
+                  </tr>
+                  <th:block th:each="rclist : ${receiveList}">
+                      <tr th:if="${rclist.agency_cd == 'KMA' && rclist.gubun == 1 && rclist.status == 1}">
+                          <td class="left"><div th:text="${rclist.name_kr +' ('+rclist.site+')'}"></div></td>
+                          <td><div th:text="${rclist.dataType}"></div></td>
+                          <td><div th:text="${rclist.data_name}"></div></td>
+                          <td>
+                              <label class="a8z-toggle-switch" data-size="sm" style="--a8z-ts-width: 100px;">
+                                  <input type="checkbox" name="config" th:id="${'KMA-'+rclist.site+'-'+rclist.dataType}" th:checked="${rclist.sms_send_activation == 1}"/>
+                                  <span class="toggle"><span class="switch"></span></span>
+                              </label>
+                          </td>
+                      </tr>
+                  </th:block>
+
+                  <!-- ------------------------------------------------------------- -->
+                  <!-- [기상청 - 소형 레이더 섹션 (gubun == 2)] -->
+                  <!-- ------------------------------------------------------------- -->
+                  <tr class="subThead">
+                      <td colspan="4" style="font-weight: bold; text-align: center;">소형 레이더</td>
+                  </tr>
+                  <th:block th:each="rclist : ${receiveList}">
+                      <tr th:if="${rclist.agency_cd == 'KMA' && rclist.gubun == 2 && rclist.status == 1}">
+                          <td class="left"><div th:text="${rclist.name_kr +' ('+rclist.site+')'}"></div></td>
+                          <td><div th:text="${rclist.dataType}"></div></td>
+                          <td><div th:text="${rclist.data_name}"></div></td>
+                          <td>
+                              <label class="a8z-toggle-switch" data-size="sm" style="--a8z-ts-width: 100px;">
+                                  <input type="checkbox" name="config" th:id="${'KMA-'+rclist.site+'-'+rclist.dataType}" th:checked="${rclist.sms_send_activation == 1}"/>
+                                  <span class="toggle"><span class="switch"></span></span>
+                              </label>
+                          </td>
+                      </tr>
+                  </th:block>
+
+                  <!-- ------------------------------------------------------------- -->
+                  <!-- [기상청 - 공항 레이더 섹션 (gubun == 3)] -->
+                  <!-- ------------------------------------------------------------- -->
+                  <tr class="subThead">
+                      <td colspan="4" style="font-weight: bold; text-align: center;">공항 레이더</td>
+                  </tr>
+                  <th:block th:each="rclist : ${receiveList}">
+                      <tr th:if="${rclist.agency_cd == 'KMA' && rclist.gubun == 3 && rclist.status == 1}">
+                          <td class="left"><div th:text="${rclist.name_kr +' ('+rclist.site+')'}"></div></td>
+                          <td><div th:text="${rclist.dataType}"></div></td>
+                          <td><div th:text="${rclist.data_name}"></div></td>
+                          <td>
+                              <label class="a8z-toggle-switch" data-size="sm" style="--a8z-ts-width: 100px;">
+                                  <input type="checkbox" name="config" th:id="${'KMA-'+rclist.site+'-'+rclist.dataType}" th:checked="${rclist.sms_send_activation == 1}"/>
+                                  <span class="toggle"><span class="switch"></span></span>
+                              </label>
+                          </td>
+                      </tr>
+                  </th:block>
+
+                  </tbody>
+              </table>
+          </div>
+
+          <!-- ========================================================================= -->
+          <!-- 2. 오른쪽: 기후부 (MCEE) 전용 테이블 -->
+          <!-- ========================================================================= -->
+          <div style="flex: 1; min-width: 0;">
+              <h3 style="font-size: 16px; font-weight: bold; margin-bottom: 10px; color: #1e293b;">기후부</h3>
+              <table class="table subTbl table-hover" summary="기후부 지점/자료별 문자 발송 설정">
+                  <caption class="hidden">기후부 지점/자료별 문자 발송 설정</caption>
+                  <colgroup>
+                      <col><col><col>
+                  </colgroup>
+                  <thead class="subThead">
+                  <tr>
+                      <th>지점</th>
+                      <th colspan="2">자료 종류</th>
+                      <th>문자 발송 설정</th>
+                  </tr>
+                  </thead>
+                  <tbody class="table-group-divider">
+
+                  <!-- ------------------------------------------------------------- -->
+                  <!-- [기후부 - 대형 레이더 섹션 (gubun == 1)] -->
+                  <!-- ------------------------------------------------------------- -->
+                  <tr class="subThead">
+                      <td colspan="4" style="font-weight: bold; text-align: center;">대형 레이더</td>
+                  </tr>
+                  <th:block th:each="rclist : ${receiveList}">
+                      <tr th:if="${rclist.agency_cd == 'MCEE' && rclist.gubun == 1 && rclist.status == 1}">
+                          <td class="left"><div th:text="${rclist.name_kr +' ('+rclist.site+')'}"></div></td>
+                          <td><div th:text="${rclist.dataType}"></div></td>
+                          <td><div th:text="${rclist.data_name}"></div></td>
+                          <td>
+                              <label class="a8z-toggle-switch" data-size="sm" style="--a8z-ts-width: 100px;">
+                                  <input type="checkbox" name="config" th:id="${'MCEE-'+rclist.site+'-'+rclist.dataType}" th:checked="${rclist.sms_send_activation == 1}"/>
+                                  <span class="toggle"><span class="switch"></span></span>
+                              </label>
+                          </td>
+                      </tr>
+                  </th:block>
+
+                  <!-- ------------------------------------------------------------- -->
+                  <!-- [기후부 - 소형 레이더 섹션 (gubun == 2)] -->
+                  <!-- ------------------------------------------------------------- -->
+                  <tr class="subThead">
+                      <td colspan="4" style="font-weight: bold; text-align: center;">소형 레이더</td>
+                  </tr>
+                  <th:block th:each="rclist : ${receiveList}">
+                      <tr th:if="${rclist.agency_cd == 'MCEE' && rclist.gubun == 2 && rclist.status == 1}">
+                          <td class="left"><div th:text="${rclist.name_kr +' ('+rclist.site+')'}"></div></td>
+                          <td><div th:text="${rclist.dataType}"></div></td>
+                          <td><div th:text="${rclist.data_name}"></div></td>
+                          <td>
+                              <label class="a8z-toggle-switch" data-size="sm" style="--a8z-ts-width: 100px;">
+                                  <input type="checkbox" name="config" th:id="${'MCEE-'+rclist.site+'-'+rclist.dataType}" th:checked="${rclist.sms_send_activation == 1}"/>
+                                  <span class="toggle"><span class="switch"></span></span>
+                              </label>
+                          </td>
+                      </tr>
+                  </th:block>
+
+                  <!-- ------------------------------------------------------------- -->
+                  <!-- [기후부 - 공항 레이더 섹션 (gubun == 3)] -->
+                  <!-- ------------------------------------------------------------- -->
+<!--                  <tr class="subThead">-->
+<!--                      <td colspan="4" style="font-weight: bold; text-align: center;">공항 레이더</td>-->
+<!--                  </tr>-->
+<!--                  <th:block th:each="rclist : ${receiveList}">-->
+<!--                      <tr th:if="${rclist.agency_cd == 'MCEE' && rclist.gubun == 3 && rclist.status == 1}">-->
+<!--                          <td class="left"><div th:text="${rclist.name_kr +' ('+rclist.site+')'}"></div></td>-->
+<!--                          <td><div th:text="${rclist.dataType}"></div></td>-->
+<!--                          <td><div th:text="${rclist.data_name}"></div></td>-->
+<!--                          <td>-->
+<!--                              <label class="a8z-toggle-switch" data-size="sm" style="&#45;&#45;a8z-ts-width: 100px;">-->
+<!--                                  <input type="checkbox" name="config" th:id="${'MCEE-'+rclist.site+'-'+rclist.dataType}" th:checked="${rclist.sms_send_activation == 1}"/>-->
+<!--                                  <span class="toggle"><span class="switch"></span></span>-->
+<!--                              </label>-->
+<!--                          </td>-->
+<!--                      </tr>-->
+<!--                  </th:block>-->
+
+                  </tbody>
+              </table>
+          </div>
+
+      </div>
+
+
+
+  </th:block>
+</html>

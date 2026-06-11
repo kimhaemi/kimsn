@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/default_layout}"
+      th:with="metaTitle='전체 감시'">
+
+<th:block layout:fragment="content">
+		<script th:inline="javascript">
+			/* <![CDATA[ */
+			var rcState = /*[[${rcState}]]*/
+			console.log(rcState);
+            /* ]]> */
+		</script>
+		<script type="text/javascript">
+			var alertToggle;
+			$(document).ready(function(){
+			  $("#nowTime").text(nowTime());
+			  window.setInterval(function(){
+				$("#nowTime").text(nowTime());
+			  },1000);
+			  window.setInterval(function(){
+					//alertCheck2();
+					//f5Station();
+					location.href = "/";
+			  },30000);
+			  alertToggle=$('.toggle').data('toggles');
+
+				// hidden input에 적혀있는 값(KMA 또는 MCEE)을 읽어옴
+				var defaultAgency = $("#agencyCd").val();
+
+				if (defaultAgency === "MCEE") {
+					// 인풋 값이 MCEE면 기후부 탭 함수를 강제로 실행시켜 화면을 전환
+					toggleTab('mcee');
+				} else {
+					// 기본값이 KMA이거나 비어있으면 기상청 탭 함수를 실행
+					toggleTab('kma');
+				}
+			});
+
+			function toggleTab(selected) {
+				const kmaTab = document.getElementById('btn-kma');
+				const mceeTab = document.getElementById('btn-mcee');
+
+				if (selected === 'kma') {
+					kmaTab.classList.add('active');
+					mceeTab.classList.remove('active');
+					$("#agencyCd").val("KMA");
+
+					// [DB 제어] 테이블 행과 지도 div 중 data-agency 속성이 'KMA'인 것만 추출해서 노출
+					$("[data-agency]").hide();
+					$("[data-agency='KMA']").show();
+
+					// 기상청일 때는 공항 레이더(TDWR) 테이블 영역이 있다면 보이도록 처리
+					$("table[data-radar-type='airport']").show();
+				} else {
+					mceeTab.classList.add('active');
+					kmaTab.classList.remove('active');
+					$("#agencyCd").val("MCEE");
+
+					// [DB 제어] 테이블 행과 지도 div 중 data-agency 속성이 'MCEE'인 것만 추출해서 노출
+					$("[data-agency]").hide();
+					$("[data-agency='MCEE']").show();
+
+					// 기후부일 때는 공항 레이더(TDWR) 테이블 영역 자체를 숨김 처리
+					$("table[data-radar-type='airport']").hide();
+				}
+			}
+
+
+		</script>
+
+		<table class="noticeTbl mainSeries">
+			<colgroup>
+				<col style="width:auto">
+				<col style="width:70px;">
+				<col style="width:105px;">
+				<col style="width:70px;">
+				<col style="width:130px;">
+			</colgroup>
+			<thead>
+				<tr>
+					<th class="left"></th>
+					<th class="left"><!-- 알람설정: --></th>
+					<th class="center toggle-light">
+						<input type="hidden" name="alert_activity" id="alert_activity" value="1">
+						<input type="hidden" name="alert_lasttime" id="alert_lasttime" value="">
+						<input type="hidden" name="alert_checksite" id="alert_checksite" value="ALL">
+						<input type="hidden" name="agencyCd" id="agencyCd" value="KMA">
+					</th>
+					<th class="left">현재시간:</th>
+					<th class="right" id="nowTime"></th>
+				</tr>
+			</thead>
+		</table>
+
+		<div id="f5content" class="mainSeries">
+			<div class="alertMap">
+				<div class="map"><img src="/images/map.png" alt="지도"></div>
+				<th:block th:each="rcSite : ${rcState}">
+					<!--
+            - th:styleappend에 DB에서 가져온 완성된 CSS 문자열(style_attr)을 그대로 주입합니다.
+            - 초기 로딩 시 기후부(MCEE) 숨김 조건만 뒤에 붙여줍니다.
+          -->
+					<div th:id="${rcSite.site}"
+							 th:classappend="${'radar ' + rcSite.dataKind + ' ' + rcSite.recvCondition}"
+							 th:data-agency="${rcSite.agencyCd}"
+							 th:styleappend="${rcSite.styleAttr + '; ' + (rcSite.agencyCd == 'MCEE' ? 'display: none;' : '')}">
+
+						<!-- 텍스트 배치는 기존처럼 site_cd나 gubun 기준으로 유연하게 처리 -->
+						<div th:class="${rcSite.site == 'KWK' || rcSite.site == 'YIT' ? 'KWKYIT' : (rcSite.gubun == 2 ? 'small' : 'large')}">
+							<a th:href="${'/station/' + rcSite.site}" th:text="${rcSite.nameKr}"></a>
+						</div>
+					</div>
+				</th:block>
+			</div>
+
+			<div class="alertTbls">
+
+				<div class="toggle-container">
+					<!-- Default state: 기상청 is active (background-color: #3498db), 기후부 is off -->
+					<div id="btn-kma" class="tab active" onclick="toggleTab('kma')">기상청</div>
+					<div id="btn-mcee" class="tab" onclick="toggleTab('mcee')">기후부</div>
+				</div>
+
+				<!-- 1. 대형 레이더 -->
+				<table class="table subTbl table-hover" data-radar-type="large" summary="">
+					<colgroup>
+						<col width="150px">
+						<col >
+					</colgroup>
+					<thead>
+					<th colspan="2">대형 레이더</th>
+					</thead>
+					<tbody>
+					<tr th:each="rcSite : ${rcState}" th:if="${rcSite.gubun == 1}"
+							th:data-agency="${rcSite.agencyCd}"
+							th:styleappend="${rcSite.agencyCd == 'MCEE' ? 'display: none;' : ''}">
+						<td class="subThead">
+							<a th:href="${'/station/'+rcSite.site}" class="radar" th:text="${rcSite.nameKr+' 레이더'}"></a>
+						</td>
+						<td>
+							<span th:classappend="${'status '+ rcSite.recvCondition}"></span>
+							<span th:text="${'최종 수신 '+ rcSite.lastCheckTime.substring(0, rcSite.lastCheckTime.length()-3)}"></span>
+						</td>
+					</tr>
+					</tbody>
+				</table>
+
+				<!-- 2. 소형 레이더 -->
+				<table class="table subTbl table-hover" data-radar-type="small" style="width:400px;" summary="">
+					<colgroup>
+						<col width="150px">
+						<col>
+					</colgroup>
+					<thead>
+					<th colspan="2">소형 레이더</th>
+					</thead>
+					<tbody>
+					<tr th:each="rcSite : ${rcState}" th:if="${rcSite.gubun == 2}"
+							th:data-agency="${rcSite.agencyCd}"
+							th:styleappend="${rcSite.agencyCd == 'MCEE' ? 'display: none;' : ''}">
+						<td class="subThead">
+							<a th:href="${'/station/'+rcSite.site}" class="radar" th:text="${rcSite.nameKr+' 레이더'}"></a>
+						</td>
+						<td>
+							<span th:classappend="${'status '+ rcSite.recvCondition}" ></span>
+							<span th:text="${'최종 수신 '+ rcSite.lastCheckTime.substring(0, rcSite.lastCheckTime.length()-3)}"></span>
+						</td>
+					</tr>
+					</tbody>
+				</table>
+
+				<!-- 3. 공항 레이더 -->
+				<table class="table subTbl table-hover" data-radar-type="airport" summary="">
+					<colgroup>
+						<col width="150px">
+						<col>
+					</colgroup>
+					<thead>
+					<th colspan="2">공항 레이더</th>
+					</thead>
+					<tbody>
+					<tr th:each="rcSite : ${rcState}" th:if="${rcSite.gubun == 3}"
+							th:data-agency="${rcSite.agencyCd}"
+							th:styleappend="${rcSite.agencyCd == 'MCEE' ? 'display: none;' : ''}">
+						<td class="subThead">
+							<a th:href="${'/station/'+rcSite.site}" class="radar" th:text="${rcSite.nameKr+' 레이더'}"></a>
+						</td>
+						<td>
+							<span th:classappend="${'status '+ rcSite.recvCondition}" ></span>
+							<span th:text="${'최종 수신 '+ rcSite.lastCheckTime.substring(0, rcSite.lastCheckTime.length()-3)}"></span>
+						</td>
+					</tr>
+					</tbody>
+				</table>
+			</div>
+
+		</div>
+	</th:block>
+	<audio class="alarmAudio" controls="" preload="auto" loop=""><source src="/sounds/Electronic_Chime.mp3" type="audio/mpeg"></audio>
+</html>

@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/default_layout}"
+      th:with="metaTitle='지점별 과거자료'">
+
+    <th:block layout:fragment="content">
+    	<!-- <link rel="stylesheet" type="text/css" href="/css/bootstrap/bootstrap-datepicker3.css">
+		
+		<link rel="stylesheet" type="text/css" href="/css/bootstrap/bootstrap-datepicker3.standalone.css">
+		<script type="application/json" src="/js/bootstrap/bootstrap-datepicker.js"></script>
+		<script type="application/json" src="/js/bootstrap/bootstrap-datepicker.kr.min.js"></script>
+		<script type="application/json" src="/js/jquery.js"></script> -->
+
+		<script th:inline="javascript">
+            /* <![CDATA[ */
+                var rdrList = /*[[${rdrList}]]*/
+                console.log(rdrList);
+				let recvData = /*[[${recvData}]]*/
+				console.log(recvData);
+				// let site = /*[[${site}]]*/
+				// console.log("site : ", site);
+            /* ]]> */
+        </script>
+        <script type="text/javascript">
+            $(document).ready(function(){
+				$('#datepicker').datepicker({
+					buttonImageOnly: true,
+                    sbuttonText: "Select date",
+                    changeMonth: true,
+                    changeYear: true,
+                    prevText: '이전 달',
+                    nextText: '다음 달',
+                    monthNames: ['1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월'],
+                    monthNamesShort: ['1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월'],
+                    dayNames: ['일','월','화','수','목','금','토'],
+                    dayNamesShort: ['일','월','화','수','목','금','토'],
+                    dayNamesMin: ['일','월','화','수','목','금','토'],
+                    showMonthAfterYear: true,
+                    yearSuffix: '년',
+                    dateFormat: 'yy년 mm월 dd일',
+                    minDate: (new Date(2009, 1 - 1, 1)), maxDate: "+0D",
+					startView: 2,
+					autoclose: true,
+					// buttonText: "Select date"
+				});
+            });
+
+            $(function() {	
+				$("#btnSearch").on('click', function (e) {
+					var selDate = $("#datepicker").val().replace(/ |년|월|일/g, "");
+					$("#sDt").val(selDate);
+					$("#searchDate").submit();
+				});
+            });
+        </script>
+        
+        <form action="" method="post" target="_self" id="searchDate">
+			<input type="hidden" name="sDt" id="sDt"/>
+			<table class="noticeTbl searchSeries">
+				<colgroup>
+					<col style="width:auto;"/>
+					<col style="width:130px;"/>
+					<col style="width:50px;"/>
+				</colgroup>
+				<thead>
+				<tr>
+					<th class="left">
+						과거자료 검색 > <span class="radar" th:text="${siteName+' 레이더'}"></span>
+					</th>
+					<th class="center">
+						<!-- <label for="datePick" class="hidden">년월일 선택</label> -->
+						<!-- <input type="text" th:value="${searchDate}" name="datePick" id="datePick"  /> -->
+
+						<input type="text" id="datepicker" th:value="${searchDate}" readonly />
+						<!-- <div id="ui-datepicker-div" class="ui-datepicker ui-widget ui-widget-content ui-helper-clearfix ui-corner-all"></div> -->
+
+					</th>
+					<th class="right">
+                        <button class="btn ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" id="btnSearch">검색</button>
+				</tr>
+				</thead>
+			</table>
+		</form>
+			
+			<table class="table subTbl table-hover" summary="">
+				<caption class="hidden" th:text="${siteName+' 레이더'}"></caption>
+				<colgroup>
+					<col style="width:400px;" />
+					<col style="width:50px" />
+					<col style="width:150px" />
+				</colgroup>
+				<thead class="subThead">
+					<tr>
+						<th>시간</th>
+						<th th:each="rdrs : ${rdrList}" colspan="2">
+							<div th:text="${rdrs.data_name.replace('레이더','')+'('+rdrs.dataType+')'}"></div>
+							<!-- <div th:text="${'('+rdrs.dataType+')'}"></div> -->
+						</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr th:each="recvDt : ${recvData}">
+						<td>
+							<span th:text="${recvDt.data_kst}"></span>
+						</td>
+						<td>
+							<span th:classappend="${'recv ' + recvDt.recv_condition}" th:title="${recvDt.recv_condition}"></span>
+						</td>
+						<td>
+							<th:block th:if="${recvDt.recv_time != '' }" >
+								<span th:text="${recvDt.recv_time}"></span>
+							</th:block>
+							<th:block th:if="${recvDt.recv_time =='' || recvDt.recv_time == null }" >
+								-
+							</th:block>
+						</td>
+					</tr>
+					<tr th:if="${recvData.size() == 0}">
+						<td colspan="3">데이터가 없습니다.</td>
+					</tr>
+				</tbody>
+			</table>
+    </th:block>
+</html>

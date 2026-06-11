@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/default_layout}"
+      th:with="metaTitle='지점별 감시'">
+
+  <th:block layout:fragment="content">
+    <script th:inline="javascript">
+			/* <![CDATA[ */
+			var rcState = /*[[${rcState}]]*/
+			console.log("rcState", rcState);
+      var rdrSet = /*[[${rdrSet}]]*/
+			console.log("rdrSet", rdrSet);
+      var keySet = /*[[${keySet}]]*/
+			console.log("keySet", keySet);
+      var rdrMap = /*[[${rdrMap}]]*/
+			console.log("rdrMap", rdrMap);
+      var dataMapByTime = /*[[${dataMapByTime}]]*/
+      console.log("dataMapByTime: ", dataMapByTime);
+      
+      /* ]]> */
+    </script>
+    <script type="text/javascript">
+    var alertToggle;
+      
+      $(document).ready(function(){
+        $("#nowTime").text(nowTime());
+        window.setInterval(function(){
+          $("#nowTime").text(nowTime());
+        },1000);
+
+        //30초 새로고침
+        window.setInterval(function(){
+          location.href = "/station/"+ $("#alert_checksite").val();
+          // alertCheck2();
+          // f5Station();
+        },30000);
+        // alertToggle=$('.toggle').data('toggles');
+      });  
+      $(function(){
+      //   $('.toggle').toggles();
+      //   $('.toggle').on('toggle', function (e, active) {
+      //     if (active) {
+      //       $("#alert_activity").val("1");
+      //     } else {
+      //       $("#alert_activity").val("0");
+      //     }
+      //   });
+      });
+    </script>
+
+    <table class="noticeTbl timeSeries">
+      <colgroup>
+        <col style="width:auto;">
+        <col style="width:70px;">
+        <col style="width:105px;">
+        <col style="width:70px;">
+        <col style="width:130px;">
+      </colgroup>
+      <thead> 
+      <tr>
+        <th class="left">
+          지점별 감시 &gt; <span class="radar" th:text="${siteName+' 레이더'}"></span>
+        </th>
+        <th class="left"><!-- 알람설정: --></th>
+        <th class="center">
+          <div class="toggle toggle-light" id="s" data-toggle-on="1" style="height: 20px;">
+            <!-- <label class="a8z-toggle-switch" data-size="sm" style="--a8z-ts-width: 60px;">
+              <input type="checkbox" th:name="notiConfig" 
+              />
+              <span class="toggle">
+                  <span class="switch"></span>
+              </span>
+            </label> -->
+          </div>
+          <input type="hidden" name="alert_activity" id="alert_activity" value="1">
+          <input type="hidden" name="alert_lasttime" id="alert_lasttime" value="${now}">
+          <input type="hidden" name="alert_checksite" id="alert_checksite" th:value="${siteCd}">
+        </th>
+        <th class="left">현재시간:</th>
+        <th class="right" id="nowTime"></th>
+      </tr>
+      </thead>
+    </table>
+
+
+    <div id="f5content">
+      <table class="table subTbl table-hover" summary="">
+        <caption class="hidden" th:text="${siteName+' 레이더'}"></caption>
+        <thead class="subThead">
+          <tr>
+            <th rowspan="2" style="width: 125px;">확인시각</th>
+              <th colspan="2">이진자료 (NQC)</th>
+          </tr>
+          <tr>
+              <th style="width: 40px;">상태</th>
+              <th>최종수신</th>
+          </tr>
+        </thead>
+        <tbody class="table-group-divider">
+          <tr th:each="rcSite : ${rcState}">
+            <td><div th:text="${now}"></div></td>
+            <td><div th:classappend="${'status ' + rcSite.recvCondition}" ></div></td>
+            <!-- <td><span th:text="${rcSite.apply_time}"></span></td> -->
+            <td><span th:text="${rcSite.lastCheckTime}"></span></td>
+          </tr>
+        </tbody>
+      </table>
+
+
+
+
+      <table class="table subTbl table-hover" summary="">
+        <caption class="hidden">1</caption>
+        <thead class="subThead">
+        <tr>
+          <th colspan="3">최근 자료 수신현황</th>
+        </tr>
+        <tr>
+          <th rowspan="2" style="width:125px;">시간</th>
+          <th colspan="2"><span th:text="${rdrSet.dataType}"></span></th>
+        </tr>
+        <tr>
+          <th style="width: 100px;">상태</th>
+          <th>수신시간</th>
+        </tr>
+        </thead>
+
+        <tbody class="table-group-divider">
+        <!-- 36개 타임라인 정각 배열 순회 ("2026.06.10_15:30" 등) -->
+        <tr th:each="datatime : ${keySet[rdrSet.dataType]}">
+          <td>
+            <!-- 화면에는 "2026.06.10 15:30" 형태로 출력 -->
+            <span th:text="${datatime.replace('_', ' ')}"></span>
+          </td>
+
+          <!-- 생성한 맵에서 타임라인 문자열을 Key로 지정해 바로 꺼냄 -->
+          <th:block th:with="matchedItem=${dataMapByTime.get(datatime)}">
+
+            <!-- 데이터가 존재하는 경우 (수신 완료) -->
+            <th:block th:if="${matchedItem != null}">
+              <td>
+                <!-- 로그 데이터에 맞춘 recv_condition 필드명 반영 -->
+                <span th:classappend="${'recv ' + matchedItem.recv_condition}"></span>
+              </td>
+              <td>
+                <!-- 로그 데이터에 맞춘 recv_time 필드명 반영 -->
+                <span th:text="${matchedItem.recv_time}"></span>
+              </td>
+            </th:block>
+
+            <!-- 데이터가 없는 경우 (미수신 공백 처리) -->
+            <th:block th:if="${matchedItem == null}">
+              <td><span> - </span></td>
+              <td><span> - </span></td>
+            </th:block>
+
+          </th:block>
+        </tr>
+        </tbody>
+      </table>
+
+
+
+    </div>
+  </th:block>
+  <!-- <audio class="alarmAudio" controls="" preload="auto" loop=""><source src="/sounds/Electronic_Chime.mp3" type="audio/mpeg"></audio> -->
+</html>

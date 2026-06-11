@@ -1,0 +1,211 @@
+package kr.or.kimsn.radar.web.controller;
+
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.CookieValue;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+
+import kr.or.kimsn.radar.data.dto.MenuDto;
+import kr.or.kimsn.radar.data.dto.ReceiveConditionDto;
+import kr.or.kimsn.radar.data.dto.ReceiveDataDto;
+import kr.or.kimsn.radar.data.dto.ReceiveSettingDto;
+import kr.or.kimsn.radar.data.dto.StationDto;
+import kr.or.kimsn.radar.web.service.MenuService;
+import kr.or.kimsn.radar.web.service.StationService;
+import kr.or.kimsn.radar.data.common.util.DateUtil;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+
+/**
+ * 지점별 감시
+ */
+@Slf4j
+@RequiredArgsConstructor
+@Controller
+public class StationController {
+
+    // @Autowired
+    // private HistoricalDataService historicalDataService;
+
+    private final MenuService menuService;
+    private final StationService stationService;
+
+    // 지점별 감시
+    @GetMapping("/station/{site}")
+    public String getStation(@CookieValue(name = "userId", required = false) String userId,
+            @PathVariable("site") String site, ModelMap model) {
+
+        if (userId == null) {
+            return "views/login";
+        }
+
+        // lgt :낙뢰
+        // rdr : radar(대형)
+        // sml : 스몰
+        String dataKind = !site.equals("LGT") ? "RDR" : "LGT";
+
+        if (site.equals("IIA"))
+            dataKind = "TDWR";
+        if (site.equals("DJK") || site.equals("SRI") || site.equals("MIL"))
+            dataKind = "SDR";
+
+        Map<String, Object> map = new HashMap<>();
+
+        List<MenuDto> menuList = menuService.getMenuList();
+        List<StationDto> stationList = menuService.getStationList();
+
+        map.put("menuList", menuList);
+        map.put("stationList", stationList);
+
+        // 지점별 감시
+        StationDto stationDtl = stationService.getStationDetail(site);
+        model.addAttribute("siteName", stationDtl.getNameKr());
+        model.addAttribute("siteCd", stationDtl.getSiteCd());
+
+        Date now = new Date();
+        model.addAttribute("now", DateUtil.formatDate("yyyy-MM-dd HH:mm:ss", now));
+
+        // 최종수신상태
+        List<ReceiveConditionDto> rcState = stationService.getStationLastCheck(site, "NQC");
+        model.addAttribute("rcState", rcState);
+
+        // 자료 수신 처리 설정
+        ReceiveSettingDto rdrSet = stationService.getReceiveSetting(dataKind, 1);
+        model.addAttribute("rdrSet", rdrSet);
+
+        // 3시간 전까지 data
+        List<ReceiveDataDto> rdrMap = stationService.getReceiveDataThreeHour(dataKind, site, rdrSet, now);
+        model.addAttribute("rdrMap", rdrMap);
+        log.info("rdrMap :::: " + rdrMap);
+
+        Map<String, List<String>> keySet = stationService.getReceiveTimeList(now, rdrSet, dataKind);
+        log.info("keySet ::::::: " + keySet);
+        model.addAttribute("keySet", keySet);
+
+        // 5분 단위 정각으로 Key를 맞춘 Map 생성
+        Map<String, ReceiveDataDto> dataMapByTime = new HashMap<>();
+        for (ReceiveDataDto dto : rdrMap) {
+            if (dto.getData_time() != null) {
+                // "2026-06-10 15:16:00" -> 연.월.일 추출 ("2026.06.10")
+                String datePart = dto.getData_time().substring(0, 10).replace("-", ".");
+                String hourPart = dto.getData_time().substring(11, 13); // "15"
+                int minute = Integer.parseInt(dto.getData_time().substring(14, 16)); // 16
+
+                // [수정된 매칭 로직] 16분->15분, 11분->10분, 36분->35분으로 강제 가공
+                int roundedMinute = (minute / 5) * 5;
+
+                // keySet과 정확히 일치하는 포맷으로 Key 생성 ("2026.06.10_15:15")
+                String timeKey = String.format("%s_%s:%02d", datePart, hourPart, roundedMinute);
+
+                dataMapByTime.put(timeKey, dto);
+            }
+        }
+        // 반드시 "dataMapByTime" 이라는 이름으로 모델에 담아주셔야 합니다.
+        model.addAttribute("dataMapByTime", dataMapByTime);
+
+
+        // receive_condition
+
+        model.addAttribute("list", map);
+
+        return "views/station/station";
+    }
+
+    // 과거자료 검색
+    @RequestMapping(value = "/station/hist/{site}", method = { RequestMethod.GET, RequestMethod.POST })
+    // @GetMapping("/station/hist/{site}")
+    public String getStationHist(@CookieValue(name = "userId", required = false) String userId,
+            @PathVariable("site") String site, HttpServletRequest request, HttpServletResponse response,
+            ModelMap model) {
+
+        if (userId == null) {
+            return "views/login";
+        }
+
+        Map<String, Object> map = new HashMap<>();
+
+        List<MenuDto> menuList = menuService.getMenuList();
+        List<StationDto> stationList = menuService.getStationList();
+        map.put("menuList", menuList);
+        map.put("stationList", stationList);
+        model.addAttribute("list", map);
+
+        // lgt :낙뢰
+        // rdr : radar(대형)
+        // sml : 스몰
+        String dataKind = !site.equals("LGT") ? "RDR" : "LGT";
+        if (site.equals("IIA"))
+            dataKind = "TDWR";
+        if (site.equals("DJK") || site.equals("SRI") || site.equals("MIL"))
+            dataKind = "SDR";
+
+        model.addAttribute("site", site);
+
+        // parameter
+        String sDt = request.getParameter("sDt");
+        // String termStart = request.getParameter("termStart");
+        // String termClose = request.getParameter("termClose");
+        String termStart = sDt != null ? sDt + "000000" : null;
+        String termClose = sDt != null ? sDt + "235959" : null;
+
+        if (termStart == null)
+            termStart = DateUtil.formatDate("yyyyMMdd", new Date()) + "000000";
+        if (termClose == null)
+            termClose = DateUtil.formatDate("yyyyMMdd", new Date()) + "235959";
+
+        // 오늘 날짜
+        Date now = new Date();
+        Date dateStart = null;
+        Date dateClose = null;
+
+        dateStart = DateUtil.stringToDate("yyyyMMddHHmmss", termStart);
+        dateClose = DateUtil.stringToDate("yyyyMMddHHmmss", termClose);
+
+        if (dateStart == null) {
+            // dateStart = DateUtils.addDays(now, -1);
+            dateStart = now;
+            // dateStart = DateUtil.stringToDate("yyyyMMddHHmmss", );
+        }
+        if (dateClose == null) {
+            dateClose = now;
+            // dateStart = DateUtil.stringToDate("yyyyMMddHHmmss",
+            // DateUtil.formatDate("yyyyMMdd", now) + "235959");
+        }
+
+        String searchDate = DateUtil.formatDate("yyyy'년 'MM'월 'dd'일'", dateClose);
+        model.addAttribute("searchDate", searchDate);
+
+        // 레이더
+        // if (dataKind.equals("RDR")) {
+        // 지점별 감시
+        StationDto stationDtl = stationService.getStationDetail(site);
+        model.addAttribute("siteName", stationDtl.getNameKr());
+
+        ReceiveSettingDto rdrList = stationService.getReceiveSetting(dataKind, 1);
+        String data_type = rdrList.getDataType();
+        model.addAttribute("rdrList", rdrList);
+
+        // hist
+        List<ReceiveDataDto> recvData = stationService.getReceiveDataList(dataKind, data_type, site, termStart,
+                termClose);
+        model.addAttribute("recvData", recvData);
+
+        // }
+
+        // 낙뢰
+
+        return "views/station/stationHistory";
+    }
+
+}

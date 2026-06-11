@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/default_layout}"
+      th:with="metaTitle='사용자 생성/삭제'">
+
+    <th:block layout:fragment="content">
+        <script th:inline="javascript">
+            const urlparams = new URL(location.href).searchParams;
+            const id = urlparams.get('id');
+            /* <![CDATA[ */
+            $(document).ready(function (){
+                $('#uid').val(id);
+
+                var mData = /*[[${list.memberData}]]*/
+                console.log(mData);
+
+                // if(flag == 'insert'){
+                //     $("#userForm").attr("action", "/users/admin_user_add");
+                // }
+
+                // if(flag == 'modity'){
+                //     $("#userForm").attr("action", "/users/admin_user_modity");
+                // }
+                
+                if(mData != null){
+                    $("#memberId").val(mData.memberId);
+                    $("#memberClass").val(mData.memberClass).prop("selected", true); //사용자 등급
+                    $("#memberName").val(mData.memberName);
+                    $('#uid').val(mData.id);
+                }
+            
+            });
+            /* ]]> */
+
+
+        </script>
+        <script type="text/javascript">
+            $(function() {
+                $('a.btn').button();
+            });
+
+            function fnGoList(){
+                location.href="/users/admin_user";
+            }
+            
+            function fnSubmit(){
+                return false;
+            }
+            
+            function fnUserDel(){
+                if(confirm("사용자를 삭제하겠습니까?")){
+                    let result = fnCall('post', '/users/admin_user_del?id='+$("#uid").val(), {});
+                    
+                    if(result.status == "success"){
+                        alert("삭제되었습니다.");
+                        location.href="/users/admin_user";
+                    } else {
+                        alert("삭제에 실패했습니다.\n" + result.data);
+                    }
+                    console.log("result :: "+ result);
+                }
+            }
+
+            function fnSave(mode){
+                var text = "";
+                if($('#memberId').val() == ""){
+                    alert("사용자ID를 입력하세요.");
+                    return false;
+                }
+                if(mode == 'create' && $('#password').val() == ""){
+                    alert("사용자 비밀번호를 입력하세요.");
+                    return false;
+                }
+                if(mode == 'create' && $('#password2').val() == ""){
+                    alert("사용자 비밀번호 확인을 입력하세요.");
+                    return false;
+                }
+                if(mode == 'create' && $('#password').val() != $('#password2').val()){
+                    alert("사용자 비밀번호를 확인하세요.");
+                    return false;
+                }
+                if($('#memberName').val() == ""){
+                    alert("사용자 이름을 입력하세요.");
+                    return false;
+                }
+
+                if(mode == 'create'){ text = "사용자를 등록하겠습니까?" }
+                if(mode == 'modify'){ text = "사용자를 수정하겠습니까?" }
+                
+                if(confirm(text)){
+                    const params = {
+                        id: mode == "modify" ? $("#uid").val() : 0,
+                        memberId: $("#memberId").val(),
+                        password: $("#password").val(),
+                        passwordHint: $("#passwordHint").val(),
+                        passwordAnswer: $("#passwordAnswer").val(),
+                        memberName: $("#memberName").val(),
+                        memberClass: $("#memberClass").val(),
+                        memberEmail: $("#email").val(),
+                        memberPhone: $("#phone").val(),
+                        memberOrg: $("#org").val(),
+                        memberDept: $("#dept").val(),
+                        memberPos: $("#pos").val(),
+                        roles: $("#memberClass").val() == "A" ? "ADMIN" : "USER"
+                    }
+                    
+                    let result = fnCall('post', '/users/admin_user_'+mode, JSON.stringify(params));
+                    
+                    console.log("result :: "+ result.status);
+                    if(result.status == "success"){
+                        if(mode == 'create'){ alert("등록되었습니다."); }
+                        if(mode == 'modify'){ alert("수정되었습니다."); }
+                        
+                        location.href="/users/admin_user";
+                    } else {
+                        alert("등록 실패하였습니다. \n" + result.data);
+                    }
+                }
+            }
+        </script>
+
+        <div id="contentMain">
+            <table class="noticeTbl searchSeries">
+                <thead>
+                <tr>
+                    <th class="left">
+                        관리 &gt; 새로운 사용자
+                    </th>
+                    <th class="right">
+                    </th>
+                </tr>
+                </thead>
+            </table>
+            
+            <!-- <form id="userForm" modelattribute="userForm" action="/users/admin_user_add" th:object="${membersDto}" method="post" target="_self"> -->
+            <!-- <form method="post" id="userForm" name="userForm"> -->
+                <input type="hidden" name="mode" value="I">
+                <table class="table subTbl table-hover" summary="">
+                    <caption class="hidden">관리자 정보 수정</caption>
+                    <colgroup>
+                        <col style="width:300px;">
+                        <col>
+                    </colgroup>
+                    <thead>
+                        <tr>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <th class="subThead">사용자 ID<i class="fa fa-asterisk required_ico"></i></th>
+                            <td><input id="memberId" name="memberId" class="user_input" type="text" value="">
+                                <input id="uid" name="uid" type="hidden" value="">
+                            </td>
+                        </tr>
+                        <tr>
+                            <th class="subThead">비밀번호<i class="fa fa-asterisk required_ico"></i></th>
+                            <td><input id="password" name="password" class="user_input" type="password" value=""></td>
+                        </tr>
+                        <tr>
+                            <th class="subThead">비밀번호 확인<i class="fa fa-asterisk required_ico"></i></th>
+                            <td><input id="password2" name="password2" class="user_input" type="password" value=""></td>
+                        </tr>
+                        <tr>
+                            <th class="subThead">사용자 등급<i class="fa fa-asterisk required_ico"></i></th>
+                            <td>
+                                <select id="memberClass" name="memberClass" class="user_input">
+                                    <option value="U">사용자</option>
+                                    <option value="A">관리자</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th class="subThead">성명<i class="fa fa-asterisk required_ico"></i></th>
+                            <td><input id="memberName" name="memberName" class="user_input" type="text" value=""></td>
+                        </tr>
+                        <tr>
+                            <th class="subThead">직책</th>
+                            <td><input id="pos" name="pos" class="user_input" type="text" value=""></td>
+                        </tr>
+                        <tr>
+                            <th class="subThead">부서</th>
+                            <td><input id="dept" name="dept" class="user_input" type="text" value=""></td>
+                        </tr>
+                        <tr>
+                            <th class="subThead">소속</th>
+                            <td><input id="org" name="org" class="user_input" type="text" value=""></td>
+                        </tr>
+                        <tr>
+                            <th class="subThead">연락처</th>
+                            <td><input id="phone" name="phone" class="user_input" type="text" value=""></td>
+                        </tr>
+                        <tr>
+                            <th class="subThead">E-Mail</th>
+                            <td><input id="email" name="email" class="user_input" type="text" value=""></td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">
+                                <input type="submit" th:if="${list.memberData == null}" id="create" class="btn login_btn" style="border-color: #8CC7F7;  background: #C4E4F1;" value="생 성" onclick="fnSave('create')">
+                                <input type="submit" th:if="${list.memberData != null}" id="modify" class="btn login_btn" style="border-color: #8CC7F7;  background: #C4E4F1;" value="수 정" onclick="fnSave('modify')">
+                                <input type="reset"  id="reset"  class="btn login_btn"  value="다시 입력" th:onclick="| location.href='@{/users/admin_user_form(id=${param.id})}' |" />
+                                <input type="submit" th:if="${list.memberData != null}" id="delete" class="btn login_btn del"    value="삭 제" onclick="fnUserDel()">
+                                <input type="button" id="list"   class="btn login_btn"        value="리스트" onclick="fnGoList();return false;">
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            <!-- </form> -->
+        </div>
+
+
+    </th:block>
+</html>

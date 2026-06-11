@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/default_layout}"
+      th:with="metaTitle='자료 수신 감시 설정'">
+
+	<th:block layout:fragment="content">
+        <script th:inline="javascript">
+            /* <![CDATA[ */
+                var rsData = /*[[${receiveSettingList}]]*/
+                console.log("rsData : ", rsData);
+            /* ]]> */
+        </script>
+        <script type="text/javascript">
+        $(function() {
+            $("#configSave").on("click", function(){
+                let list = new Array();
+
+                rsData.forEach((e, idx) => {
+                    // console.log(e);
+                    // e.dataKind=e.dataKind;
+                    // e.dataType=e.dataType;
+                    // e.data_name=e.data_name;
+                    // e.recv_interval=e.recv_interval;
+                    // e.status=e.status;
+                    // console.log("idx :: ", idx);
+                    let dataKind = $("#data_kind-"+idx).val();
+                    let dataType = $("#data_type-"+idx).val();
+                    // console.log("dataKind :: ", dataKind);
+                    // console.log("dataType :: ", dataType);
+                    if(e.dataKind == dataKind && e.dataType == dataType){
+                        e.time_zone=$("#time-"+idx).is(":checked") ? "K" : "U";
+                        e.filename_pattern=$("#filename_pattern-"+idx).val();
+                        e.filename_regex=$("#filename_regex-"+idx).val();
+                        e.permittedWatch=$("#pmt-"+idx).is(":checked") ? 1 : 0;
+                        e.delay_tolerance=$("#delay_tolerance-"+idx).val();
+                        list.push(e);
+                    }
+                });
+
+                // console.log("rsData ::: ", rsData);
+                console.log(list);
+                
+                if(confirm("저장 하겠습니까?")){
+                    let result = fnCall('post', '/manage/station_set_rs_modify', JSON.stringify(list));
+                    
+                    console.log("result :: "+ result.status);
+                    if(result.status == "success"){
+                        alert("저장되었습니다.");
+                        location.href="/manage/station_set_rs"; //다시 로딩
+                    } else {
+                        alert("저장에 실패하였습니다. \n" + result.data);
+                    }
+                }
+                
+            });
+        });
+        </script>
+    
+        <table class="noticeTbl settingSeries">
+            <thead>
+            <tr>
+                <th class="left">
+                    관리 &gt; 자료 수신 감시 설정
+                </th>
+                <th class="right">
+                    <input type="submit" id="configSave" class="btn ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" value="설정저장">
+                </th>
+            </tr>
+            </thead>
+        </table>
+        
+        <table class="table subTbl table-hover" summary="">
+            <caption class="hidden">자료 수신 감시 설정</caption>
+            <colgroup>
+                <!-- <col style="width:50px" />
+                <col style="width:180px" />
+                <col style="width:70px" />
+                <col />
+                <col />
+                <col style="width:70px" />
+                <col style="width:70px" /> -->
+            </colgroup>
+            <thead class="subThead">
+                <tr>
+                    <th>데이터 종류</th>
+                    <th>시간대<br/> 설정</th>
+                    <th>파일이름 패턴</th>
+                    <th>파일이름 정규식 </th>
+                    <th>누락처리<br/> 지연시간 </th>
+                    <th>자료 감시<br/> 설정 </th>
+                </tr>
+            </thead>
+            <tbody class="table-group-divider" th:each="rsList, rsListStat : ${receiveSettingList}" th:if="${rsList.status == 1}">
+                <tr class="subThead">
+                    <th colspan="7" th:if="${rsList.dataKind} == 'RDR'">
+                        대형 레이더
+                    </th>
+                    <th colspan="7" th:if="${rsList.dataKind} == 'SDR'">
+                        소형 레이더
+                    </th>
+                    <th colspan="7" th:if="${rsList.dataKind} == 'TDWR'">
+                        공항 레이더
+                    </td>
+                    <!-- <th colspan="7" th:if="${rsList.dataKind} == 'LGT'">
+                        낙뢰
+                    </th> -->
+                </tr>
+                <tr th:if="${rsList.dataKind} != 'all'">
+                    <td><!-- <th>데이터 종류</th> -->
+                        <input type="hidden" th:id="${'data_type-'+rsListStat.index}" th:value="${rsList.dataType }" />
+                        <input type="hidden" th:id="${'data_kind-'+rsListStat.index}" th:value="${rsList.dataKind }" />
+                        <div th:text="${rsList.dataType}"></div>
+                        <input type="hidden" th:id="${'data_name-'+rsListStat.index}" th:value="${rsList.data_name }" />
+                        <div th:text="${'('+rsList.data_name+')'}"></div>
+                    </td>
+                    <td><!-- <th>시간대<br/> 설정</th> -->
+                        <label class="a8z-toggle-switch" data-size="sm" style="--a8z-ts-input-checked-content:'KST'; --a8z-ts-input-unchecked-content: 'UTC'; --a8z-ts-width: 60px;">
+                            <input type="checkbox" name="timeConfig" 
+                                th:id="${'time-'+rsListStat.index}"
+                                th:checked="${rsList.time_zone == 'K'}"
+                            />
+                            <span class="toggle">
+                                <span class="switch"></span>
+                            </span>
+                        </label>
+                    </td>
+                    <td>
+                        <input type="text" th:id="${'filename_pattern-'+rsListStat.index}" class="namePattern" th:value="${rsList.filename_pattern }" />
+                    </td>
+                    <td>
+                        <input type="text" th:id="${'filename_regex-'+rsListStat.index}" class="nameRegex" th:value="${rsList.filename_regex }" />
+                    </td>
+                    <td>
+                        <input type="text" th:id="${'delay_tolerance-'+rsListStat.index}" class="rccset" th:value="${rsList.delay_tolerance }" />분
+                    </td>
+                    <td>
+                        <label class="a8z-toggle-switch" data-size="sm" style="--a8z-ts-width: 60px;">
+                            <input type="checkbox" name="pmtConfig" 
+                                th:id="${'pmt-'+rsListStat.index}"
+                                th:checked="${rsList.permittedWatch}"
+                            />
+                            <span class="toggle">
+                                <span class="switch"></span>
+                            </span>
+                        </label>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </th:block>
+</html>

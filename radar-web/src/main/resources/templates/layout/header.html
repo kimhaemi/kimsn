@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+    <th:block th:fragment="headerFragment">
+        <script th:inline="javascript">
+			/* <![C DATA[ */
+            var menuList = /*[[${list.menuList}]]*/
+            console.log("menuList", menuList);
+            var site = /*[[${list.stationList}]]*/
+            console.log(site);
+            /* ]]> */
+            </script>
+        <script type="text/javascript">
+            var menuList;
+            $(document).ready(function () {
+
+              var path = window.location.pathname.toString().trim();
+              if (path === "") path = "/"; // 메인 페이지 대응
+
+              // 1. 대메뉴 활성화
+              $(".navi > div > li").each(function () {
+                var url = $(this).find("> a").attr("href").toString().trim();
+                if (url == path) {
+                  $(this).addClass("on");
+                }
+              });
+
+              // 2. 서브 메뉴 활성화 (지점 모니터링 및 5000번대 관리 메뉴 일괄 처리)
+              $(".sub a").each(function () {
+                var url = $(this).attr("href").toString().trim();
+
+                // 💡 글자 겹침 버그(rc, rcc)를 막기 위한 정확한 매칭 조건 2가지
+                var exactMatch = (path == url);                    // 주소가 100% 똑같을 때 (5000번대용)
+                var folderMatch = (path.indexOf(url + "/") === 0);  // 뒤에 하위 지점 코드가 붙을 때 (2000~4000번용)
+
+                if (exactMatch || folderMatch) {
+                  $(this).addClass("on"); // <a> 태그 활성화
+
+                  // 5000번대 메뉴일 경우 감싸고 있는 <li> 태그도 활성화
+                  var parentLi = $(this).closest("li");
+                  if (!parentLi.hasClass("subTitle") && parentLi.css("display") !== "flex") {
+                    parentLi.addClass("on");
+                  }
+
+                  // 상위 대메뉴 li도 자동으로 활성화 상태로 유지
+                  $(this).closest(".navi > div > li").addClass("on");
+                }
+              });
+
+              // 3. 메인 로고 클릭 이벤트
+              $(".header h1").on("click", function () {
+                location.href = "/";
+                return false;
+              });
+
+              $(".header h1").hover(function () {
+                $(this).css("cursor", "pointer");
+              });
+
+              // 4. 서브메뉴 마우스 호버 애니메이션
+              $('.navi > div').on({
+                mouseenter: function () {
+                  var sub = $(this).find('.sub');
+                  sub.stop().slideDown();
+                },
+                mouseleave: function () {
+                  var sub = $(this).find('.sub');
+                  sub.stop().slideUp();
+                }
+              });
+            });
+
+            //menu List
+            function menuData() {    
+                $.ajax({
+                    type: "GET",
+                    url: "/getMenuData",
+                    contentType : 'application/json; charset=utf-8',
+                    dataType : 'json',
+                    success: function (data) {
+                        console.log(data);
+                        // menuList = data.menuList;
+
+                        // $(".data").replaceWith(data);
+                    },
+                    error :function (request, status, error) {
+                        console.log("error");
+                        console.log(error);
+                    }
+                });
+            }
+
+        </script>
+
+        <div class="header">
+            <div class="gnb_wrap max_width">
+                <h1 style="cursor: pointer;">
+                    <a href="/"><b>기상레이더 장애 문자 전송 시스템</b></a>
+                </h1>
+                <ul class="logout">
+                    <li><a href="/logout" class="btn ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only">Logout</a></li>
+                    <li>
+                        <div >
+                            <!-- <button class="btn_hambuger" toggle_menu="">
+                                <span class="ico">메뉴</span>
+                            </button> -->
+                        </div>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="lnb">
+                <div class="lnb_wrap">
+                    <ul class="navi">
+                        <div th:each="mList : ${list.menuList}" th:if="${mList.depth == 1}">
+                            <li>
+                                <a th:href="${mList.path}" th:text="${mList.menuName}"></a><!-- 대메뉴 -->
+
+                                <!-- 서브 메뉴 레이어 -->
+                                <ul th:if="${mList.id != 1000 && mList.id != 6000}" class="sub" style="display: none; height: auto; padding-top: 0px; margin-top: 0px; padding-bottom: 10px; margin-bottom: 10px;">
+
+                                  <!-- [CASE A] 레이더 지점 모니터링 메뉴들 (2000, 3000, 4000) -->
+                                  <th:block th:if="${mList.id != 5000}">
+
+                                    <!-- =======================================================================
+                                         1. [대형] 기존 디자인 및 클래스 형태 100% 유지
+                                         ======================================================================= -->
+                                    <li class="subTitle" th:if="${mList.id < 5000}">대형</li>
+
+                                    <!-- [개선] 최상단에 기상청/기후부 헤더 라인을 추가하여 좌우 기둥의 기준을 제시 -->
+                                    <li style="display: flex; width: 100%; font-weight: bold; font-size: 14px; color: #000; margin-top: 5px; margin-bottom: 5px; list-style: none;">
+                                      <div style="width: 50%; ">기상청</div>
+                                      <div style="width: 50%; ">기후부</div>
+                                    </li>
+
+                                    <li style="display: flex; width: 100%; list-style: none;">
+                                      <!-- 좌측 열 (기상청 대형) -->
+                                      <div style="width: 50%; display: flex; flex-direction: column; padding-left: 40px;">
+                                        <th:block th:each="sList : ${list.stationList}">
+                                          <a th:if="${sList.gubun == 1 && sList.agencyCd == 'KMA'}"
+                                             th:href="${mList.id == 2000 ? '/station/' + sList.siteCd : (mList.id == 3000 ? '/station/hist/' + sList.siteCd : '/stat/' + sList.siteCd)}"
+                                             th:text="${sList.nameKr}" style="margin-bottom: 5px;"></a>
+                                        </th:block>
+                                      </div>
+                                      <!-- 우측 열 (기후부 대형) -->
+                                      <div style="width: 50%; display: flex; flex-direction: column; padding-left: 40px;">
+                                        <th:block th:each="sList : ${list.stationList}">
+                                          <a th:if="${sList.gubun == 1 && sList.agencyCd == 'MCEE'}"
+                                             th:href="${mList.id == 2000 ? '/station/' + sList.siteCd : (mList.id == 3000 ? '/station/hist/' + sList.siteCd : '/stat/' + sList.siteCd)}"
+                                             th:text="${sList.nameKr}" style="margin-bottom: 5px;"></a>
+                                        </th:block>
+                                      </div>
+                                    </li>
+
+                                    <!-- =======================================================================
+                                         2. [소형] 기존 디자인 및 클래스 형태 100% 유지
+                                         ======================================================================= -->
+                                    <li class="subTitle" th:if="${mList.id < 5000}">소형</li>
+
+                                    <!-- [개선] 최상단에 기상청/기후부 헤더 라인을 추가하여 좌우 기둥의 기준을 제시 -->
+                                    <li style="display: flex; width: 100%; font-weight: bold; font-size: 14px; color: #000; margin-top: 5px; margin-bottom: 5px; list-style: none;">
+                                      <div style="width: 50%; ">기상청</div>
+                                      <div style="width: 50%; ">기후부</div>
+                                    </li>
+
+                                    <li style="display: flex; width: 100%; list-style: none;">
+                                      <!-- 좌측 열 (기상청 소형) -->
+                                      <div style="width: 50%; display: flex; flex-direction: column; padding-left: 40px;">
+                                        <th:block th:each="sList : ${list.stationList}">
+                                          <a th:if="${sList.gubun == 2 && sList.agencyCd == 'KMA'}"
+                                             th:href="${mList.id == 2000 ? '/station/' + sList.siteCd : (mList.id == 3000 ? '/station/hist/' + sList.siteCd : '/stat/' + sList.siteCd)}"
+                                             th:text="${sList.nameKr}" style="margin-bottom: 5px;"></a>
+                                        </th:block>
+                                      </div>
+                                      <!-- 우측 열 (기후부 소형) -->
+                                      <div style="width: 50%; display: flex; flex-direction: column; padding-left: 40px;">
+                                        <th:block th:each="sList : ${list.stationList}">
+                                          <a th:if="${sList.gubun == 2 && sList.agencyCd == 'MCEE'}"
+                                             th:href="${mList.id == 2000 ? '/station/' + sList.siteCd : (mList.id == 3000 ? '/station/hist/' + sList.siteCd : '/stat/' + sList.siteCd)}"
+                                             th:text="${sList.nameKr}" style="margin-bottom: 5px;"></a>
+                                        </th:block>
+                                      </div>
+                                    </li>
+
+                                    <!-- =======================================================================
+                                         3. [공항] 기존 디자인 및 클래스 형태 100% 유지
+                                         ======================================================================= -->
+                                    <li class="subTitle" th:if="${mList.id < 5000}">공항</li>
+                                    <li style="display: flex; width: 100%; list-style: none;">
+                                      <!-- 좌측 열 (기상청 공항) -->
+                                      <div style="width: 50%; display: flex; flex-direction: column; padding-left: 40px;">
+                                        <th:block th:each="sList : ${list.stationList}">
+                                          <a th:if="${sList.gubun == 3 && sList.agencyCd == 'KMA'}"
+                                             th:href="${mList.id == 2000 ? '/station/' + sList.siteCd : (mList.id == 3000 ? '/station/hist/' + sList.siteCd : '/stat/' + sList.siteCd)}"
+                                             th:text="${sList.nameKr}" style="margin-bottom: 5px;"></a>
+                                        </th:block>
+                                      </div>
+                                      <!-- 우측 열 (기후부 공항 - 데이터 연동 대비 여백 유지) -->
+                                      <div style="width: 50%; display: flex; flex-direction: column; padding-left: 40px;">
+                                        <th:block th:each="sList : ${list.stationList}">
+                                          <a th:if="${sList.gubun == 3 && sList.agencyCd == 'MCEE'}"
+                                             th:href="${mList.id == 2000 ? '/station/' + sList.siteCd : (mList.id == 3000 ? '/station/hist/' + sList.siteCd : '/stat/' + sList.siteCd)}"
+                                             th:text="${sList.nameKr}" style="margin-bottom: 5px;"></a>
+                                        </th:block>
+                                      </div>
+                                    </li>
+                                  </th:block>
+
+                                  <!-- [CASE B] 시스템 관리 메뉴 (5000번 일 때) -->
+                                  <th:block th:if="${mList.id == 5000}">
+                                    <li th:if="${subList.depth == 2}" th:each="subList : ${list.menuList}">
+                                      <div style="padding-top: 5px;">
+                                        <a th:href="'/manage'+${subList.path}" th:text="${subList.menuName}" style="margin-left: 50px;"></a>
+                                      </div>
+                                    </li>
+                                  </th:block>
+                                </ul>
+                  </li>
+                </div>
+              </ul>
+            </div>
+          </div>
+
+
+
+        </div>
+    </th:block>
+</html>

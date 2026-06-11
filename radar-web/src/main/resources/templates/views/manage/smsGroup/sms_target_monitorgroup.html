@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/default_layout}"
+      th:with="metaTitle='상시 문자 수신 그룹 관리'">
+
+	<th:block layout:fragment="content">
+        <script th:inline="javascript">
+            /* <![CDATA[ */
+                var links = /*[[${links}]]*/
+                console.log(links);
+                var notlinks = /*[[${notlinks}]]*/
+                console.log(notlinks);
+            /* ]]> */
+        </script>
+        <script type="text/javascript">
+        //연결 해제
+        function fnUnLink(mid){
+            //if(confirm("연결을 해제하겠습니까?")){
+                let result = fnCall('post', '/manage/sms_target_group_member_unlink?gid=1&mid='+mid, {});
+                if(result.status == "success"){
+                    alert("연결 해제되었습니다.");
+                    location.href="/manage/sms_target_monitorgroup";
+                } else {
+                    alert("연결 해제에 실패했습니다.\n" + result.data);
+                }
+                console.log("result :: "+ result);
+            //}
+        }
+
+        //연결 추가
+        function fnLink(mid){
+            // if(confirm("추가 하겠습니까?")){
+                let result = fnCall('post', '/manage/sms_target_group_member_addlink?gid=1&mid='+mid, {});
+                if(result.status == "success"){
+                    alert("추가 되었습니다.");
+                    location.href="/manage/sms_target_monitorgroup";
+                } else {
+                    alert("연결 추가에 실패했습니다.\n" + result.data);
+                }
+                console.log("result :: "+ result);
+            // }
+        }
+        </script>
+     
+        <table class="noticeTbl searchSeries">
+            <thead>
+            <tr>
+                <th class="left">
+                    관리 &gt; 상시 문자 수신 그룹 관리
+                </th>
+                <th class="right">
+                </th>
+            </tr>
+            </thead>
+        </table>
+        
+        <table class="table subTbl table-hover" summary="">
+            <caption class="hidden">그룹 관리</caption>
+            <colgroup>
+                <col style="width:90px" />
+                <col style="width:120px" />
+                <col style="width:120px" />
+                <col style="width:200px" />
+                <col />
+                <col style="width:140px" />
+            </colgroup>
+            <thead class="subThead">
+                <tr>
+                    <th colspan="6">
+                        정상 자료 수신 시 1일 3회 보내는 문자 전송받을 수신자
+                    </th>
+                </tr>
+                <tr>
+                    <th>성명</th>
+                    <th>직책</th>
+                    <th>부서</th>
+                    <th>소속</th>
+                    <th>연락처</th>
+                    <th>삭제</th>
+                </tr>
+            </thead>
+            <tbody class="table-group-divider">
+                <tr th:each="link : ${links}">
+                    <td><span th:text="${link.name}"></span></td>
+                    <td><span th:text="${link.position }"></span></td>
+                    <td><span th:text="${link.department }"></span></td>
+                    <td><span th:text="${link.organization }"></span></td>
+                    <td><span th:text="${link.phone_num }"></span></td>
+                    <td>
+                        <input type="submit" id="bthUnLink" class="btn ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" value="연결 해제" th:onclick="fnUnLink([[${link.mid}]])"/>
+                    </td>
+                </tr>
+                <tr th:if="${links.size() == 0 }">
+                    <td colspan="6">데이터가 없습니다.</td>
+                </tr>
+            </tbody>
+        </table>
+        
+        <table class="table subTbl table-hover" summary="">
+            <caption class="hidden">그룹 관리</caption>
+            <colgroup>
+                <col style="width:90px" />
+                <col style="width:120px" />
+                <col style="width:120px" />
+                <col style="width:150px" />
+                <col />
+                <col style="width:140px" />
+            </colgroup>
+            <thead class="subThead">
+                <tr>
+                    <th colspan="6">
+                        정상 자료 수신 시 1일 3회 보내는 문자 전송받지 않는 수신자
+                    </th>
+                </tr>
+                <tr>
+                    <th>성명</th>
+                    <th>직책</th>
+                    <th>부서</th>
+                    <th>소속</th>
+                    <th>연락처</th>
+                    <th>삭제</th>
+                </tr>
+            </thead>
+            <tbody class="table-group-divider">
+                <tr th:each="unlink : ${notlinks}">
+                    <td><span th:text="${unlink.name}"></span></td>
+                    <td><span th:text="${unlink.position }"></span></td>
+                    <td><span th:text="${unlink.department }"></span></td>
+                    <td><span th:text="${unlink.organization }"></span></td>
+                    <td><span th:text="${unlink.phone_num }"></span></td>
+                    <td>
+                        <input type="submit" id="btnLink" class="btn ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" value="연결 추가" th:onclick="fnLink([[${unlink.id}]])" />
+                        <!-- <a class="btn" href="sms_target_monitorgroup_mklink.do?m=${link.mid}">연결 추가</a> -->
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </th:block>
+</html>
