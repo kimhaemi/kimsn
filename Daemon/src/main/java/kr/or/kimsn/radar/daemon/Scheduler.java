@@ -7,22 +7,23 @@ import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicBoolean;
 
-import kr.or.kimsn.radar.daemon.enums.RadarTypeEnum;
+import kr.or.kimsn.radar.daemon.config.RadarConfigProperties;
+import kr.or.kimsn.radar.daemon.enums.DataKindEnum;
+import kr.or.kimsn.radar.daemon.util.ConfigManager;
+import kr.or.kimsn.radar.daemon.util.DataCommon;
+import kr.or.kimsn.radar.data.dto.StationDto;
+import kr.or.kimsn.radar.daemon.service.StepOneService;
+import kr.or.kimsn.radar.daemon.service.StepTwoService;
+import kr.or.kimsn.radar.daemon.service.QueryService;
+
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.MDC;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
-
-import kr.or.kimsn.radar.daemon.util.ConfigManager;
-import kr.or.kimsn.radar.data.dto.StationDto;
-import kr.or.kimsn.radar.daemon.process.StepOneProcess;
-import kr.or.kimsn.radar.daemon.process.StepTwoProcess;
-import kr.or.kimsn.radar.daemon.service.QueryService;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Component
@@ -31,106 +32,106 @@ import lombok.extern.slf4j.Slf4j;
 public class Scheduler {
 
     private final QueryService queryService;
+    private final StepOneService stepOneService;
+    private final StepTwoService stepTwoService;
+    private final RadarConfigProperties radarConfigProperties;
 
-    // 1분 주기가 겹쳤을 때 데이터가 뒤섞이거나 쓰레드가 폭발하는 것을 막는 방어막
-    private final AtomicBoolean isRunning = new AtomicBoolean(false);
+    // 💡 [요구사항 반영]: 이전 사이클의 미종료 여부와 상관없이 매분 강제 실행하기 위해 AtomicBoolean 락을 완전 제거합니다.
 
     private static final DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
     private static final DateTimeFormatter logDtf = DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss");
 
     /**
-     * [통합 데몬 스케줄러]
-     * 1분마다 정각(또는 30초)에 켜져서 StepOne(병렬 메타조회) -> pauseTime 대기 -> StepTwo(후처리)를 순차 실행합니다.
+     * [통합 데몬 스케줄러 - 100% 무조건 강제 실행 모드]
+     * 지정된 크론 주기(표준 1분 또는 1분 지연 5분 그리드 타임라인)에 매 세션 무조건 독립 호출 구동됩니다.
      */
     @Scheduled(cron = "#{@radarConfigProperties.cronExpression}")
     @Async
     public void cronJobSch() throws InterruptedException {
 
-        // 1. 혹시라도 이전 주기가 1분을 넘겨 처리 중이라면 이번 주기는 통째로 건너뛰어 안전을 보장합니다.
-        if (!isRunning.compareAndSet(false, true)) {
-            log.warn("[⚠️스킵] 이전 사이클 작업이 1분 내에 끝나지 않아 이번 주기를 건너뜁니다. 레이더 서버 응답을 확인하세요.");
-            return;
-        }
-
-        // 로그백 SiftingAppender와 연동되어 주기별로 로그 파일을 분리할 고유 식별자 (예: 20260529_110030)
+        // 💡 각 사이클이 서로 방해받지 않고 로그가 완벽하게 분리 격리 보존되도록 Cycle ID를 메인 스레드에 선제 주입
         String cycleId = LocalDateTime.now().format(logDtf);
         MDC.put("cycleId", cycleId);
 
         ExecutorService exec = null;
-        try {
-            final long pauseTime = ConfigManager.getLong("PauseTime"); // 예: 20초
-            int gubun = ConfigManager.getInt("gubun");
-            RadarTypeEnum radarType = RadarTypeEnum.find(gubun);
-            String mode = ConfigManager.getString("mode");
-            String gubunStr = radarType.getKrName();
+        String siteInfoPath = radarConfigProperties.getSiteInfoPath();
+        String ipInfoPath = radarConfigProperties.getIpInfoPath();
 
-            log.info("[🚀 사이클 시작] ID: [{}] | 장비타입: {} - {}", cycleId, gubunStr, LocalDateTime.now().format(dtf));
+        try {
+            final long pauseTime = ConfigManager.getLong("PauseTime");
+            int gubun = ConfigManager.getInt("gubun");
+            String dataKindStr = DataKindEnum.getDescriptionByGubun(gubun);
+            String mode = ConfigManager.getString("mode");
+            String gubunStr = ConfigManager.getGubunStr();
+
+            log.info("[🚀 강제 사이클 가동 시작] ID: [{}] | 장비타입: {} - {}", cycleId, gubunStr, LocalDateTime.now().format(dtf));
 
             List<StationDto> srDto = new ArrayList<>();
             if (!"test".equalsIgnoreCase(mode)) {
                 srDto = queryService.getStation(gubun);
             }
 
-            if (srDto.isEmpty()) {
-                log.info("[사이클 종료] ID: [{}] - 처리할 레이더 스테이션이 없습니다.", cycleId);
+            if (srDto == null || srDto.isEmpty()) {
+                log.info("[사이클 즉시 마감] ID: [{}] - 가동 처리할 타겟 레이더 스테이션 정보가 존재하지 않습니다.", cycleId);
                 return;
             }
 
             // ----------------------------------------------------------------
             // [💥 1단계: StepOne - 레이더 서버 접속 및 메타데이터 수집]
             // ----------------------------------------------------------------
-            log.info("[▶️ StepOne 시작] 각 서버 병렬 메타데이터 조회 시작 (ID: [{}])", cycleId);
-            StepOneProcess stepone = new StepOneProcess(queryService);
+            log.info("[▶️ StepOne 시작] 독립 병렬 수집 세션 풀 가동 (ID: [{}])", cycleId);
 
-            // 레이더 장비 개수만큼 딱 고정된 크기의 최적화된 쓰레드 풀 생성
+            // 각 주기(매분)마다 독립된 크기의 고정 스레드 풀을 동적으로 생성하여 이전 주기 스레드와 병합 경합 차단
             exec = Executors.newFixedThreadPool(srDto.size());
 
             for (StationDto currentStation : srDto) {
                 exec.submit(() -> {
-                    MDC.put("cycleId", cycleId); // 비동기 자식 쓰레드에도 로그 격리 식별자 주입
+                    MDC.put("cycleId", cycleId); // 비동기 자식 자바 스레드 내부에 고유 cycleId 전파 격리
                     try {
-                        stepone.stepOne(mode, gubun, currentStation, cycleId, cycleId);
+                        stepOneService.stepOne(mode, gubun, currentStation, siteInfoPath, ipInfoPath);
                     } finally {
                         MDC.clear();
                     }
                 });
-                Thread.sleep(50); // 순간적인 접속 부하 분산 마진
+                Thread.sleep(50); // 네트워크 순간 유입 부하 분산 마진
             }
 
             exec.shutdown();
 
-            // 1분 완주 마지노선을 넘지 않도록 최대 35초만 응답을 기다립니다.
-            // 35초가 지나도 대답 없는 불통 서버가 있다면 자바가 대기줄을 깨고 빠져나옵니다.
-            boolean allFinished = exec.awaitTermination(35, TimeUnit.SECONDS);
-
-            if (!allFinished) {
-                log.warn("[⏰ 타임아웃 발생] ID: [{}] 일부 서버 응답 지연으로 35초 도달하여 대기 강제 해제", cycleId);
+            // 설정에서 타임아웃 값을 유연하게 탈환하되 실패 시 기본 안전 대기 마지노선 35초 적용
+            int connectTimeOut = 35;
+            try {
+                connectTimeOut = Integer.parseInt(DataCommon.getInfoConf("ipInfo", "connectTimeOut", siteInfoPath, ipInfoPath));
+            } catch (Exception e) {
+                log.warn("[⚙️ 설정 정보 알림] connectTimeOut 파싱 보류로 기본 마지노선 35초를 대기 규격으로 고수합니다.");
             }
-            log.info("[🏁 StepOne 완료] 수집 세션 종료 (ID: [{}])", cycleId);
+
+            // ⚠️ 중요: 이전 주기가 끝나지 않았더라도 현재 스레드 풀은 최대지정 초(예: 35초)만 딱 기다리고 강제로 대기를 해제하여 빠져나옵니다.
+            boolean allFinished = exec.awaitTermination(connectTimeOut, TimeUnit.SECONDS);
+            if (!allFinished) {
+                log.warn("[⏰ 타임아웃 강제돌파] ID: [{}] 일부 응답 지연 장비가 존재하나 {}초 도달로 대기를 해제하고 정산으로 진입합니다.", cycleId, connectTimeOut);
+            }
+            log.info("[🏁 StepOne 완료] 이번 주기 병렬 수집 종료 (ID: [{}])", cycleId);
 
             // ----------------------------------------------------------------
             // [💤 2단계: 비즈니스 요구 규격에 따른 일시정지]
             // ----------------------------------------------------------------
+            log.info("[💤 정산 지연 마진 대기] 지정된 {}초 정지 후 후처리 정산을 시작합니다.", pauseTime);
             Thread.sleep(pauseTime * 1000);
-            log.info("[{}초 대기 후 다음 단계 진행] - {}", pauseTime, LocalDateTime.now().format(dtf));
 
             // ----------------------------------------------------------------
             // [📊 3단계: StepTwo - 데이터 최종 가공 및 후처리 DB 적재]
             // ----------------------------------------------------------------
             log.info("[=================== ▶️ StepTwo 프로세스 시작 (ID: [{}]) ===================]", cycleId);
-            StepTwoProcess twoProc = new StepTwoProcess();
-
-            // 35초 타임아웃 덕분에 정상적으로 수집 완료가 찍힌 데이터들만 안전하게 마저 정산 처리합니다.
-            twoProc.stepTwo(gubunStr, cycleId, cycleId);
-
+            // 💡 락이 풀렸으므로 이전 주기 정산 결과에 지장 없이 현재 시점의 누적 3회 수집 이력을 정밀 대조하여 마스터 상태를 갱신합니다.
+            stepTwoService.stepTwo(gubunStr, cycleId, cycleId);
             log.info("[=================== 🏁 StepTwo 프로세스 종료 (ID: [{}]) ===================]", cycleId);
 
         } catch (Exception e) {
-            log.error("[❌ 사이클 오류] 스케줄러 실행 중 예상치 못한 치명적 예외 발생 (ID: [{}])", cycleId, e);
+            log.error("[❌ 사이클 중단 장애] 스케줄러 처리 도중 예상치 못한 런타임 예외 감지 (ID: [{}])", cycleId, e);
         } finally {
-            isRunning.set(false); // 무조건 락을 해제하여 다음 1분 주기가 켜질 수 있도록 보장
-            log.info("[🏁 사이클 최종 완료] ID: [{}] - {}", cycleId, LocalDateTime.now().format(dtf));
-            MDC.clear(); // 메인 쓰레드 로그 컨텍스트 메모리 초기화
+            log.info("[🏁 사이클 최종 완료 완료] ID: [{}] - {}", cycleId, LocalDateTime.now().format(dtf));
+            MDC.clear(); // 메인 스레드 메모리 청소
         }
     }
 }

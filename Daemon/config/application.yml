@@ -1,0 +1,22 @@
+# 💡 외부 노출: 자바 소스코드 재빌드 없이 리눅스 환경 변수와 경로 주입 맵을 자유롭게 수정 관리합니다.
+radar:
+  config:
+    cron-expression: "0 * * * * *"
+    site-info-path: "./conf/siteInfoSetting.conf"
+    ip-info-path: "./conf/siteIPInfoSetting.conf"
+    paths:
+      KMA_RDR:
+        site-info: "/home/watcher/deamon/RDR/conf/siteInfoSetting.conf"
+        ip-info: "/home/watcher/ipConf/RDR/siteIPInfoSetting.conf"
+      KMA_SDR:
+        site-info: "/home/watcher/deamon/SDR/conf/siteInfoSetting.conf"
+        ip-info: "/home/watcher/ipConf/SDR/siteIPInfoSetting.conf"
+      KMA_TDWR:
+        site-info: "/home/watcher/deamon/TDWR/conf/siteInfoSetting.conf"
+        ip-info: "/home/watcher/ipConf/TDWR/siteIPInfoSetting.conf"
+      MCEE_RDR:
+        site-info: "/home/watcher/deamon/MCEE_RDR/conf/siteInfoSetting.conf"
+        ip-info: "/home/watcher/ipConf/MCEE_RDR/siteIPInfoSetting.conf"
+      MCEE_SDR:
+        site-info: "/home/watcher/deamon/MCEE_SDR/conf/siteInfoSetting.conf"
+        ip-info: "/home/watcher/ipConf/MCEE_SDR/siteIPInfoSetting.conf"

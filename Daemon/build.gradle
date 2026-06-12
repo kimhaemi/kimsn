@@ -1,13 +1,59 @@
-// 실제 실행되는 메인 모듈이므로 bootJar 활성화
-bootJar { enabled = true }
-jar { enabled = false }
+plugins {
+    id 'org.springframework.boot'
+}
 
 dependencies {
-    // 비즈니스 로직이 담긴 api-module을 가져옴 (api-module이 db-module을 품고 있음)
-//    implementation project(':radar-api')
     implementation project(':common-data')
-
     implementation 'org.springframework.boot:spring-boot-starter-batch'
-
     implementation 'org.json:json:20230618'
+    implementation 'com.jcraft:jsch:0.1.55'
 }
+
+tasks.named('test') { useJUnitPlatform() }
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
+}
+
+bootJar { enabled = false }
+jar { enabled = true }
+
+def daemonSystems = [
+        'KMA_RDR'  : [desc: '기상청 대형 레이더 데몬 인프라'],
+        'KMA_SDR'  : [desc: '기상청 소형 레이더 데몬 인프라'],
+        'KMA_TDWR' : [desc: '기상청 공항 레이더 데몬 인프라'],
+        'MCEE_RDR' : [desc: '기후부 대형 레이더 데몬 인프라'],
+        'MCEE_SDR' : [desc: '기후부 소형 레이더 데몬 인프라']
+]
+
+// 💡 완결: 그레이들 내장 태스크 컨테이너에서 BootJar 클래스 타입을 안전하게 역추적하여 주입합니다.
+// 소스 코드 상에서 'org' 문자열이 완전히 청소되므로 문법 해석 오류가 영구적으로 차단됩니다.
+def bootJarTaskType = tasks.bootJar.getClass()
+
+daemonSystems.each { sysType, config ->
+    tasks.register("bootJar_${sysType}", bootJarTaskType) {
+        group = 'build'
+        description = "Builds JAR for ${config.desc}"
+
+        archiveClassifier = sysType
+        archiveVersion = project.version
+        mainClass = 'kr.or.kimsn.radar.daemon.RadarDaemonApplication'
+
+        with copySpec { from sourceSets.main.output }
+        classpath = sourceSets.main.runtimeClasspath
+
+        // 매니페스트에 시스템 식별 구분자 박제 (ConfigManager 바인딩용)
+        manifest {
+            attributes(
+                    'Start-Class': 'kr.or.kimsn.radar.daemon.RadarDaemonApplication',
+                    'Radar-System-Type': sysType
+            )
+        }
+    }
+}
+
+tasks.register('buildAllRadarJar') {
+    group = 'build'
+    description = 'Generates all 5 executable radar daemon JAR files at once.'
+    daemonSystems.keySet().each { sysType -> dependsOn "bootJar_${sysType}" }
+}
+build.dependsOn buildAllRadarJar

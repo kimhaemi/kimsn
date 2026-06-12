@@ -156,11 +156,11 @@ public class QueryService {
         rcDto.setSite(site_cd);
         rcDto.setDataKind(dataKindStr);
         rcDto.setDataType(dataType);
-        rcDto.setRecv_condition(recv_condition);
-        rcDto.setApply_time(apply_time);
-        rcDto.setLast_check_time(last_check_time);
-        rcDto.setSms_send(sms_send);
-        rcDto.setSms_send_activation(sms_send_activation);
+        rcDto.setRecvCondition(recv_condition);
+        rcDto.setApplyTime(apply_time);
+        rcDto.setLastCheckTime(last_check_time);
+        rcDto.setSmsSend(sms_send);
+        rcDto.setSmsSendActivation(sms_send_activation);
         rcDto.setStatus(status);
         rcDto.setCodedtl(codedtl);
 

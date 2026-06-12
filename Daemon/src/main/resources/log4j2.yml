@@ -1,20 +1,23 @@
-Configutation:
+Configuration:
   name: Default
   status: info
- 
+
   Properties:
     Property:
-      name: log-path
-      value: "logs"
- 
+      - name: log-path
+        value: "logs"
+      # 💡 기본값 정의: 혹시 모를 변수 누락 시 방어선 파일명 지정
+      - name: default-log-name
+        value: "radarCommon"
+
   Appenders:
     RollingFile:
       - name: RollingFile_Appender
-        fileName: ./${log-path}/radarTDWR.log
-        filePattern: "./${log-path}/radarTDWR_%d{yyyy-MM-dd}-%i.log"
+        # 💡 동적 확장: {sys:daemonLogName} 속성과 맞물려 radar_KMA_RDR.log 등으로 분리 출력됩니다.
+        fileName: "./${log-path}/radar_${sys:daemonLogName:-${default-log-name}}.log"
+        filePattern: "./${log-path}/radar_${sys:daemonLogName:-${default-log-name}}_%d{yyyy-MM-dd}-%i.log"
         PatternLayout:
-          pattern: "%style{%d{yyyy-MM-dd HH:mm:ss.SSS}}{cyan} %highlight{[%-5p]}{FATAL=bg_red,
-            ERROR=red, INFO=green, DEBUG=blue, TRACE=bg_yellow} %m%n"
+          pattern: "%style{%d{yyyy-MM-dd HH:mm:ss.SSS}}{cyan} %highlight{[%-5p]}{FATAL=bg_red, ERROR=red, INFO=green, DEBUG=blue, TRACE=bg_yellow} %m%n"
         Policies:
           TimeBasedTriggeringPolicy:
             Interval: 1

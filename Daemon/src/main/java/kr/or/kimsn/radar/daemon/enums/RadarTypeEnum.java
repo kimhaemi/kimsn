@@ -1,32 +1,25 @@
 package kr.or.kimsn.radar.daemon.enums;
 
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import java.util.Arrays;
+
+@Getter
+@RequiredArgsConstructor
 public enum RadarTypeEnum {
-  RDR(1, "대형", "RDR"),
-  SDR(2, "소형", "SDR"),
-  TDWR(3, "공항", "TDWR"),
-  UNKNOWN(0, "알수없음", "");
+  LARGE(1, "RDR", "대형 레이더"),
+  SMALL(2, "SDR", "소형 레이더"),
+  AIRPORT(3, "TDWR", "공항 레이더"),
+  UNKNOWN(0, "ERR", "미지정 장비");
 
   private final int gubun;
-  private final String krName;  // "대형", "소형", "공항"
-  private final String code;    // "RDR", "SDR", "TDWR"
+  private final String code;
+  private final String krName;
 
-  RadarTypeEnum(int gubun, String krName, String code) {
-    this.gubun = gubun;
-    this.krName = krName;
-    this.code = code;
-  }
-
-  public int getGubun() { return gubun; }
-  public String getKrName() { return krName; }
-  public String getCode() { return code; }
-
-  // ⭐ 핵심: gubun 숫자를 던지면 매칭되는 Enum 객체 자체를 찾아주는 메소드
   public static RadarTypeEnum find(int gubun) {
-    for (RadarTypeEnum type : values()) {
-      if (type.getGubun() == gubun) {
-        return type;
-      }
-    }
-    return UNKNOWN;
+    return Arrays.stream(values())
+        .filter(e -> e.getGubun() == gubun)
+        .findFirst()
+        .orElse(UNKNOWN);
   }
 }

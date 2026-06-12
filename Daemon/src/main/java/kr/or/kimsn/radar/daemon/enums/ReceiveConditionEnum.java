@@ -1,28 +1,53 @@
 package kr.or.kimsn.radar.daemon.enums;
 
+import java.util.Arrays;
+
 public enum ReceiveConditionEnum {
   ORDI("ORDI", "정상"),
-  WARN("WARN", "주의/경고 (미수신)"),
-  TOTA("TOTA", "전 사이트 네트워크 마비"),
-  TORE("TORE", "네트워크 복구중"),
-  RETR("RETR", "복구완료");
+
+  // 💡 하나의 상태코드("WARN") 안에서 한글 명칭으로 세분화 분기
+  WARN_ATTN("WARN", "주의"),
+  WARN_QUAL("WARN", "품질이상"),
+  WARN_MISS("WARN", "미수신"),
+
+  RETR("RETR", "정상복구"),
+  TOTA("TOTA", "전체장애"),
+  TORE("TORE", "전체복구");
 
   private final String code;
-  private final String description;
+  private final String krName;
 
-  ReceiveConditionEnum(String code, String description) {
+  ReceiveConditionEnum(String code, String krName) {
     this.code = code;
-    this.description = description;
+    this.krName = krName;
   }
 
-  public String getCode() { return code; }
-  public String getDescription() { return description; }
+  public String getCode() {
+    return this.code;
+  }
 
-  // DB 문자열 안전 변환 유틸리티
+  public String getKrName() {
+    return this.krName;
+  }
+
+  /**
+   * 기존에 가지고 계신 기본 탐색 메서드 (그대로 유지)
+   */
   public static ReceiveConditionEnum find(String code) {
-    for (ReceiveConditionEnum condition : values()) {
-      if (condition.getCode().equalsIgnoreCase(code)) return condition;
-    }
-    return ORDI; // 기본 방어값
+    return Arrays.stream(ReceiveConditionEnum.values())
+        .filter(e -> e.getCode().equalsIgnoreCase(code))
+        .findFirst()
+        .orElse(ORDI);
+  }
+
+  /**
+   * 💡 새로 하단에 추가할 정밀 탐색 메서드
+   * 상태코드("WARN")와 한글 상세 사유를 동시 대조하여 정확한 엔티티 객체를 반환합니다.
+   */
+  public static ReceiveConditionEnum findDetail(String code, String krName) {
+    return Arrays.stream(ReceiveConditionEnum.values())
+        .filter(e -> e.getCode().equalsIgnoreCase(code) && e.getKrName().equals(krName))
+        .findFirst()
+        .orElseGet(() -> find(code)); // 일치하는 한글명이 없으면 기본 find(code) 결과로 방어
   }
 }

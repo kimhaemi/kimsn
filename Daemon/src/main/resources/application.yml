@@ -1,16 +1,29 @@
+server:
+  port: 8701
+
 spring:
-# 콘솔 색상
   output:
     ansi:
       enabled: always
+  application:
+    name: radar-daemon
 
-# 디버그
+  # 💡 멀티모듈 내부 클래스패스 상의 공통 데이터베이스 속성 결합선 유지
+  config:
+    use-legacy-processing: true
+    import:
+      optional:
+        - "classpath*:common-data.yml"
+
+  data:
+    jpa:
+      repositories:
+        bootstrap-mode: default
+
+  devtools:
+    livereload:
+      enabled: true
+
+# 💡 외부 확장 연동 통로 지정: 런타임 시 외부에 노출된 별도의 log4j2.yml 설정을 바라보도록 구성
 logging:
-  config: 
-    classpath: log4j2.yml
-  level:
-    root: info
-    '[kr.or.kimsn.radardemo]': DEBUG
-  pattern:
-    console: "%-5level [%d{yyyy-MM-dd HH:mm:ss}] - %msg%n"
-    file: "%-5level [%d{yyyy-MM-dd HH:mm:ss}] - %msg%n"
+  config: "file:./config/log4j2.yml"
