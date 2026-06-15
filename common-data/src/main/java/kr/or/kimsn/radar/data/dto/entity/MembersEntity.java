@@ -1,4 +1,4 @@
-package kr.or.kimsn.radar.data.config.dto.entity;
+package kr.or.kimsn.radar.data.dto.entity;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;

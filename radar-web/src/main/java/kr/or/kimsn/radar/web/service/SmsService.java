@@ -1,9 +1,6 @@
 package kr.or.kimsn.radar.web.service;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -12,7 +9,6 @@ import javax.transaction.Transactional;
 
 import kr.or.kimsn.radar.data.dto.SmsSendNuri2Dto;
 import kr.or.kimsn.radar.data.repository.SmsSendNuri2Repository;
-import org.json.simple.JSONObject;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -190,7 +186,7 @@ public class SmsService {
 //                Long msgKey = smsSendNuri2Repository.getMsgNextval();
                 String call_from = "027337365";
                 String call_to = smsDto.get("call_to").toString().replaceAll("-", "");
-                String res_date = smsDto.get("req_date").toString().replace(".", "").replace(":", "")+"00";
+                String res_date = smsDto.get("req_date").toString().replace(".", "").replace(":", "");
 
                 log.info("call_from: " + call_from);
                 log.info("call_to: " + call_to);

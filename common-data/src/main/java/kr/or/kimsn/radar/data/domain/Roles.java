@@ -1,4 +1,4 @@
-package kr.or.kimsn.radar.data.config.domain;
+package kr.or.kimsn.radar.data.domain;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

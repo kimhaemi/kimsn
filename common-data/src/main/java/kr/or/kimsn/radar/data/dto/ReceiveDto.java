@@ -6,7 +6,6 @@ import javax.persistence.Id;
 import javax.persistence.IdClass;
 
 import kr.or.kimsn.radar.data.dto.pkColumn.CommonPk;
-import kr.or.kimsn.radar.data.dto.pkColumn.CommonPk;
 import lombok.Data;
 
 @Data

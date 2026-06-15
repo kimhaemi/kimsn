@@ -25,6 +25,8 @@ public class SmsSendNuri2Dto {
     private String RSLT_TYPE;  // # '*결과처리 된 메시지 유형', XMS(또는 MMS,SMS), ALT, RCS
     private String RSLT_TYPE_NAME;
     private String RSLT_TYPE_NAME_2;
+    private String ALT_RSLT_CODE; // '카카오 결과코드', 카카오 알림톡 메시지 발송 결과코드, NURI2_NRMSG_RSLT 코드 조회
+    private String XMS_RSLT_CODE; // 'sms 결과코드', 문자 메시지 발송 결과코드, NURI2_NRMSG_RSLT 코드 조회
     private String ALT_RSLT_EXPLA; // '결과코드 상세내용'
     private String XMS_RSLT_EXPLA; // '결과코드 상세내용'
     private String RSLT_EXPLA; // '결과코드 상세내용'

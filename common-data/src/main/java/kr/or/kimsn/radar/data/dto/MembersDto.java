@@ -11,7 +11,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-import kr.or.kimsn.radar.data.config.domain.Roles;
+import kr.or.kimsn.radar.data.domain.Roles;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
 
