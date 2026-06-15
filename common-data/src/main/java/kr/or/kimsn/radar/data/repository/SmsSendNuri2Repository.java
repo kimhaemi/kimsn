@@ -8,7 +8,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public interface SmsSendNuri2Repository extends JpaRepository<SmsSendNuri2Dto, Long> {
 	// app contents seq
 	@Query(nativeQuery = true, value = "SELECT nuri2.msg_nextval() from dual"
