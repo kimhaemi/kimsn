@@ -18,11 +18,11 @@ bootJar { enabled = false }
 jar { enabled = true }
 
 def daemonSystems = [
-        'KMA_RDR'  : [desc: '기상청 대형 레이더 데몬 인프라'],
-        'KMA_SDR'  : [desc: '기상청 소형 레이더 데몬 인프라'],
-        'KMA_TDWR' : [desc: '기상청 공항 레이더 데몬 인프라'],
-        'MCEE_RDR' : [desc: '기후부 대형 레이더 데몬 인프라'],
-        'MCEE_SDR' : [desc: '기후부 소형 레이더 데몬 인프라']
+        'KMA_RDR'  : [desc: '기상청A 대형 레이더 데몬 인프라'],
+        'KMA_SDR'  : [desc: '기상청A 소형 레이더 데몬 인프라'],
+        'KMA_TDWR' : [desc: '기상청A 공항 레이더 데몬 인프라'],
+        'MCEE_RDR' : [desc: '기상청B 대형 레이더 데몬 인프라'],
+        'MCEE_SDR' : [desc: '기상청B 소형 레이더 데몬 인프라']
 ]
 
 // 💡 완결: 그레이들 내장 태스크 컨테이너에서 BootJar 클래스 타입을 안전하게 역추적하여 주입합니다.

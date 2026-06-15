@@ -28,7 +28,7 @@
 				var defaultAgency = $("#agencyCd").val();
 
 				if (defaultAgency === "MCEE") {
-					// 인풋 값이 MCEE면 기후부 탭 함수를 강제로 실행시켜 화면을 전환
+					// 인풋 값이 MCEE면 기상청B 탭 함수를 강제로 실행시켜 화면을 전환
 					toggleTab('mcee');
 				} else {
 					// 기본값이 KMA이거나 비어있으면 기상청 탭 함수를 실행
@@ -60,7 +60,7 @@
 					$("[data-agency]").hide();
 					$("[data-agency='MCEE']").show();
 
-					// 기후부일 때는 공항 레이더(TDWR) 테이블 영역 자체를 숨김 처리
+					// 기상청B일 때는 공항 레이더(TDWR) 테이블 영역 자체를 숨김 처리
 					$("table[data-radar-type='airport']").hide();
 				}
 			}
@@ -98,7 +98,7 @@
 				<th:block th:each="rcSite : ${rcState}">
 					<!--
             - th:styleappend에 DB에서 가져온 완성된 CSS 문자열(style_attr)을 그대로 주입합니다.
-            - 초기 로딩 시 기후부(MCEE) 숨김 조건만 뒤에 붙여줍니다.
+            - 초기 로딩 시 기상청B(MCEE) 숨김 조건만 뒤에 붙여줍니다.
           -->
 					<div th:id="${rcSite.site}"
 							 th:classappend="${'radar ' + rcSite.dataKind + ' ' + rcSite.recvCondition}"
@@ -116,9 +116,9 @@
 			<div class="alertTbls">
 
 				<div class="toggle-container">
-					<!-- Default state: 기상청 is active (background-color: #3498db), 기후부 is off -->
-					<div id="btn-kma" class="tab active" onclick="toggleTab('kma')">기상청</div>
-					<div id="btn-mcee" class="tab" onclick="toggleTab('mcee')">기후부</div>
+					<!-- Default state: 기상청A is active (background-color: #3498db), 기상청B is off -->
+					<div id="btn-kma" class="tab active" onclick="toggleTab('kma')">기상청A</div>
+					<div id="btn-mcee" class="tab" onclick="toggleTab('mcee')">기상청B</div>
 				</div>
 
 				<!-- 1. 대형 레이더 -->

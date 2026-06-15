@@ -126,14 +126,14 @@
                                          ======================================================================= -->
                                     <li class="subTitle" th:if="${mList.id < 5000}">대형</li>
 
-                                    <!-- [개선] 최상단에 기상청/기후부 헤더 라인을 추가하여 좌우 기둥의 기준을 제시 -->
+                                    <!-- [개선] 최상단에 기상청A/기상청B 헤더 라인을 추가하여 좌우 기둥의 기준을 제시 -->
                                     <li style="display: flex; width: 100%; font-weight: bold; font-size: 14px; color: #000; margin-top: 5px; margin-bottom: 5px; list-style: none;">
-                                      <div style="width: 50%; ">기상청</div>
-                                      <div style="width: 50%; ">기후부</div>
+                                      <div style="width: 50%; ">기상청A</div>
+                                      <div style="width: 50%; ">기상청B</div>
                                     </li>
 
                                     <li style="display: flex; width: 100%; list-style: none;">
-                                      <!-- 좌측 열 (기상청 대형) -->
+                                      <!-- 좌측 열 (기상청A 대형) -->
                                       <div style="width: 50%; display: flex; flex-direction: column; padding-left: 40px;">
                                         <th:block th:each="sList : ${list.stationList}">
                                           <a th:if="${sList.gubun == 1 && sList.agencyCd == 'KMA'}"
@@ -141,7 +141,7 @@
                                              th:text="${sList.nameKr}" style="margin-bottom: 5px;"></a>
                                         </th:block>
                                       </div>
-                                      <!-- 우측 열 (기후부 대형) -->
+                                      <!-- 우측 열 (기상청B 대형) -->
                                       <div style="width: 50%; display: flex; flex-direction: column; padding-left: 40px;">
                                         <th:block th:each="sList : ${list.stationList}">
                                           <a th:if="${sList.gubun == 1 && sList.agencyCd == 'MCEE'}"
@@ -156,14 +156,14 @@
                                          ======================================================================= -->
                                     <li class="subTitle" th:if="${mList.id < 5000}">소형</li>
 
-                                    <!-- [개선] 최상단에 기상청/기후부 헤더 라인을 추가하여 좌우 기둥의 기준을 제시 -->
+                                    <!-- [개선] 최상단에 기상청A/기상청B 헤더 라인을 추가하여 좌우 기둥의 기준을 제시 -->
                                     <li style="display: flex; width: 100%; font-weight: bold; font-size: 14px; color: #000; margin-top: 5px; margin-bottom: 5px; list-style: none;">
-                                      <div style="width: 50%; ">기상청</div>
-                                      <div style="width: 50%; ">기후부</div>
+                                      <div style="width: 50%; ">기상청A</div>
+                                      <div style="width: 50%; ">기상청B</div>
                                     </li>
 
                                     <li style="display: flex; width: 100%; list-style: none;">
-                                      <!-- 좌측 열 (기상청 소형) -->
+                                      <!-- 좌측 열 (기상청A 소형) -->
                                       <div style="width: 50%; display: flex; flex-direction: column; padding-left: 40px;">
                                         <th:block th:each="sList : ${list.stationList}">
                                           <a th:if="${sList.gubun == 2 && sList.agencyCd == 'KMA'}"
@@ -171,7 +171,7 @@
                                              th:text="${sList.nameKr}" style="margin-bottom: 5px;"></a>
                                         </th:block>
                                       </div>
-                                      <!-- 우측 열 (기후부 소형) -->
+                                      <!-- 우측 열 (기상청B 소형) -->
                                       <div style="width: 50%; display: flex; flex-direction: column; padding-left: 40px;">
                                         <th:block th:each="sList : ${list.stationList}">
                                           <a th:if="${sList.gubun == 2 && sList.agencyCd == 'MCEE'}"
@@ -186,7 +186,7 @@
                                          ======================================================================= -->
                                     <li class="subTitle" th:if="${mList.id < 5000}">공항</li>
                                     <li style="display: flex; width: 100%; list-style: none;">
-                                      <!-- 좌측 열 (기상청 공항) -->
+                                      <!-- 좌측 열 (기상청A 공항) -->
                                       <div style="width: 50%; display: flex; flex-direction: column; padding-left: 40px;">
                                         <th:block th:each="sList : ${list.stationList}">
                                           <a th:if="${sList.gubun == 3 && sList.agencyCd == 'KMA'}"
@@ -194,7 +194,7 @@
                                              th:text="${sList.nameKr}" style="margin-bottom: 5px;"></a>
                                         </th:block>
                                       </div>
-                                      <!-- 우측 열 (기후부 공항 - 데이터 연동 대비 여백 유지) -->
+                                      <!-- 우측 열 (기상청B 공항 - 데이터 연동 대비 여백 유지) -->
                                       <div style="width: 50%; display: flex; flex-direction: column; padding-left: 40px;">
                                         <th:block th:each="sList : ${list.stationList}">
                                           <a th:if="${sList.gubun == 3 && sList.agencyCd == 'MCEE'}"
