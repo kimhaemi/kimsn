@@ -3,14 +3,13 @@ package kr.or.kimsn.radar.data.repository;
 import java.util.List;
 
 import kr.or.kimsn.radar.data.dto.ReceiveDataForSiteStatMonthDto;
+import kr.or.kimsn.radar.data.dto.pkColumn.ReceiveDataForSiteStatMonthPk;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-import org.springframework.stereotype.Repository;
-
-@Repository
-public interface ReceiveDataForSiteStatMonthRepository extends JpaRepository<ReceiveDataForSiteStatMonthDto, String> {
+public interface ReceiveDataForSiteStatMonthRepository extends JpaRepository<ReceiveDataForSiteStatMonthDto, ReceiveDataForSiteStatMonthPk> {
     //  @Query(
     //      nativeQuery = true,
     //      value=

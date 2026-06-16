@@ -6,13 +6,12 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
-import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import kr.or.kimsn.radar.data.dto.ReceiveSettingDto;
+import kr.or.kimsn.radar.data.dto.pkColumn.ReceiveSettingPk;
 
-@Repository
-public interface ReceiveSettingRepository extends JpaRepository<ReceiveSettingDto, String> {
+public interface ReceiveSettingRepository extends JpaRepository<ReceiveSettingDto, ReceiveSettingPk> {
 
     List<ReceiveSettingDto> findByDataKind(String dataKind);
 

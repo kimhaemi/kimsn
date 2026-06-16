@@ -7,9 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import kr.or.kimsn.radar.data.dto.SmsTargetGroupLinkListDto;
-import org.springframework.stereotype.Repository;
 
-@Repository
 public interface SmsTargetGroupLinkListRepository extends JpaRepository<SmsTargetGroupLinkListDto, String> {
 
     @Query(nativeQuery = true, value = "select /*getTableJoinAll*/\n" +

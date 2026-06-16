@@ -10,9 +10,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import kr.or.kimsn.radar.data.dto.StationStatusDto;
-import org.springframework.stereotype.Repository;
 
-@Repository
 public interface StationStatusRepository extends JpaRepository<StationStatusDto, String>{
 
     List<StationStatusDto> findByOrderBySortOrder();

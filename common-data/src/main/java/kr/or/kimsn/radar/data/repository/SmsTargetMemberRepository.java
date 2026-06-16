@@ -7,9 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import kr.or.kimsn.radar.data.dto.SmsTargetMemberDto;
-import org.springframework.stereotype.Repository;
 
-@Repository
 public interface SmsTargetMemberRepository extends JpaRepository<SmsTargetMemberDto, Long>{
 
     List<SmsTargetMemberDto> findByOrderByName();

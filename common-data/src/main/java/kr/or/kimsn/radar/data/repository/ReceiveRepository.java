@@ -6,10 +6,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 import kr.or.kimsn.radar.data.dto.ReceiveDto;
-import org.springframework.stereotype.Repository;
+import kr.or.kimsn.radar.data.dto.pkColumn.CommonPk;
 
-@Repository
-public interface ReceiveRepository extends JpaRepository<ReceiveDto, String> {
+public interface ReceiveRepository extends JpaRepository<ReceiveDto, CommonPk> {
     @Query(nativeQuery = true, value = "select /*getReceiveCondition*/\n" +
             "  T1.data_kind as data_kind,\n" +
             "  T1.site as site, \n" +

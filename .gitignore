@@ -17,7 +17,8 @@ Thumbs.db
 logs/
 gradle/
 ./radar-web/build/
-/radar-web/bin/
+/radar-web/bin
+/
 ./common-data/build/
 /common-data/bin/
 /Daemon/bin/
@@ -26,3 +27,4 @@ gradlew
 .gitignore
 
 .history
+.vscode

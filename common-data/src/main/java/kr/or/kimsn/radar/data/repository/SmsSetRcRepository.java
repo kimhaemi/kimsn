@@ -7,10 +7,9 @@ import org.springframework.data.jpa.repository.Query;
 
 import kr.or.kimsn.radar.data.dto.ReceiveConditionDto;
 import kr.or.kimsn.radar.data.dto.SmsSetRcDto;
-import org.springframework.stereotype.Repository;
+import kr.or.kimsn.radar.data.dto.pkColumn.CommonPk;
 
-@Repository
-public interface SmsSetRcRepository extends JpaRepository<SmsSetRcDto, String> {
+public interface SmsSetRcRepository extends JpaRepository<SmsSetRcDto, CommonPk> {
     List<ReceiveConditionDto> findBySiteAndDataType(String site, String data_type);
 
     @Query(value = "select \n" +

@@ -17,6 +17,7 @@ Configuration:
         fileName: "./${log-path}/radar_${sys:daemonLogName:-${default-log-name}}.log"
         filePattern: "./${log-path}/radar_${sys:daemonLogName:-${default-log-name}}_%d{yyyy-MM-dd}-%i.log"
         PatternLayout:
+          Charset: "UTF-8"
           pattern: "%style{%d{yyyy-MM-dd HH:mm:ss.SSS}}{cyan} %highlight{[%-5p]}{FATAL=bg_red, ERROR=red, INFO=green, DEBUG=blue, TRACE=bg_yellow} %m%n"
         Policies:
           TimeBasedTriggeringPolicy:

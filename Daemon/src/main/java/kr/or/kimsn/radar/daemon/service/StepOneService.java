@@ -11,7 +11,6 @@ import kr.or.kimsn.radar.daemon.util.TimeUtil;
 import kr.or.kimsn.radar.daemon.util.SftpUtil;
 import kr.or.kimsn.radar.data.dto.StationDto;
 import kr.or.kimsn.radar.data.dto.ReceiveSettingDto;
-import kr.or.kimsn.radar.daemon.service.QueryService;
 
 @Slf4j
 @Component

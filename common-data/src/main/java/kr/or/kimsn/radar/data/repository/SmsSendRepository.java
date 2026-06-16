@@ -10,10 +10,9 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import kr.or.kimsn.radar.data.dto.SmsSendDto;
-import org.springframework.stereotype.Repository;
+import kr.or.kimsn.radar.data.dto.pkColumn.SmsSendPk;
 
-@Repository
-public interface SmsSendRepository extends JpaRepository<SmsSendDto, Long> {
+public interface SmsSendRepository extends JpaRepository<SmsSendDto, SmsSendPk> {
 	// app contents seq
 	@Query(nativeQuery = true, value = "SELECT nuri.appContentNextval() from dual"
 			// value = "select seq_currval+1 as seq from nuri.app_contents_sequence"

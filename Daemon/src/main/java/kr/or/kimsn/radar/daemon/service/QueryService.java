@@ -3,6 +3,8 @@ package kr.or.kimsn.radar.daemon.service;
 import java.util.List;
 
 import lombok.RequiredArgsConstructor;
+
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import kr.or.kimsn.radar.data.dto.AppTemplateCodeDto;
@@ -89,7 +91,7 @@ public class QueryService {
 
     // data 처리 이력
     public List<ReceiveDataDto> getReceiveDataList(String site, String dataKindStr, int count) {
-        return receiveDataRepository.getReceiveDataList(site, dataKindStr, count);
+        return receiveDataRepository.getReceiveDataList(site, dataKindStr, PageRequest.of(0, count));
     }
 
     // 문자 메시지 on/off
@@ -99,7 +101,7 @@ public class QueryService {
 
     // data 처리 이력 - dtl
     public List<ReceiveDataDto> getReceiveDataCodedtlList(String site, String dataKindStr, int count, String codedtl) {
-        return receiveDataRepository.getReceiveDataCodedtlList(site, dataKindStr, count, codedtl);
+        return receiveDataRepository.getReceiveDataCodedtlList(site, dataKindStr, codedtl, PageRequest.of(0, count));
     }
 
     // site 수신그룹 담당자

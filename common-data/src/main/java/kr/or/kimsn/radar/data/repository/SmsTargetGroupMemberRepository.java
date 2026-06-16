@@ -8,9 +8,7 @@ import org.springframework.data.repository.query.Param;
 
 import kr.or.kimsn.radar.data.dto.SmsTargetGroupMemberDto;
 import kr.or.kimsn.radar.data.dto.pkColumn.SmsTargetGroupMemberPk;
-import org.springframework.stereotype.Repository;
 
-@Repository
 public interface SmsTargetGroupMemberRepository extends JpaRepository<SmsTargetGroupMemberDto, SmsTargetGroupMemberPk> {
         @Query(nativeQuery = true, value = "select \n" +
                         "   T1.mid as mid\n" +
