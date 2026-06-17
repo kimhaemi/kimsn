@@ -23,17 +23,18 @@ import kr.or.kimsn.radar.data.dto.ReceiveConditionCriteriaDto;
 public class StepTwoService {
 
     private final QueryService queryService;
-    private final SmsNotificationService smsNotificationService;
+    private final SmsService smsNotificationService;
 
     @Transactional
     public void stepTwo(String gubunStr, String cycleId, String placeholder) {
         String mode = ConfigManager.getString("mode");
         int gubun = ConfigManager.getInt("gubun");
+        String agencyCd = ConfigManager.getString("agencyCd");
         String dataKindStr = RadarTypeEnum.find(gubun).getCode();
 
         // 💡 자바 8 표준 타임스탬프 계산 바인딩
         String currentTime = TimeUtil.getAdjustedCurrentTime(gubun);
-        List<StationDto> srDto = (!"test".equalsIgnoreCase(mode)) ? queryService.getStation(gubun) : new ArrayList<>();
+        List<StationDto> srDto = (!"test".equalsIgnoreCase(mode)) ? queryService.getStation(gubun, agencyCd, 1) : new ArrayList<>();
         int srCnt = (srDto != null) ? srDto.size() : 0;
 
         int allSiteNetNo = 0;

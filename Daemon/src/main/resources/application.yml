@@ -12,7 +12,7 @@ spring:
   config:
     use-legacy-processing: true
     import:
-      - "optional: classpath*:common-data.yml"
+      - "optional:classpath*:common-data.yml"
 
   data:
     jpa:
@@ -24,5 +24,5 @@ spring:
       enabled: true
 
 # 💡 외부 확장 연동 통로 지정: 런타임 시 외부에 노출된 별도의 log4j2.yml 설정을 바라보도록 구성
-logging:
-  config: "file:./config/log4j2.yml"
+# logging:
+#   config: "file:log4j2.yml"

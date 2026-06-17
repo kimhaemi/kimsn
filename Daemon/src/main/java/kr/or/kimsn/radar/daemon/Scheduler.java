@@ -20,6 +20,7 @@ import kr.or.kimsn.radar.daemon.service.QueryService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.MDC;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -32,106 +33,71 @@ import org.springframework.stereotype.Component;
 public class Scheduler {
 
     private final QueryService queryService;
+    private final RadarConfigProperties radarConfigProperties;
+    
+    // 💡 핵심 해결: 수동 'new' 생성을 제거하고, 스프링이 주입해 준 빈을 사용합니다.
+    // 이렇게 해야 StepTwoProcess 내부의 @Transactional과 SmsService가 정상 작동하며 컴파일 에러가 해결됩니다.
     private final StepOneService stepOneService;
     private final StepTwoService stepTwoService;
-    private final RadarConfigProperties radarConfigProperties;
 
-    // 💡 [요구사항 반영]: 이전 사이클의 미종료 여부와 상관없이 매분 강제 실행하기 위해 AtomicBoolean 락을 완전 제거합니다.
+    @Value("${DAEMON_TYPE}")
+    private String daemonType;
 
-    private static final DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-    private static final DateTimeFormatter logDtf = DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss");
+    private List<StationDto> srDto;
+    private final DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+    private final DateTimeFormatter cycleIdFormatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
 
-    /**
-     * [통합 데몬 스케줄러 - 100% 무조건 강제 실행 모드]
-     * 지정된 크론 주기(표준 1분 또는 1분 지연 5분 그리드 타임라인)에 매 세션 무조건 독립 호출 구동됩니다.
-     */
-    @Scheduled(cron = "#{@radarConfigProperties.cronExpression}")
+    @Scheduled(cron = "#{@radarConfigProperties.getDynamicPath(environment.getProperty('DAEMON_TYPE'), 'cron-expression')}")
     @Async
     public void cronJobSch() throws InterruptedException {
 
-        // 💡 각 사이클이 서로 방해받지 않고 로그가 완벽하게 분리 격리 보존되도록 Cycle ID를 메인 스레드에 선제 주입
-        String cycleId = LocalDateTime.now().format(logDtf);
-        MDC.put("cycleId", cycleId);
+        String siteInfoPath = radarConfigProperties.getDynamicPath(daemonType, "site-info");
+        String ipInfoPath = radarConfigProperties.getDynamicPath(daemonType, "ip-info");
 
-        ExecutorService exec = null;
-        String siteInfoPath = radarConfigProperties.getSiteInfoPath();
-        String ipInfoPath = radarConfigProperties.getIpInfoPath();
+        String pauseTimeStr = DataCommon.getInfoConf("ipInfo", "PauseTime", siteInfoPath, ipInfoPath);
+        final Long pauseTime = (pauseTimeStr != null && !pauseTimeStr.isEmpty()) ? Long.parseLong(pauseTimeStr) : 20L; // 기본값 20초
 
-        try {
-            final long pauseTime = ConfigManager.getLong("PauseTime");
-            int gubun = ConfigManager.getInt("gubun");
-            String dataKindStr = DataKindEnum.getDescriptionByGubun(gubun);
-            String mode = ConfigManager.getString("mode");
-            String gubunStr = ConfigManager.getGubunStr();
+        String mode = DataCommon.getInfoConf("siteInfo", "mode", siteInfoPath, ipInfoPath);
+        String agencyCd = DataCommon.getInfoConf("siteInfo", "agencyCd", siteInfoPath, ipInfoPath);
 
-            log.info("[🚀 강제 사이클 가동 시작] ID: [{}] | 장비타입: {} - {}", cycleId, gubunStr, LocalDateTime.now().format(dtf));
+        String gubunStr = DataCommon.getInfoConf("siteInfo", "gubun", siteInfoPath, ipInfoPath);
+        int gubun = (gubunStr != null && !gubunStr.isEmpty()) ? Integer.parseInt(gubunStr) : 1; // 기본값 1(대형)
 
-            List<StationDto> srDto = new ArrayList<>();
-            if (!"test".equalsIgnoreCase(mode)) {
-                srDto = queryService.getStation(gubun);
+        log.info("[현재 실행 데몬 타입(YML 기준)] : " + daemonType);
+
+        if (gubun == 1) gubunStr = "대형";
+        if (gubun == 2) gubunStr = "소형";
+        if (gubun == 3) gubunStr = "공항";
+        log.info("[데몬 구분] : " + gubunStr);
+
+        int srCnt = 0; 
+        if (!mode.equals("test")) {
+            srDto = queryService.getStation(gubun, agencyCd, 1);
+            if (srDto != null) {
+                srCnt = srDto.size();
             }
-
-            if (srDto == null || srDto.isEmpty()) {
-                log.info("[사이클 즉시 마감] ID: [{}] - 가동 처리할 타겟 레이더 스테이션 정보가 존재하지 않습니다.", cycleId);
-                return;
-            }
-
-            // ----------------------------------------------------------------
-            // [💥 1단계: StepOne - 레이더 서버 접속 및 메타데이터 수집]
-            // ----------------------------------------------------------------
-            log.info("[▶️ StepOne 시작] 독립 병렬 수집 세션 풀 가동 (ID: [{}])", cycleId);
-
-            // 각 주기(매분)마다 독립된 크기의 고정 스레드 풀을 동적으로 생성하여 이전 주기 스레드와 병합 경합 차단
-            exec = Executors.newFixedThreadPool(srDto.size());
-
-            for (StationDto currentStation : srDto) {
-                exec.submit(() -> {
-                    MDC.put("cycleId", cycleId); // 비동기 자식 자바 스레드 내부에 고유 cycleId 전파 격리
-                    try {
-                        stepOneService.stepOne(mode, gubun, currentStation, siteInfoPath, ipInfoPath);
-                    } finally {
-                        MDC.clear();
-                    }
-                });
-                Thread.sleep(50); // 네트워크 순간 유입 부하 분산 마진
-            }
-
-            exec.shutdown();
-
-            // 설정에서 타임아웃 값을 유연하게 탈환하되 실패 시 기본 안전 대기 마지노선 35초 적용
-            int connectTimeOut = 35;
-            try {
-                connectTimeOut = Integer.parseInt(DataCommon.getInfoConf("ipInfo", "connectTimeOut", siteInfoPath, ipInfoPath));
-            } catch (Exception e) {
-                log.warn("[⚙️ 설정 정보 알림] connectTimeOut 파싱 보류로 기본 마지노선 35초를 대기 규격으로 고수합니다.");
-            }
-
-            // ⚠️ 중요: 이전 주기가 끝나지 않았더라도 현재 스레드 풀은 최대지정 초(예: 35초)만 딱 기다리고 강제로 대기를 해제하여 빠져나옵니다.
-            boolean allFinished = exec.awaitTermination(connectTimeOut, TimeUnit.SECONDS);
-            if (!allFinished) {
-                log.warn("[⏰ 타임아웃 강제돌파] ID: [{}] 일부 응답 지연 장비가 존재하나 {}초 도달로 대기를 해제하고 정산으로 진입합니다.", cycleId, connectTimeOut);
-            }
-            log.info("[🏁 StepOne 완료] 이번 주기 병렬 수집 종료 (ID: [{}])", cycleId);
-
-            // ----------------------------------------------------------------
-            // [💤 2단계: 비즈니스 요구 규격에 따른 일시정지]
-            // ----------------------------------------------------------------
-            log.info("[💤 정산 지연 마진 대기] 지정된 {}초 정지 후 후처리 정산을 시작합니다.", pauseTime);
-            Thread.sleep(pauseTime * 1000);
-
-            // ----------------------------------------------------------------
-            // [📊 3단계: StepTwo - 데이터 최종 가공 및 후처리 DB 적재]
-            // ----------------------------------------------------------------
-            log.info("[=================== ▶️ StepTwo 프로세스 시작 (ID: [{}]) ===================]", cycleId);
-            // 💡 락이 풀렸으므로 이전 주기 정산 결과에 지장 없이 현재 시점의 누적 3회 수집 이력을 정밀 대조하여 마스터 상태를 갱신합니다.
-            stepTwoService.stepTwo(gubunStr, cycleId, cycleId);
-            log.info("[=================== 🏁 StepTwo 프로세스 종료 (ID: [{}]) ===================]", cycleId);
-
-        } catch (Exception e) {
-            log.error("[❌ 사이클 중단 장애] 스케줄러 처리 도중 예상치 못한 런타임 예외 감지 (ID: [{}])", cycleId, e);
-        } finally {
-            log.info("[🏁 사이클 최종 완료 완료] ID: [{}] - {}", cycleId, LocalDateTime.now().format(dtf));
-            MDC.clear(); // 메인 스레드 메모리 청소
         }
+
+        ExecutorService exec = Executors.newCachedThreadPool(); 
+
+        for (int a = 0; a < srCnt; a++) {
+            int cnt = a;
+            Runnable task = () -> stepOneService.stepOne(mode, gubun, srDto.get(cnt), siteInfoPath, ipInfoPath);
+            exec.submit(task);
+            Thread.sleep(500);
+        }
+        exec.shutdown();
+
+        Thread.sleep(pauseTime * 1000); 
+        log.info("[" + pauseTime + "초 후 다음] : " + LocalDateTime.now().format(dtf));
+        log.info("[=================== 2번째 프로세스 ===================] " + LocalDateTime.now().format(dtf));
+        
+        String cycleId = LocalDateTime.now().format(cycleIdFormatter);
+        String placeholder = ""; 
+        
+        // 💡 핵심 해결: 주입받은 스프링 빈 인스턴스의 메서드를 직접 호출합니다.
+        stepTwoService.stepTwo(gubunStr, cycleId, placeholder);
+        
+        log.info("[=================== end ===================]");
     }
 }

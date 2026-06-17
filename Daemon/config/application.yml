@@ -6,17 +6,32 @@ radar:
     ip-info-path: "./conf/siteIPInfoSetting.conf"
     paths:
       KMA_RDR:
-        site-info: "/home/watcher/deamon/RDR/conf/siteInfoSetting.conf"
-        ip-info: "/home/watcher/ipConf/RDR/siteIPInfoSetting.conf"
+        # 실행: java -jar -DDAEMON_TYPE=KMA_RDR radardemo.jar
+        # 초(0-59) 분(0-59) 시간(0-23) 일(1-31) 월(1-12) 요일(0-7)
+        # 6분 00초
+        cron-expression: "* * * * * *"
+        site-info-path: "C:/kimsn/20260615/kimsn/Daemon/config/siteInfoSetting.conf"
+        ip-info-path: "C:/kimsn/20260615/kimsn/Daemon/config/siteIPInfoSetting.conf"
+        # cron-expression: "0 1,6,11,16,21,26,31,36,41,46,51,56 * * * *"
+        # site-info: "/home/watcher/deamon/RDR/conf/siteInfoSetting.conf"
+        # ip-info: "/home/watcher/ipConf/RDR/siteIPInfoSetting.conf"
       KMA_SDR:
+        # 매분 30초
+        cron-expression: "30 0-59 * * * *"
         site-info: "/home/watcher/deamon/SDR/conf/siteInfoSetting.conf"
         ip-info: "/home/watcher/ipConf/SDR/siteIPInfoSetting.conf"
       KMA_TDWR:
+        # 6분 00초
+        cron-expression: "0 1,6,11,16,21,26,31,36,41,46,51,56 * * * *"
         site-info: "/home/watcher/deamon/TDWR/conf/siteInfoSetting.conf"
         ip-info: "/home/watcher/ipConf/TDWR/siteIPInfoSetting.conf"
       MCEE_RDR:
+        # 6분 00초
+        cron-expression: "0 1,6,11,16,21,26,31,36,41,46,51,56 * * * *"
         site-info: "/home/watcher/deamon/MCEE_RDR/conf/siteInfoSetting.conf"
         ip-info: "/home/watcher/ipConf/MCEE_RDR/siteIPInfoSetting.conf"
       MCEE_SDR:
+        # 6분 00초
+        cron-expression: "0 1,6,11,16,21,26,31,36,41,46,51,56 * * * *"
         site-info: "/home/watcher/deamon/MCEE_SDR/conf/siteInfoSetting.conf"
         ip-info: "/home/watcher/ipConf/MCEE_SDR/siteIPInfoSetting.conf"

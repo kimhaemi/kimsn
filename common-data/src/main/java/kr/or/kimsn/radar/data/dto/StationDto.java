@@ -55,4 +55,6 @@ public class StationDto {
     @Column(name = "style_attr")
     private String styleAttr;
 
+    private int status;
+
 }

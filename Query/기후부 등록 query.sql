@@ -18,6 +18,9 @@ where site_num > 60000;
 
 -- 2. 현재 웹 화면 배치용 데이터 (현재 UI 유지보수 제로화용)
 ALTER TABLE `station_rdr` ADD `style_attr` VARCHAR(255) DEFAULT NULL COMMENT '화면 배치 CSS 스타일';
+ALTER TABLE `station_rdr` ADD `status` tinyint DEFAULT 1 COMMENT '사용 상태';
+
+commit;
 
 -- 기상청: 대형
 UPDATE watchdog.station_rdr

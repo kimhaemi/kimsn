@@ -2,7 +2,6 @@ package kr.or.kimsn.radar.data.repository;
 
 
 import java.util.List;
-
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import kr.or.kimsn.radar.data.dto.StationDto;
@@ -14,5 +13,7 @@ public interface StationRepository extends JpaRepository<StationDto, String> {
     StationDto findBySiteCdOrderBySortOrder(String siteCd);
 
     List<StationDto> findByGubunOrderBySortOrder(int gubun);
+
+    List<StationDto> findByGubunAndAgencyCdAndStatusOrderBySortOrder(int gubun, String agencyCd, int status);
 
 }

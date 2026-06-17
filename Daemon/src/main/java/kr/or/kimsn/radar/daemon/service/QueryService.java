@@ -52,8 +52,9 @@ public class QueryService {
     private final AppTemplateCodeRepository appTemplateCodeRepository; //템플릿
 
     // site 조회
-    public List<StationDto> getStation(int gubun) {
-        return stationRepository.findByGubunOrderBySortOrder(gubun);
+    public List<StationDto> getStation(int gubun, String agencyCd, int status) {
+        // return stationRepository.findByGubunOrderBySortOrder(gubun);
+        return stationRepository.findByGubunAndAgencyCdAndStatusOrderBySortOrder(gubun, agencyCd, status);
     }
 
     // 자료 수신 처리 설정 조회

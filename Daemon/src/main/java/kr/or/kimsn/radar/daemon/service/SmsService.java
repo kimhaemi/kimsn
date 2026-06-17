@@ -2,7 +2,6 @@ package kr.or.kimsn.radar.daemon.service;
 
 import java.util.ArrayList;
 import java.util.List;
-import kr.or.kimsn.radar.daemon.service.QueryService;
 import kr.or.kimsn.radar.daemon.util.ConfigManager;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,7 +22,7 @@ import kr.or.kimsn.radar.data.dto.SmsSendMemberDto;
 @Service
 @Slf4j
 @RequiredArgsConstructor
-public class SmsNotificationService {
+public class SmsService {
 
   private final QueryService queryService;
 
