@@ -1,17 +1,18 @@
 # 💡 외부 노출: 자바 소스코드 재빌드 없이 리눅스 환경 변수와 경로 주입 맵을 자유롭게 수정 관리합니다.
+
 radar:
   config:
     cron-expression: "0 * * * * *"
-    site-info-path: "./conf/siteInfoSetting.conf"
-    ip-info-path: "./conf/siteIPInfoSetting.conf"
+    site-info: "./conf/siteInfoSetting.conf"
+    ip-info: "./conf/siteIPInfoSetting.conf"
     paths:
       KMA_RDR:
         # 실행: java -jar -DDAEMON_TYPE=KMA_RDR radardemo.jar
         # 초(0-59) 분(0-59) 시간(0-23) 일(1-31) 월(1-12) 요일(0-7)
         # 6분 00초
         cron-expression: "* * * * * *"
-        site-info-path: "C:/kimsn/20260615/kimsn/Daemon/config/siteInfoSetting.conf"
-        ip-info-path: "C:/kimsn/20260615/kimsn/Daemon/config/siteIPInfoSetting.conf"
+        site-info: "./config/siteInfoSetting.conf"
+        ip-info: "./config/siteIPInfoSetting.conf"
         # cron-expression: "0 1,6,11,16,21,26,31,36,41,46,51,56 * * * *"
         # site-info: "/home/watcher/deamon/RDR/conf/siteInfoSetting.conf"
         # ip-info: "/home/watcher/ipConf/RDR/siteIPInfoSetting.conf"

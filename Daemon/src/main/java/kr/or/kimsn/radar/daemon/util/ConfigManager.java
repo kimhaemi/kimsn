@@ -60,8 +60,8 @@ public class ConfigManager {
       targetIpInfoPath = radarConfigProperties.getDynamicPath(currentSystemType, ConfigFileEnum.IP_INFO.getInfoType());
     } else {
       // 로컬 IDE 시뮬레이션 가동 단계일 경우 yml의 최상단 기본 경로 수용
-      targetSiteInfoPath = radarConfigProperties.getSiteInfoPath();
-      targetIpInfoPath = radarConfigProperties.getIpInfoPath();
+      targetSiteInfoPath = radarConfigProperties.getSiteInfo();
+      targetIpInfoPath = radarConfigProperties.getIpInfo();
     }
 
     // 3단계: 매핑 완료된 원격지 .conf 파일 실시간 캐싱 파이프라인 가동

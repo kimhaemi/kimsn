@@ -18,7 +18,7 @@ import java.util.List;
 public class YmlRefreshManager {
 
   private final ConfigurableEnvironment environment;
-  private final String YML_FILE_PATH = "./config/application.yml"; // JAR 파일과 동일한 경로의 외부 YML 파일
+  private final String YML_FILE_PATH = "./Daemon/config/application.yml"; // JAR 파일과 동일한 경로의 외부 YML 파일
   private WatchService watchService;
   private Thread watchThread;
 

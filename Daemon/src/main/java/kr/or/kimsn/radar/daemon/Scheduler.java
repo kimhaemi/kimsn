@@ -40,16 +40,18 @@ public class Scheduler {
     private final StepOneService stepOneService;
     private final StepTwoService stepTwoService;
 
-    @Value("${DAEMON_TYPE}")
-    private String daemonType;
+//    @Value("${DAEMON_TYPE}")
+//    private String daemonType;
 
     private List<StationDto> srDto;
     private final DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
     private final DateTimeFormatter cycleIdFormatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
 
-    @Scheduled(cron = "#{@radarConfigProperties.getDynamicPath(environment.getProperty('DAEMON_TYPE'), 'cron-expression')}")
+//    @Scheduled(cron = "#{@radarConfigProperties.getDynamicPath(environment.getProperty('KMA_RDR'), 'cron-expression')}")
+    @Scheduled(cron= "* * * * * *")
     @Async
     public void cronJobSch() throws InterruptedException {
+        String daemonType = "KMA_RDR";
 
         String siteInfoPath = radarConfigProperties.getDynamicPath(daemonType, "site-info");
         String ipInfoPath = radarConfigProperties.getDynamicPath(daemonType, "ip-info");

@@ -7,6 +7,9 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-batch'
     implementation 'org.json:json:20230618'
     implementation 'com.jcraft:jsch:0.1.55'
+
+    // Annotation Processor 추가
+    annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
 }
 
 tasks.named('test') { useJUnitPlatform() }
@@ -34,14 +37,26 @@ daemonSystems.each { sysType, config ->
         group = 'build'
         description = "Builds JAR for ${config.desc}"
 
+        // 중복 파일 에러 원천 차단
+        duplicatesStrategy = DuplicatesStrategy.INCLUDE
+
         archiveClassifier = sysType
         archiveVersion = project.version
         mainClass = 'kr.or.kimsn.radar.daemon.RadarDaemonApplication'
 
-        with copySpec { from sourceSets.main.output }
+        // ❌ [기존 코드 삭제]: with copySpec { from sourceSets.main.output }
+
+        // ⭕ [개선 코드]: 컴파일된 클래스 파일과 resources(YML) 폴더를 안전하게 JAR 표준 경로로 강제 주입
+        from(sourceSets.main.output.classesDirs) {
+            into 'BOOT-INF/classes'
+        }
+        from(sourceSets.main.output.resourcesDir) {
+            into 'BOOT-INF/classes'
+        }
+
         classpath = sourceSets.main.runtimeClasspath
 
-        // 매니페스트에 시스템 식별 구분자 박제 (ConfigManager 바인딩용)
+        // 매니페스트에 시스템 식별 구분자 박제
         manifest {
             attributes(
                     'Start-Class': 'kr.or.kimsn.radar.daemon.RadarDaemonApplication',
