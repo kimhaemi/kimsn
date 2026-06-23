@@ -55,19 +55,6 @@ radar:
       KMA_RDR:
         cron-expression: "0 1,6,11,16,21,26,31,36,41,46,51,56 * * * *"
         stations:
-          # 💡 각 관측소의 인프라 스펙에 맞춤형으로 file_size_min/max 속성을 완전 개별 독립 주입 처리했습니다.
-          # KWK: { IP: "190.1.56.113", PORT: 22, ID: "root", PASSWORD: "eecj9620", PATH: "/var/opt/edge/ncData", FILE: "RDR_%site%_RAW_%yyyyMMddHHmm%.nc", file_size_min: 999999, file_size_max: 640350 } # 관악산
-          # BRI: { IP: "190.1.11.103", PORT: 22, ID: "root", PASSWORD: "eecj9620", PATH: "/var/opt/edge/ncData", FILE: "RDR_%site%_RAW_%yyyyMMddHHmm%.nc", file_size_min: 999999, file_size_max: 640350 } # 백령도
-          # GDK: { IP: "190.1.218.113", PORT: 22, ID: "root", PASSWORD: "eecj9620", PATH: "/var/opt/edge/ncData", FILE: "RDR_%site%_RAW_%yyyyMMddHHmm%.nc", file_size_min: 999999, file_size_max: 640350 } # 광덕산
-          # GNG: { IP: "190.1.219.113", PORT: 22, ID: "root", PASSWORD: "eecj9620", PATH: "/var/opt/edge/ncData", FILE: "RDR_%site%_RAW_%yyyyMMddHHmm%.nc", file_size_min: 999999, file_size_max: 640350 } # 강릉
-          # MYN: { IP: "190.1.126.113", PORT: 22, ID: "root", PASSWORD: "eecj9620", PATH: "/var/opt/edge/ncData", FILE: "RDR_%site%_RAW_%yyyyMMddHHmm%.nc", file_size_min: 999999, file_size_max: 640350 } # 면봉산
-          # PSN: { IP: "190.1.110.113", PORT: 22, ID: "root", PASSWORD: "eecj9620", PATH: "/var/opt/edge/ncData", FILE: "RDR_%site%_RAW_%yyyyMMddHHmm%.nc", file_size_min: 999999, file_size_max: 640350 } # 구덕산
-          # KSN: { IP: "190.1.150.113", PORT: 22, ID: "root", PASSWORD: "eecj9620", PATH: "/var/opt/edge/ncData", FILE: "RDR_%site%_RAW_%yyyyMMddHHmm%.nc", file_size_min: 999999, file_size_max: 640350 } # 오성산
-          # JNI: { IP: "190.1.137.113", PORT: 22, ID: "root", PASSWORD: "eecj9620", PATH: "/var/opt/edge/ncData", FILE: "RDR_%site%_RAW_%yyyyMMddHHmm%.nc", file_size_min: 999999, file_size_max: 640350 } # 진도
-          # GSN: { IP: "190.1.52.113", PORT: 22, ID: "root", PASSWORD: "eecj9620", PATH: "/var/opt/edge/ncData", FILE: "RDR_%site%_RAW_%yyyyMMddHHmm%.nc", file_size_min: 999999, file_size_max: 640350 } # 고산
-          # SSP: { IP: "190.1.54.113", PORT: 22, ID: "root", PASSWORD: "eecj9620", PATH: "/var/opt/edge/ncData", FILE: "RDR_%site%_RAW_%yyyyMMddHHmm%.nc", file_size_min: 999999, file_size_max: 640350 } # 성산
-          # YIT: { IP: "190.1.59.113", PORT: 22, ID: "root", PASSWORD: "eecj9620", PATH: "/var/opt/edge/ncData", FILE: "RDR_%site%_RAW_%yyyyMMddHHmm%.nc", file_size_min: 999999, file_size_max: 640350 } # 용인
-
           KWK: { IP: "190.1.56.113", PORT: 22, ID: "root", PASSWORD: "eecj9620", PATH: "/var/opt/edge/ncData", FILE: "RDR_%site%_RAW_%yyyyMMddHHmm%.nc", file_size_min: 2048, file_size_max: 640350 } # 관악산
           BRI: { IP: "190.1.11.103", PORT: 22, ID: "root", PASSWORD: "eecj9620", PATH: "/var/opt/edge/ncData", FILE: "RDR_%site%_RAW_%yyyyMMddHHmm%.nc", file_size_min: 2048, file_size_max: 640350 } # 백령도
           GDK: { IP: "190.1.218.113", PORT: 22, ID: "root", PASSWORD: "eecj9620", PATH: "/var/opt/edge/ncData", FILE: "RDR_%site%_RAW_%yyyyMMddHHmm%.nc", file_size_min: 2048, file_size_max: 640350 } # 광덕산
@@ -109,13 +96,21 @@ radar:
       MCEE_RDR:
         cron-expression: "0 1,6,11,16,21,26,31,36,41,46,51,56 * * * *"
         stations:
-          BSL: { IP: "172.16.211.111", PORT: 22022, ID: "rda", PASSWORD: "Bslradar1!", PATH: "/opt/rda/bdftp3_uf/backup", FILE: "BSL.VOL.VCP_P2.%yyyyMMddHHmm%", file_size_min: 2048, file_size_max: 640350 } # 비슬산
-          SBS: { IP: "172.16.210.111", PORT: 22022, ID: "rda", PASSWORD: "Sbsradar1!", PATH: "/opt/rda/bdftp3_uf/backup", FILE: "SBS.VOL.VCP_P2_250m.%yyyyMMddHHmm%", file_size_min: 2048, file_size_max: 640350 } # 소백산
-          GRS: { IP: "172.16.205.111", PORT: 22022, ID: "rainbow", PASSWORD: "Grsradar1!", PATH: "/usr/local/Rainbow5/rainbow/rawdata/138KRS2/KMA_GRS.vol/%yyyy-MM-dd%", FILE: "%yyyyMMddHHmm%", file_size_min: 2048, file_size_max: 640350 } # 가리산
-          YBS: { IP: "172.16.206.111", PORT: 22022, ID: "rainbow", PASSWORD: "Ybsradar1!", PATH: "/usr/local/Rainbow5/rainbow/rawdata/138KRS3/KMA_YBS.vol/%yyyy-MM-dd%", FILE: "%yyyyMMddHHmm%", file_size_min: 2048, file_size_max: 640350 } # 예봉산
-          GAS: { IP: "172.16.207.111", PORT: 22022, ID: "rainbow", PASSWORD: "Gasradar1!", PATH: "/usr/local/Rainbow5/rainbow/rawdata/GAS/KMA_GAS.vol/%yyyy-MM-dd%", FILE: "%yyyyMMddHHmm%", file_size_min: 2048, file_size_max: 640350 } # 감악산
-          SDS: { IP: "172.16.208.111", PORT: 22022, ID: "rainbow", PASSWORD: "Sdsradar1!", PATH: "/usr/local/Rainbow5/rainbow/rawdata/138KRS1/SDS_KMA_SEQ.vol/%yyyy-MM-dd%", FILE: "%yyyyMMddHHmm%", file_size_min: 2048, file_size_max: 640350 } # 서대산
-          MHS: { IP: "172.16.209.111", PORT: 22022, ID: "rainbow", PASSWORD: "Mhsradar1!", PATH: "/usr/local/Rainbow5/rainbow/rawdata/125KS/9MHS_KMA_SEQ.vol/%yyyy-MM-dd%", FILE: "%yyyyMMddHHmm%", file_size_min: 2048, file_size_max: 640350 } # 모후산
+          # BSL: { IP: "172.16.211.111", PORT: 22022, ID: "root", PASSWORD: "Bslradar1!", PATH: "/opt/rda/bdftp3_uf/backup", FILE: "BSL.VOL.VCP_P2.%yyyyMMddHHmm%00Z.rawuf", file_size_min: 999999, file_size_max: 640350 } # 비슬산
+          # SBS: { IP: "172.16.210.111", PORT: 22022, ID: "root", PASSWORD: "Sbsradar1!", PATH: "/opt/rda/bdftp3_uf/backup+B1:O5", FILE: "SBS.VOL.VCP_P2_250m.%yyyyMMddHHmm%01Z.rawuf", file_size_min: 999999, file_size_max: 640350 } # 소백산
+          # GRS: { IP: "172.16.205.111", PORT: 22022, ID: "root", PASSWORD: "Grsradar1!", PATH: "/usr/local/Rainbow5/rainbow/rawdata/138KRS2/KMA_GRS.vol/%yyyy-MM-dd%", FILE: "%yyyyMMddHHmm%0400dBZ.vol.tgz", file_size_min: 999999, file_size_max: 640350 } # 가리산
+          # YBS: { IP: "172.16.206.111", PORT: 22022, ID: "root", PASSWORD: "Ybsradar1!", PATH: "/usr/local/Rainbow5/rainbow/rawdata/138KRS3/KMA_YBS.vol/%yyyy-MM-dd%", FILE: "%yyyyMMddHHmm%0500dBZ.vol.tgz", file_size_min: 999999, file_size_max: 640350 } # 예봉산
+          # GAS: { IP: "172.16.207.111", PORT: 22022, ID: "root", PASSWORD: "Gasradar1!", PATH: "/usr/local/Rainbow5/rainbow/rawdata/GAS/KMA_GAS.vol/%yyyy-MM-dd%", FILE: "%yyyyMMddHHmm%0100dBZ.vol.tgz", file_size_min: 999999, file_size_max: 640350 } # 감악산
+          # SDS: { IP: "172.16.208.111", PORT: 22022, ID: "root", PASSWORD: "Rainbow99@", PATH: "/usr/local/Rainbow5/rainbow/rawdata/138KRS1/SDS_KMA_SEQ.vol/%yyyy-MM-dd%", FILE: "%yyyyMMddHHmm%0600dBZ.vol.tgz", file_size_min: 999999, file_size_max: 640350 } # 서대산
+          # MHS: { IP: "172.16.209.111", PORT: 22022, ID: "root", PASSWORD: "Mhsradar1!", PATH: "/usr/local/Rainbow5/rainbow/rawdata/125KS/9MHS_KMA_SEQ.vol/%yyyy-MM-dd%", FILE: "%yyyyMMddHHmm%0500dBZ.vol.tgz", file_size_min: 999999, file_size_max: 640350 } # 모후산
+
+          BSL: { IP: "172.16.211.111", PORT: 22022, ID: "rda", PASSWORD: "Bslradar1!", PATH: "/opt/rda/bdftp3_uf/backup", FILE: "BSL.VOL.VCP_P2.%yyyyMMddHHmm%*Z.rawuf", file_size_min: 2048, file_size_max: 640350 } # 비슬산
+          SBS: { IP: "172.16.210.111", PORT: 22022, ID: "rda", PASSWORD: "Sbsradar1!", PATH: "/opt/rda/bdftp3_uf/backup", FILE: "SBS.VOL.VCP_P2_250m.%yyyyMMddHHmm%*Z.rawuf", file_size_min: 2048, file_size_max: 640350 } # 소백산
+          GRS: { IP: "172.16.205.111", PORT: 22022, ID: "rainbow", PASSWORD: "Grsradar1!", PATH: "/usr/local/Rainbow5/rainbow/rawdata/138KRS2/KMA_GRS.vol/%yyyy-MM-dd%", FILE: "%yyyyMMddHHmm%*00dBZ.vol.tgz", file_size_min: 2048, file_size_max: 640350 } # 가리산
+          YBS: { IP: "172.16.206.111", PORT: 22022, ID: "rainbow", PASSWORD: "Ybsradar1!", PATH: "/usr/local/Rainbow5/rainbow/rawdata/138KRS3/KMA_YBS.vol/%yyyy-MM-dd%", FILE: "%yyyyMMddHHmm%*00dBZ.vol.tgz", file_size_min: 2048, file_size_max: 640350 } # 예봉산
+          GAS: { IP: "172.16.207.111", PORT: 22022, ID: "rainbow", PASSWORD: "Gasradar1!", PATH: "/usr/local/Rainbow5/rainbow/rawdata/GAS/KMA_GAS.vol/%yyyy-MM-dd%", FILE: "%yyyyMMddHHmm%*00dBZ.vol.tgz", file_size_min: 2048, file_size_max: 640350 } # 감악산
+          SDS: { IP: "172.16.208.111", PORT: 22022, ID: "rainbow", PASSWORD: "Sdsradar1!", PATH: "/usr/local/Rainbow5/rainbow/rawdata/138KRS1/SDS_KMA_SEQ.vol/%yyyy-MM-dd%", FILE: "%yyyyMMddHHmm%*00dBZ.vol.tgz", file_size_min: 2048, file_size_max: 640350 } # 서대산
+          MHS: { IP: "172.16.209.111", PORT: 22022, ID: "rainbow", PASSWORD: "Mhsradar1!", PATH: "/usr/local/Rainbow5/rainbow/rawdata/125KS/9MHS_KMA_SEQ.vol/%yyyy-MM-dd%", FILE: "%yyyyMMddHHmm%*00dBZ.vol.tgz", file_size_min: 2048, file_size_max: 640350 } # 모후산
 
       # ----------------------------------------------------
       # 5. 기후부 소형 레이더 데몬 (MCEE_SDR)
@@ -123,14 +118,14 @@ radar:
       MCEE_SDR:
         cron-expression: "0 1,6,11,16,21,26,31,36,41,46,51,56 * * * *"
         stations:
-          SAC: { IP: "172.16.213.112", PORT: 22022, ID: "radar", PASSWORD: "Sacradar1!", PATH: "/home/radar/DATA/UF2", FILE: "RDR_SAC_RAW_%yyyyMMddHHmm%.uf", file_size_min: 2048, file_size_max: 640350 } # 삼척
-          TGS: { IP: "172.16.214.111", PORT: 22022, ID: "radar", PASSWORD: "Tgsradar1!", PATH: "/home/radar/DATA/UF2", FILE: "RDR_TGS_RAW_%yyyyMMddHHmm%.uf", file_size_min: 2048, file_size_max: 640350 } # 통고산
+          SAC: { IP: "172.16.213.112", PORT: 22022, ID: "radar", PASSWORD: "Sacradar1!", PATH: "/home/radar/DATA/UF2", FILE: "RDR_SAC_RAW_%yyyyMMddHHmm%*.uf", file_size_min: 2048, file_size_max: 640350 } # 삼척
+          TGS: { IP: "172.16.214.111", PORT: 22022, ID: "radar", PASSWORD: "Tgsradar1!", PATH: "/home/radar/DATA/UF2", FILE: "RDR_TGS_RAW_%yyyyMMddHHmm%*.uf", file_size_min: 2048, file_size_max: 640350 } # 통고산
           GJU: { IP: "172.16.218.111", PORT: 22, ID: "radarop", PASSWORD: "Va1sala!", PATH: "/srv/iris_data/UF_in", FILE: "RDR_GJU_RAW_%yyyyMMddHHmm%.uf", file_size_min: 2048, file_size_max: 640350 } # 광주
           DJN: { IP: "172.16.220.111", PORT: 22, ID: "radarop", PASSWORD: "Va1sala!", PATH: "/srv/iris_data/UF_in", FILE: "RDR_DJN_RAW_%yyyyMMddHHmm%.uf", file_size_min: 2048, file_size_max: 640350 } # 대전
           BSN: { IP: "172.16.216.111", PORT: 22, ID: "radarop", PASSWORD: "xxxxxx", PATH: "/usr/iris_data/UF_in", FILE: "RDR_BSN_RAW_%yyyyMMddHHmm%.uf", file_size_min: 2048, file_size_max: 640350 } # 부산
           BSE: { IP: "172.16.217.111", PORT: 22, ID: "radarop", PASSWORD: "xxxxxx", PATH: "/usr/iris_data/UF_in", FILE: "RDR_BSE_RAW_%yyyyMMddHHmm%.uf", file_size_min: 2048, file_size_max: 640350 } # 부산 EDC
           SEJ: { IP: "172.16.221.111", PORT: 22, ID: "radarop", PASSWORD: "Va1sala!", PATH: "/srv/iris_data/UF_in", FILE: "RDR_SEJ_RAW_%yyyyMMddHHmm%.uf", file_size_min: 2048, file_size_max: 640350 } # 세종
           JJU: { IP: "172.16.219.111", PORT: 22, ID: "radarop", PASSWORD: "Va1sala!", PATH: "/srv/iris_data/UF_in", FILE: "RDR_JJU_RAW_%yyyyMMddHHmm%.uf", file_size_min: 2048, file_size_max: 640350 } # 전주
-          USN: { IP: "172.16.215.111", PORT: 22, ID: "root", PASSWORD: "gamic", PATH: "/opt/gamic/data/operational-30km", FILE: "operational_NFC_%yyyyMMddHHmmss%_00.h5", file_size_min: 2048, file_size_max: 2048 } # 울산
-          TSB: { IP: "172.16.212.111", PORT: 22022, ID: "operator", PASSWORD: "xxxxxx", PATH: "/home/operator/DATA/UF2", FILE: "%site%%yyyyMMddHHmmss%.RAWC4F2.gz", file_size_min: 2048, file_size_max: 640350 } # 임진강 # 파일명 체크
+          USN: { IP: "172.16.215.111", PORT: 22, ID: "root", PASSWORD: "gamic", PATH: "/opt/gamic/data/operational-30km", FILE: "operational_NFC_%yyyyMMddHHmm%*_00.h5", file_size_min: 2048, file_size_max: 2048 } # 울산
+          TSB: { IP: "172.16.212.111", PORT: 22022, ID: "operator", PASSWORD: "xxxxxx", PATH: "/home/operator/DATA/UF2", FILE: "%site%%yyMMddHHmm%*.*.gz", file_size_min: 2048, file_size_max: 640350 } # 임진강 # 파일명 체크
           CHU: { IP: "172.16.222.111", PORT: 22022, ID: "radarop", PASSWORD: "Churadar1!", PATH: "/srv/iris_data/UF_in", FILE: "RDR_CHU_RAW_%yyyyMMddHHmm%.uf", file_size_min: 2048, file_size_max: 2048 } # 청주

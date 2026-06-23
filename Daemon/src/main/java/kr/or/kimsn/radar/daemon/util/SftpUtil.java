@@ -76,17 +76,17 @@ public class SftpUtil {
    * 레이더 사이트 원격 경로 내 관측 데이터 파일 실시간 유무 판단
    */
   @SuppressWarnings("rawtypes")
-  public boolean fileExists(String path, String fileName, String siteCd, String dataKind, String filePattern) {
-    log.info("[📂 {} 탐색] 경로: {}/{}", siteCd, path, fileName);
+  public boolean fileExists(String path, String fileName, String siteStr, String dataKind, String filePattern) {
+    log.info("[📂 {} 탐색] 경로: {}/{}", siteStr, path, fileName);
 
     Vector res = null;
     try {
-      res = channelSftp.ls(path + "/" + fileName + "*");
+      res = channelSftp.ls(path + "/" + fileName);
     } catch (SftpException e) {
       if (e.id == ChannelSftp.SSH_FX_NO_SUCH_FILE) {
         return false;
       }
-      log.error("[❌ ls 명령어 에러] 지점: {}, 원인코드: {}", siteCd, e.id);
+      log.error("[❌ ls 명령어 에러] 지점: {}, 원인코드: {}", siteStr, e.id);
     }
     return res != null && !res.isEmpty();
   }
@@ -94,15 +94,15 @@ public class SftpUtil {
   /**
    * 파일 품질 수신 정상성 체크를 위한 용량 크기(Size) 획득
    */
-  public Long fileSize(String path, String fileName, Long file_size_min, Long file_size_max) {
+  public Long fileSize(String path, String fileName, String siteStr) {
     Long fileSize = 0L;
     try {
-      fileSize = channelSftp.lstat(path + "/" + fileName + "*").getSize();
+      fileSize = channelSftp.lstat(path + "/" + fileName).getSize();
     } catch (SftpException e) {
       if (e.id == ChannelSftp.SSH_FX_NO_SUCH_FILE) {
         return 0L;
       }
-      log.error("[❌ lstat 파일 정보 획득 에러] 파일명: {}, 원인: {}", fileName, e.getMessage());
+      log.error("[❌ {} lstat 파일 정보 획득 에러] 파일명: {}, 원인: {}", siteStr, fileName, e.getMessage());
     }
     return fileSize;
   }

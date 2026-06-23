@@ -142,9 +142,9 @@ public class StepOneService {
 
                         filePath = filePath.replace("%yyyyMM%", yyyyMM).replace("%dd%", dd).replace("%yyyy-MM-dd%", yyyyMMdd);
 
-                        // file
+                        //파일 패턴
                         String filePattern = environment.getProperty(pathPrefix + "FILE", "");
-                        log.info("filePattern: {}", filePattern);
+                        log.info("{} filePattern: {}", siteStr, filePattern);
                         
                         int second = (gubun == 1 || gubun == 3 || (gubun == 2 && agencyCd.equals("MCEE"))) ? (60 * 4 + 30) : (60 * 2);
                         String dateFormat = "yyyyMMddHHmm";
@@ -156,30 +156,33 @@ public class StepOneService {
                         if (gubun == 1 || gubun == 3 || (gubun == 2 && agencyCd.equals("MCEE"))) {
                             previousTime = TimeUtil.getAdjustedPreviousTime(previousTime);
                         }
-                        log.info("previousTime: {}", previousTime);
+                        log.info("{} 감지해야할 시간: {}", siteStr, previousTime);
 
                         fileName = filePattern
                             .replace("%site%", siteCd)
-                            .replace("%yyyyMMddHHmm%", previousTime);
+                            .replace("%yyyyMMddHHmm%", previousTime)
+                            .replace("%yyMMddHHmm%", previousTime);;
                         // if(filePattern.contains("yyyyMMddHHmmss")){
                         //     fileName = filePattern.replace("%yyyyMMddHHmmss%", previousTime);
                         // }
                             
-                        log.info("fileName: {}", fileName); 
+                        log.info("{} 찾아야할 파일명: {}", siteStr, fileName); 
                         try {
-                            boolean fileExists = sftp.fileExists(filePath, fileName, siteCd, dataKindStr, filePattern);
-                            log.info("[" + siteStr + " 파일존재유무] : " + fileExists);
+                            //파일 존재유무
+                            boolean fileExists = sftp.fileExists(filePath, fileName, siteStr, dataKindStr, filePattern);
+                            log.info("[{} 파일존재유무]: {} ", siteStr, fileExists);
 
                             if (fileExists) {
                                 Long fileSizeMin = environment.getProperty(pathPrefix + "file_size_min", Long.class, 999999L);
-                                Long fileSizeMax = environment.getProperty(pathPrefix + "file_size_max", Long.class, 0L);
-
-                                fileSize = sftp.fileSize(filePath, fileName, fileSizeMin, fileSizeMax);
+                                
+                                //관측소 파일 사이즈 추출
+                                fileSize = sftp.fileSize(filePath, fileName, siteStr);
                                 Long kb = fileSize / 1024;
 
+                                log.info("{} 기준 파일 사이즈: {}", siteStr, fileSizeMin);
                                 log.info("{} 실제 파일 사이즈: {}", siteStr, fileSize);
-                                log.info("실제 파일 사이즈: {}", fileSize);
 
+                                // 파일 사이즈 비교
                                 if (kb > fileSizeMin) {
                                     codedtl = "ok";
                                     recvConditionData = "RECV";
@@ -203,16 +206,18 @@ public class StepOneService {
                     }
                     sftp.close();
                 } else {
-                    log.info("[" + siteStr + " 자료감시 설정 off]");
+                    log.info("[{} 자료감시 설정 off]", siteStr);
                 }
+
+                log.info("{} 결과 : {}, {}: {}", siteStr, codedtl, recvConditionData, errStrData);
 
                 queryService.insReceiveData(dataKindStr, siteCd, dataType, dataTime, dataKst + ":00", currentTime, recvConditionData, recvConditionCheckTime, fileName, fileSize, codedtl);
             } catch (Exception e) {
                 sftp.close();
-                log.info("StepOne Service Inner Error - " + e);
+                log.info("StepOne Service Inner Error - {}", e);
             }
         } catch (Exception e) {
-            log.info("Thread error ::: " + e);
+            log.info("Thread error ::: {}", e);
         }
     }
 }
