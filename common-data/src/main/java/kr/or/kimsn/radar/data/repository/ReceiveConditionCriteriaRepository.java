@@ -30,6 +30,7 @@ public interface ReceiveConditionCriteriaRepository extends JpaRepository<Receiv
                 "  , gubun\n" +
                 "  , codedtl\n" +
                 "  , sort\n" +
+                "  , status\n" +
                 "from watchdog.receive_condition_criteria rcc\n" +
                 "where 1=1\n" +
                 "  and code != 'ORDI'\n" +
@@ -55,7 +56,7 @@ public interface ReceiveConditionCriteriaRepository extends JpaRepository<Receiv
         "  and gubun = :gubun \n"
     )
     @Transactional
-    @Modifying
+    @Modifying(clearAutomatically = true, flushAutomatically = true)
     // 경고 기준 설정 일괄 수정
     Integer setReceiveConditionCriteriaModify(
         @Param("criterion") int criterion,

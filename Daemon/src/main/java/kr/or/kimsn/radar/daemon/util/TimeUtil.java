@@ -29,23 +29,45 @@ public class TimeUtil {
   /**
    * 입력받은 초(second) 이전의 한국 시각을 구한 뒤 yyyyMMddHHmm 형식으로 반환합니다. (파일명 패턴 매칭용)
    */
-  public static String getPreviousTimePattern(int second) {
+  public static String getPreviousTimePattern(int second, String format) {
     LocalDateTime targetTime = LocalDateTime.now(ZoneId.of("Asia/Seoul")).minusSeconds(second);
-    return targetTime.format(DateTimeFormatter.ofPattern("yyyyMMddHHmm"));
+    // return targetTime.format(DateTimeFormatter.ofPattern("yyyyMMddHHmm"));
+    return targetTime.format(DateTimeFormatter.ofPattern(format));
+  }
+
+   public static String getPreviousTimePatternUTC(int second, String format) {
+    // LocalDateTime targetTime = LocalDateTime.now(ZoneId.of("Asia/Seoul")).minusSeconds(second);
+    ZonedDateTime kstZone = ZonedDateTime.now(ZoneId.of("Asia/Seoul")).minusSeconds(second);
+    ZonedDateTime utcZone = kstZone.withZoneSameInstant(ZoneId.of("UTC")).minusSeconds(second);;
+    return utcZone.format(DateTimeFormatter.ofPattern(format));
+    // return utcZone.format(DateTimeFormatter.ofPattern("yyyyMMddHHmm"));
   }
 
   /**
    * 현재 시각을 마스터 정산 규격에 맞게 5분 단위로 절삭 보정합니다. (yyyy-MM-dd HH:mm)
    */
-  public static String getAdjustedCurrentTime(int gubun) {
+  public static String getAdjustedCurrentTime(int gubun, String agencyCd) {
     LocalDateTime now = LocalDateTime.now(ZoneId.of("Asia/Seoul"));
-    if (gubun == 1 || gubun == 3) {
+    if (gubun == 1 || gubun == 3 || ((gubun == 2 && agencyCd.equals("MCEE")))) {
       int adjustedMinute = (now.getMinute() / 5) * 5;
       now = now.withMinute(adjustedMinute).withSecond(0).withNano(0);
-    } else if (gubun == 2) {
+    } else if (gubun == 2 && agencyCd.equals("KMA")) {
       now = now.withSecond(0).withNano(0);
     }
     return now.format(ADJUSTED_FORMATTER);
+  }
+
+  //utc
+  public static String getUTCTime(int gubun, String agencyCd) {
+    ZonedDateTime kstZone = ZonedDateTime.now(ZoneId.of("Asia/Seoul"));
+    ZonedDateTime utcZone = kstZone.withZoneSameInstant(ZoneId.of("UTC"));
+    if (gubun == 1 || gubun == 3 || ((gubun == 2 && agencyCd.equals("MCEE")))) {
+      int adjustedMinute = (utcZone.getMinute() / 5) * 5;
+      utcZone = utcZone.withMinute(adjustedMinute).withSecond(0).withNano(0);
+    } else if (gubun == 2 && agencyCd.equals("KMA")) {
+      utcZone = utcZone.withSecond(0).withNano(0);
+    }
+    return utcZone.format(DEFAULT_FORMATTER);
   }
 
   /**

@@ -171,7 +171,7 @@ public interface SmsSendNuri2Repository extends JpaRepository<SmsSendNuri2Dto, L
 				+ ") \n"
 			)
 	@Transactional
-	@Modifying
+	@Modifying(clearAutomatically = true, flushAutomatically = true)
 	// 카카오톡 발송
 	Integer nuri2SendContentsSave(
 //			@Param("msgKey") Long msgKey,

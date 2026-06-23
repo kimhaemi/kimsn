@@ -2,166 +2,217 @@ package kr.or.kimsn.radar.daemon.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Component;
+import org.springframework.core.env.ConfigurableEnvironment;
+import org.springframework.stereotype.Service;
 
-import kr.or.kimsn.radar.daemon.enums.DataKindEnum;
-import kr.or.kimsn.radar.daemon.enums.ReceiveCodeDtlEnum;
-import kr.or.kimsn.radar.daemon.util.DataCommon;
 import kr.or.kimsn.radar.daemon.util.TimeUtil;
 import kr.or.kimsn.radar.daemon.util.SftpUtil;
-import kr.or.kimsn.radar.data.dto.StationDto;
 import kr.or.kimsn.radar.data.dto.ReceiveSettingDto;
+import kr.or.kimsn.radar.data.dto.StationDto;
 
 @Slf4j
-@Component
+@Service
 @RequiredArgsConstructor
 public class StepOneService {
 
     private final QueryService queryService;
+    private final ConfigurableEnvironment environment;
 
-    public void stepOne(String mode, int gubun, StationDto srDto, String siteInfo, String ipInfo) {
-        SftpUtil sftp = null;
-        String siteStr = srDto.getNameKr();
-        String siteCd = srDto.getSiteCd();
-        String dataKindStr = DataKindEnum.getDescriptionByGubun(gubun);
-        String dataType = "NQC";
-
+    public void stepOne(String mode, int gubun, StationDto srDto, String daemonType) {
         try {
+            String dataKindStr = ""; 
+            String dataType = "NQC"; 
+
+            // 최신 TimeUtil API 표준 규격 완벽 반영
             final String currentTime = TimeUtil.getCurrentKstString();
             final String dataTime = TimeUtil.getCurrentUtcString();
-            String dataKst = currentTime;
-            String recvConditionCheckTime = currentTime;
+            
+            final String agencyCd = daemonType.contains("MCEE") ? "MCEE" : "KMA";
 
-            // 디폴트 초기 상태 (미수신 스탠스 포지셔닝)
-            String recvConditionData = "MISS";
-            String codedtl = ReceiveCodeDtlEnum.FILE_NO.getCode();
+            String dataKst = TimeUtil.getAdjustedCurrentTime(gubun, agencyCd);
+            String dataUtc = TimeUtil.getUTCTime(gubun, agencyCd);
+            String recvConditionCheckTime = currentTime;
+            
+            String recvConditionData = "";
+            String codedtl = "";
             String fileName = "";
             Long fileSize = 0L;
             String errStrData = "";
 
-            ReceiveSettingDto rsDto = queryService.getrRceiveSetting(dataKindStr);
+            if (gubun == 1) dataKindStr = "RDR";
+            if (gubun == 2) dataKindStr = "SDR";
+            if (gubun == 3) dataKindStr = "TDWR";
 
-            if (rsDto != null && rsDto.getPermittedWatch() == 1) {
+            System.out.println("data_kst :::: " + dataKst);
+            System.out.println("dataUtc :::: " + dataUtc);
 
-                // 💡 [실제 동합 패러다임] mode=test와 real 분기
-                boolean sftpConnect = false;
+            String siteCd = srDto.getSiteCd();
+            String siteStr = srDto.getNameKr();
+            // =========================================================================
+            // 💡 [실시간 YML 주입 가드] mode: "test" 런타임 제어 엔진 (SFTP 바이패스)
+            // =========================================================================
+            String globalPrefix = "radar.config.global.";
+            String liveMode = environment.getProperty(globalPrefix + "mode", "real");
+            String targetSite = environment.getProperty(globalPrefix + "target_site", "");
 
-                if ("test".equalsIgnoreCase(mode)) {
-                    // 💥 테스트 모드일 때는 물리 원격지 장비가 없으므로 커넥션 오픈 결과만 true로 가상 통과 처리
-                    log.info("[🔬 TEST 모드 가동 - {}] 원격 레이더 서버 SFTP 접속 성공 가상 통과", siteStr);
-                    sftpConnect = true;
-                } else {
-                    // 실제 운영 모드(real)일 때는 conf 파일의 계정으로 SFTP 연결 시도
-                    int connectTimeOut = Integer.parseInt(DataCommon.getInfoConf("ipInfo", "connectTimeOut", siteInfo, ipInfo));
-                    int sessionTimeOut = Integer.parseInt(DataCommon.getInfoConf("ipInfo", "sessionTimeOut", siteInfo, ipInfo));
-                    int port = Integer.parseInt(DataCommon.getInfoConf("ipInfo", "PORT", siteInfo, ipInfo));
-                    String siteIp = DataCommon.getInfoConf("ipInfo", siteCd + "_IP", siteInfo, ipInfo);
-                    String siteUsername = DataCommon.getInfoConf("ipInfo", siteCd + "_ID", siteInfo, ipInfo);
-                    String sitePwd = DataCommon.getInfoConf("ipInfo", siteCd + "_PASSWORD", siteInfo, ipInfo);
-                    if (gubun == 2) sitePwd += "#";
+            if ("test".equalsIgnoreCase(liveMode) && (targetSite.isEmpty() || targetSite.contains(siteCd))) {
+                log.info("[⚙️ 실시간 가상 테스트 가드 발동] 대상 관측소: {}", siteStr);
+                
+                // 외부 YML 편집 결과 즉각 미러링 파싱
+                recvConditionData = environment.getProperty(globalPrefix + "recv_condition", "MISS");
+                codedtl = environment.getProperty(globalPrefix + "codedtl", "file_no");
+                
+                fileName = "TEST_INJECTED_" + siteCd + "_" + codedtl + ".nc";
+                fileSize = "ok".equals(codedtl) ? 1048576L : 500L; 
+                errStrData = "[" + siteStr + " 실시간 YML 테스트 결과 강제 주입 성공] 상태: " + recvConditionData + " | 상세: " + codedtl;
 
-                    sftp = new SftpUtil();
-                    sftpConnect = sftp.open(siteIp, siteUsername, sitePwd, port, connectTimeOut, sessionTimeOut);
+                log.info("[" + siteStr + " 가상 파일 명] : " + fileName);
+                log.info("[" + siteStr + " 가상 파일 size] : " + fileSize);
+                log.info("[" + siteStr + " 가상 파일 recv] : " + recvConditionData);
+                log.info("[" + siteStr + " 가상 파일 recvDtl] : " + codedtl);
+                log.info(errStrData);
+
+                // 가상 결과 데이터를 수집 이력 테이블에 곧바로 인서트 후 세션 조기 탈출
+                queryService.insReceiveData(dataKindStr, siteCd, dataType, dataTime, dataKst + ":00", currentTime, recvConditionData, recvConditionCheckTime, fileName, fileSize, codedtl);
+                return; 
+            }
+            // =========================================================================
+            // 💡 오리지널 "real" 비즈니스 파이프라인 (신형 6인자 SftpUtil 적용 사양)
+            // =========================================================================
+            SftpUtil sftp = new SftpUtil();
+            try {
+                String pathPrefix = "radar.config.paths." + daemonType + ".stations." + siteCd + ".";
+                
+                int port = environment.getProperty(pathPrefix + "PORT", Integer.class, 22);
+                String siteIp = environment.getProperty(pathPrefix + "IP", "");
+                String siteUsername = environment.getProperty(pathPrefix + "ID", "");
+                String sitePwd = environment.getProperty(pathPrefix + "PASSWORD", "");
+                
+                // 글로벌 스펙 타임아웃 추출
+                int sessionTimeOut = environment.getProperty(globalPrefix + "sessionTimeOut", Integer.class, 5);
+                int connectTimeOut = environment.getProperty(globalPrefix + "connectTimeOut", Integer.class, 35);
+                
+                // 소형 레이더 패스워드 고유 규칙 유지
+                if (gubun == 2 && !sitePwd.isEmpty() && !sitePwd.endsWith("#") && agencyCd.equals("KMA")) {
+                    sitePwd = sitePwd + "#";
                 }
 
-                // 💡 [여기서부터는 mode 값과 상관없이 완전히 동일한 실제 운영 로직을 관통함]
-                if (sftpConnect) {
+                log.info("[========================= " + siteStr + " 접속 정보 ===============================]");
+                log.info("[" + siteStr + " port] : " + port);
+                log.info("[" + siteStr + " ip] : " + siteIp);
+                log.info("[" + siteStr + " username] : " + siteUsername);
+                log.info("[" + siteStr + " pwd] : " + sitePwd);
+
+                ReceiveSettingDto rsDto = queryService.getrRceiveSetting(dataKindStr);
+                System.out.println("rsDto ::: " + rsDto.getPermittedWatch());
+
+                if (rsDto.getPermittedWatch() == 1) {
+                    log.info("[자료감시 설정 on]");
+                    boolean sftpConnect = false;
                     try {
-                        String filePath = DataCommon.getInfoConf("siteInfo", "rdr_path", siteInfo, ipInfo);
-                        if (gubun == 2) {
-                            filePath = filePath.replace("%yyyyMM%", currentTime.substring(0,4) + currentTime.substring(5,7))
-                                .replace("%dd%", currentTime.substring(8,10));
-                        }
-
-                        String filePattern = rsDto.getFilename_pattern();
-                        String timeZone = rsDto.getTime_zone();
-                        int second = (gubun == 1 || gubun == 3) ? (60 * 4 + 30) : (60 * 2);
-                        String previousTime = TimeUtil.getPreviousTimePattern(second);
-
-                        if (gubun == 1 || gubun == 3) {
-                            if (Integer.parseInt(previousTime.substring(previousTime.length() - 1)) <= 5) {
-                                previousTime = previousTime.substring(0, previousTime.length() - 1) + "0";
-                            } else {
-                                previousTime = previousTime.substring(0, previousTime.length() - 1) + "5";
-                            }
-                        }
-
-                        fileName = filePattern.replace("%site%", siteCd).replace("%yyyyMMddHHmm%", previousTime);
-
-                        // 💡 중요: mode=test 일 때는 물리 디스크 검사 대신 가짜 플래그나 DB 사양 판정을 유도하도록 sftp 내부 방어선 가동
-                        boolean fileExists = false;
-                        if ("test".equalsIgnoreCase(mode)) {
-                            // 테스트 환경일 때는 데이터 축적 연산을 관측해야 하므로 항상 파일이 존재하여 정산 단계로 유입되도록 true 고정
-                            fileExists = true;
-                        } else {
-                            fileExists = sftp.fileExists(filePath, fileName, siteCd, dataKindStr, filePattern, timeZone);
-                        }
-
-                        if (fileExists) {
-                            Long fileSizeMin = Long.parseLong(DataCommon.getInfoConf("siteInfo", "file_size_min", siteInfo, ipInfo));
-                            Long fileSizeMax = Long.parseLong(DataCommon.getInfoConf("siteInfo", "file_size_max", siteInfo, ipInfo));
-
-                            Long kb = 0L;
-                            if ("test".equalsIgnoreCase(mode)) {
-                                // 💡 테스트 시에는 conf 파일에 정의한 max 값을 기준으로 안전 용량(RECV)을 시뮬레이션하도록 설정
-                                kb = fileSizeMax / 1024 - 10;
-                                fileSize = kb * 1024;
-                            } else {
-                                fileSize = sftp.fileSize(filePath, fileName, fileSizeMin, fileSizeMax);
-                                kb = fileSize / 1024;
-                            }
-
-                            if (kb > fileSizeMin) {
-                                codedtl = ReceiveCodeDtlEnum.OK.getCode();
-                                recvConditionData = "RECV";
-                                errStrData = String.format("[%s] 자료 정상 분석 통과 (RECV)", siteStr);
-                            } else {
-                                codedtl = ReceiveCodeDtlEnum.FILE_SIZE_NO.getCode();
-                                recvConditionData = "MISS";
-                                errStrData = String.format("[%s] 용량 부족 품질 이상 감지 (MISS)", siteStr);
-                            }
-                        } else {
-                            codedtl = ReceiveCodeDtlEnum.FILE_NO.getCode();
-                            recvConditionData = "MISS";
-                            errStrData = String.format("[%s] 관측 파일 부재 미수신 감지 (MISS)", siteStr);
-                        }
-                    } catch (Exception fe) {
-                        log.error("[❌ {}] 데이터 패킷 분석 중 예외 발생", siteStr, fe);
-                        codedtl = ReceiveCodeDtlEnum.FILE_NO.getCode();
-                        recvConditionData = "MISS";
-                    } finally {
-                        // 실제 운영 모드일 때 맺었던 물리 자원만 해제하여 리크 방어
-                        if (sftp != null) {
-                            sftp.close();
-                        }
+                        // 💡 요구하신 6인자 사양 오픈 메서드 인터페이스 규격 호출
+                        sftpConnect = sftp.open(siteIp, siteUsername, sitePwd, port, connectTimeOut, sessionTimeOut);
+                    } catch (Exception ce) {
+                        System.out.println("접속오류: " + ce);
                     }
+
+                    log.info("[" + siteStr + " 접속 유무] : " + sftpConnect);
+
+                    //기후부 대형만 UTC: U(9시간 전), 나머지는 KST: K(현재시간)
+                    String timeZone = (gubun == 1 && agencyCd.equals("MCEE")) ? "UTC" : "KST";
+                    String utcTime = TimeUtil.getPreviousTimePatternUTC(0, "yyyyMMddHHmm");
+                    String kstTime = TimeUtil.getPreviousTimePattern(0, "yyyyMMddHHmm");
+
+                    if (sftpConnect) {
+                        String yyyyMMdd = "";
+                        String yyyyMM = "";
+                        String dd = "";
+                        String filePath = environment.getProperty(pathPrefix + "PATH", "");
+                        
+                        if(timeZone.equals("UTC")){
+                            yyyyMMdd = utcTime.substring(0, 8).replaceAll("(\\d{4})(\\d{2})(\\d{2})", "$1-$2-$3");
+                            yyyyMM = utcTime.substring(0, 6);
+                            dd = utcTime.substring(6, 8);
+                        } else {
+                            // if (gubun == 2 && agencyCd.equals("KMA")) {
+                            yyyyMM = kstTime.substring(0, 6);
+                            dd = kstTime.substring(6, 8);
+                                // }
+                        }
+
+                        filePath = filePath.replace("%yyyyMM%", yyyyMM).replace("%dd%", dd).replace("%yyyy-MM-dd%", yyyyMMdd);
+
+                        // file
+                        String filePattern = environment.getProperty(pathPrefix + "FILE", "");
+                        log.info("filePattern: {}", filePattern);
+                        
+                        int second = (gubun == 1 || gubun == 3 || (gubun == 2 && agencyCd.equals("MCEE"))) ? (60 * 4 + 30) : (60 * 2);
+                        String dateFormat = "yyyyMMddHHmm";
+                        
+                        String previousTime = timeZone.equals("UTC") 
+                            ? TimeUtil.getPreviousTimePatternUTC(second, dateFormat) 
+                            : TimeUtil.getPreviousTimePattern(second, dateFormat);
+                        
+                        if (gubun == 1 || gubun == 3 || (gubun == 2 && agencyCd.equals("MCEE"))) {
+                            previousTime = TimeUtil.getAdjustedPreviousTime(previousTime);
+                        }
+                        log.info("previousTime: {}", previousTime);
+
+                        fileName = filePattern
+                            .replace("%site%", siteCd)
+                            .replace("%yyyyMMddHHmm%", previousTime);
+                        // if(filePattern.contains("yyyyMMddHHmmss")){
+                        //     fileName = filePattern.replace("%yyyyMMddHHmmss%", previousTime);
+                        // }
+                            
+                        log.info("fileName: {}", fileName); 
+                        try {
+                            boolean fileExists = sftp.fileExists(filePath, fileName, siteCd, dataKindStr, filePattern);
+                            log.info("[" + siteStr + " 파일존재유무] : " + fileExists);
+
+                            if (fileExists) {
+                                Long fileSizeMin = environment.getProperty(pathPrefix + "file_size_min", Long.class, 999999L);
+                                Long fileSizeMax = environment.getProperty(pathPrefix + "file_size_max", Long.class, 0L);
+
+                                fileSize = sftp.fileSize(filePath, fileName, fileSizeMin, fileSizeMax);
+                                Long kb = fileSize / 1024;
+
+                                log.info("{} 실제 파일 사이즈: {}", siteStr, fileSize);
+                                log.info("실제 파일 사이즈: {}", fileSize);
+
+                                if (kb > fileSizeMin) {
+                                    codedtl = "ok";
+                                    recvConditionData = "RECV";
+                                    errStrData = "[" + siteStr + " 자료 정상 수신 인서트]";
+                                } else {
+                                    codedtl = "filesize_no";
+                                    recvConditionData = "MISS";
+                                    errStrData = "[" + siteStr + " 파일 품질 이상 인서트]";
+                                }
+                            } else {
+                                fileName = ""; fileSize = 0L; codedtl = "file_no"; recvConditionData = "MISS";
+                                errStrData = "[" + siteStr + " 자료 미수신 인서트]";
+                            }
+                        } catch (Exception fe) {
+                            fileName = ""; fileSize = 0L; codedtl = "file_no"; recvConditionData = "MISS";
+                            errStrData = "[" + siteStr + " 파일 접속 오류 인서트]";
+                        }
+                    } else {
+                        codedtl = "file_no"; recvConditionData = "MISS";
+                        errStrData = "[" + siteStr + " 접속 실패 인서트]";
+                    }
+                    sftp.close();
                 } else {
-                    codedtl = ReceiveCodeDtlEnum.FILE_NO.getCode();
-                    recvConditionData = "MISS";
-                    errStrData = String.format("[%s] 원격지 통신 커넥션 불통 장애 (MISS)", siteStr);
+                    log.info("[" + siteStr + " 자료감시 설정 off]");
                 }
-            } else {
-                return;
+
+                queryService.insReceiveData(dataKindStr, siteCd, dataType, dataTime, dataKst + ":00", currentTime, recvConditionData, recvConditionCheckTime, fileName, fileSize, codedtl);
+            } catch (Exception e) {
+                sftp.close();
+                log.info("StepOne Service Inner Error - " + e);
             }
-
-            // 5분 타임 라인 슬라이스 정합성 연산 보정
-            if (gubun == 1 || gubun == 3) {
-                if (Integer.parseInt(dataKst.substring(dataKst.length() - 4, dataKst.length() - 3)) <= 5) {
-                    dataKst = dataKst.substring(0, dataKst.length() - 4) + "0:00";
-                } else {
-                    dataKst = dataKst.substring(0, dataKst.length() - 4) + "5:00";
-                }
-            } else if (gubun == 2) {
-                dataKst = dataKst.substring(0, dataKst.length() - 2) + "00";
-            }
-
-            log.info(errStrData);
-
-            // 💡 [실제 구동과 100% 동일한 INSERT] 조작 없는 순수 비즈니스 데이터 이력이 실시간 적재됨
-            queryService.insReceiveData(dataKindStr, siteCd, dataType, dataTime, dataKst, currentTime, recvConditionData, recvConditionCheckTime, fileName, fileSize, codedtl);
-
         } catch (Exception e) {
-            log.error("[🚨 StepOne Core Error] 지점: {}", siteStr, e);
+            log.info("Thread error ::: " + e);
         }
     }
 }

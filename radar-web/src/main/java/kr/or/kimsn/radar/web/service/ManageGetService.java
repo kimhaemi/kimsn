@@ -82,7 +82,7 @@ public class ManageGetService {
 
         for (SmsSendPatternDto vo : list) {
             String key = String.valueOf(vo.getCode()) + "_" + vo.getMode() + "_" + vo.getCodedtl();
-            map.put(String.valueOf(key) + "_activation", vo.getActivation());
+            map.put(String.valueOf(key) + "_activation", vo.getActivation()+"");
             map.put(String.valueOf(key) + "_pattern", vo.getPattern());
         }
 

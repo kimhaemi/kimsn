@@ -31,7 +31,7 @@ public interface ReceiveConditionRepository extends JpaRepository<ReceiveConditi
         "  and data_kind = :dataKindStr \n" +
         "  and data_type = :dataType \n")
     @Transactional
-    @Modifying
+    @Modifying(clearAutomatically = true, flushAutomatically = true)
     // 문자 발송 update
     Integer updateReceiveConditionSms(
         // @Param("apply_time") String apply_time,
@@ -55,7 +55,7 @@ public interface ReceiveConditionRepository extends JpaRepository<ReceiveConditi
         "  and data_kind = :dataKindStr \n" +
         "  and data_type = :dataType \n")
     @Transactional
-    @Modifying
+    @Modifying(clearAutomatically = true, flushAutomatically = true)
     // 최종결과 update
     Integer updateReceiveCondition(
         @Param("apply_time") String apply_time,
@@ -78,7 +78,7 @@ public interface ReceiveConditionRepository extends JpaRepository<ReceiveConditi
         "  and data_type = :dataType \n"
     )
     @Transactional
-    @Modifying
+    @Modifying(clearAutomatically = true, flushAutomatically = true)
     // 지점/자료별 문자 발송 설정 일괄 수정
     Integer setReceiveConditionModify(
         @Param("sms_send_activation") int sms_send_activation,

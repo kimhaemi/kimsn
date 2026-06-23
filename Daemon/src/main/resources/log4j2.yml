@@ -11,6 +11,14 @@ Configuration:
         value: "radarCommon"
 
   Appenders:
+    # ⬇️ 콘솔(VS Code 터미널) 출력용 어펜더를 새로 추가합니다.
+    Console:
+      # - name: Console_Appender
+      #   target: SYSTEM_OUT
+      #   PatternLayout:
+      #     Charset: "utf-8" # 👈 UTF-8에서 MS949로 변경
+      #     pattern: "%style{%d{yyyy-MM-dd HH:mm:ss.SSS}}{cyan} %highlight{[%-5p]}{FATAL=bg_red, ERROR=red, INFO=green, DEBUG=blue, TRACE=bg_yellow} %m%n"
+
     RollingFile:
       - name: RollingFile_Appender
         # 💡 동적 확장: {sys:daemonLogName} 속성과 맞물려 radar_KMA_RDR.log 등으로 분리 출력됩니다.
@@ -34,14 +42,17 @@ Configuration:
               age: "P14D"
             IfAccumulatedFileCount:
               exceeds: 140
+
   Loggers:
     Root:
       level: info
       AppenderRef:
+        - ref: Console_Appender     # 👈 콘솔 추가
         - ref: RollingFile_Appender
     Logger:
       - name: kr.or.kimsn
         additivity: false
         level: info
         AppenderRef:
+          - ref: Console_Appender     # 👈 콘솔 추가
           - ref: RollingFile_Appender

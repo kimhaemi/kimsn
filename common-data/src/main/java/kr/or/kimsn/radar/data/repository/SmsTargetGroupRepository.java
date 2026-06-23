@@ -28,7 +28,7 @@ public interface SmsTargetGroupRepository extends JpaRepository<SmsTargetGroupDt
 		"  and gid = :id \n"
     )
     @Transactional
-    @Modifying
+    @Modifying(clearAutomatically = true, flushAutomatically = true)
     //문자 수신 그룹 관리 설정 일괄 수정
     Integer setSmsTargetGroupModify(
         @Param("id") Long id,

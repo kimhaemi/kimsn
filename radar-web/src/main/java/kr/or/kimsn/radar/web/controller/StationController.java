@@ -53,12 +53,12 @@ public class StationController {
         // lgt :낙뢰
         // rdr : radar(대형)
         // sml : 스몰
-        String dataKind = !site.equals("LGT") ? "RDR" : "LGT";
+        // String dataKind = !site.equals("LGT") ? "RDR" : "LGT";
 
-        if (site.equals("IIA"))
-            dataKind = "TDWR";
-        if (site.equals("DJK") || site.equals("SRI") || site.equals("MIL"))
-            dataKind = "SDR";
+        // if (site.equals("IIA"))
+        //     dataKind = "TDWR";
+        // if (site.equals("DJK") || site.equals("SRI") || site.equals("MIL"))
+        //     dataKind = "SDR";
 
         Map<String, Object> map = new HashMap<>();
 
@@ -73,6 +73,12 @@ public class StationController {
         model.addAttribute("siteName", stationDtl.getNameKr());
         model.addAttribute("siteCd", stationDtl.getSiteCd());
 
+        String dataKind = "";
+        String agencyCd = stationDtl.getAgencyCd();
+        if(stationDtl.getGubun() == 1) dataKind = "RDR";
+        if(stationDtl.getGubun() == 2) dataKind = "SDR";
+        if(stationDtl.getGubun() == 3) dataKind = "TDWR";
+        
         Date now = new Date();
         model.addAttribute("now", DateUtil.formatDate("yyyy-MM-dd HH:mm:ss", now));
 
@@ -89,34 +95,61 @@ public class StationController {
         model.addAttribute("rdrMap", rdrMap);
         log.info("rdrMap :::: " + rdrMap);
 
-        Map<String, List<String>> keySet = stationService.getReceiveTimeList(now, rdrSet, dataKind);
+        Map<String, List<String>> keySet = stationService.getReceiveTimeList(now, rdrSet, dataKind, agencyCd);
         log.info("keySet ::::::: " + keySet);
         model.addAttribute("keySet", keySet);
 
-        // 5분 단위 정각으로 Key를 맞춘 Map 생성
+        // ----------------------------------------------------
+        // [개선] 소형(1분 단위)/대형·공항(5분 단위) 구분 Key 매핑 생성
+        // ----------------------------------------------------
+        boolean isKmaSdr = "SDR".equalsIgnoreCase(dataKind) && "KMA".equalsIgnoreCase(agencyCd);
+
         Map<String, ReceiveDataDto> dataMapByTime = new HashMap<>();
         for (ReceiveDataDto dto : rdrMap) {
-            if (dto.getData_time() != null) {
-                // "2026-06-10 15:16:00" -> 연.월.일 추출 ("2026.06.10")
-                String datePart = dto.getData_time().substring(0, 10).replace("-", ".");
-                String hourPart = dto.getData_time().substring(11, 13); // "15"
-                int minute = Integer.parseInt(dto.getData_time().substring(14, 16)); // 16
+            if (dto.getData_kst() != null) {
+                String datePart = dto.getData_kst().substring(0, 10).replace("-", ".");
+                String hourPart = dto.getData_kst().substring(11, 13);
+                int minute = Integer.parseInt(dto.getData_kst().substring(14, 16));
 
-                // [수정된 매칭 로직] 16분->15분, 11분->10분, 36분->35분으로 강제 가공
-                int roundedMinute = (minute / 5) * 5;
+                int targetMinute = minute;
 
-                // keySet과 정확히 일치하는 포맷으로 Key 생성 ("2026.06.10_15:15")
-                String timeKey = String.format("%s_%s:%02d", datePart, hourPart, roundedMinute);
+                // 💡 오직 KMA 소형만 1분 단위를 유지합니다.
+                // 대형(RDR), 공항(TDWR) 및 MECC 소형(SDR)은 모두 5분 단위 버림 처리 적용
+                if (!isKmaSdr) {
+                    targetMinute = (minute / 5) * 5;
+                }
 
+                // keySet 포맷과 일치하도록 키 조립
+                String timeKey = String.format("%s_%s:%02d", datePart, hourPart, targetMinute);
                 dataMapByTime.put(timeKey, dto);
             }
         }
+
+        // // 5분 단위 정각으로 Key를 맞춘 Map 생성
+        // Map<String, ReceiveDataDto> dataMapByTime = new HashMap<>();
+        // for (ReceiveDataDto dto : rdrMap) {
+        //     if (dto.getData_kst() != null) {
+        //         // "2026-06-10 15:16:00" -> 연.월.일 추출 ("2026.06.10")
+        //         String datePart = dto.getData_kst().substring(0, 10).replace("-", ".");
+        //         String hourPart = dto.getData_kst().substring(11, 13); // "15"
+        //         int minute = Integer.parseInt(dto.getData_kst().substring(14, 16)); // 16
+
+        //         // [수정된 매칭 로직] 16분->15분, 11분->10분, 36분->35분으로 강제 가공
+        //         int roundedMinute = (minute / 5) * 5;
+
+        //         // keySet과 정확히 일치하는 포맷으로 Key 생성 ("2026.06.10_15:15")
+        //         String timeKey = String.format("%s_%s:%02d", datePart, hourPart, roundedMinute);
+
+        //         dataMapByTime.put(timeKey, dto);
+        //     }
+        // }
+
+        System.out.println("dataMapByTime: " + dataMapByTime);
         // 반드시 "dataMapByTime" 이라는 이름으로 모델에 담아주셔야 합니다.
         model.addAttribute("dataMapByTime", dataMapByTime);
 
 
         // receive_condition
-
         model.addAttribute("list", map);
 
         return "views/station/station";
@@ -144,13 +177,13 @@ public class StationController {
         // lgt :낙뢰
         // rdr : radar(대형)
         // sml : 스몰
-        String dataKind = !site.equals("LGT") ? "RDR" : "LGT";
-        if (site.equals("IIA"))
-            dataKind = "TDWR";
-        if (site.equals("DJK") || site.equals("SRI") || site.equals("MIL"))
-            dataKind = "SDR";
+        // String dataKind = !site.equals("LGT") ? "RDR" : "LGT";
+        // if (site.equals("IIA"))
+        //     dataKind = "TDWR";
+        // if (site.equals("DJK") || site.equals("SRI") || site.equals("MIL"))
+        //     dataKind = "SDR";
 
-        model.addAttribute("site", site);
+        // model.addAttribute("site", site);
 
         // parameter
         String sDt = request.getParameter("sDt");
@@ -191,6 +224,11 @@ public class StationController {
         // 지점별 감시
         StationDto stationDtl = stationService.getStationDetail(site);
         model.addAttribute("siteName", stationDtl.getNameKr());
+
+        String dataKind = "";
+        if(stationDtl.getGubun() == 1) dataKind = "RDR";
+        if(stationDtl.getGubun() == 2) dataKind = "SDR";
+        if(stationDtl.getGubun() == 3) dataKind = "TDWR";
 
         ReceiveSettingDto rdrList = stationService.getReceiveSetting(dataKind, 1);
         String data_type = rdrList.getDataType();

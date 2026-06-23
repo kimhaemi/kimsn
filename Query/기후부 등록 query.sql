@@ -8,6 +8,13 @@ KILL 557;
 
 commit;
 
+ALTER TABLE `station_rdr` ADD `status` tinyint DEFAULT 1 COMMENT '사용 상태';
+
+update watchdog.station_rdr sr set
+status = 1;
+
+select * from watchdog.station_rdr sr ;
+
 -- 기후부 등록 query
 ALTER TABLE watchdog.station_rdr add agency_cd varchar(4) NULL COMMENT '소속기관코드 (KMA:기상청, MCEE:기후부)';
 -- update watchdog.station_rdr set
@@ -18,9 +25,6 @@ where site_num > 60000;
 
 -- 2. 현재 웹 화면 배치용 데이터 (현재 UI 유지보수 제로화용)
 ALTER TABLE `station_rdr` ADD `style_attr` VARCHAR(255) DEFAULT NULL COMMENT '화면 배치 CSS 스타일';
-ALTER TABLE `station_rdr` ADD `status` tinyint DEFAULT 1 COMMENT '사용 상태';
-
-commit;
 
 -- 기상청: 대형
 UPDATE watchdog.station_rdr

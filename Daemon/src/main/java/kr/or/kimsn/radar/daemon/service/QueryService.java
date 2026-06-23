@@ -3,6 +3,7 @@ package kr.or.kimsn.radar.daemon.service;
 import java.util.List;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -30,8 +31,9 @@ import kr.or.kimsn.radar.data.repository.StationStatusRepository;
 import kr.or.kimsn.radar.data.repository.SmsSendNuri2Repository;
 import kr.or.kimsn.radar.data.repository.AppTemplateCodeRepository;
 
-@RequiredArgsConstructor
 @Service
+@Slf4j
+@RequiredArgsConstructor
 public class QueryService {
 
     private final StationRepository stationRepository; // site
@@ -92,7 +94,8 @@ public class QueryService {
 
     // data 처리 이력
     public List<ReceiveDataDto> getReceiveDataList(String site, String dataKindStr, int count) {
-        return receiveDataRepository.getReceiveDataList(site, dataKindStr, PageRequest.of(0, count));
+        // log.info("receiveDataRepository.getReceiveDataListLimit(site, dataKindStr, count): {}", receiveDataRepository.getReceiveDataListLimit(site, dataKindStr, count));
+        return receiveDataRepository.getReceiveDataListLimit(site, dataKindStr, count);
     }
 
     // 문자 메시지 on/off
@@ -125,6 +128,16 @@ public class QueryService {
     // 최종 결과 update query
     public Integer updateReceiveCondition(String apply_time, String new_recv_condition, String new_codedtl,
             int sms_send, String where_recv_condition, String site, String dataKindStr, String dataType) {
+        log.info("===== updateReceiveCondition start ====");
+        log.info("apply_time: " + apply_time);
+        log.info("new_recv_condition: " + new_recv_condition);
+        log.info("new_codedtl: " + new_codedtl);
+        log.info("sms_send: " + sms_send);
+        log.info("where_recv_condition: " + where_recv_condition);
+        log.info("site: " + site);
+        log.info("dataKindStr: " + dataKindStr);
+        log.info("dataType: " + dataType);
+        log.info("===== updateReceiveCondition end ====");
         return receiveConditionRepository.updateReceiveCondition(apply_time, new_recv_condition, new_codedtl, sms_send,
                 where_recv_condition, site, dataKindStr, dataType);
         // select * from receive_condition rc where recv_condition = 'TOTA' and site =
@@ -134,50 +147,31 @@ public class QueryService {
     // 이력 update
     public Integer updateReceiveData(String new_recv_condition, String new_codedtl, String site, String dataKindStr,
             String dataType, String where_recv_condition, String data_kst) {
-        return receiveDataRepository.updateReceiveData(new_recv_condition,
+
+                log.info("================== updateReceiveData start ===================");
+                log.info("new_recv_condition: {}", new_recv_condition);
+                log.info("new_codedtl: {}", new_codedtl);
+                log.info("site: {}", site);
+                log.info("dataKindStr: {}", dataKindStr);
+                log.info("dataType: {}", dataType);
+                log.info("where_recv_condition: {}", where_recv_condition);
+                log.info("data_kst: {}", data_kst);
+                log.info("================== updateReceiveData end ===================");
+        // 🔥 리턴값을 변수에 저장
+        Integer updatedRows = receiveDataRepository.updateReceiveData(new_recv_condition,
                 new_codedtl, site, dataKindStr, dataType, where_recv_condition, data_kst);
+                
+        log.info("🔥 [UPDATE 결과] 영향을 받은 행(Row)의 개수: {}", updatedRows);
+        
+        return updatedRows;
     }
 
-    // 최종 결과 update
-    public void insReceiveCondition(String site_cd, String dataKindStr, String dataType, String recv_condition,
-            String apply_time, String last_check_time, int sms_send, int sms_send_activation, int status,
-            String codedtl) {
-        ReceiveConditionDto rcDto = new ReceiveConditionDto();
-
-        System.out.println("[==updateReceiveCondition==]");
-        // System.out.println(" site : " + site_cd);
-        // System.out.println(" data_kind : " + dataKindStr);
-        // System.out.println(" data_type : " + dataType);
-        // System.out.println(" recv_condition : " + recv_condition);
-        // System.out.println(" apply_time : " + apply_time);
-        // System.out.println(" last_check_time : " + last_check_time);
-        // System.out.println(" sms_send : " + sms_send);
-        // System.out.println(" sms_send_activation : " + sms_send_activation);
-        // System.out.println(" status : " + status);
-        // System.out.println(" codedtl : " + codedtl);
-
-        rcDto.setSite(site_cd);
-        rcDto.setDataKind(dataKindStr);
-        rcDto.setDataType(dataType);
-        rcDto.setRecvCondition(recv_condition);
-        rcDto.setApplyTime(apply_time);
-        rcDto.setLastCheckTime(last_check_time);
-        rcDto.setSmsSend(sms_send);
-        rcDto.setSmsSendActivation(sms_send_activation);
-        rcDto.setStatus(status);
-        rcDto.setCodedtl(codedtl);
-
-        // receiveConditionRepositor/y.save(rcDto);
-
-    }
-
-    // 쓸데가 있겠지...
     public void insReceiveData(String dataKindStr, String site_cd, String dataType, String data_time, String data_kst,
             String recv_time,
             String recv_condition, String recv_condition_check_time, String file_name, Long file_size, String codedtl) {
         ReceiveDataDto rdDto = new ReceiveDataDto();
 
-        System.out.println("[==InsReceiveData==]");
+        log.info("[==InsReceiveData==]");
         // System.out.println("data_kind : " + dataKindStr);
         // System.out.println("site : " + site_cd);
         // System.out.println("data_type : " + dataType);
@@ -203,17 +197,9 @@ public class QueryService {
         rdDto.setFile_size(file_size);
         rdDto.setCodedtl(codedtl);
 
-        receiveDataRepository.save(rdDto);
-    }
-
-    // 문자 전송(app_send_data) insert
-    public void insGaonAppSendDataSave(Long appSeq, String call_to, String call_from) {
-//        smsSendRepository.gaonAppSendDataSave(appSeq, call_to, call_from); // 템플릿 코드 넣어야함.
-    }
-
-    // 문자 전송(app_send_contents) insert
-    public void intGaonAppSendContentsSave(Long appSeq, String smsPettern) {
-        smsSendRepository.gaonAppSendContentsSave(appSeq, smsPettern);
+        // receiveDataRepository.save(rdDto);
+        ReceiveDataDto result = receiveDataRepository.saveAndFlush(rdDto);
+        log.info("receive_data insert 결과: {}", result);
     }
 
     // 문자 전송(NURI2_NRMSG_DATA) insert

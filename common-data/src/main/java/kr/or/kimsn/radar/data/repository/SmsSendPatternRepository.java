@@ -11,15 +11,15 @@ import org.springframework.data.repository.query.Param;
 
 import kr.or.kimsn.radar.data.dto.SmsSendPatternDto;
 import kr.or.kimsn.radar.data.dto.pkColumn.SmsSendPatternPk;
-import org.springframework.stereotype.Repository;
 
-@Repository
 public interface SmsSendPatternRepository extends JpaRepository<SmsSendPatternDto, SmsSendPatternPk>{
     List<SmsSendPatternDto> findAll();
 
     List<SmsSendPatternDto> findByOrderByCodeAscModeDesc();
 
-  List<SmsSendPatternDto> findByActivationAndStatusAndCodeAndCodedtl(int activation, int status, String code, String codedtl);
+    List<SmsSendPatternDto> findByActivationAndStatusAndCodeAndCodedtl(int activation, int status, String code, String codedtl);
+
+    SmsSendPatternDto findByActivationAndStatusAndCodeAndCodedtlAndMode(int activation, int status, String code, String codedtl, String mode);
 
     @Query(
         nativeQuery = true,
@@ -33,11 +33,11 @@ public interface SmsSendPatternRepository extends JpaRepository<SmsSendPatternDt
         "  and mode = :mode \n"
     )
     @Transactional
-    @Modifying
+    @Modifying(clearAutomatically = true, flushAutomatically = true)
     // 문자 메시지 패턴 일괄 수정
     Integer setSmsSetMsgModify(
         @Param("pattern") String pattern,
-        @Param("activation") String activation,
+        @Param("activation") int activation,
         @Param("code") String code,
         @Param("mode") String mode,
         @Param("codedtl") String codedtl

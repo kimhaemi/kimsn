@@ -111,7 +111,7 @@ public class ManagePostService {
         try {
             for (SmsSendPatternDto dto : smsSendPatternDto) {
                 String pattern = dto.getPattern();
-                String activation = dto.getActivation();
+                int activation = dto.getActivation();
                 String code = dto.getCode();
                 String mode = dto.getMode();
                 String codedtl = dto.getCodedtl();

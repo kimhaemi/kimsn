@@ -76,12 +76,12 @@ public class SftpUtil {
    * 레이더 사이트 원격 경로 내 관측 데이터 파일 실시간 유무 판단
    */
   @SuppressWarnings("rawtypes")
-  public boolean fileExists(String path, String fileName, String siteCd, String dataKind, String filePattern, String timeZone) {
+  public boolean fileExists(String path, String fileName, String siteCd, String dataKind, String filePattern) {
     log.info("[📂 {} 탐색] 경로: {}/{}", siteCd, path, fileName);
 
     Vector res = null;
     try {
-      res = channelSftp.ls(path + "/" + fileName);
+      res = channelSftp.ls(path + "/" + fileName + "*");
     } catch (SftpException e) {
       if (e.id == ChannelSftp.SSH_FX_NO_SUCH_FILE) {
         return false;
@@ -97,7 +97,7 @@ public class SftpUtil {
   public Long fileSize(String path, String fileName, Long file_size_min, Long file_size_max) {
     Long fileSize = 0L;
     try {
-      fileSize = channelSftp.lstat(path + "/" + fileName).getSize();
+      fileSize = channelSftp.lstat(path + "/" + fileName + "*").getSize();
     } catch (SftpException e) {
       if (e.id == ChannelSftp.SSH_FX_NO_SUCH_FILE) {
         return 0L;

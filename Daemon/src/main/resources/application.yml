@@ -1,5 +1,9 @@
 server:
-  port: 8701
+  servlet:
+    encoding:
+      charset: UTF-8
+      force: true
+      enabled: true
 
 spring:
   output:
@@ -24,5 +28,10 @@ spring:
       enabled: true
 
 # 💡 외부 확장 연동 통로 지정: 런타임 시 외부에 노출된 별도의 log4j2.yml 설정을 바라보도록 구성
-# logging:
-#   config: "file:log4j2.yml"
+logging:
+  config: "classpath:log4j2.yml"
+  level: # 각 package 별로 로깅 레벨을 지정할 수 있다.
+    '[kr.or.kimsn.radar.daemon]': INFO # DEBUG
+  pattern:
+    console: "%-5level [%d{yyyy-MM-dd HH:mm:ss}] - %msg%n"
+    file: "%-5level [%d{yyyy-MM-dd HH:mm:ss}] - %msg%n"

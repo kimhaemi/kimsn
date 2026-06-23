@@ -35,7 +35,7 @@ public interface ReceiveSettingRepository extends JpaRepository<ReceiveSettingDt
 		"  and data_type = :data_type \n"
     )
     @Transactional
-    @Modifying
+    @Modifying(clearAutomatically = true, flushAutomatically = true)
     //자료 수신 감시 설정 일괄 수정
     Integer setReceiveSettingModify(
         @Param("time_zone") String time_zone,

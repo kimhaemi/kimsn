@@ -12,9 +12,33 @@ dependencies {
     annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
 }
 
-tasks.named('test') { useJUnitPlatform() }
+// tasks.named('test') { useJUnitPlatform() }
+// tasks.named('jar') { 
+//     mainfest {
+//         attributes(
+//             'Main-Class': kr.or.kimsn.radar.daemon.DaemonApplication
+//         )
+
+//         from {
+//             configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it)}
+//         }
+//         duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+//     } 
+// }
+
 tasks.withType(JavaCompile) {
     options.encoding = 'UTF-8'
+    options.compilerArgs << '-Xlint:unchecked' << '-Xlint:deprecation'
+}
+System.setProperty("file.encoding", "UTF-8")
+
+// ⬇️ 아래 3줄을 바로 이 자리에 새로 추가해 주세요.
+System.setProperty("user.language", "ko")
+System.setProperty("user.country", "KR")
+System.setProperty("sun.stdout.encoding", "UTF-8")
+
+tasks.withType(JavaExec).configureEach {
+    jvmArgs += ['-Dfile.encoding=UTF-8', '-Dsun.stdout.encoding=UTF-8', '-Dsun.stderr.encoding=UTF-8']
 }
 
 bootJar { enabled = false }
@@ -59,7 +83,7 @@ daemonSystems.each { sysType, config ->
         // 매니페스트에 시스템 식별 구분자 박제
         manifest {
             attributes(
-                    'Start-Class': 'kr.or.kimsn.radar.daemon.RadarDaemonApplication',
+                    'Start-Class': 'kr.or.kimsn.radar.daemon.DaemonApplication',
                     'Radar-System-Type': sysType
             )
         }

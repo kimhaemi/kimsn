@@ -531,7 +531,7 @@ public interface SmsSendRepository extends JpaRepository<SmsSendDto, SmsSendPk> 
 			") \n")
 	// 문자발송
 	@Transactional
-	@Modifying
+	@Modifying(clearAutomatically = true, flushAutomatically = true)
 	Integer nuriSmsSendSave(
 			@Param("req_date") String req_date,
 			@Param("call_to") String call_to,
@@ -551,7 +551,7 @@ public interface SmsSendRepository extends JpaRepository<SmsSendDto, SmsSendPk> 
 			", 'AT'        -- = 고정값\n" +
 			")\n")
 	@Transactional
-	@Modifying
+	@Modifying(clearAutomatically = true, flushAutomatically = true)
 	// 카카오톡 발송(내용)
 	Integer gaonAppSendContentsSave(
 			@Param("appnextval") Long appnextval,
@@ -580,7 +580,7 @@ public interface SmsSendRepository extends JpaRepository<SmsSendDto, SmsSendPk> 
 			", 'L'             -- = GAON_MSG_TYPE ='L' 입력 고정 (실패시 자동 바이트 계산 후 SMS/LMS 재접수 처리)\n" +
 			")\n")
 	@Transactional
-	@Modifying
+	@Modifying(clearAutomatically = true, flushAutomatically = true)
 	// 카카오톡 발송(전화번호)
 	Integer gaonAppSendDataSave(
 			@Param("appNextval") Long appNextval,
