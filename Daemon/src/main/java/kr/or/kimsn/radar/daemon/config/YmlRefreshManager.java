@@ -31,6 +31,7 @@ public class YmlRefreshManager {
     // 💡 [방어선 1] 다중 대안 경로 추적 스캔 가동 (Scheduler 구조와 정합성 일치)
     String[] candidatePaths = {
       "/home/watcher/deamon/config/application.yml",
+      "/home/watcher/daemon/config/application.yml",
       "../config/application.yml",
       "./config/application.yml",
       "./Daemon/config/application.yml"

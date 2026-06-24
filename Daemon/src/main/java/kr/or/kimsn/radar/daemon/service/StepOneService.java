@@ -2,6 +2,7 @@ package kr.or.kimsn.radar.daemon.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.core.env.ConfigurableEnvironment;
 import org.springframework.stereotype.Service;
 
@@ -32,7 +33,7 @@ public class StepOneService {
             String dataKst = TimeUtil.getAdjustedCurrentTime(gubun, agencyCd);
             String dataUtc = TimeUtil.getUTCTime(gubun, agencyCd);
             String recvConditionCheckTime = currentTime;
-            
+
             String recvConditionData = "";
             String codedtl = "";
             String fileName = "";
@@ -97,15 +98,14 @@ public class StepOneService {
                     sitePwd = sitePwd + "#";
                 }
 
-                log.info("[========================= " + siteStr + " 접속 정보 ===============================]");
-                log.info("[" + siteStr + " port] : " + port);
-                log.info("[" + siteStr + " ip] : " + siteIp);
-                log.info("[" + siteStr + " username] : " + siteUsername);
-                log.info("[" + siteStr + " pwd] : " + sitePwd);
+                log.info("[========================= {} 접속 정보 ===============================]", siteStr);
+                log.info("[{} port]: {}", siteStr, port);
+                log.info("[{} ip]: {}", siteStr, siteIp);
+                log.info("[{} username]: {}", siteStr, siteUsername);
+                log.info("[{} pwd]: {}", siteStr, sitePwd);
 
                 ReceiveSettingDto rsDto = queryService.getrRceiveSetting(dataKindStr);
-                System.out.println("rsDto ::: " + rsDto.getPermittedWatch());
-
+                
                 if (rsDto.getPermittedWatch() == 1) {
                     log.info("[자료감시 설정 on]");
                     boolean sftpConnect = false;
@@ -116,7 +116,7 @@ public class StepOneService {
                         System.out.println("접속오류: " + ce);
                     }
 
-                    log.info("[" + siteStr + " 접속 유무] : " + sftpConnect);
+                    log.info("[{} 접속 유무]: {}", siteStr, sftpConnect);
 
                     //기후부 대형만 UTC: U(9시간 전), 나머지는 KST: K(현재시간)
                     String timeZone = (gubun == 1 && agencyCd.equals("MCEE")) ? "UTC" : "KST";
@@ -144,10 +144,14 @@ public class StepOneService {
 
                         //파일 패턴
                         String filePattern = environment.getProperty(pathPrefix + "FILE", "");
-                        log.info("{} filePattern: {}", siteStr, filePattern);
+                        // log.info("[{} filePattern]: {}", siteStr, filePattern);
                         
                         int second = (gubun == 1 || gubun == 3 || (gubun == 2 && agencyCd.equals("MCEE"))) ? (60 * 4 + 30) : (60 * 2);
                         String dateFormat = "yyyyMMddHHmm";
+                        // //삼척, 통고산 10분 전 시간 추출
+                        // if(){
+                        //     second
+                        // }
                         
                         String previousTime = timeZone.equals("UTC") 
                             ? TimeUtil.getPreviousTimePatternUTC(second, dateFormat) 
@@ -156,7 +160,11 @@ public class StepOneService {
                         if (gubun == 1 || gubun == 3 || (gubun == 2 && agencyCd.equals("MCEE"))) {
                             previousTime = TimeUtil.getAdjustedPreviousTime(previousTime);
                         }
-                        log.info("{} 감지해야할 시간: {}", siteStr, previousTime);
+                        log.info("[{} timeZone]: {}: {}", siteStr, timeZone, previousTime);
+
+                        recvConditionCheckTime = previousTime+ "00";
+
+                        // log.info("[{} recvConditionCheckTime]: {}", siteStr, recvConditionCheckTime);
 
                         fileName = filePattern
                             .replace("%site%", siteCd)
@@ -166,21 +174,20 @@ public class StepOneService {
                         //     fileName = filePattern.replace("%yyyyMMddHHmmss%", previousTime);
                         // }
                             
-                        log.info("{} 찾아야할 파일명: {}", siteStr, fileName); 
+                        log.info("[{} 찾아야할 파일명]: {}", siteStr, fileName); 
                         try {
                             //파일 존재유무
                             boolean fileExists = sftp.fileExists(filePath, fileName, siteStr, dataKindStr, filePattern);
                             log.info("[{} 파일존재유무]: {} ", siteStr, fileExists);
 
                             if (fileExists) {
-                                Long fileSizeMin = environment.getProperty(pathPrefix + "file_size_min", Long.class, 999999L);
+                                Long fileSizeMin = environment.getProperty(pathPrefix + "file_size_min", Long.class, 2048L);
                                 
                                 //관측소 파일 사이즈 추출
-                                fileSize = sftp.fileSize(filePath, fileName, siteStr);
-                                Long kb = fileSize / 1024;
+                                fileSize = sftp.fileSize(filePath, fileName, siteStr); //byte
+                                Long kb = fileSize / 1024; //kb
 
-                                log.info("{} 기준 파일 사이즈: {}", siteStr, fileSizeMin);
-                                log.info("{} 실제 파일 사이즈: {}", siteStr, fileSize);
+                                log.info("[{} 파일사이즈(kb) 기준 / 실제]: {}/{}", siteStr, fileSizeMin, kb);
 
                                 // 파일 사이즈 비교
                                 if (kb > fileSizeMin) {
@@ -209,7 +216,11 @@ public class StepOneService {
                     log.info("[{} 자료감시 설정 off]", siteStr);
                 }
 
-                log.info("{} 결과 : {}, {}: {}", siteStr, codedtl, recvConditionData, errStrData);
+                if(codedtl != "ok"){
+                    log.error("[❌ {} 접속 결과] : {}, {}: {}", siteStr, codedtl, recvConditionData, errStrData);
+                } else {
+                    log.info("[{} 접속 결과 : {}, {}: {}]", siteStr, codedtl, recvConditionData, errStrData);
+                }
 
                 queryService.insReceiveData(dataKindStr, siteCd, dataType, dataTime, dataKst + ":00", currentTime, recvConditionData, recvConditionCheckTime, fileName, fileSize, codedtl);
             } catch (Exception e) {

@@ -45,11 +45,11 @@ bootJar { enabled = false }
 jar { enabled = true }
 
 def daemonSystems = [
-        'KMA_RDR'  : [desc: '기상청A 대형 레이더 데몬 인프라'],
-        'KMA_SDR'  : [desc: '기상청A 소형 레이더 데몬 인프라'],
-        'KMA_TDWR' : [desc: '기상청A 공항 레이더 데몬 인프라'],
-        'MCEE_RDR' : [desc: '기상청B 대형 레이더 데몬 인프라'],
-        'MCEE_SDR' : [desc: '기상청B 소형 레이더 데몬 인프라']
+    'RDR' : [desc: '기상청A 대형 레이더 데몬 인프라'],
+    'SDR' : [desc: '기상청A 소형 레이더 데몬 인프라'],
+    'TDWR'  : [desc: '기상청A 공항 레이더 데몬 인프라'],
+    'RDR_B' : [desc: '기상청B 대형 레이더 데몬 인프라'],
+    'SDR_B' : [desc: '기상청B 소형 레이더 데몬 인프라']
 ]
 
 // 💡 완결: 그레이들 내장 태스크 컨테이너에서 BootJar 클래스 타입을 안전하게 역추적하여 주입합니다.
@@ -96,3 +96,21 @@ tasks.register('buildAllRadarJar') {
     daemonSystems.keySet().each { sysType -> dependsOn "bootJar_${sysType}" }
 }
 build.dependsOn buildAllRadarJar
+
+
+// =======================================================================
+// 💡 [운영 배포 자동화 세팅] 기존 코드 손대지 않고 하단 결합 로직만 유지
+// =======================================================================
+daemonSystems.keySet().each { sysType ->
+    tasks.named("bootJar_${sysType}") {
+        // 빌드되는 최종 파일명을 인자 없이 띄울 수 있게 'RDR_A.jar' 형태로 깔끔하게 강제합니다.
+        archiveFileName = "${sysType}.jar"
+        
+        // ⭕ 자바 코드가 인식할 수 있도록 jar 파일 내부의 Manifest에 값을 직접 구워넣습니다.
+        manifest {
+            attributes(
+                'Radar-System-Type': sysType
+            )
+        }
+    }
+}

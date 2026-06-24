@@ -35,7 +35,7 @@ public class StepTwoService {
         srDto = queryService.getStation(gubun, agencyCd, 1);
         int srCnt = (srDto != null) ? srDto.size() : 0;
 
-        log.info("gubunL {}, : agencyCd: {}, srDto.size: {}", gubun, agencyCd, srDto.size());
+        log.info("gubun {}, : agencyCd: {}, srDto.size: {}", gubun, agencyCd, srDto.size());
 
         //기후부 소형은 대형 로직임.
         int new_gubun = (gubun == 1 || (gubun == 2 && agencyCd.equals("MCEE"))) ? 1 : (gubun == 2 && agencyCd.equals("KMA")) ? 2 : 3;

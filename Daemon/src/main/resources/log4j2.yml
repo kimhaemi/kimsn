@@ -6,27 +6,22 @@ Configuration:
     Property:
       - name: log-path
         value: "logs"
-      # 💡 기본값 정의: 혹시 모를 변수 누락 시 방어선 파일명 지정
       - name: default-log-name
         value: "radarCommon"
 
   Appenders:
-    # ⬇️ 콘솔(VS Code 터미널) 출력용 어펜더를 새로 추가합니다.
-    Console:
-      # - name: Console_Appender
-      #   target: SYSTEM_OUT
-      #   PatternLayout:
-      #     Charset: "utf-8" # 👈 UTF-8에서 MS949로 변경
-      #     pattern: "%style{%d{yyyy-MM-dd HH:mm:ss.SSS}}{cyan} %highlight{[%-5p]}{FATAL=bg_red, ERROR=red, INFO=green, DEBUG=blue, TRACE=bg_yellow} %m%n"
+    # 💡 Console 어펜더를 비워두어 터미널 출력을 원천 차단합니다.
+    Console: []
 
     RollingFile:
       - name: RollingFile_Appender
-        # 💡 동적 확장: {sys:daemonLogName} 속성과 맞물려 radar_KMA_RDR.log 등으로 분리 출력됩니다.
-        fileName: "./${log-path}/radar_${sys:daemonLogName:-${default-log-name}}.log"
-        filePattern: "./${log-path}/radar_${sys:daemonLogName:-${default-log-name}}_%d{yyyy-MM-dd}-%i.log"
+        fileName: "./${log-path}/${sys:daemonLogName:-radarCommon}.log"
+        filePattern: "./${log-path}/${sys:daemonLogName:-radarCommon}_%d{yyyy-MM-dd}-%i.log"
+        immediateFlush: true # 💡 파일 실시간 디스크 쓰기 보장
         PatternLayout:
           Charset: "UTF-8"
-          pattern: "%style{%d{yyyy-MM-dd HH:mm:ss.SSS}}{cyan} %highlight{[%-5p]}{FATAL=bg_red, ERROR=red, INFO=green, DEBUG=blue, TRACE=bg_yellow} %m%n"
+          # 💡 클래스명(%logger)이 제거된 깔끔한 포맷
+          pattern: "%style{%d{yyyy-MM-dd HH:mm:ss.SSS}}{cyan} %highlight{[%-5p]}{FATAL=bg_red, ERROR=red, INFO=green, DEBUG=blue, TRACE=bg_yellow} - %m%n"
         Policies:
           TimeBasedTriggeringPolicy:
             Interval: 1
@@ -47,12 +42,12 @@ Configuration:
     Root:
       level: info
       AppenderRef:
-        - ref: Console_Appender     # 👈 콘솔 추가
+        # 💡 오직 파일로만 출력 방향을 제한합니다.
         - ref: RollingFile_Appender
     Logger:
       - name: kr.or.kimsn
         additivity: false
         level: info
         AppenderRef:
-          - ref: Console_Appender     # 👈 콘솔 추가
+          # 💡 오직 파일로만 출력 방향을 제한합니다.
           - ref: RollingFile_Appender

@@ -141,8 +141,9 @@ public class Scheduler implements SchedulingConfigurer { // 💡 무중단 동�
         }
         exec.shutdown();
 
-        Thread.sleep(pauseTime * 1000); 
         log.info("[" + pauseTime + "초 후 다음 정산 처리] : " + LocalDateTime.now().format(dtf));
+        Thread.sleep(pauseTime * 1000); 
+        log.info("[{}초 후 시간]: {}", pauseTime, LocalDateTime.now().format(dtf));
         log.info("[=================== 2번째 프로세스 상태 판정 진입 ===================] " + LocalDateTime.now().format(dtf));
         
         String cycleId = LocalDateTime.now().format(cycleIdFormatter);

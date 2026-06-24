@@ -55,7 +55,7 @@ radar:
       KMA_RDR:
         cron-expression: "0 1,6,11,16,21,26,31,36,41,46,51,56 * * * *"
         stations:
-          KWK: { IP: "61.75.57.11", PORT: 22, ID: "root", PASSWORD: "eecj9620", PATH: "/var/opt/edge/ncData", FILE: "RDR_%site%_RAW_%yyyyMMddHHmm%.nc", file_size_min: 2048, file_size_max: 640350 } # 관악산
+          KWK: { IP: "190.1.56.113", PORT: 22, ID: "root", PASSWORD: "eecj9620", PATH: "/var/opt/edge/ncData", FILE: "RDR_%site%_RAW_%yyyyMMddHHmm%.nc", file_size_min: 2048, file_size_max: 640350 } # 관악산
           BRI: { IP: "190.1.11.103", PORT: 22, ID: "root", PASSWORD: "eecj9620", PATH: "/var/opt/edge/ncData", FILE: "RDR_%site%_RAW_%yyyyMMddHHmm%.nc", file_size_min: 2048, file_size_max: 640350 } # 백령도
           GDK: { IP: "190.1.218.113", PORT: 22, ID: "root", PASSWORD: "eecj9620", PATH: "/var/opt/edge/ncData", FILE: "RDR_%site%_RAW_%yyyyMMddHHmm%.nc", file_size_min: 2048, file_size_max: 640350 } # 광덕산
           GNG: { IP: "190.1.219.113", PORT: 22, ID: "root", PASSWORD: "eecj9620", PATH: "/var/opt/edge/ncData", FILE: "RDR_%site%_RAW_%yyyyMMddHHmm%.nc", file_size_min: 2048, file_size_max: 640350 } # 강릉
@@ -76,9 +76,9 @@ radar:
       KMA_SDR:
         cron-expression: "30 0-59 * * * *"
         stations:
-          MIL: { IP: "61.75.57.11", PORT: 22, ID: "root", PASSWORD: "watch1234", PATH: "/RDNAS_BK/UF_SQ/%yyyyMM%/%dd%", FILE: "RDR_%site%_%yyyyMMddHHmm%.uf", file_size_min: 750, file_size_max: 640350 } # 망일산
-          SRI: { IP: "61.75.57.11", PORT: 22, ID: "root", PASSWORD: "watch1234", PATH: "/RDNAS_BK/UF_SQ/%yyyyMM%/%dd%", FILE: "RDR_%site%_%yyyyMMddHHmm%.uf", file_size_min: 750, file_size_max: 640350 } # 수리산
-          DJK: { IP: "61.75.57.11", PORT: 22, ID: "root", PASSWORD: "watch1234", PATH: "/RDNAS_BK/UF_SQ/%yyyyMM%/%dd%", FILE: "RDR_%site%_%yyyyMMddHHmm%.uf", file_size_min: 750, file_size_max: 640350 } # 덕적도
+          MIL: { IP: "172.20.132.114", PORT: 22, ID: "sradar", PASSWORD: "radar!@", PATH: "/RDNAS_BK/UF_SQ/%yyyyMM%/%dd%", FILE: "RDR_%site%_%yyyyMMddHHmm%.uf", file_size_min: 750, file_size_max: 640350 } # 망일산
+          SRI: { IP: "172.20.132.114", PORT: 22, ID: "sradar", PASSWORD: "radar!@", PATH: "/RDNAS_BK/UF_SQ/%yyyyMM%/%dd%", FILE: "RDR_%site%_%yyyyMMddHHmm%.uf", file_size_min: 750, file_size_max: 640350 } # 수리산
+          DJK: { IP: "172.20.132.114", PORT: 22, ID: "sradar", PASSWORD: "radar!@", PATH: "/RDNAS_BK/UF_SQ/%yyyyMM%/%dd%", FILE: "RDR_%site%_%yyyyMMddHHmm%.uf", file_size_min: 750, file_size_max: 640350 } # 덕적도
 
       # ----------------------------------------------------
       # 3. 기상청 공항 레이더 데몬 (KMA_TDWR)
@@ -87,8 +87,8 @@ radar:
       KMA_TDWR:
         cron-expression: "0 1,6,11,16,21,26,31,36,41,46,51,56 * * * *"
         stations:
-          IIA: { IP: "61.75.57.11", PORT: 22, ID: "root", PASSWORD: "watch1234", PATH: "/usr/local/Rainbow5/rainbow/rawdata/264KRC/NCdata", FILE: "RDR_%site%_RAW_%yyyyMMddHHmm%.nc", file_size_min: 2048, file_size_max: 640350 } # 인천공항
-          JIA: { IP: "61.75.57.11", PORT: 22, ID: "root", PASSWORD: "watch1234", PATH: "/usr/local/Rainbow5/rainbow/rawdata/264KRC/NCdata", FILE: "RDR_%site%_RAW_%yyyyMMddHHmm%.nc", file_size_min: 2048, file_size_max: 850000 } # 제주공항 (🆕 신규 추가 - 용량 별도 격리 구성 가능!)
+          IIA: { IP: "190.1.11.209", PORT: 22, ID: "rainbow", PASSWORD: "rain99", PATH: "/usr/local/Rainbow5/rainbow/rawdata/264KRC/NCdata", FILE: "RDR_%site%_RAW_%yyyyMMddHHmm%.nc", file_size_min: 2048, file_size_max: 640350 } # 인천공항
+          JIA: { IP: "190.1.11.211", PORT: 22, ID: "rainbow", PASSWORD: "rain99", PATH: "/usr/local/Rainbow5/rainbow/rawdata/264KRC/NCdata", FILE: "RDR_%site%_RAW_%yyyyMMddHHmm%.nc", file_size_min: 2048, file_size_max: 850000 } # 제주공항 (🆕 신규 추가 - 용량 별도 격리 구성 가능!)
 
       # ----------------------------------------------------
       # 4. 기후부 대형 레이더 데몬 (MCEE_RDR)

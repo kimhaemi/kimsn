@@ -128,18 +128,20 @@ public class QueryService {
     // 최종 결과 update query
     public Integer updateReceiveCondition(String apply_time, String new_recv_condition, String new_codedtl,
             int sms_send, String where_recv_condition, String site, String dataKindStr, String dataType) {
-        log.info("===== updateReceiveCondition start ====");
-        log.info("apply_time: " + apply_time);
-        log.info("new_recv_condition: " + new_recv_condition);
-        log.info("new_codedtl: " + new_codedtl);
-        log.info("sms_send: " + sms_send);
-        log.info("where_recv_condition: " + where_recv_condition);
-        log.info("site: " + site);
-        log.info("dataKindStr: " + dataKindStr);
-        log.info("dataType: " + dataType);
-        log.info("===== updateReceiveCondition end ====");
-        return receiveConditionRepository.updateReceiveCondition(apply_time, new_recv_condition, new_codedtl, sms_send,
+        // log.info("===== updateReceiveCondition start ====");
+        // log.info("apply_time: " + apply_time);
+        // log.info("new_recv_condition: " + new_recv_condition);
+        // log.info("new_codedtl: " + new_codedtl);
+        // log.info("sms_send: " + sms_send);
+        // log.info("where_recv_condition: " + where_recv_condition);
+        // log.info("site: " + site);
+        // log.info("dataKindStr: " + dataKindStr);
+        // log.info("dataType: " + dataType);
+        // log.info("===== updateReceiveCondition end ====");
+        Integer updateResult = receiveConditionRepository.updateReceiveCondition(apply_time, new_recv_condition, new_codedtl, sms_send,
                 where_recv_condition, site, dataKindStr, dataType);
+        log.info("[{} 최종상태 update]: {}", site, updateResult == 1? "성공":"실패");
+        return updateResult;
         // select * from receive_condition rc where recv_condition = 'TOTA' and site =
         // 'TEST' and data_kind = 'RDR' and data_type = 'NQC';
     }
@@ -148,20 +150,20 @@ public class QueryService {
     public Integer updateReceiveData(String new_recv_condition, String new_codedtl, String site, String dataKindStr,
             String dataType, String where_recv_condition, String data_kst) {
 
-                log.info("================== updateReceiveData start ===================");
-                log.info("new_recv_condition: {}", new_recv_condition);
-                log.info("new_codedtl: {}", new_codedtl);
-                log.info("site: {}", site);
-                log.info("dataKindStr: {}", dataKindStr);
-                log.info("dataType: {}", dataType);
-                log.info("where_recv_condition: {}", where_recv_condition);
-                log.info("data_kst: {}", data_kst);
-                log.info("================== updateReceiveData end ===================");
+                // log.info("================== updateReceiveData start ===================");
+                // log.info("new_recv_condition: {}", new_recv_condition);
+                // log.info("new_codedtl: {}", new_codedtl);
+                // log.info("site: {}", site);
+                // log.info("dataKindStr: {}", dataKindStr);
+                // log.info("dataType: {}", dataType);
+                // log.info("where_recv_condition: {}", where_recv_condition);
+                // log.info("data_kst: {}", data_kst);
+                // log.info("================== updateReceiveData end ===================");
         // 🔥 리턴값을 변수에 저장
         Integer updatedRows = receiveDataRepository.updateReceiveData(new_recv_condition,
                 new_codedtl, site, dataKindStr, dataType, where_recv_condition, data_kst);
                 
-        log.info("🔥 [UPDATE 결과] 영향을 받은 행(Row)의 개수: {}", updatedRows);
+        log.info("🔥 [{} receive data UPDATE 결과]: {}", site, updatedRows);
         
         return updatedRows;
     }
@@ -171,7 +173,7 @@ public class QueryService {
             String recv_condition, String recv_condition_check_time, String file_name, Long file_size, String codedtl) {
         ReceiveDataDto rdDto = new ReceiveDataDto();
 
-        log.info("[==InsReceiveData==]");
+        // log.info("[==InsReceiveData==]");
         // System.out.println("data_kind : " + dataKindStr);
         // System.out.println("site : " + site_cd);
         // System.out.println("data_type : " + dataType);
@@ -199,7 +201,7 @@ public class QueryService {
 
         // receiveDataRepository.save(rdDto);
         ReceiveDataDto result = receiveDataRepository.saveAndFlush(rdDto);
-        log.info("receive_data insert 결과: {}", result);
+        log.info("[{} receive_data insert 결과]: {}",site_cd, result);
     }
 
     // 문자 전송(NURI2_NRMSG_DATA) insert

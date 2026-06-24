@@ -28,8 +28,8 @@ public class SmsService {
         String callFrom = environment.getProperty(globalPrefix + "call_from", "027337365");
         String templateCode = environment.getProperty(globalPrefix + "template_code", "radar_0001");
         AppTemplateCodeDto templateCodeDto = queryService.getTemplateCode(templateCode);
-        System.out.println("templateCodeDto: "+ templateCodeDto);
         String smsTitle = templateCodeDto.getHead();
+        // log.info("템플릿: {}", templateCodeDto);
 
         //기후부 소형은 대형 로직임.
         int new_gubun = (gubun == 1 || (gubun == 2 && agencyCd.equals("MCEE"))) ? 1 : (gubun == 2 && agencyCd.equals("KMA")) ? 2 : 3;
@@ -65,21 +65,27 @@ public class SmsService {
                 recvTore++;
             }
         }
-        log.info("[Code] :::: " + recvCode);
-        log.info("[CodeDtl] :::: " + recvCodeDtl);
-        log.info("[전체 장애] :::: " + recvTota);
-        log.info("[일부 복구] :::: " + recvTore);
+        if(recvCodeDtl != ""){
+            log.info("[Code]: {}", recvCode);
+            log.info("[CodeDtl]: {}", recvCodeDtl);
+            log.info("[전체 장애]: {}", recvTota);
+            log.info("[일부 복구]: {}", recvTore);
+        }
 
         if (srDto.size() == recvTota || recvTore > 0) {
             List<SmsSendPatternDto> smsPatternDto = queryService.getSmsSendPattern(1, 1, recvCode, recvCodeDtl);
             String smsPetterns = "";
 
+            log.info("[문자메시지 패턴]", smsPatternDto);
+
             for (StationStatusDto status : siteStatusDtos) {
                 if (status.getStatus() > 0) {
                     for (SmsSendPatternDto spDto : smsPatternDto) {
+                        log.info("패턴: {}", spDto);
                         if (status.getSiteStatus().equals(spDto.getMode())) {
 
                             for (ReceiveConditionDto rcList : rcActiveList) {
+                                log.info("최종결과site: {}, 관측소상태siteCd: {}, 최종결과smsSend: {}", rcList.getSite(), status.getSiteCd(), rcList.getSmsSend());
                                 if (rcList.getSite().equals(status.getSiteCd()) && rcList.getSmsSend() == 0) {
                                     // 네트워크 장애, 복구 일때 대형,소형,공항 구분
                                     String sitePrefix = (recvCode.equals("TOTA") || recvCode.equals("TORE")) ? (gubunStr + " ") : "";
@@ -87,6 +93,8 @@ public class SmsService {
                                     smsPetterns = sitePrefix + spDto.getPattern()
                                             .replace("%SITE%", status.getSiteName())
                                             .replace("%TIME%", dateTime);
+                                } else {
+                                    log.info("[문자 전송 여부]: {}", rcList.getSmsSend() == 1 ? "전송됨" : "전송 안됨");
                                 }
                             }
                         }
@@ -147,7 +155,7 @@ public class SmsService {
                 // update
                 queryService.updateReceiveConditionSms(1, null, null, dataKindStr, "NQC");
             } else {
-                log.info("설정값에 따른 문자메시지 패턴 다시 확인 on/off");
+                log.error("설정값에 따른 문자메시지 패턴 다시 확인 on/off");
             }
         }
         

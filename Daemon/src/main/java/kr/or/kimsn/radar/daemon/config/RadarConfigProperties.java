@@ -52,6 +52,7 @@ public class RadarConfigProperties {
     // 1. Daemon 모듈 바깥(상위) 선상의 config 경로를 최우선 순위로 지정하여 파일 객체 생성
     String[] candidatePaths = {
       "/home/watcher/deamon/config/application.yml",
+      "/home/watcher/daemon/config/application.yml",
       "../config/application.yml",  // Daemon 모듈 바깥과 같은 선상의 config (가장 유력)
       "./config/application.yml",   // 최상위 루트 프로젝트 기준 실행 시 대안 경로
       "./Daemon/config/application.yml"

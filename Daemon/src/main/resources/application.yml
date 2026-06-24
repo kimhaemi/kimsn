@@ -11,6 +11,9 @@ spring:
       enabled: always
   application:
     name: radar-daemon
+  
+  profiles:
+    active: local-daemon # build.gradle이 구워낸 프로필을 작동시킴
 
   # 💡 멀티모듈 내부 클래스패스 상의 공통 데이터베이스 속성 결합선 유지
   config:
