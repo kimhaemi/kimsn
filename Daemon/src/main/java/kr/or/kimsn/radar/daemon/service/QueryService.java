@@ -69,8 +69,8 @@ public class QueryService {
         return receiveConditionRepository.findByDataKindAndDataType(dataKindStr, data_type);
     }
 
-    public List<ReceiveConditionDto> getReceiveConditionList(String dataKindStr, String data_type, String agencyCd) {
-        return receiveConditionRepository.findByDataKindAndDataTypeAndAgencyCd(dataKindStr, data_type, agencyCd);
+    public List<ReceiveConditionDto> getReceiveConditionList(String dataKindStr, String dataType, String agencyCd) {
+        return receiveConditionRepository.findByDataKindAndDataTypeAndAgencyCd(dataKindStr, dataType, agencyCd);
     }
 
     // 최종 처리 상태 - site 별

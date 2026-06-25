@@ -146,10 +146,11 @@ public class StepOneService {
                         String filePattern = environment.getProperty(pathPrefix + "FILE", "");
                         // log.info("[{} filePattern]: {}", siteStr, filePattern);
                         
+                        //대형, 공항, 기후부-소형: 4분 30초(270초), 소형 2분(120초)
                         int second = (gubun == 1 || gubun == 3 || (gubun == 2 && agencyCd.equals("MCEE"))) ? (60 * 4 + 30) : (60 * 2);
 
                         if("SAC".equals(siteCd) || "TGS".equals(siteCd) ){
-                            second = (60 * 9 + 30);
+                            second = (60 * 9 + 30); //9분 30초
                         }
                         String dateFormat = "yyyyMMddHHmm";
 
@@ -169,14 +170,19 @@ public class StepOneService {
 
                         // log.info("[{} recvConditionCheckTime]: {}", siteStr, recvConditionCheckTime);
 
+                        //임진강
+                        String yyMMddHHmm = "";
+                        if("TSB".equals(siteCd)){
+                            yyMMddHHmm = previousTime.substring(2, previousTime.length());
+                        }
+
+                        // log.info("[{} 시간 패턴]: {}", siteCd, yyMMddHHmm);
+                        
                         fileName = filePattern
                             .replace("%site%", siteCd)
                             .replace("%yyyyMMddHHmm%", previousTime)
-                            .replace("%yyMMddHHmm%", previousTime);;
-                        // if(filePattern.contains("yyyyMMddHHmmss")){
-                        //     fileName = filePattern.replace("%yyyyMMddHHmmss%", previousTime);
-                        // }
-                            
+                            .replace("%yyMMddHHmm%", yyMMddHHmm);
+                        
                         log.info("[{} 찾아야할 파일명]: {}", siteStr, fileName); 
                         try {
                             //파일 존재유무

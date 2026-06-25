@@ -6,6 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import com.jcraft.jsch.Channel;
 import com.jcraft.jsch.ChannelSftp;
+import com.jcraft.jsch.ChannelSftp.LsEntry;
 import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.Session;
@@ -82,6 +83,17 @@ public class SftpUtil {
     Vector res = null;
     try {
       res = channelSftp.ls(path + "/" + fileName);
+      if (res != null && !res.isEmpty()) {
+        for (Object obj : res) {
+            if (obj instanceof LsEntry) {
+                LsEntry entry = (LsEntry) obj;
+                // 매칭된 파일명 출력
+                log.info("[{} 찾은 파일명]: ", siteStr, entry.getFilename());
+            }
+        }
+      } else {
+          // System.out.println("패턴과 일치하는 파일이 없습니다.");
+      }
     } catch (SftpException e) {
       if (e.id == ChannelSftp.SSH_FX_NO_SUCH_FILE) {
         return false;

@@ -81,11 +81,10 @@ public class SmsService {
             for (StationStatusDto status : siteStatusDtos) {
                 if (status.getStatus() > 0) {
                     for (SmsSendPatternDto spDto : smsPatternDto) {
-                        log.info("패턴: {}", spDto);
+                        // log.info("패턴: {}", spDto);
                         if (status.getSiteStatus().equals(spDto.getMode())) {
 
                             for (ReceiveConditionDto rcList : rcActiveList) {
-                                log.info("최종결과site: {}, 관측소상태siteCd: {}, 최종결과smsSend: {}", rcList.getSite(), status.getSiteCd(), rcList.getSmsSend());
                                 if (rcList.getSite().equals(status.getSiteCd()) && rcList.getSmsSend() == 0) {
                                     // 네트워크 장애, 복구 일때 대형,소형,공항 구분
                                     String sitePrefix = (recvCode.equals("TOTA") || recvCode.equals("TORE")) ? (gubunStr + " ") : "";
@@ -94,7 +93,7 @@ public class SmsService {
                                             .replace("%SITE%", status.getSiteName())
                                             .replace("%TIME%", dateTime);
                                 } else {
-                                    log.info("[문자 전송 여부]: {}", rcList.getSmsSend() == 1 ? "전송됨" : "전송 안됨");
+                                    // log.info("[문자 전송 여부]: {}", rcList.getSmsSend() == 1 ? "이미 전송됨" : "전송 안됨");
                                 }
                             }
                         }
@@ -134,14 +133,15 @@ public class SmsService {
                             if (!callTo.equals("") && callTo.matches("[0-9]+")) {
                                 queryService.intNuri2Save(resDate, callTo, callFrom, templateCode, smsTitle, titleAndText);
                             } else {
-                                log.info("[수신번호 확인] : " + callTo);
+                                log.error("[수신번호 확인]: {}", callTo);
                             }
                         }
                     }
                 }
 
-                log.info("[문자 전송 여부 update]");
+                log.info("[최종 상태 테이블 문자 전송 여부 update]");
                 int second = 60 * 4 + 30;
+
                 String previousTime = queryService.getPreviousTime(second);
                 log.info("감시 해야할 시간 이전: " + previousTime);
 
@@ -155,7 +155,7 @@ public class SmsService {
                 // update
                 queryService.updateReceiveConditionSms(1, null, null, dataKindStr, "NQC");
             } else {
-                log.error("설정값에 따른 문자메시지 패턴 다시 확인 on/off");
+                log.error("설정값에 따른 문자메시지 패턴 다시 확인 on/off 또는 전체장애, 일부복구 문자패턴 없음.");
             }
         }
         
