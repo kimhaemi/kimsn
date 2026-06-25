@@ -19,6 +19,8 @@ public interface StationStatusRepository extends JpaRepository<StationStatusDto,
 
     List<StationStatusDto> findByGubun(int gubun);
 
+    List<StationStatusDto> findByGubunAndAgencyCd(int gubun, String agencyCd);
+
     @Query(
         nativeQuery = true,
         value=

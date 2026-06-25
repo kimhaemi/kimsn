@@ -32,12 +32,12 @@ public class SmsService {
         // log.info("템플릿: {}", templateCodeDto);
 
         //기후부 소형은 대형 로직임.
-        int new_gubun = (gubun == 1 || (gubun == 2 && agencyCd.equals("MCEE"))) ? 1 : (gubun == 2 && agencyCd.equals("KMA")) ? 2 : 3;
+//        int new_gubun = (gubun == 1 || (gubun == 2 && agencyCd.equals("MCEE"))) ? 1 : (gubun == 2 && agencyCd.equals("KMA")) ? 2 : 3;
 
         // 전 사이트 장애/복구 메시지는 1번씩만
-        List<ReceiveConditionDto> rcDtoAll = queryService.getReceiveConditionList(dataKindStr, "NQC");
+        List<ReceiveConditionDto> rcDtoAll = queryService.getReceiveConditionList(dataKindStr, "NQC", agencyCd);
         // 지점별 운영상태가 정상일 때만
-        List<StationStatusDto> siteStatusDtos = queryService.getStationStatusGubun(new_gubun);
+        List<StationStatusDto> siteStatusDtos = queryService.findByGubunAndAgencyCd(gubun, agencyCd);
 
         String dateTime = TimeUtil.getCurrentKstString();
 
@@ -183,6 +183,9 @@ public class SmsService {
                     int smsSend = rcDto.getSmsSend();
 
                     log.info("[code] : {} | [code-dtl] : {}", code, codedtl);
+
+                    //기후부 소형은 대형 로직임.
+                    int new_gubun = (gubun == 1 || (gubun == 2 && agencyCd.equals("MCEE"))) ? 1 : (gubun == 2 && agencyCd.equals("KMA")) ? 2 : 3;
 
                     // 경고 기준 (횟수 - criterion)
                     ReceiveConditionCriteriaDto rccDto = queryService.getReceiveConditionCriteria(new_gubun, code, codedtl);

@@ -5,19 +5,19 @@
 # 모듈작동이 되지 않을 수 있습니다.
 #################################################
 #JAVA_HOME=/usr/lib/jvm/java-1.8.0-openjdk-1.8.0.342.b07-2.el8_6.x86_64
-RADAR_HOME=/home/watcher/deamon/RDR
-RADAR_NAME_JAR=RDR.jar
-RADAR_DAEMON_TYPE=-DDAEMON_TYPE=KMA_RDR
-RADAR_TITLE=RDR
+RADAR_HOME=/home/watcher/deamon/SDR_B
+RADAR_NAME_JAR=SDR_B.jar
+RADAR_DAEMON_TYPE=-DDAEMON_TYPE=MCEE_SDR
+RADAR_TITLE=SDR_B
 ##################
 # 사용방법
 ##################
 # # 시작
-#./RDR_process.sh start
+#./SDR_B_process.sh start
 # # 종료
-#./RDR_process.sh stop
+#./SDR_B_process.sh stop
 # # 프로세스 확인
-#./RDR_process.sh list
+#./SDR_B_process.sh list
 ##################################################
 export LANG=ko_KR.utf8
 #
@@ -26,7 +26,7 @@ export LANG=ko_KR.utf8
 # linux
 
 if [ $# == 0 ]
-        then echo "Usage: RDR_process.sh [start | stop | list | version]"; exit;
+        then echo "Usage: SDR_B_process.sh [start | stop | list | version]"; exit;
 fi
 
 RADAR_HOME_LIST=`ls -al  | grep '$RADAR_TITLE' | awk '{print $9}'`

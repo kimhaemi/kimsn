@@ -147,19 +147,22 @@ public class StepOneService {
                         // log.info("[{} filePattern]: {}", siteStr, filePattern);
                         
                         int second = (gubun == 1 || gubun == 3 || (gubun == 2 && agencyCd.equals("MCEE"))) ? (60 * 4 + 30) : (60 * 2);
+
+                        if("SAC".equals(siteCd) || "TGS".equals(siteCd) ){
+                            second = (60 * 9 + 30);
+                        }
                         String dateFormat = "yyyyMMddHHmm";
-                        // //삼척, 통고산 10분 전 시간 추출
-                        // if(){
-                        //     second
-                        // }
-                        
+
                         String previousTime = timeZone.equals("UTC") 
                             ? TimeUtil.getPreviousTimePatternUTC(second, dateFormat) 
                             : TimeUtil.getPreviousTimePattern(second, dateFormat);
-                        
+
+                        log.info("[{} previousTime]: {}", siteStr, previousTime);
+                        //대형, 공항, 기후부-소형
                         if (gubun == 1 || gubun == 3 || (gubun == 2 && agencyCd.equals("MCEE"))) {
                             previousTime = TimeUtil.getAdjustedPreviousTime(previousTime);
                         }
+
                         log.info("[{} timeZone]: {}: {}", siteStr, timeZone, previousTime);
 
                         recvConditionCheckTime = previousTime+ "00";

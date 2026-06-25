@@ -52,18 +52,21 @@ public class Scheduler implements SchedulingConfigurer { // 💡 무중단 동�
             },
             triggerContext -> {
                 // 1. 기동 시점 및 런타임 환경변수 실시간 상시 정제
-                String rawDaemonType = System.getProperty("daemonLogName");
-                if (rawDaemonType == null || "LOCAL_CORE".equals(rawDaemonType) || rawDaemonType.trim().isEmpty()) {
-                    rawDaemonType = System.getProperty("DAEMON_TYPE");
-                }
+                String rawDaemonType = System.getProperty("DAEMON_TYPE");
+
+                // 인프라 식별자 최종 실종 시 데이터 오염 방지를 위해 프로세스 강제 커널 다운 가드 유지
                 if (rawDaemonType == null || rawDaemonType.trim().isEmpty()) {
-                    rawDaemonType = "KMA_RDR";
+                    log.error("[🚨 치명적 런타임 오류] 데몬 구동 시스템 식별자(DAEMON_TYPE) 유실로 프로세스를 전체 강제 종료합니다.");
+                    System.exit(1);
                 }
+
                 String daemonType = rawDaemonType.toUpperCase().replace("-", "_").trim();
 
                 // 2. ⭐ [무중단 변경의 심장] YmlRefreshManager가 갱신해 준 최신 메모리에서 크론식을 실시간 스캔!
                 String cronPath = "radar.config.paths." + daemonType + ".cron-expression";
                 String cronExpression = environment.getProperty(cronPath, "30 * * * * *");
+
+//                log.info("{} crontab: {}", rawDaemonType, cronExpression);
 
                 // 3. 다음 수집 주행 스케줄 타임라인을 동적으로 재계산하여 이식
                 CronTrigger trigger = new CronTrigger(cronExpression);
@@ -76,11 +79,8 @@ public class Scheduler implements SchedulingConfigurer { // 💡 무중단 동�
      * 비즈니스 파이프라인 (기존 @Scheduled, @Async 구조 걷어내고 순수 자바 멀티스레드 안정 가동)
      */
     public void cronJobSch() throws InterruptedException {
-        String rawDaemonType = System.getProperty("daemonLogName");
-        if (rawDaemonType == null || "LOCAL_CORE".equals(rawDaemonType) || rawDaemonType.trim().isEmpty()) {
-            rawDaemonType = System.getProperty("DAEMON_TYPE");
-        }
-        
+        String rawDaemonType = System.getProperty("DAEMON_TYPE");
+
         // 인프라 식별자 최종 실종 시 데이터 오염 방지를 위해 프로세스 강제 커널 다운 가드 유지
         if (rawDaemonType == null || rawDaemonType.trim().isEmpty()) {
             log.error("[🚨 치명적 런타임 오류] 데몬 구동 시스템 식별자(DAEMON_TYPE) 유실로 프로세스를 전체 강제 종료합니다.");

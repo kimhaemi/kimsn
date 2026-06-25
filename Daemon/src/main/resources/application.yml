@@ -20,7 +20,6 @@ spring:
     use-legacy-processing: true
     import:
       - "optional:classpath*:common-data.yml"
-
   data:
     jpa:
       repositories:

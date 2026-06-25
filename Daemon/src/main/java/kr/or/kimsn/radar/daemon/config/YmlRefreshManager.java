@@ -1,5 +1,6 @@
 package kr.or.kimsn.radar.daemon.config;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.env.YamlPropertySourceLoader;
 import org.springframework.core.env.ConfigurableEnvironment;
 import org.springframework.core.env.PropertySource;
@@ -14,6 +15,7 @@ import java.io.IOException;
 import java.nio.file.*;
 import java.util.List;
 
+@Slf4j
 @Component
 public class YmlRefreshManager {
 
@@ -30,11 +32,10 @@ public class YmlRefreshManager {
   public void startWatching() {
     // 💡 [방어선 1] 다중 대안 경로 추적 스캔 가동 (Scheduler 구조와 정합성 일치)
     String[] candidatePaths = {
-      "/home/watcher/deamon/config/application.yml",
-      "/home/watcher/daemon/config/application.yml",
-      "../config/application.yml",
-      "./config/application.yml",
-      "./Daemon/config/application.yml"
+        "/home/watcher/deamon/config/application.yml",
+        "../config/application.yml",
+        "./config/application.yml",
+        "./Daemon/config/application.yml"
     };
 
     File ymlFile = null;

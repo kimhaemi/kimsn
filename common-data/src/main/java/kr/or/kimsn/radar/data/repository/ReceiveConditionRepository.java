@@ -18,6 +18,7 @@ public interface ReceiveConditionRepository extends JpaRepository<ReceiveConditi
     List<ReceiveConditionDto> findByDataKindAndDataType(String dataKind, String dataType);
 
     ReceiveConditionDto findByDataKindAndDataTypeAndSite(String dataKind, String dataType, String Site);
+    List<ReceiveConditionDto> findByDataKindAndDataTypeAndAgencyCd(String dataKind, String dataType, String agencyCd);
 
     @Query(nativeQuery = true, value = "update watchdog.receive_condition set\n" +
         // " apply_time = DATE_FORMAT(:apply_time, '%Y-%m-%d %H:%i:%S'), \n" +

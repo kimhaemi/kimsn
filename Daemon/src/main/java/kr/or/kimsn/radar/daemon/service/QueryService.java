@@ -69,6 +69,10 @@ public class QueryService {
         return receiveConditionRepository.findByDataKindAndDataType(dataKindStr, data_type);
     }
 
+    public List<ReceiveConditionDto> getReceiveConditionList(String dataKindStr, String data_type, String agencyCd) {
+        return receiveConditionRepository.findByDataKindAndDataTypeAndAgencyCd(dataKindStr, data_type, agencyCd);
+    }
+
     // 최종 처리 상태 - site 별
     public ReceiveConditionDto getReceiveCondition(String dataKindStr, String data_type, String site_cd) {
         return receiveConditionRepository.findByDataKindAndDataTypeAndSite(dataKindStr, data_type, site_cd);
@@ -217,6 +221,10 @@ public class QueryService {
     // 지점별 운영상태
     public List<StationStatusDto> getStationStatusGubun(int gubun) {
         return stationStatusRepository.findByGubun(gubun);
+    }
+
+    public List<StationStatusDto> findByGubunAndAgencyCd(int gubun, String agencyCd) {
+        return stationStatusRepository.findByGubunAndAgencyCd(gubun, agencyCd);
     }
 
     // 지점별 운영상태
