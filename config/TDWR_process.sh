@@ -29,7 +29,7 @@ if [ $# == 0 ]
         then echo "Usage: TDWR_process.sh [start | stop | list | version]"; exit;
 fi
 
-RADAR_HOME_LIST=`ls -al  | grep '$RADAR_TITLE' | awk '{print $9}'`
+RADAR_HOME_LIST=`ls -al  | grep "$RADAR_TITLE" | awk '{print $9}'`
 
 case "$1" in
 
