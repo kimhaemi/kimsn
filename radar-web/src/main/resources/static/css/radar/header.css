@@ -355,16 +355,16 @@ input, select {
 .alertMap .radar { 
   width: 60px;
   height: 60px;
-  z-index: 40;
+  /*z-index: 10;*/
   position: absolute;
 }
-.alertMap .RETR {background:url('../../images/watchcon/radar_ordi.png') no-repeat;}
-.alertMap .TORE {background:url('../../images/watchcon/radar_ordi.png') no-repeat;}
-.alertMap .ORDI {background:url('../../images/watchcon/radar_ordi.png') no-repeat;}
-.alertMap .NOTI {background:url('../../images/watchcon/radar_noti.png') no-repeat;}
-.alertMap .WARN {background:url('../../images/watchcon/radar_warn.png') no-repeat;}
-.alertMap .TOTA {background:url('../../images/watchcon/status_TOTA.png') no-repeat;}
-.alertMap .MRO {background:url('../../images/watchcon/status_MRO.png') no-repeat;}
+.alertMap .RETR {background:url('../../images/watchcon/radar_ordi.png') no-repeat; z-index: -1 !important;}
+.alertMap .TORE {background:url('../../images/watchcon/radar_ordi.png') no-repeat; z-index: -1 !important;}
+.alertMap .ORDI {background:url('../../images/watchcon/radar_ordi.png') no-repeat; z-index: -1 !important;}
+.alertMap .NOTI {background:url('../../images/watchcon/radar_noti.png') no-repeat; z-index: -1 !important;}
+.alertMap .WARN {background:url('../../images/watchcon/radar_warn.png') no-repeat; z-index: -1 !important;}
+.alertMap .TOTA {background:url('../../images/watchcon/status_TOTA.png') no-repeat; z-index: -1 !important;}
+.alertMap .MRO {background:url('../../images/watchcon/status_MRO.png') no-repeat; z-index: -1 !important;}
 /* 대형 */
 /*.alertMap .radar.KWK {top:170px; left:250px; background-size: 70% 70%;}*/
 /*.alertMap .radar.BRI {top:100px; left:25px; background-size: 70% 70%;}*/
@@ -408,9 +408,45 @@ input, select {
 /*.alertMap .radar. {top:170px; left:250px; background-size: 35% 35%;} !*울산*!*/
 /*.alertMap .radar. {top:170px; left:250px; background-size: 35% 35%;} !*청주*!*/
 
-.KWKYIT {position:absolute; top:13px; left:43px;width:100%; text-align: center; background: url("../../images/tbl_head_bar1.png") repeat-x;background-position: -1px; }
-.large {position:absolute; top:45px; left:-10px;width:100%; text-align: center; background: url("../../images/tbl_head_bar1.png") repeat-x;background-position: -1px; }
-.small {position:absolute; top:25px; left:-20px;width:100%; text-align: center; background: url("../../images/tbl_head_bar1.png") repeat-x;background-position: -1px; }
+.KWKYIT {position:absolute; top:13px; left:43px;width:100%; text-align: center; background: url("../../images/tbl_head_bar1.png") repeat-x 1px top;background-position: -1px; }
+.large {position:absolute; top:45px; left:35%;width:100%; text-align: center; background: url("../../images/tbl_head_bar1.png") repeat-x 1px top;background-position: -1px; }
+.small {position:absolute; top:25px; left:30%;width:100%; text-align: center; background: url("../../images/tbl_head_bar1.png") repeat-x 1px top;background-position: -1px; }
+
+/* ==========================================
+   2. 원본 수정 없이 문제를 해결하는 덮어쓰기 코드 (최종 수정본)
+   ========================================== */
+/* 겹침을 유발하는 부모 레이더 박스의 z-index 그룹 설정을 강제로 풉니다 */
+.alertMap .radar {
+	z-index: auto !important; /* 부모의 층 제약을 해제하여 자식들이 탈출할 수 있게 만듭니다 */
+}
+
+/* [최상위 배치] 글자 박스들을 이미지와 지도 전체보다 무조건 앞(위쪽)으로 끄집어냅니다 */
+.radar .large,
+.radar .small {
+	z-index: 999 !important; /* 어떤 레이더 이미지보다 무조건 맨 위로 올라옵니다 */
+
+	/* [너비 복구] 주석을 해제하고 글자 길이에 맞춰 배경 바 크기가 자동으로 맞춰지도록 설정 */
+	width: max-content !important;
+	min-width: 50px !important; /* 2글자 지역명이 너무 쪼그라들지 않게 최소 크기 지정 */
+	padding: 0 6px !important;  /* 글자 좌우에 자연스러운 여백 제공 */
+
+	/* [정중앙 정렬 공식] 원본의 치우친 left 값을 완벽하게 무력화하고 이미지 중앙에 수직 정렬 */
+	/*left: 30% !important;*/
+	transform: translateX(-50%);
+}
+
+/* ==========================================
+   3. 텍스트 시인성 확보를 위한 링크 스타일
+   ========================================== */
+.radar .KWKYIT a,
+.radar .large a,
+.radar .small a {
+	text-decoration: none;   /* 밑줄 제거 */
+	font-size: 11px;         /* 폰트가 너무 커서 겹치지 않도록 살짝 조절 */
+	display: block;          /* 클릭 영역을 박스 전체로 확장 */
+	line-height: 1.5;        /* 텍스트 줄간격 안정화 */
+}
+
 
 .alertMap .lgt{
 	width:48px;
@@ -420,6 +456,7 @@ input, select {
 	top:300px;
 	left:20px;
 }
+
 
 .alertTbls {
 	/* width: 500px; */

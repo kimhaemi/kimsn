@@ -1,6 +1,6 @@
 # server
 server:
-  port: 8080
+  port: 80
 
 # environment (dev, prod)
 #app:

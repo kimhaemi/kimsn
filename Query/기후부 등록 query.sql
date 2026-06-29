@@ -4,9 +4,11 @@ SHOW PROCESSLIST;
 SELECT * 
 FROM information_schema.innodb_trx;
 
-KILL 557;
+KILL 3017;
 
 commit;
+
+ALTER TABLE watchdog.receive_data ADD INDEX idx_recv_site_time (site, data_time, recv_condition);
 
 ALTER TABLE `station_rdr` ADD `status` tinyint DEFAULT 1 COMMENT '사용 상태';
 

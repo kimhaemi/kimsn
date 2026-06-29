@@ -72,6 +72,8 @@ public class SmsService {
             log.info("[일부 복구]: {}", recvTore);
         }
 
+        String siteTitle = agencyCd == "KMA" ? "기상청A" : "기상청B";
+
         if (srDto.size() == recvTota || recvTore > 0) {
             List<SmsSendPatternDto> smsPatternDto = queryService.getSmsSendPattern(1, 1, recvCode, recvCodeDtl);
             String smsPetterns = "";
@@ -82,13 +84,14 @@ public class SmsService {
                 if (status.getStatus() > 0) {
                     for (SmsSendPatternDto spDto : smsPatternDto) {
                         // log.info("패턴: {}", spDto);
+                        //RUN
                         if (status.getSiteStatus().equals(spDto.getMode())) {
 
                             for (ReceiveConditionDto rcList : rcActiveList) {
                                 if (rcList.getSite().equals(status.getSiteCd()) && rcList.getSmsSend() == 0) {
                                     // 네트워크 장애, 복구 일때 대형,소형,공항 구분
-                                    String sitePrefix = (recvCode.equals("TOTA") || recvCode.equals("TORE")) ? (gubunStr + " ") : "";
-                                    
+                                    String sitePrefix = (recvCode.equals("TOTA") || recvCode.equals("TORE")) ? (siteTitle + " " + gubunStr + " ") : "";
+
                                     smsPetterns = sitePrefix + spDto.getPattern()
                                             .replace("%SITE%", status.getSiteName())
                                             .replace("%TIME%", dateTime);
@@ -112,7 +115,7 @@ public class SmsService {
                 // if (rcList.getSms_send() == 0) {
 
                 // site 수신그룹 담당자에게 문자 전송
-                List<SmsSendMemberDto> smsMembersDto = queryService.getSmsSendMemberList(dataKindStr, null);
+                List<SmsSendMemberDto> smsMembersDto = queryService.getSmsSendMemberList(dataKindStr, null, agencyCd);
                 // log.info("[담당자] : " + smsDto);
 
                 for (SmsSendMemberDto dto : smsMembersDto) {
@@ -254,7 +257,7 @@ public class SmsService {
                             // 최종 결과의 문자 전송 상태가 0일때만 문자 전송
                             if (smsSend == 0) {
                                 // site 수신그룹 담당자에게 문자 전송
-                                List<SmsSendMemberDto> smsDto = queryService.getSmsSendMemberList(dataKindStr, site_cd);
+                                List<SmsSendMemberDto> smsDto = queryService.getSmsSendMemberList(dataKindStr, site_cd, agencyCd);
                                 // log.info("[담당자] : " + smsDto);
 
                                 for (SmsSendMemberDto dto : smsDto) {

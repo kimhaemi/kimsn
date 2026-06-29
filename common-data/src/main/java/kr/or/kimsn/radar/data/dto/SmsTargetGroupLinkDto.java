@@ -25,4 +25,7 @@ public class SmsTargetGroupLinkDto {
     private String dataType;
     @Id
     private String group_id;
+
+    @Column(name = "agency_cd")
+    private String agencyCd;
 }

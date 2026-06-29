@@ -117,6 +117,10 @@ public class QueryService {
         return smsSendMemberRepositroy.getSmsSendMemberList(data_kind, site);
     }
 
+    public List<SmsSendMemberDto> getSmsSendMemberList(String data_kind, String site, String agencyCd) {
+        return smsSendMemberRepositroy.getSmsSendMemberList(data_kind, site, agencyCd);
+    }
+
     // app sequence
     public Long getAppContentNextval() {
         return smsSendRepository.getAppContentNextval();
