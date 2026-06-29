@@ -57,7 +57,7 @@ public interface SmsSendMemberRepositroy extends JpaRepository<SmsSendMemberDto,
         "and stgl.data_type = 'NQC'\n" +
         "and stm.activation = 1\n" +
         "and stgl.data_kind = :data_kind -- param\n" +
-        "and stg.agency_cd = :agencyCd -- param\n" +
+        "and stgl.agency_cd = :agencyCd -- param\n" +
         "and (:site is null or stgl.site = :site) -- param\n" +
         "order by stm.name asc\n")
         // site 수신그룹 담당자

@@ -31,7 +31,7 @@ public interface SmsTargetGroupLinkListRepository extends JpaRepository<SmsTarge
             "and T1.data_type = T3.data_type\n" +
             "and T1.group_id = :id \n" +
             "order by \n" +
-            "T1.data_kind asc,\n" +
+            "T2.agency_cd, T2.gubun asc, T2.sort_order, T1.data_kind asc, \n" +
             "T2.name_kr, T3.data_name")
     List<SmsTargetGroupLinkListDto> getTableJoinAll(@Param("id") Long id);
 }

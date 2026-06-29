@@ -4,8 +4,8 @@ Configutation:
  
   Properties:
     Property:
-      name: log-path
-      value: "logs"
+      - name: log-path
+        value: "/home/watcher/radarWebsite/logs"
  
   Appenders:
     RollingFile:

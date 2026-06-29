@@ -71,7 +71,7 @@ case "$1" in
                         else
                         {
                                 # cd $RADAR_HOME/$2
-                                nohup java $RADAR_DAEMON_TYPE -jar $RADAR_HOME/$RADAR_NAME_JAR $RADAR_YML > /dev/null 2>&1 &
+                                nohup java $RADAR_DAEMON_TYPE -jar $RADAR_HOME/$RADAR_NAME_JAR > /dev/null 2>&1 &
                                 echo "$RADAR_TITLE Process Start-up."
                         }
                         fi
