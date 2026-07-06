@@ -5,7 +5,7 @@ Configuration:
   Properties:
     Property:
       - name: log-path
-        value: "/home/watcher/deamon/${sys:daemonLogName:-common}/logs"
+        value: "logs"
       - name: default-log-name
         value: "radarCommon"
 
@@ -15,8 +15,8 @@ Configuration:
 
     RollingFile:
       - name: RollingFile_Appender
-        fileName: "{log-path}/${sys:daemonLogName:-radarCommon}.log"
-        filePattern: "${log-path}/${sys:daemonLogName:-radarCommon}_%d{yyyy-MM-dd}-%i.log"
+        fileName: "./${log-path}/${sys:daemonLogName:-radarCommon}.log"
+        filePattern: "./${log-path}/${sys:daemonLogName:-radarCommon}_%d{yyyy-MM-dd}-%i.log"
         immediateFlush: true # 💡 파일 실시간 디스크 쓰기 보장
         PatternLayout:
           Charset: "UTF-8"

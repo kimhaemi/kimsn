@@ -13,7 +13,6 @@ RADAR_LOGS=$RADAR_HOME/logs
 
 # 로그 디렉토리가 없으면 부팅 시점에 자동 생성
 mkdir -p $RADAR_LOGS
-
 ##################
 # 사용방법
 ##################

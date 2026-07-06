@@ -1,17 +1,17 @@
 Configutation:
   name: Default
   status: info
- 
+
   Properties:
     Property:
-      - name: log-path
-        value: "/home/watcher/radarWebsite/logs"
- 
+      name: log-path
+      value: "logs"
+
   Appenders:
     RollingFile:
       - name: RollingFile_Appender
-        fileName: ${log-path}/RADAR_WEB.log
-        filePattern: "${log-path}/RADAR_WEB_%d{yyyy-MM-dd}-%i.log"
+        fileName: "./${log-path}/RADAR_WEB.log"
+        filePattern: "./${log-path}/RADAR_WEB_%d{yyyy-MM-dd}-%i.log"
         PatternLayout:
           pattern: "%style{%d{yyyy-MM-dd HH:mm:ss.SSS}}{cyan} %highlight{[%-5p]}{FATAL=bg_red,
             ERROR=red, INFO=green, DEBUG=blue, TRACE=bg_yellow} %m%n"
@@ -24,6 +24,7 @@ Configutation:
         DefaultRollOverStrategy:
           max: 10
           Delete:
+            basePath: "${log-path}"
             basePath: "./${log-path}"
             maxDepth: "1"
             IfLastModified:
@@ -47,3 +48,4 @@ Configutation:
         level: info
         AppenderRef:
           - ref: RollingFile_Appender
+
