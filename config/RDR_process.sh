@@ -9,6 +9,10 @@ RADAR_HOME=/home/watcher/deamon/RDR
 RADAR_NAME_JAR=RDR.jar
 RADAR_DAEMON_TYPE=-DDAEMON_TYPE=KMA_RDR
 RADAR_TITLE=RDR
+RADAR_LOGS=$RADAR_HOME/logs
+
+# 로그 디렉토리가 없으면 부팅 시점에 자동 생성
+mkdir -p $RADAR_LOGS
 ##################
 # 사용방법
 ##################
@@ -53,7 +57,7 @@ case "$1" in
                                 else
                                 {
                                         cd $RADAR_HOME
-                                        nohup java $RADAR_DAEMON_TYPE -jar $RADAR_HOME/$RADAR_NAME_JAR > /dev/null 2>&1 &
+                                        nohup java $RADAR_DAEMON_TYPE -jar $RADAR_HOME/$RADAR_NAME_JAR >> "$RADAR_LOGS/$RADAR_TITLE.log" 2>&1 &
                                         echo "$radar_list $RADAR_TITLE Process Start-up."
                                 }
                                 fi
@@ -71,7 +75,7 @@ case "$1" in
                         else
                         {
                                 # cd $RADAR_HOME/$2
-                                nohup java $RADAR_DAEMON_TYPE -jar $RADAR_HOME/$RADAR_NAME_JAR > /dev/null 2>&1 &
+                                nohup java $RADAR_DAEMON_TYPE -jar $RADAR_HOME/$RADAR_NAME_JAR >> "$RADAR_LOGS/$RADAR_TITLE.log" 2>&1 &
                                 echo "$RADAR_TITLE Process Start-up."
                         }
                         fi

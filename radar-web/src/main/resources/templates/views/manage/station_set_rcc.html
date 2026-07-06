@@ -88,10 +88,10 @@
                 <th:block th:each="list, listState : ${list.criteriaList}">
                 <tr class="subThead">
                     <td colspan="2" th:if="${list.code == 'ORDI' && list.gubun == 1}">
-                        대형 레이더
+                        기상청_A 대형, 기상청_B 대형, 기상청_B 소형 레이더
                     </td>
                     <td colspan="2" th:if="${list.code == 'ORDI' && list.gubun == 2}">
-                        소형 레이더
+                        기상청_A 소형 레이더
                     </td>
                     <td colspan="2" th:if="${list.code == 'ORDI' && list.gubun == 3}">
                         공항 레이더
