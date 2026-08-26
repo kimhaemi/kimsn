@@ -1,0 +1,12 @@
+REM REM은 주석 입니다. 실행되지 않습니다.
+
+REM 서비스 중지
+NET STOP 00_Nuri2_MASTER
+
+SET NURI2_HOME=D:/NURI2/
+SET NURI2_SERVICE_NAME=00_Nuri2_MASTER
+REM SET NURI2_SERVICE_NAME=Nuri2
+
+"%NURI2_HOME%\JavaService32.exe" -uninstall "%NURI2_SERVICE_NAME%"
+REM "%NURI2_HOME%\JavaService64.exe" -uninstall "%NURI2_SERVICE_NAME%"
+

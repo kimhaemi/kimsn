@@ -1,0 +1,354 @@
+# * 모듈 업데이트 *
+# - jar 파일만 교체, nuri2.conf 일부만 수정
+# - 메시지 규격이 바뀌지는 않음
+────────────────────────────────────────────────────────────
+
+### Nuri2 v3.1.0 (Released 2026.04.02) ###
+1. Oracle DB에서 ORA-00060 교착 상태(deadlock) 발생
+ - DELETE 실행 중 다른 세션과의 행 잠금 충돌현상, 개선
+2. DB Pool 수정
+        DriverManagerConnectionFactory -> DriverConnectionFactory + Driver.connect() 직접 호출
+3. Nuri2Config 설정 파싱 헬퍼 리팩토링
+        ConfigHelper.java 신규(설정 파싱 헬퍼 6개 메서드)+Nuri2Config.java config.get() 120->6곳 치환, DB 정합성 검증(validateDbConfig), sample 미수정 감지(validateNoKorean), Properties.load UTF-8 전환 + toKor() 제거
+4. log4j level 속성 수정
+        <Configuration status="ERROR" shutdownHook="disable">
+        status="INFO" -> status="ERROR" -> Log4j 내부 에러만 출력
+5. Nuri2SenderFast: cleanupResources() 수정
+        connFirst가 null(finally에서 이미 반환)일 때 새 커넥션으로 MSG_STATE 3->1 UPDATE 폴백 추가.
+        Broken pipe 등 예외 시 메시지 상태가 3에 고착되는 버그 수정
+
+
+### Nuri2 v3.0.0 (Released 2026.03.19) ###
+1. 주요 변경사항
+ - 배포명 변경 :  nuri2_v2.3.0  -> nuri2-v3.0.0
+ - LICENSES 문서 추가
+ - GroupChecker 6세대 로직 개선
+ - [성능개선] 전송 속도 효율 개선
+ - DB Pool 7세대 로직 개선 및 중앙 디스패치 클래스 추가
+ - 중복 키 체크 자료구조 변경, MMS 전송 메모리 효율 개선
+ - fetchSize 사용 방식 변경에 따라 MySQL JDBC 옵션을 추가(# useCursorFetch=true #  MySQL 전용.)
+ - 기타 코드 개선
+ - Limit Time Zone (전송 제한 시간대 설정) 로직 안정화
+2. DB2 문제 해결
+  - 국세청 정보 IBM java 번들 1.8.0.361 / DB2 11.5
+  - 검사주기 변경
+        poolConfig.setMinEvictableIdleDuration(Duration.ofMinutes(10));       // 10분 유휴 시 제거 대상
+        poolConfig.setSoftMinEvictableIdleDuration(Duration.ofMinutes(5));   // 초과분 5분 후 제거
+        poolConfig.setTimeBetweenEvictionRuns(Duration.ofMinutes(30));        // 검사 주기 30분
+3. 이중화 설정 변경
+   - DB2 NRMSG_RSLT Table Schema 수정: DUPLEX_KEY DECIMAL(11,0) NOT NULL GENERATED ALWAYS AS IDENTITY (START WITH 1 INCREMENT BY 1 CYCLE) ▶ DUPLEX_KEY DECIMAL(11,0)   NOT NULL
+   - duplex_switch가 ON일 때 nuri2_master.chk / nuri2_slave.chk로 분리되어 심볼릭 링크 환경에서 각각 독립 실행되게 하여 이중화를 사용하게 함.
+4. Altibase 6.1 이하 이슈 개선
+   - JDBC 버전 7.1.0.10.2 -> 6.1.1.4.2 로 다운그레이드하여 배포
+   - JDBC 6.1.1.4.2 는 Altibase 7.1.x, 7.3.x (CMP) 호환 불가
+   - 호환을 위해 쿼리 변경 : CREATE SEQUENCE ...
+5. 참고용_nuri2_launcher.sh 수정
+       - Sender : 10개, Receiver : 10개 설정시 최대 메모리 512m로 변경
+       * -Xms700m -Xmx1250m => -Xms512m -Xmx512m
+6. db_limit_fast 기본 값 변경
+        1000 -> 2000
+7. API 변경 및 추가
+         Altibase : 7.1.0.10.2 -> 6.1.1.4.2 다운그레이드 후 변경 금지
+         Db2 : 12.1.2.0 -> 12.1.0.0 다운그레이드 후 변경 금지
+         lombok : 1.18.40 -> 1.18.44 변경
+         log4j-api : 2.25.1 -> 2.25.3 변경
+         log4j-core : 2.25.1 -> 2.25.3 변경
+         log4j-slf4j-impl : 2.25.1 -> 2.25.3 변경
+         commons-codec : 1.19.0 -> 1.21.0 변경
+         commons-dbcp2 : 2.13.0 -> 2.14.0 변경
+         commons-pool2 : 2.12.1 -> 2.13.1 변경
+         mysql-connector-j : 9.4.0 -> 9.6.0 변경
+         mariadb-java-client : 3.5.6 -> 3.5.7 변경
+         postgresql : 42.7.8 -> 42.7.10 변경
+
+
+### Nuri2 2.1.1 (Released 2025.09.26) ###
+1. DB Pool 5세대 로직은 그대로 배포, 국세청(DB2)은 5세대 로직이 안되어 1세대로 되게 옵션 설정
+        국세청는 아래와 같이
+        Staging Server, Production Server 가 환경이 달라 5세대 연결이 실패 함
+        따라서 초기버전으로 배포하여 운영되게 지원
+        2-1 검증서버(214)   > 검증DB 연결 성공
+        2-2 운영서버(228,229) > 검증DB 연결 실패
+        2-3 운영서버(228,229) > 운영DB 연결 실패
+2. 2번 사항으로 nuri2.conf 옵션 추가
+       1) nuri2.conf 옵션 추가 : 배포시 함께 배포
+       ################################################################################################
+       ##  DB Pool 세대 선택 옵션 ( 기본 : 5 )
+       ##  1 : 1세대(1st)
+       ##  5 : 5세대(5th)
+       #db_pool_generation = 5
+
+
+### Nuri2 2.1.0 (Released 2025.09.01) ###
+1. 마포구 전용으로 패치(2025.08.21) : 2025.08.22 구청 작업
+    * ORACLE 9i 에서 ojdbc8 접속 안되어 10.2.0.5.0 와 11.2.0.4 로 각각 변경 패치
+    * 11.2.0.4 로 되는 것 확인되어 11버전과 23버전으로 분리하여 배포
+    * 마포구는 버전업 시 꼭 확인할 것
+2. DB Pool 5세대 로직은 그대로 배포, 국세청(DB2)은 5세대 로직이 안되어 1세대로 되게 옵션 설정
+        국세청는 아래와 같이
+        Staging Server, Production Server 가 환경이 달라 5세대 연결이 실패 함
+        따라서 초기버전으로 배포하여 운영되게 지원
+        2-1 검증서버(214)   > 검증DB 연결 성공
+        2-2 운영서버(228,229) > 검증DB 연결 실패
+        2-3 운영서버(228,229) > 운영DB 연결 실패
+3. 2번 사항으로 nuri2.conf 옵션 추가
+       1) nuri2.conf 옵션 추가 : 배포시 함께 배포
+       ################################################################################################
+       ##  DB Pool 세대 선택 옵션 ( 기본 : 5 )
+       ##  1 : 1세대(1st)
+       ##  5 : 5세대(5th)
+       #db_pool_generation = 5
+4. Agent 의 장애시 동작 지속 시간 로직 개선 및 활성화
+        nuri_life_time 옵션 활성화(초기 값 : 0)하지만 사용은 되지 않게 0으로 셋팅
+        기존 기본 : 48 -> 0으로 변경
+5. log 기록 info -> debug 변경
+        [2025-08-28 15:55:05.323][INFO ][Nuri2Carrier    ] GET DATA MSG_TYPE[SMS] MSG_STATE[1] RES_DATE[12]
+        [2025-08-28 15:55:05.331][INFO ][Nuri2Carrier    ] GET DATA MSG_TYPE[MMS] MSG_STATE[1] RES_DATE[12]
+        [2025-08-28 15:55:05.333][INFO ][Nuri2Carrier    ] GET DATA MSG_TYPE[ALT] MSG_STATE[1] RES_DATE[12]
+        [2025-08-28 15:55:05.335][INFO ][Nuri2Carrier    ] GET DATA MSG_TYPE[RCS] MSG_STATE[1] RES_DATE[12]
+6. API 변경 및 추가
+         commons-codec : 1.18.0 -> 1.19.0 변경
+         mssql-jdbc : 12.10.1.jre8 -> 13.2.0.jre8 변경
+         mariadb-java-client : 3.5.4 -> 3.5.5 변경
+
+
+### Nuri2 2.0.0 (Released 2025.07.31) ###
+1. log table MSG_KEY index 추가
+2. Nuri2Carrier 에 callGarbageCollection() 부분 Nuri2JobWorker 로 이동
+3. db lock 관련 코드 추가 및 transaction 수동 job 최소화 로직 적용 및 옵션 추가
+ ################################################################################################
+ ## Deadlock 시 Sender, Receiver Update 재시도 횟수 ( 기본 : 3 | 최대 : 5 )
+ ## 입력하면 적용됨
+ #db_deadlock_retry = 3
+4. Process Group 5세대 로직 개선
+5. 이중화(DUPLEX) 관련 코드 수정
+6. xxx_sender OFF 시 Carrier log 미출력 및 MSG_TYPE 별로 한 번만 출력
+7. RCS 컬럼 추가
+       RCS 브랜드 아이디 : RCS_BRAND_ID VARCHAR2(100)
+       참조 : 99_RCS_컬럼_추가_v1.8.x_이하_25-07-23.sql
+8. nuri2.conf 옵션 추가
+       ORACLE, PostgreSQL, TIBERO, ALTIBASE, CUBRID, DB2
+       jdbc Driver UTF-8 옵션 추가
+9. API 변경 및 추가
+       UniversalUtils : 1.1.0 -> 1.3.0 변경
+       log4j-api : 2.24.3 -> 2.25.0 변경
+       log4j-core : 2.24.3 -> 2.25.0 변경
+       log4j-slf4j-impl : 2.24.3 -> 2.25.0 변경
+       ojdbc8 : 11.2.0.4 -> 12.2.0.1 변경 (Oracle 10g 같이 오래된 버전을 사용하는 관공서로 인해 구형 버전 추가)
+       orai18n : 23.7.0.25.01 -> 12.2.0.1 변경 (Oracle 10g 같이 오래된 버전을 사용하는 관공서로 인해 구형 버전 추가)
+       ojdbc8 : 23.7.0.25.01 -> 23.8.0.25.04 변경 (Oracle 10g 같이 오래된 버전을 사용하는 관공서로 인해 구형 버전 추가)
+       orai18n : 23.7.0.25.01 -> 23.8.0.25.04 변경 (Oracle 10g 같이 오래된 버전을 사용하는 관공서로 인해 구형 버전 추가)
+       postgresql : 42.7.5 -> 42.7.7 변경
+       cubrid-jdbc : 11.3.0.0047 -> 11.3.1.0050 변경
+       jcc : 12.1.0.0 -> 12.1.2.0 변경
+       altibase-jdbc : 7.1.0.9.2 -> 7.1.0.10.2 변경 (공정위 기업집단포털 운영사업단 Altibase JDBC 이슈로 인해 Driver 교체)
+10. DB Pool 3/4세대 로직 개선
+	국세청(DB2) 때문에 Release 버전과 날짜 변경 없이 validation query 변경: 2025.07.31
+	DB2 를 사용하고 테스트 DB 에선 DB2 전용 쿼리가 되는데 실 DB 에선 전용 쿼리가 안되어
+	DB2용 유효성 검사 쿼리 결정 함수 추가하여 처리
+	VALUES 1 -> SELECT 1 FROM SYSIBM.SYSDUMMY1 -> getDB2ValidationQuery
+
+
+### Nuri2 1.8.0 (Released 2025.05.12) ###
+1. RSLT_DATE null 또는 empty 면 강제 date 입력
+2. DB Pool Status Scheduler 추가
+3. DB Pool DBMS 종류에 따라 적절한 가벼운 검증 쿼리로 변경
+4. DB Pool 최대 갯수 설정 수정
+5. API 변경 및 추가
+altibase-jdbc : 7.3.0.0.3 -> 7.1.0.9.2 변경 (공정위 Altibase JDBC 이슈로 인해 Driver 교체)
+ojdbc8 : 11.2.0.4 -> 12.2.0.1 변경 (대검찰청 Oracle 10g 사용하며 아래와 같이 인증 이슈가 발생하여 Driver 교체)
+orai18n : 23.7.0.25.01 -> 12.2.0.1 변경 (대검찰청 Oracle 10g 사용하며 아래와 같이 인증 이슈가 발생하여 Driver 교체)
+mysql-connector-j : 9.2.0 -> 9.3.0 변경
+
+
+
+### Nuri2 1.7.2 (Released 2025.05.03) ###
+1. 리포트수신 날짜 Null이면 현재시간으로 처리
+
+
+
+### Nuri2 1.7.1 (Released 2025.04.10) ###
+1. 공정위 Altibase JDBC 이슈로 인해 Driver 교체
+ - 오류내용은 java.sql.SQLException: communication link failure: There was no response from the server, and the channel has reached end-of-stream.
+
+2. 대검찰청 Oracle 10g 사용하며 아래와 같이 인증 이슈가 발생하여 Driver 교체하여 확인 요청 중(2025.04.10)
+ - java.sql.SQLRecoverableException: ORA-17002: I/O 오류: Socket write interrupted, Authentication lapse 40011 ms.
+ - java.lang.Exception: java.sql.SQLException: Cannot get a connection, pool error: Timeout waiting for idle object, borrowMaxWaitDuration=PT30S
+
+3. API 변경 및 추가
+ - altibase-jdbc : 7.3.0.0.3 -> 7.1.0.9.2 변경
+ - ojdbc8 : 23.7.0.25.01 -> ojdbc6 : 11.2.0.4 변경
+
+
+
+### Nuri2 1.7.0 (Released 2025.04.03) ###
+1. 대검찰청 문제로 db pool connection wait time 옵션 추가
+nuri2.conf 옵션 추가
+###############################################........................................
+# DBMS 연결 요청 대기 시간 ( 단위 : 초 | 기본 : 30 / -1 = 무한정)
+# 커넥션 연결 요청 대기 시간은 각 DBMS 의 연결 요청 대기 시간 설정을 확인 후 사용해야 함
+#
+#db_connection_wait_time = 30
+
+2. API 변경 및 추가
+lombok : 1.18.36 -> 1.18.38 변경
+mssql-jdbc : 12.8.1.jre8 -> 12.10.0.jre8 변경
+mariadb-java-client : 3.5.2 -> 3.5.3 변경
+
+
+
+### Nuri2 1.6.0 (Released 2025.02.26) ###
+1. ALT_COUNTRY_CODE 국가 번호 자릿수 변경
+    VARCHAR(3) -> VARCHAR(5)
+2. 결과코드 추가 및 수정
+- 추가할 코드
+910 AGT MSG_TYPE 전송불가 발송불가
+310 SED 접수 불가. ALT, RCS 접수권한 없음
+2000 ALT 메시지전문 내용오류
+4999 ALT 해당 실패 건은 알림톡 수신 차단으로 인한 실패입니다.
+- 수정할 코드
+1000 ALT 메시지를 전송 했으나, 수신확인 안됨 (성공 불확실)->1000 ALT 성공
+
+
+
+### Nuri2 1.5.0 (Released 2025.02.19) ###
+1. Altibase getIsSequence, getIsSequence 변경
+SYSTEM_.SYS_TABLES_ 로 변경
+
+2. API 변경 및 추가
+ojdbc8 : 23.6.0.24.10 -> 23.7.0.25.01 변경
+orai18n : 23.6.0.24.10 -> 23.7.0.25.01 변경
+mariadb-java-client : 3.5.1 -> 3.5.2 변경
+
+
+
+### Nuri2 1.4.0 (Released 2025.02.03) ###
+1. PostgreSQL Function 변경
+TO_DATE -> TO_TIMESTAMP
+
+2. API 변경 및 추가
+commons-codec : 1.17.2 -> 1.18.0 변경
+commons-pool2 : 2.12.0 -> 2.12.1 변경
+mysql-connector-j : 9.1.0 -> 9.2.0 변경
+
+
+
+### Nuri2 1.3.0 (Released 2025.01.21) ###
+1. 오타 변경
+RCS_MASSAGE_BASE_ID ▶ RCS_MESSAGE_BASE_ID
+
+2. Nuri2 설치 및 예제가이드 v1.4.pdf 오타 수정
+RCS_MASSAGE_BASE_ID ▶ RCS_MESSAGE_BASE_ID
+
+3. API 변경 및 추가
+postgresql : 42.7.4 ▶ 42.7.5 변경
+cubrid-jdbc : 11.2.1.0038 ▶ 11.3.0.0047 변경
+
+
+
+### Nuri2 1.2.0 (Released 2025.01.13) ###
+1. IBM Db2 추가 요청
+(Oracle, MSSQL, MySQL, MariaDB, PostgreSQL, CUBRID, Tibero, Altibase, Db2 현재까지 가능)
+
+2. AgentVersion 기록 시 DB NAME 추가
+
+3. Sender Fail 시 MSG_TYPE 없이 기록되는 부분 강제로 입력
+
+4. API 변경 및 추가
+log4j-api : 2.24.2 ▶ 2.24.3 변경
+log4j-core : 2.24.2 ▶ 2.24.3 변경
+log4j-slf4j-impl : 2.24.2 ▶ 2.24.3 변경
+commons-codec : 1.17.1 ▶ 1.17.2 변경
+jcc : 12.1.0.0 추가
+
+
+
+### Nuri2 1.1.0 (Released 2024.12.10) ###
+1. DBMS 전송할 자료가 대량(50만 건 이상) 입력되어 있는 경우 Carrier 조회가 늦어짐
+기존 : MSG_TYPE 모두를 UNION ALL 사용하여 조회
+변경 : MSG_TYPE 별 조회
+
+2. MSG_PRIORITY 1, 9 삭제
+기존 : 1:광고성 전송 / 3:일반성 전송 / 7:긴급성 전송 / 9:인증성 전송
+변경 : 3:일반성 전송 / 7:긴급성 전송
+
+3. NRNSG_DATA Index 변경
+기존 : IDX_NRMSG_DATA_02 (MSG_STATE, RES_DATE, SENT_COUNT, MSG_TYPE_1, MSG_TYPE_2, MSG_TYPE_3)
+변경 : IDX_NRMSG_DATA_02 (MSG_STATE, RES_DATE, MSG_PRIORITY, SENT_COUNT, MSG_TYPE_1, MSG_TYPE_2, MSG_TYPE_3)
+/** 기존 인덱스 삭제 후 재생성 필요.
+-- 기존 인덱스 삭제
+DROP INDEX 기존인덱스명 ON 누리2테이블명 ;
+-- 새 인덱스 생성
+CREATE INDEX 기존인덱스명 ON 누리2테이블명  (MSG_STATE,RES_DATE,MSG_PRIORITY,SENT_COUNT,MSG_TYPE_1,MSG_TYPE_2,MSG_TYPE_3);
+*/
+
+4. nuri2.conf 옵션 추가
+db_hint 옵션 추가
+
+5. log 생성 수정
+파일 크기가 1GB 초과되면 증가 번호가 붙은 압축 log 생성되게 수정
+nuri2.2024-12-11.log.gz ▶ nuri2.2024-12-11-1.log.gz
+
+6. API 변경 및 추가
+log4j-api : 2.24.1 ▶ 2.24.2 변경
+log4j-core : 2.24.1 ▶ 2.24.2 변경
+log4j-slf4j-impl : 2.24.1 ▶ 2.24.2 변경
+commons-dbcp2 : 2.12.0 ▶ 2.13.0 변경
+mariadb-java-client : 3.5.0 ▶ 3.5.1 변경
+
+
+
+### Nuri2 1.0.2 (Released 2024.11.18)|
+1. 구 G/W XMS 의 SUB_ID는 SUBID 로 전달
+2. API 변경 및 추가
+lombok : 1.18.34 ▶ 1.18.36 변경
+ojdbc8 : 23.5.0.24.07 ▶ 23.6.0.24. 10 변경
+orail8n : 23.5.0.24.07 ▶ 23.6. 0.24.10 변경
+
+
+
+### Nuri2 1.0.1 (Released 2024.11.08) ###
+1. Agent 의 장애시 동작 지속 시간 처리 및 동작 부분 SKIP
+
+
+
+### Nuri2 1.0.0 (Released 2024.11.01) ###
+1. 정식버전
+
+
+
+### Nuri2 0.0.11 (Released 2024.10.31) ###
+1. 테스트 버전
+2. nuri2.conf 수정
+	"발송" 명칭 "전송"으로 수정
+	sender_failure_switch = ON ▶ OFF 기본 값 변경
+3. MSG_PRIORITY 입력 시 우선 순위로 전송(기본 값 : 3)
+	MSG_PRIORITY 1:광고성 전송 / 3:일반성 전송 / 7:긴급성 전송 / 9:인증성 전송
+4. nuri2.conf 설정 오류에 의한 오동작 예방
+	db_name = XXXX 잘못 입력 시 Nuri2 의 오동작 예방
+	출력 : "ERROR 301: nuri2.conf 파일의 db_name 이 잘못되었습니다. 정확하게 입력 입력하세요."
+
+
+
+### Nuri2 0.0.10 (Released 2024.10.25) ###
+1. 테스트 버전
+2. 리포트 결과 업데이트 개선
+
+
+
+### Nuri2 0.0.9 (Released 2024.10.21) ###
+1. 테스트 버전
+2. DB_CREATE_TABLE = OFF / DB_CREATE_SEQUENCE = OFF 일 경우
+   Nuri2JobWorker NRMSG_DATA Fast Move Start 에서도 만들지 않게 변경
+
+
+
+### Nuri2 0.0.8 (Released 2024.10.17) ###
+1. 테스트 버전
+2. 사용자 컬럼 추가시 버그 개선
+
+
+
+### Nuri2 0.0.7 (Released 2024.10.02) ###
+1. 테스트 버전
+2. Modify XMS RSLT_CODE Mapping : 결과코드 맵핑

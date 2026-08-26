@@ -1,0 +1,6 @@
+-- ** CUBRID 용 SERIAL ** 사용법
+--  현재 query 내용을 실행 , 특별한 오류가 없으면 정상 생성완료
+-- *시리얼 생성
+CREATE SERIAL MSG_KEY_SERIAL START WITH 0 INCREMENT BY 1 MAXVALUE 99999999 CACHE 3;
+-- *조회
+SELECT MSG_KEY_SERIAL.NEXT_VALUE

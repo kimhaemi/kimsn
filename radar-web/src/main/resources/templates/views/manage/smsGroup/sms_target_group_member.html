@@ -79,7 +79,13 @@
                     alert("추가 되었습니다.");
                     location.href="/manage/sms_target_group_member?gid="+gid;
                 } else {
-                    alert("연결 추가에 실패했습니다.\n" + result.data);
+                    if (result.status === 'ERROR' && result.code === 'NEED_LOGIN') {
+                        alert(result.message); // "로그인이 필요합니다." 알림 창 표시
+                        window.location.href = "/login"; // 실제 서비스의 로그인 페이지 경로로 변경
+                        return;
+                    } else {
+                        alert("연결 추가에 실패했습니다.\n" + result.data);
+                    }
                 }
                 console.log("result :: "+ result);
             // }
@@ -143,7 +149,7 @@
                     <td><span th:text="${link.position }"></span></td>
                     <td><span th:text="${link.department }"></span></td>
                     <td><span th:text="${link.organization }"></span></td>
-                    <td><span th:text="${link.phone_num }"></td>
+                    <td><span th:text="${link.phone_num }"></span></td>
                     <!-- <td class="settingSeries">
                         <label class="a8z-toggle-switch" data-size="sm" style="--a8z-ts-width: 60px;">
                             <input type="checkbox" th:name="notiConfig" 
@@ -192,7 +198,7 @@
                         </label>
                     </td>
                     <td>
-                        <input type="submit" id="bthUnLink" class="btn ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" value="연결 해제" th:onclick="fnUnLink([[${link.mid}]], [[${link.gid}]])"/>
+                        <input type="submit" id="bthUnLink" class="btn ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" value="연결 해제" th:onclick="|fnUnLink(${link.mid}, ${link.gid})|"/>
                     </td>
                 </tr>
                 <tr th:if="${links.size == 0}">
@@ -234,7 +240,7 @@
                     <td><span th:text="${notLink.organization }"></span></td>
                     <td><span th:text="${notLink.phone_num }"></span></td>
                     <td>
-                        <input type="submit" id="btnLink" class="btn ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" value="연결 추가" th:onclick="fnLink([[${notLink.id}]], [[${group.id}]])" />
+                        <input type="submit" id="btnLink" class="btn ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" value="연결 추가" th:onclick="|fnLink(${notLink.id}, ${group.id})|" />
                     </td>
                 </tr>
             </tbody>

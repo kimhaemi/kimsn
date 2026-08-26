@@ -1,0 +1,383 @@
+###########################################################################################
+* 중요 *
+###########################################################################################
+[1] * Nuri2(이하 누리2) 모듈 업데이트 방법 안내입니다.
+###########################################################################################
+* 누리2 1.x.x 마이너 버전업 데이트 방법입니다.
+* 구버전 누리1(1.3.x, 1.x) 교체 방법이 아닙니다.
+
+
+[중요]
+* 누리2 v1.x.x 사용기관이 누리2 v.2.x.x 업데이트시
+ - 반드시 아래 내용 참조 하시고 컬럼(필드)명 변경 및 추가 하세요.
+ 참고파일
+ 99_RCS_컬럼_변경_이슈_v1.2.x_이하.sql      : v1.2.0_이하 이용기관이 2.0 사용시 RCS_MESSAGE_BASE_ID 컬럼명 변경 이슈 조치 방법
+ 99_RCS_컬럼_추가_v1.8.x_이하_YY-MM-DD.sql  : v1.8.0_이하 이용기관이 2.0 사용시 RCS_BRAND_ID 컬럼명 추가 조치 방법
+[중요]
+
+
+
+**********************************************************************************
+* 순서 : 모듈기동 확인  > 모듈 정지 > 기존버전 백업 > 모듈 기동  > 상태확인(로그)
+**********************************************************************************
+* nuri2_for_java_v1.x.x_202xxxxx_JDK8.zip 이상 버전 다운 후 압축해제
+* 설치경로에 파일 옮겨 놓은 후 진행, 미리 이름을 바꾸어 올림 예) nuri2_1xx.jar
+
+
+	**********************************************************************************
+	Unix, Linux 버전
+	**********************************************************************************
+	#경로이동(누리2 설치경로를 /home/nuir2 로 안내)
+        cd /home/nuri2/
+	------------------------------------------------------------------------------------------------
+	1) 누리2 기동 확인( nuri2.jar 파일 확인)
+	------------------------------------------------------------------------------------------------
+	- sh nuri2_launcher.sh list 또는 ps -ef|grep nuri2.jar |grep -v grep 실행 정보확인
+	 예) hostname(계정)/home/NURI2>ps -ef|grep nuri2.jar |grep -v grep
+	     계정     9937     1  0 01:02 ?        00:02:24 java -jar ..nuri2.jar
+
+        ------------------------------------------------------------------------------------------------
+        2) 누리2 정지(kill)(Unix, Linux)
+        ------------------------------------------------------------------------------------------------
+	# 누리 pid 검색
+         ps -ef|grep nuri2.jar |grep -v grep
+
+        #예) pid 검색 결과
+        hostname(계정)/home/nuri2/>ps -ef|grep nuri2.jar |grep -v grep
+         계정     9937     1  0 01:02 ?        00:02:24 java -jar ..nuri2.jar
+
+        # kill 권장 ( -9 옵션은 종료가 되지 않을 때 : kill -9 pid)
+        # kill 9937
+        kill $(ps -ef | grep nuri2.jar | grep -v grep | awk '{print $2}')
+
+
+        # 종료 확인 ( *중요* 약 종료까지 약 10~ 20초 소요 *중요*)
+        ps -ef|grep nuri2.jar |grep -v grep
+
+
+
+
+	------------------------------------------------------------------------------------------------
+	3) 누리2 파일 교체(Unix, Linux)
+	------------------------------------------------------------------------------------------------
+	 # * 기존 버전 이름 변경 nuri2_old.jar
+
+	 mv nuri2.jar nuri2_old.jar
+
+	 # * 신규 버전 이름 nuri2.jar로 변경
+
+         mv nuri2_1xx.jar nuri2.jar
+
+	------------------------------------------------------------------------------------------------
+	4) 누리2 기동(Unix, Linux)
+	------------------------------------------------------------------------------------------------
+         #누리기동 확인
+         ps -ef|grep nuri2.jar |grep -v grep
+
+         #[1] O/S(서버) local(언어) 재설정.(euckr)  : 'locale -a|grep ko' 확인 utf8 적용
+         export LANG=ko_KR.utf8
+
+	 #모듈 기동.
+         nohup java -jar nuri2.jar nuri2.conf > /dev/null &
+
+         #누리2 기동 확인
+         ps -ef|grep nuri2.jar |grep -v grep
+
+         # 기타 : /usr/java/bin/java -jar nuri2.jar nuri2.conf 만 입력하면 화면(콘솔)에 로그를 바로 표시. [Ctrl]+[c] 또는 터미널을 닫으면 종료 됨
+         # 기타 : java -jar nuri2.jar nuri2.conf 만 입력하면 화면(콘솔)에 로그를 바로 표시. [Ctrl]+[c] 또는 터미널을 닫으면 종료 됨
+
+
+	**********************************************************************************
+	Windows(윈도우) 버전 (설치경로  D:/NURI2)
+	**********************************************************************************
+	* nuri2_for_java_v1.x.x_202xxxxx_JDK8.zip 이상 버전 다운 후 압축해제
+	* 설치경로에 파일 옮겨 놓은 후 진행, 미리 이름을 바꾸어 올림 예) nuri2_1xx.jar
+
+	 1) 윈도우키+R 실행 :  cmd 입력후 엔터키
+	   설치경로로 이동
+	  C:/Users/Administrator> D:
+	  D:> CD NURI\
+	  D:/NURI2>
+
+	 2) Nuri2 서비스 종료
+	  종료
+	  - D:/NURI2>net stop Nuri2
+		Nuri2 서비스를 멈춥니다......
+		Nuri2 서비스를 잘 멈추었습니다.
+
+	 3) 기존 버전 이름 변경 nuri2_old.jar
+          - D:/NURI2>rename nuri2.jar nuri2_old.jar
+
+	 4) 신규 버전 이름 nuri2.jar로 변경
+          - D:/NURI2>rename nuri2_1xx.jar nuri2.jar
+
+	 5) Nuri2 서비스 기동
+	  - D:/NURI2>net start Nuri2
+		Nuri2 서비스를 시작합니다..
+		Nuri2 서비스가 잘 시작되었습니다.
+
+	 6)  윈도우키+R 실행 : services.msc 실행
+	  - Nuri2 상태 실행확인
+
+
+	**********************************************************************************
+	 [공통]누리2 로그 확인 (설치경로  D:/NURI2)
+	**********************************************************************************
+        - 누리2 log(로그) 경로(기본값)
+         예) D:/NURI2/nuri2_log
+         예) /home/nuri2/nuri2_log
+
+        - 로그파일 종류
+                nuri2.log        : 통합 로그, 최대크기 1GB 단위로 생성(전일 로그 자동압축)
+                result_query.log : DBMS 처리 로그, 최대크기 1GB 단위로 생성(전일 로그 자동압축)
+
+        - 누리2 log(로그) 경로(기본값)에서 확인( tail 이용 버전확인 )
+        예) tail -f nuri2.log, vi, 메모장 등으로 로그 파일 열기
+        ========================================================================================
+		[2025-07-25 15:50:01.400][INFO ][Nuri2Main       ][ NURI2 INFO         ][ START ]
+		[2025-07-25 15:50:01.400][INFO ][Nuri2Main       ][ NURI2 INFO         ]
+		[2025-07-25 15:50:01.400][INFO ][Nuri2Main       ][ NURI2 INFO         ][ VERSION           ][Nuri2 2.x.x][Released 2025.07.14][JDK8]MMGP 1.0.3
+		[2025-07-25 15:50:01.400][INFO ][Nuri2Main       ][ NURI2 INFO         ]
+		[2025-07-25 15:50:01.400][INFO ][Nuri2Main       ][ NURI2 INFO         ][ AGENT HOME        ][D:\01_NURI2]
+		[2025-07-25 15:50:01.404][INFO ][Nuri2Main       ][ NURI2 INFO         ][ OS NAME           ][Windows 10]
+		[2025-07-25 15:50:01.404][INFO ][Nuri2Main       ][ NURI2 INFO         ][ OS VERSION        ][10.0]
+		[2025-07-25 15:50:01.404][INFO ][Nuri2Main       ][ NURI2 INFO         ][ OS ARCHITECTURE   ][amd64]
+		[2025-07-25 15:50:01.404][INFO ][Nuri2Main       ][ NURI2 INFO         ][ OS DEFAULT LOCALE ][ko_KR]
+		[2025-07-25 15:50:01.404][INFO ][Nuri2Main       ][ NURI2 INFO         ][ FILE ENCODING     ][x-windows-949]
+		[2025-07-25 15:50:01.404][INFO ][Nuri2Main       ][ NURI2 INFO         ][ CHARSET_SMS       ][EUC-KR]
+		[2025-07-25 15:50:01.404][INFO ][Nuri2Main       ][ NURI2 INFO         ][ CHARSET_MMS       ][EUC-KR]
+		[2025-07-25 15:50:01.404][INFO ][Nuri2Main       ][ NURI2 INFO         ][ CHARSET_RCS       ][UTF-8]
+		[2025-07-25 15:50:01.404][INFO ][Nuri2Main       ][ NURI2 INFO         ][ CHARSET_ALT       ][UTF-8]
+		[2025-07-25 15:50:01.404][INFO ][Nuri2Main       ][ NURI2 INFO         ]
+		[2025-07-25 15:50:01.404][INFO ][Nuri2Main       ][ NURI2 INFO         ][ JAVA NAME       ][OpenJDK Runtime Environment]
+		[2025-07-25 15:50:01.404][INFO ][Nuri2Main       ][ NURI2 INFO         ][ JAVA VERSION    ][1.8.0_212-1-ojdkbuild-b04]
+		[2025-07-25 15:50:01.404][INFO ][Nuri2Main       ][ NURI2 INFO         ][ JAVA HOME       ][C:\JAVA\java-1.8.0-openjdk\jre]
+		[2025-07-25 15:50:01.404][INFO ][Nuri2Main       ][ NURI2 INFO         ]
+		[2025-07-25 15:50:01.404][INFO ][Nuri2Main       ][ NURI2 INFO         ][ XMS_IP    ][10.xxx.xxx.235]
+		[2025-07-25 15:50:01.404][INFO ][Nuri2Main       ][ NURI2 INFO         ][ XMS_PORT  ][20000]
+		[2025-07-25 15:50:01.404][INFO ][Nuri2Main       ][ NURI2 INFO         ][ XMS_ID    ][mgov???]
+		[2025-07-25 15:50:01.404][INFO ][Nuri2Main       ][ NURI2 INFO         ][ XMS_LINK  ][OFF]
+		[2025-07-25 15:50:01.404][INFO ][Nuri2Main       ][ NURI2 INFO         ]
+		[2025-07-25 15:50:01.404][INFO ][Nuri2Main       ][ NURI2 INFO         ][ ALT_IP    ][10.xxx.xxx.235]
+		[2025-07-25 15:50:01.404][INFO ][Nuri2Main       ][ NURI2 INFO         ][ ALT_PORT  ][40000]
+		[2025-07-25 15:50:01.404][INFO ][Nuri2Main       ][ NURI2 INFO         ][ ALT_ID    ][mgov???]
+		[2025-07-25 15:50:01.404][INFO ][Nuri2Main       ][ NURI2 INFO         ][ ALT_LINK  ][OFF]
+		[2025-07-25 15:50:01.404][INFO ][Nuri2Main       ][ NURI2 INFO         ]
+		[2025-07-25 15:50:01.404][INFO ][Nuri2Main       ][ NURI2 INFO         ][ RCS_IP    ][10.xxx.xxx.235]
+		[2025-07-25 15:50:01.404][INFO ][Nuri2Main       ][ NURI2 INFO         ][ RCS_PORT  ][40000]
+		[2025-07-25 15:50:01.404][INFO ][Nuri2Main       ][ NURI2 INFO         ][ RCS_ID    ][mgov???]
+		[2025-07-25 15:50:01.404][INFO ][Nuri2Main       ][ NURI2 INFO         ][ RCS_LINK  ][OFF]
+		[2025-07-25 15:50:01.404][INFO ][Nuri2Main       ][ NURI2 INFO         ]
+		[2025-07-25 15:50:01.404][INFO ][Nuri2Main       ][ NURI2 INFO         ][ LIFE_TIME            ][48]
+		[2025-07-25 15:50:01.409][INFO ][Nuri2Main       ][ NURI2 INFO         ][ PING TERM            ][50]
+		[2025-07-25 15:50:01.409][INFO ][Nuri2Main       ][ NURI2 INFO         ][ LOG_MODE             ][BATCH]
+		[2025-07-25 15:50:01.409][INFO ][Nuri2Main       ][ NURI2 INFO         ][ LOG_MAKE_MODE        ][LOG]
+		[2025-07-25 15:50:01.409][INFO ][Nuri2Main       ][ NURI2 INFO         ][ RESTART TIME         ][0730]
+		[2025-07-25 15:50:01.409][INFO ][Nuri2Main       ][ NURI2 INFO         ][ REPORT_FOLLOW_UPDATE ][ON]
+		[2025-07-25 15:50:01.409][INFO ][Nuri2Main       ][ NURI2 INFO         ][ QUEUE_TERM           ][0]
+		[2025-07-25 15:50:01.409][INFO ][Nuri2Main       ][ NURI2 INFO         ][ SOCKET_TIMEOUT       ][2]
+		[2025-07-25 15:50:01.409][INFO ][Nuri2Main       ][ NURI2 INFO         ][ XMS_ACTIVE_SOCKET    ][1]
+		[2025-07-25 15:50:01.409][INFO ][Nuri2Main       ][ NURI2 INFO         ][ ALT_ACTIVE_SOCKET    ][1]
+		[2025-07-25 15:50:01.409][INFO ][Nuri2Main       ][ NURI2 INFO         ][ RCS_ACTIVE_SOCKET    ][1]
+		[2025-07-25 15:50:01.409][INFO ][Nuri2Main       ][ NURI2 INFO         ][ RECEIVER_MULTI       ][OFF]
+		[2025-07-25 15:50:01.409][INFO ][Nuri2Main       ][ NURI2 INFO         ][ XMS_RECEIVER_COUNT   ][1]
+		[2025-07-25 15:50:01.409][INFO ][Nuri2Main       ][ NURI2 INFO         ][ ALT_RECEIVER_COUNT   ][1]
+		[2025-07-25 15:50:01.409][INFO ][Nuri2Main       ][ NURI2 INFO         ][ RCS_RECEIVER_COUNT   ][1]
+		[2025-07-25 15:50:01.409][INFO ][Nuri2Main       ][ NURI2 INFO         ][ FAST MODE            ][ON]
+		[2025-07-25 15:50:01.409][INFO ][Nuri2Main       ][ NURI2 INFO         ][ SENDER_FAILURE_SWITCH][ON]
+		[2025-07-25 15:50:01.409][INFO ][Nuri2Main       ][ NURI2 INFO         ][ SENDER_FAILURE_TIME  ][300]
+		[2025-07-25 15:50:01.409][INFO ][Nuri2Main       ][ NURI2 SIGN         ][ ON/OFF               ][OFF]
+		[2025-07-25 15:50:01.409][INFO ][Nuri2Main       ][ NURI2 XMS SIGN     ][ ON/OFF               ][ON]
+		[2025-07-25 15:50:01.409][INFO ][Nuri2Main       ][ NURI2 XMS SENDER   ][ ON/OFF               ][ON]
+		[2025-07-25 15:50:01.409][INFO ][Nuri2Main       ][ NURI2 XMS RECEIVER ][ ON/OFF               ][ON]
+		[2025-07-25 15:50:01.409][INFO ][Nuri2Main       ][ NURI2 ALT SIGN     ][ ON/OFF               ][ON]
+		[2025-07-25 15:50:01.409][INFO ][Nuri2Main       ][ NURI2 ALT SENDER   ][ ON/OFF               ][ON]
+		[2025-07-25 15:50:01.409][INFO ][Nuri2Main       ][ NURI2 ALT RECEIVER ][ ON/OFF               ][ON]
+		[2025-07-25 15:50:01.409][INFO ][Nuri2Main       ][ NURI2 RCS SIGN     ][ ON/OFF               ][ON]
+		[2025-07-25 15:50:01.409][INFO ][Nuri2Main       ][ NURI2 RCS SENDER   ][ ON/OFF               ][ON]
+		[2025-07-25 15:50:01.409][INFO ][Nuri2Main       ][ NURI2 RCS RECEIVER ][ ON/OFF               ][ON]
+		[2025-07-25 15:50:01.409][INFO ][Nuri2Main       ][ NURI2 DUPLEX       ][ ON/OFF               ][OFF]
+		[2025-07-25 15:50:01.409][INFO ][Nuri2Main       ][ NURI2 DUPLEX       ][ DUPLEX_ID            ][SLAVE]
+		[2025-07-25 15:50:01.409][INFO ][Nuri2Main       ][ NURI2 INFO         ][ LOG_PATH             ][./nuri2_log]
+		[2025-07-25 15:50:01.409][INFO ][Nuri2Main       ][ NURI2 INFO         ][ QUE_PATH             ][./nuri2_que]
+		[2025-07-25 15:50:01.409][INFO ][Nuri2Main       ][ NURI2 INFO         ][ LOG_FILE_LIFE_TIME   ][0]
+		[2025-07-25 15:50:01.413][INFO ][Nuri2Main       ][ NURI2 INFO         ][ LIMIT TIME ZONE      ][ ~ ]
+		[2025-07-25 15:50:01.413][INFO ][Nuri2Main       ][ NURI2 INFO         ][ BEFORE_TIME          ][3]
+		[2025-07-25 15:50:01.413][INFO ][Nuri2Main       ][ NURI2 INFO         ][ DUPLICATE_PHONE_COUNT][200]
+		[2025-07-25 15:50:01.413][INFO ][Nuri2Main       ][ DB INFO            ]
+		[2025-07-25 15:50:01.413][INFO ][Nuri2Main       ][ DB INFO            ][ DB_NAME                ][MYSQL]
+		[2025-07-25 15:50:01.413][INFO ][Nuri2Main       ][ DB INFO            ][ DB_DRIVER              ][com.mysql.jdbc.Driver]
+		[2025-07-25 15:50:01.413][INFO ][Nuri2Main       ][ DB INFO            ][ DB_URL                 ][jdbc:mysql://localhost:3326/dbname?autoReconnect=true&useUnicode=true&characterEncoding=euc-kr]
+		[2025-07-25 15:50:01.413][INFO ][Nuri2Main       ][ DB INFO            ][ DB_CREATE_TABLE        ][ON]
+		[2025-07-25 15:50:01.413][INFO ][Nuri2Main       ][ DB INFO            ][ DB_CREATE_SEQUENCE     ][OFF]
+		[2025-07-25 15:50:01.413][INFO ][Nuri2Main       ][ DB INFO            ][ DB_SIGN_FIELD          ][OFF]
+		[2025-07-25 15:50:01.413][INFO ][Nuri2Main       ][ DB INFO            ][ DB_STORAGE_ENGINE      ][]
+		[2025-07-25 15:50:01.413][INFO ][Nuri2Main       ][ DB INFO            ][ DB_SELECT_USER         ][]
+		[2025-07-25 15:50:01.413][INFO ][Nuri2Main       ][ DB INFO            ][ DB_HINT                ][IDX_nuri2_nrmsg_data_02]
+		[2025-07-25 15:50:01.413][INFO ][Nuri2Main       ][ DB INFO            ][ DB_RETRY_COUNT         ][3]
+		[2025-07-25 15:50:01.413][INFO ][Nuri2Main       ][ DB INFO            ][ DB_SKIP_QUERY          ][]
+		[2025-07-25 15:50:01.413][INFO ][Nuri2Main       ][ DB INFO            ][ DB_LOG_MOVE            ][ON]
+		[2025-07-25 15:50:01.413][INFO ][Nuri2Main       ][ DB INFO            ][ DB_TRAN_TERM           ][1]
+		[2025-07-25 15:50:01.413][INFO ][Nuri2Main       ][ DB INFO            ][ DB_PING_TERM           ][60]
+		[2025-07-25 15:50:01.413][INFO ][Nuri2Main       ][ DB INFO            ][ DB_CONNECTION_WAIT_TIME][30]
+		[2025-07-25 15:50:01.413][INFO ][Nuri2Main       ][ DB INFO            ][ DB_QUERY_TIMEOUT       ][8]
+		[2025-07-25 15:50:01.413][INFO ][Nuri2Main       ][ DB INFO            ][ RECORD_LIFE_TIME       ][82]
+		[2025-07-25 15:50:01.413][INFO ][Nuri2Main       ][ DB INFO            ]
+		[2025-07-25 15:50:01.413][INFO ][Nuri2Main       ][ DB INFO            ][ NRMSG_DATA        ][nuri2_nrmsg_data]
+		[2025-07-25 15:50:01.413][INFO ][Nuri2Main       ][ DB INFO            ][ NRMSG_LOG         ][nuri2_nrmsg_data_log]
+		[2025-07-25 15:50:01.413][INFO ][Nuri2Main       ][ DB INFO            ][ NRMSG_RSLT        ][nuri2_nrmsg_rslt]
+		[2025-07-25 15:50:01.413][INFO ][Nuri2Main       ][ DB INFO            ][ NRMSG_DUPLEX      ][nuri2_nrmsg_duplex]
+		[2025-07-25 15:50:01.413][INFO ][Nuri2Main       ][ DB INFO            ]
+		[2025-07-25 15:50:01.413][INFO ][Nuri2Main       ][ DB INFO            ][ NRMSG_DATA_SEQ    ][NRMSG_DATA_SEQ]
+		[2025-07-25 15:50:01.413][INFO ][Nuri2Main       ][ DB INFO            ][ NRMSG_RSLT_SEQ    ][NRMSG_RSLT_SEQ]
+		[2025-07-25 15:50:01.413][INFO ][Nuri2Main       ][ DB INFO            ][ NRMSG_DUPLEX_SEQ  ][NRMSG_DUPLEX_SEQ]
+		[2025-07-25 15:50:01.413][INFO ][Nuri2Main       ][ DB DRIVER          ]
+		[2025-07-25 15:50:01.413][INFO ][Nuri2Main       ][ DB DRIVER          ] LOADING THE DB DRIVER
+		[2025-07-25 15:50:01.468][INFO ][Nuri2Main       ][ DB DRIVER          ] SUCCESS TO LOAD DB DRIVER
+		[2025-07-25 15:50:01.470][INFO ][Nuri2Main       ][ KOR LANG OUTPUT    ]
+		[2025-07-25 15:50:01.470][INFO ][Nuri2Main       ][ KOR LANG OUTPUT    ] 한글출력확인
+		[2025-07-25 15:50:01.470][INFO ][Nuri2Main       ][ NURI2 INFO         ][ END ]
+		[2025-07-25 15:50:01.470][INFO ][DB POOL         ] Setting up connection pool with validation query: SELECT 1
+		[2025-07-25 15:50:01.494][INFO ][DB POOL         ] Closed existing connection pool: ConnectionPool
+		[2025-07-25 15:50:01.494][INFO ][DB POOL         ] Connection pool initialized successfully. MAX TOTAL[10] MAX IDLE[10]
+		[2025-07-25 15:50:01.494][INFO ][DB POOL         ] Testing initial connection
+		[2025-07-25 15:50:01.788][INFO ][DB POOL         ] Initial connection test successful
+		[2025-07-25 15:50:01.793][INFO ][Nuri2Main       ] DB POOL STATUS MAX TOTAL[10] ACTIVE[0] IDLE[1] WAITERS[0]
+		[2025-07-25 15:50:02.478][INFO ][Nuri2Main       ] Nuri2SenderXMS : NUMBER[1] BOOLEAN[OFF] LIVE TIME[2025-07-25 15:50:02]
+		[2025-07-25 15:50:02.478][INFO ][Nuri2Main       ] Nuri2SenderXMS : Check if thread is completely terminated(스레드 완전 종료 확인)
+		[2025-07-25 15:50:02.482][INFO ][Nuri2SenderXMS  ] Run
+		[2025-07-25 15:50:02.487][INFO ][Nuri2SenderXMS  ] READY TO CREATE SOCKET[10.xxx.xxx.235:20000]
+		[2025-07-25 15:50:02.510][INFO ][Nuri2SenderXMS  ] SUCCESS TO CREATE SOCKET
+		[2025-07-25 15:50:03.184][INFO ][Nuri2Main       ] Nuri2SenderALT : NUMBER[1] BOOLEAN[OFF] LIVE TIME[2025-07-25 15:50:03]
+		[2025-07-25 15:50:03.184][INFO ][Nuri2Main       ] Nuri2SenderALT : Check if thread is completely terminated(스레드 완전 종료 확인)
+		[2025-07-25 15:50:03.187][INFO ][Nuri2SenderALT  ] Run
+		[2025-07-25 15:50:03.213][INFO ][Nuri2SenderALT  ] READY TO CREATE SOCKET[10.xxx.xxx.235:40000]
+		[2025-07-25 15:50:03.233][INFO ][Nuri2SenderALT  ] SUCCESS TO CREATE SOCKET
+		[2025-07-25 15:50:03.900][INFO ][Nuri2Main       ] Nuri2SenderRCS : NUMBER[1] BOOLEAN[OFF] LIVE TIME[2025-07-25 15:50:03]
+		[2025-07-25 15:50:03.900][INFO ][Nuri2Main       ] Nuri2SenderRCS : Check if thread is completely terminated(스레드 완전 종료 확인)
+		[2025-07-25 15:50:03.902][INFO ][Nuri2SenderRCS  ] Run
+		[2025-07-25 15:50:03.929][INFO ][Nuri2SenderRCS  ] READY TO CREATE SOCKET[10.xxx.xxx.235:40000]
+		[2025-07-25 15:50:03.950][INFO ][Nuri2SenderRCS  ] SUCCESS TO CREATE SOCKET
+		[2025-07-25 15:50:04.608][INFO ][Nuri2Main       ] Nuri2ReceiverXMS : NUMBER[1] BOOLEAN[OFF] LIVE TIME[2025-07-25 15:50:04]
+		[2025-07-25 15:50:04.609][INFO ][Nuri2Main       ] Nuri2ReceiverXMS : Check if thread is completely terminated(스레드 완전 종료 확인)
+		[2025-07-25 15:50:04.611][INFO ][Nuri2ReceiverXMS] Run
+		[2025-07-25 15:50:04.635][INFO ][Nuri2ReceiverXMS] READY TO CREATE SOCKET[10.xxx.xxx.235:20000]
+		[2025-07-25 15:50:04.660][INFO ][Nuri2ReceiverXMS] SUCCESS TO CREATE SOCKET
+		[2025-07-25 15:50:05.064][INFO ][Nuri2SenderXMS  ] LINK ON/OFF[OFF]
+		[2025-07-25 15:50:05.292][INFO ][Nuri2SenderALT  ] LINK ON/OFF[OFF]
+		[2025-07-25 15:50:05.321][INFO ][Nuri2Main       ] Nuri2ReceiverALT : NUMBER[1] BOOLEAN[OFF] LIVE TIME[2025-07-25 15:50:05]
+		[2025-07-25 15:50:05.321][INFO ][Nuri2Main       ] Nuri2ReceiverALT : Check if thread is completely terminated(스레드 완전 종료 확인)
+		[2025-07-25 15:50:05.321][INFO ][Nuri2ReceiverALT] Run
+		[2025-07-25 15:50:05.321][INFO ][Nuri2ReceiverALT] READY TO CREATE SOCKET[10.xxx.xxx.235:40000]
+		[2025-07-25 15:50:05.347][INFO ][Nuri2ReceiverALT] SUCCESS TO CREATE SOCKET
+		[2025-07-25 15:50:05.998][INFO ][Nuri2SenderRCS  ] LINK ON/OFF[OFF]
+		[2025-07-25 15:50:06.024][INFO ][Nuri2Main       ] Nuri2ReceiverRCS : NUMBER[1] BOOLEAN[OFF] LIVE TIME[2025-07-25 15:50:06]
+		[2025-07-25 15:50:06.024][INFO ][Nuri2Main       ] Nuri2ReceiverRCS : Check if thread is completely terminated(스레드 완전 종료 확인)
+		[2025-07-25 15:50:06.024][INFO ][Nuri2ReceiverRCS] Run
+		[2025-07-25 15:50:06.027][INFO ][Nuri2ReceiverRCS] READY TO CREATE SOCKET[10.xxx.xxx.235:40000]
+		[2025-07-25 15:50:06.050][INFO ][Nuri2ReceiverRCS] SUCCESS TO CREATE SOCKET
+		[2025-07-25 15:50:06.741][INFO ][Nuri2Main       ] Nuri2Carrier : NUMBER[1] BOOLEAN[OFF] LIVE TIME[2025-07-25 15:50:06]
+		[2025-07-25 15:50:06.741][INFO ][Nuri2Main       ] Nuri2Carrier : Check if thread is completely terminated(스레드 완전 종료 확인)
+		[2025-07-25 15:50:06.743][INFO ][Nuri2Carrier    ] Run
+		[2025-07-25 15:50:06.755][INFO ][Nuri2Carrier    ] GET DATA MSG_TYPE[SMS] MSG_STATE[1] RES_DATE[3]
+		[2025-07-25 15:50:06.757][INFO ][Nuri2Carrier    ] GET DATA MSG_TYPE[MMS] MSG_STATE[1] RES_DATE[3]
+		[2025-07-25 15:50:06.761][INFO ][Nuri2Carrier    ] GET DATA MSG_TYPE[ALT] MSG_STATE[1] RES_DATE[3]
+		[2025-07-25 15:50:06.761][INFO ][Nuri2Carrier    ] GET DATA MSG_TYPE[RCS] MSG_STATE[1] RES_DATE[3]
+		[2025-07-25 15:50:07.460][INFO ][Nuri2Main       ] Nuri2JobWorker : NUMBER[1] BOOLEAN[OFF] LIVE TIME[2025-07-25 15:50:07]
+		[2025-07-25 15:50:07.460][INFO ][Nuri2Main       ] Nuri2JobWorker : Check if thread is completely terminated(스레드 완전 종료 확인)
+		[2025-07-25 15:50:07.460][INFO ][Nuri2JobWorker  ] Run
+
+		............아래 반복.............대기상태..............
+
+		[2025-07-25 15:50:07.887][INFO ][Nuri2Carrier    ] GET DATA MSG_TYPE[SMS] MSG_STATE[1] RES_DATE[3]
+		[2025-07-25 15:50:07.887][INFO ][Nuri2Carrier    ] GET DATA MSG_TYPE[MMS] MSG_STATE[1] RES_DATE[3]
+		[2025-07-25 15:50:07.889][INFO ][Nuri2Carrier    ] GET DATA MSG_TYPE[ALT] MSG_STATE[1] RES_DATE[3]
+		[2025-07-25 15:50:07.889][INFO ][Nuri2Carrier    ] GET DATA MSG_TYPE[RCS] MSG_STATE[1] RES_DATE[3]
+		[2025-07-25 15:50:09.017][INFO ][Nuri2Carrier    ] GET DATA MSG_TYPE[SMS] MSG_STATE[1] RES_DATE[3]
+		[2025-07-25 15:50:09.017][INFO ][Nuri2Carrier    ] GET DATA MSG_TYPE[MMS] MSG_STATE[1] RES_DATE[3]
+		[2025-07-25 15:50:09.017][INFO ][Nuri2Carrier    ] GET DATA MSG_TYPE[ALT] MSG_STATE[1] RES_DATE[3]
+		[2025-07-25 15:50:09.021][INFO ][Nuri2Carrier    ] GET DATA MSG_TYPE[RCS] MSG_STATE[1] RES_DATE[3]
+		[2025-07-25 15:50:10.136][INFO ][Nuri2Carrier    ] GET DATA MSG_TYPE[SMS] MSG_STATE[1] RES_DATE[3]
+		[2025-07-25 15:50:10.136][INFO ][Nuri2Carrier    ] GET DATA MSG_TYPE[MMS] MSG_STATE[1] RES_DATE[3]
+		[2025-07-25 15:50:10.140][INFO ][Nuri2Carrier    ] GET DATA MSG_TYPE[ALT] MSG_STATE[1] RES_DATE[3]
+		[2025-07-25 15:50:10.140][INFO ][Nuri2Carrier    ] GET DATA MSG_TYPE[RCS] MSG_STATE[1] RES_DATE[3]
+		[2025-07-25 15:50:11.267][INFO ][Nuri2Carrier    ] GET DATA MSG_TYPE[SMS] MSG_STATE[1] RES_DATE[3]
+		[2025-07-25 15:50:11.267][INFO ][Nuri2Carrier    ] GET DATA MSG_TYPE[MMS] MSG_STATE[1] RES_DATE[3]
+		[2025-07-25 15:50:11.270][INFO ][Nuri2Carrier    ] GET DATA MSG_TYPE[ALT] MSG_STATE[1] RES_DATE[3]
+		[2025-07-25 15:50:11.270][INFO ][Nuri2Carrier    ] GET DATA MSG_TYPE[RCS] MSG_STATE[1] RES_DATE[3]
+		[2025-07-25 15:50:12.395][INFO ][Nuri2Carrier    ] GET DATA MSG_TYPE[SMS] MSG_STATE[1] RES_DATE[3]
+		[2025-07-25 15:50:12.395][INFO ][Nuri2Carrier    ] GET DATA MSG_TYPE[MMS] MSG_STATE[1] RES_DATE[3]
+		[2025-07-25 15:50:12.399][INFO ][Nuri2Carrier    ] GET DATA MSG_TYPE[ALT] MSG_STATE[1] RES_DATE[3]
+		[2025-07-25 15:50:12.399][INFO ][Nuri2Carrier    ] GET DATA MSG_TYPE[RCS] MSG_STATE[1] RES_DATE[3]
+		[2025-07-25 15:50:13.517][INFO ][Nuri2Carrier    ] GET DATA MSG_TYPE[SMS] MSG_STATE[1] RES_DATE[3]
+		[2025-07-25 15:50:13.519][INFO ][Nuri2Carrier    ] GET DATA MSG_TYPE[MMS] MSG_STATE[1] RES_DATE[3]
+		[2025-07-25 15:50:13.521][INFO ][Nuri2Carrier    ] GET DATA MSG_TYPE[ALT] MSG_STATE[1] RES_DATE[3]
+		[2025-07-25 15:50:13.523][INFO ][Nuri2Carrier    ] GET DATA MSG_TYPE[RCS] MSG_STATE[1] RES_DATE[3]
+		[2025-07-25 15:50:14.646][INFO ][Nuri2Carrier    ] GET DATA MSG_TYPE[SMS] MSG_STATE[1] RES_DATE[3]
+		[2025-07-25 15:50:14.646][INFO ][Nuri2Carrier    ] GET DATA MSG_TYPE[MMS] MSG_STATE[1] RES_DATE[3]
+		[2025-07-25 15:50:14.646][INFO ][Nuri2Carrier    ] GET DATA MSG_TYPE[ALT] MSG_STATE[1] RES_DATE[3]
+		[2025-07-25 15:50:14.651][INFO ][Nuri2Carrier    ] GET DATA MSG_TYPE[RCS] MSG_STATE[1] RES_DATE[3]
+		[2025-07-25 15:50:15.765][INFO ][Nuri2Carrier    ] GET DATA MSG_TYPE[SMS] MSG_STATE[1] RES_DATE[3]
+		[2025-07-25 15:50:15.767][INFO ][Nuri2Carrier    ] GET DATA MSG_TYPE[MMS] MSG_STATE[1] RES_DATE[3]
+		[2025-07-25 15:50:15.769][INFO ][Nuri2Carrier    ] GET DATA MSG_TYPE[ALT] MSG_STATE[1] RES_DATE[3]
+		[2025-07-25 15:50:15.769][INFO ][Nuri2Carrier    ] GET DATA MSG_TYPE[RCS] MSG_STATE[1] RES_DATE[3]
+		[2025-07-25 15:50:16.901][INFO ][Nuri2Carrier    ] GET DATA MSG_TYPE[SMS] MSG_STATE[1] RES_DATE[3]
+		[2025-07-25 15:50:16.901][INFO ][Nuri2Carrier    ] GET DATA MSG_TYPE[MMS] MSG_STATE[1] RES_DATE[3]
+		[2025-07-25 15:50:16.904][INFO ][Nuri2Carrier    ] GET DATA MSG_TYPE[ALT] MSG_STATE[1] RES_DATE[3]
+		[2025-07-25 15:50:16.904][INFO ][Nuri2Carrier    ] GET DATA MSG_TYPE[RCS] MSG_STATE[1] RES_DATE[3]
+		[2025-07-25 15:50:17.482][INFO ][Nuri2JobWorker  ] nuri2_nrmsg_data Fast Move Start
+		[2025-07-25 15:50:17.486][INFO ][Nuri2JobWorker  ] SELECT VALUE MSG_STATE[6]
+		[2025-07-25 15:50:17.486][INFO ][Nuri2JobWorker  ] nuri2_nrmsg_data Fast Move End
+		[2025-07-25 15:50:17.486][INFO ][Nuri2JobWorker  ] nuri2_nrmsg_data TimeOut Fast Move Start
+		[2025-07-25 15:50:17.493][INFO ][Nuri2JobWorker  ] SELECT VALUE MSG_STATE[5] RECORD_LIFE_TIME[82]
+		[2025-07-25 15:50:17.493][INFO ][Nuri2JobWorker  ] nuri2_nrmsg_data TimeOut Fast Move End
+
+		............  반복.............
+
+        ========================================================================================
+
+
+
+###########################################################################################
+2 Nuri2(이하 누리2) JDBC 업데이트 방법 안내입니다.
+###########################################################################################
+	------------------------------------------------------------------------------------------------
+	1) 기존 버전 백업(중요)
+	------------------------------------------------------------------------------------------------
+	* nuri2.jar(누리2) 설치 경로 확인(nuri2.jar 파일 위치)
+	  - nuri2.jar(or nuri2.jar), nuri2.conf 백업
+
+	* 현재 사용 중인 DB(데이터베이스) 확인(일부 DB의 경우 jdbc 드라이버 교체필요함.)
+	  - Altibase의 경우 버전 별로 jdbc 필수 교체
+	  - Mysql은 5.2.x 버전이 일부 호환이 되지않아 교체필요.
+	  * JDBC 드라이버교체는 필수 아님. 일부 DB에서만 교체가 필요함.
+
+	------------------------------------------------------------------------------------------------
+	1. [* 참고] jdbc 드라이버 교체 방법.(1)
+	------------------------------------------------------------------------------------------------
+	1.1) 압축 해제, 재압축
+	------------------------------------------------------------------------------------------------
+	 가) PC에서 nuri2.jar 을 nuri2.zip으로 확장자 변경 후 압축풀기( nuri2/)
+	 나) nuri2/ 경로 아래 해당 DB에 맞는 jdbc 파일로 교체
+	    예) Cubrid 는  /NURI2/cubrid/ 이며 해당 cubrid/ 디렉토리를 삭제 후 현재 사용중 인 jdbc 압축 해제후  /NURI2/cubrid/ 로 교체
+	 다) nuri2/이동 후 전체 선택 zip(*Windows 기본 압축기능 이용)파일로 압축 후 nuri2.zip을 nuri2.jar 로 변경
+	 라) 모듈 기동
+	------------------------------------------------------------------------------------------------
+	1.2) UI 화면에서(반디집이 설치된 시스템, 기타 압축툴도 가능), Cubrid 일때
+	------------------------------------------------------------------------------------------------
+	 가) PC에서 nuri2.jar 반디집으로 압축파일 열기
+	 나) nuri2/ 경로 아래 해당 DB에 맞는 jdbc 파일 경로 삭제
+	    예) Cubrid 는  /NURI2/cubrid/ 이며 해당 cubrid/ 디렉토리 삭제
+	 다) 현재 사용중 인 jdbc 압축 해제후  /NURI2/ 하위로 드레그 /NURI2/Cubrid 되도록 함.
+	 라) 모듈 기동
+
+	------------------------------------------------------------------------------------------------
+	2) 환경설정 수정
+	------------------------------------------------------------------------------------------------
+	- 기존 환경설정 파일을 유지하셔도 메시지발송시 영향은 없습니다.
+	- 변경시 nuri2.conf.sample 파일을 nuri2.conf 변경 후 기존 환경설정 값을 적용 권장
+	------------------------------------------------------------------------------------------------
+###########################################################################################
+
+
+

@@ -1,0 +1,52 @@
+====================================================================================================================================
+무료 라이센스는 OpenJDK 또는 Azul사 Zulu을 사용하면 되며
+유료 라이센스 는 ORACLE(SUN) 사 JDK 또는 JRE 을 사용 하실 수 있습니다
+1. OpenJDK (무료 라이센스) https://github.com/ojdkbuild/ojdkbuild
+2. Zulu (무료 라이센스) https://www.azul.com/downloads/?package=jdk#download-openjdk
+3. Amazon Corretto (무료 라이센스) : https://aws.amazon.com/corretto
+4. Eclipse Temurin : https://adoptium.net/temurin/releases/
+========================================================================================================================
+JAVA 8 환경 사용 방법
+- JDK7(JDK6)이하 설치된 기관에서 활용 방법
+- 누리2 모듈은 JDK8 ~ JDK17 까지 지원 합니다.
+- 누리2 설치 환경: '/home/nuri2/'으로 안내 드립니다.
+
+*JDK 8 바이너리 파일 다운로드 후 로컬 실행
+ - Oracle JDK 또는 OpenJDK는 설치 과정 없이 바이너리를 추출하여 실행할 수 있습니다.
+
+[방법]
+1. JDK 8 바이너리 압축 파일 다운로드(권장버전:8u272b10 이상)
+ - Oracle 또는 OpenJDK 웹사이트에서 JDK 8의 tar.gz 파일을 다운로드합니다.
+ - 파일명 예: jdk-8uXXX-linux-x64.tar.gz
+
+2. 압축 해제
+ - [nuri2:/home/nuri2/] tar -xvzf jdk-8uXXX-linux-x64.tar.gz -C /home/nuri2/java8
+ - java 파일은 다음에 경로로 해제 '/home/nuri2/java8/bin/java'
+ - [*실행 확인]
+  [nuri2:/home/nuri2/] ./java8/bin/java - version
+ - 실행 불가시 nuri2 계정 사용 권한 적용 (하위디렉토리 포함)
+  [nuri2:/home/nuri2/] chmod 755 -R ./java8
+
+3. 누리2 기동 및 환경 설정(일시적으로 실행 중에만 적용 가능)
+ 1) 누리2 실행시 응용
+   #[2-3][실행][#Path, #Background]
+   nohup /home/nuri2/java8/bin/java -jar nuri2.jar nuri2.conf > /dev/null &
+   #[2-4][실행][#Path, #Background, #Heap]
+   nohup /home/nuri2/java8/bin/java -Xms100m -Xmx1250m -jar nuri2.jar nuri2.conf > /dev/null &
+   #누리2 기동 확인
+   ps -ef|grep nuri2.jar |grep -v grep
+   # 기타 : /usr/java/bin/java -jar nuri2.jar nuri2.conf 만 입력하면 화면(콘솔)에 로그를 바로 표시. [Ctrl]+[c] 또는 터미널을 닫으면 종료 됨
+   # 기타 : java -jar nuri2.jar nuri2.conf 만 입력하면 화면(콘솔)에 로그를 바로 표시. [Ctrl]+[c] 또는 터미널을 닫으면 종료 됨
+ 2) nuri2_launcher.sh 수정
+   ---------------------------
+   #!/bin/bash
+   ..
+   JAVA_HOME=/home/nuri2/java8/bin
+   # nuri2 path
+   NURI2_HOME=/home/nuri2
+   NURI2_NAMES=nuri2.jar
+   ...
+   ---------------------------
+
+
+========================================================================================================================

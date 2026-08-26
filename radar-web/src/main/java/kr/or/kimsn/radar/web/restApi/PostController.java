@@ -108,7 +108,10 @@ public class PostController {
 
     // 그룹 멤버 관리 > 연결 추가
     @PostMapping("/manage/sms_target_group_member_addlink")
-    public ApiResult<SmsTargetMemberLinkDto> smsTargetGroupMemberAddLink(@RequestParam Long mid, Long gid) {
+    public ApiResult<SmsTargetMemberLinkDto> smsTargetGroupMemberAddLink(@CookieValue(name = "userId", required = false) String userId, @RequestParam Long mid, Long gid) {
+        if (userId == null) {
+            return ApiResult.error("로그인이 필요합니다.", null, "NEED_LOGIN");
+        }
         return ApiResult.success(managePostService.setSmsTargetGroupMemberAddLink(mid, gid));
     }
 

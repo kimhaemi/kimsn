@@ -1,0 +1,248 @@
+<html>
+<head>
+<title>Get Byte! -바이트계산, 자릿수 계산</title>
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8">
+</head>
+<body topmargin='30' leftmargin='0' >
+<!-- ######################################## -->
+<SCRIPT LANGUAGE="JavaScript">
+<!--
+
+//날짜 시간
+function today_Hmdhis() {
+	var dt= new Date();
+	var year=dt.getYear();
+	var month=dt.getMonth()+1;
+	var days=dt.getDate();
+	var hour,min,sec ,dTime,tmp;
+	month=""+month; days=""+days; hour=""+dt.getHours(); min=""+dt.getMinutes(); sec=""+dt.getSeconds();
+	month		=(month.length	==1)?"0"+month	:	month;
+	days		=(days.length	==1)?"0"+days	:	days;
+	hour	=(hour.length	==1)?"0"+hour	:	hour;
+	min		=(min.length	==1)?"0"+min	:	min;
+	sec		=(sec.length	==1)?"0"+sec	:	sec;
+	dTime= hour +":"+ min +":"+ sec;
+	tmp = year+"-"+month+"-"+days+" "+dTime ;
+	return tmp;
+}
+
+
+// trim 선언 메시지 최종 (압뒤 공백 제거)
+if(!String.prototype.trim) {
+  String.prototype.trim = function (){ return this.replace(/^[\s\uFEFF\xA0]+|[\s\uFEFF\xA0]+$/g,''); };
+}
+
+function etrim(value){  //실제 트림실행.
+		value = value.replace(/\s+/, "");
+		//왼쪽 공백제거
+		value = value.replace(/\s+$/g, "");
+		//오른쪽 공백제거
+		value = value.replace(/\n/g, "");
+		//행바꿈제거
+		value = value.replace(/\r/g, "");
+		//엔터제거
+		return value;
+}
+
+
+//한글바이트 확인-- [2012-06-18] --
+function GetBytes(aro_name){
+    var ls_str = aro_name.value; // 이벤트가 일어난 컨트롤의 value 값
+		ls_str = ls_str.replace(/\r\n/g,'\n')//줄바꿈1byte 처리
+    var li_str_len = ls_str.length;  // 전체길이
+	var i           = 0;  // for문에 사용
+	var li_byte     = 0;  // (EUCKR=2)한글일 경우는 2 그밗에는 1을 더함
+	var ls_one_char = ""; // 한글자씩 검사한다
+
+   for(i=0; i< li_str_len; i++){
+	  // 한글자추출
+	  ls_one_char = ls_str.charAt(i);
+	  // 한글이면 2를 더한다.
+	  if (escape(ls_one_char).length > 4) {
+		 li_byte     = li_byte+2;  //euc_kr
+	  }else{// 그외의 경우는 1을 더한다.
+	 	 li_byte++;
+	  }
+   }
+	   ls_str=ls_str.trim(); //트림 처리된 데이터
+   var li_str_trim_len = ls_str.length;  // 전체길이 트림 이 후
+   var li_byte_trim    = 0;  // (EUCKR=2)한글일 경우는 2 그밗에는 1을 더함
+
+   for(i=0; i< li_str_trim_len; i++){
+	  // 한글자추출
+	  ls_one_char = ls_str.charAt(i);
+	  // 한글이면 2를 더한다.
+	  if (escape(ls_one_char).length > 4) {
+		 li_byte_trim     = li_byte_trim+2;  //euc_kr
+	  }else{// 그외의 경우는 1을 더한다.
+	 	 li_byte_trim++;
+	  }
+   }
+   alert("전체 byte\r\n======================\r [1] euckr :[ "+li_byte+" ] byte \n [2] 자릿수 : [ "+li_str_len+" ] 자리 \r\n======================\r\n[3] 트림 후 :[ "+li_byte_trim+" ] byte \n [4] 트림 후 자릿수 : [ "+li_str_trim_len+" ] 자리") ;
+
+   aro_name.value=	ls_str;
+   getByteLengh(document.MessagSendForm.MSG_TXT);
+
+   //return li_byte;
+}
+
+function input_Text(i) {
+	var thisForm = document.MessagSendForm;
+	var tmp="";
+	 if(i=="1") { // 80
+		tmp =today_Hmdhis()+" 무궁화꽃이피었습니다무궁화꽃이피었습니다무궁화꽃이피었습니다";
+		thisForm.MSG_TXT.value=thisForm.MSG_TXT.value + tmp  ;
+	}else if(i=="2") {// 80
+		tmp ="00000000011111111112222222222344444444455555555556666666666777777777788888888880";
+		thisForm.MSG_TXT.value=thisForm.MSG_TXT.value + tmp  ;
+	}else if(i=="3") {// 90
+		tmp ="무궁화꽃이피었습니다무궁화꽃이피었습니다무궁화꽃이피었습니다무궁화꽃이피었습니다무궁화꽃이";
+		thisForm.MSG_TXT.value=thisForm.MSG_TXT.value + tmp  ;
+	}else if(i=="4") {// 90
+		tmp ="000000000111111111122222222223444444444555555555566666666667777777777888888888801234567899";
+		thisForm.MSG_TXT.value=thisForm.MSG_TXT.value + tmp  ;
+	}else if(i=="8") {// 90
+		tmp =" \r\n000000000111111111122222222223444444444555555555566666666667777777777888888888801234567899\r\n";
+		thisForm.MSG_TXT.value=thisForm.MSG_TXT.value + tmp  ;
+	}else if(i=="5") {
+
+		tmp="모바일메시지서비스\r\n안내입니다.\r\n\r\n연동문의전화:\r\n042-250-5537\r\n문자문의:\r\n#1110-8888\r\n\r\n===================\r\n*홈페이지\r\nhttp://www.mgov.go.kr\r\n*연동모듈 다운로드\r\n[게이트웨이 연동 및\r\n개발가이드] =>\r\n'nuri_for_java_*****.zip' 다운로드\r\n\r\n===================\r\n*연동전 첨부문서\r\n'01_중요_연동_유의사항'을 꼭 읽어주세요!!\r\n\r\n* 개발시 필수 사항\r\n* 미적용시 차단\r\n- 전화번호 필터링\r\n수신번호: 01x 번호\r\n자리수 10~11자리.\r\n\r\n- 발신번호: 공백 불가\r\n ,유선통화 가능 번호\r\n ,발신번호 세칙 준수\r\n===================\r\n1. Test Bed URL\r\nhttps://www.mgov.go.kr/view/front/\r\n\r\n[Test Bed]는\r\n* 연동계정 로그인\r\n* 메시지 발송 대체\r\n* 데이타 검증 등\r\n* 주요기능\r\n- 메시지 접수(발송)\r\n- 한글 인코딩 확인\r\n- 내역 및 통계 조회\r\n- 가상이통사 Dummy 이용\r\n- 메시지 실제발송 안됨\r\n- 성공,실패 결과조회\r\n\r\n* 운영전환 필수사항\r\n - 발,수신 규칙 적용\r\n===================\r\n서비스 승인 안내\r\n-------------------\r\n*SMS,MMS(LMS)별도 승인\r\n*필수테스트 사항(접수)\r\n-SMS,MMS(LMS) 한글 전송,규격확인\r\n-SMS,MMS(LMS) 최대용량확인:90byte,2000byte\r\n-메시지 90byte(SMS),91byte(LMS)구간 테스트\r\n-SMS,MMS(LMS) 100건 전송,성능확인\r\n\r\n*서비스별 제약사항(승인후)\r\n누리가 G/W로 접수시 제한이\r\n없으나 이동 통신사로 발송시\r\n제한됨\r\n- SMS(단문): 30건\r\n- LMS(TXT) : 5건\r\n- MMS(첨부): 2건\r\n\r\n\r\n===================\r\n*메시지 전송 오류 문의 유의사항\r\n-------------------\r\n1.DB 상태값 확인\r\n- CUR_STATE , RSLT_CODE2\r\n2.발송로그 SEND로그\r\n- SEND로그 오류확인\r\n3.수신번호 및 발신시간 확인\r\n4.관리원문의";
+
+		thisForm.MSG_TXT.value= tmp  ;
+
+	}else if(i=="6") {
+
+		tmp ="모바일메시지서비스\r\n안내입니다.\r\n\r\n연동문의전화:\r\n042-250-5537\r\n문자문의:\r\n#1110-8888\r\n\r\n홈페이지\r\nhttp://www.mgov.go.kr\r\n\r\n===================\r\n*누리(Nuri)기동 명령어\r\n\r\n1.Command(커멘드) 기동\r\n\r\n#자바 버전확인(jdk 1.6이상)\r\n예1) java -version\r\n예2) /전체경로/java -version\r\n\r\n#누리기동 확인\r\nps -ef|grep nuri.jar\r\n\r\n#누리 실행\r\ncd /누리설치경로/\r\n\r\nnohup java -jar nuri.jar nuri.conf > /dev/null &\r\n\r\nnohup /전체경로/java -jar nuri.jar nuri.conf > /dev/null &\r\n\r\n\r\n2. 쉘(Shell)을 이용한 실행\r\n- nuri 기본제공 shell 입니다.\r\n- 환경설정 후 실행\r\n- 다음 경로 이동 '/누리설치경로/'\r\n- 아래 명령어 실행 기본권환(7xx)\r\n\r\n# 사용방법\r\nsh nuri_proccess.sh 파라미터\r\n예) sh nuri_proccess.sh start\r\nlist  : 누리 상태 확인 (ps -ef|grep nuri.jar)\r\nstart : 기동(실행)\r\nstop  : 중지(종료)";
+
+		thisForm.MSG_TXT.value= tmp  ;
+
+	}else if(i=="9") {
+		thisForm.MSG_TXT.value=""  ;
+
+	}else{
+		tmp ="모바일메시지\r\n테스트 메세지 입니다.\r\n"+ today_Hmdhis()+"\r\n테스트 메시지 입니다." ;
+		thisForm.MSG_TXT.value=thisForm.MSG_TXT.value + tmp  ;
+	}
+	// 바이트 확인
+	getByteLengh(document.MessagSendForm.MSG_TXT);
+}
+
+function getByteLengh(pstr) {
+    var str = pstr.value.substring(0);
+		//alert("["+str+"]");
+		//str = str.trim();			   //앞뒤 공백제거
+		str = str.replace(/\r\n/g,'\n')// 줄바꿈 1byte 처리
+		//alert("["+str+"]");
+		//alert(str);
+    var len = 0;
+    var lens = 0;
+    var overlength = false;
+    var msgType;
+    var isMms=false;
+	    msgType= "SMS";
+
+    for (i = 0; i < str.length; i++){
+        var ch = escape(str.charAt(i));
+        if (ch.length == 1) len++;
+        else if (ch.indexOf("%u") != -1) len += 2;
+        else if (ch.indexOf("%") != -1) len += ch.length / 3;
+
+        if (len > 90) {
+    		msgType= "LMS";
+			document.MessagSendForm.MSG_TXT.color='#0000FF';
+        }else{
+        	msgType= "SMS";
+			document.MessagSendForm.MSG_TXT.color='#FF0000';
+        }
+
+        if (len <= 2000) {
+            lens = i;
+            if (ch.indexOf("%u") != -1) lens = lens + 1;
+        }
+        else {
+            overlength = true;
+            if (ch.length == 1) len--;
+            else if (ch.indexOf("%u") != -1) len -= 2;
+            else if (ch.indexOf("%") != -1) len -= ch.length / 3;
+        }
+    } //end for
+
+    if (overlength) {
+        alert("메시지는 2000byte까지 작성 가능합니다");
+        pstr.value = pstr.value.substring(0, lens);
+        len = bytelength(pstr);
+    }
+
+	document.MessagSendForm.ThisByte.value=len;
+	document.MessagSendForm.MsgType.value=msgType;
+	//document.MessagSendForm.MSG_TXT.value=str;
+	document.MessagSendForm.ThisLength.value=str.length;  // 전체길이;
+}
+
+function bytelength(pstr) {
+    var str = pstr.value.substring(0).trim();
+    var len = 0;
+    for (i = 0; i < str.length; i++) {
+        var ch = escape(str.charAt(i));
+        if (ch.length == 1) len++;
+        else if (ch.indexOf("%u") != -1) len += 2;
+        else if (ch.indexOf("%") != -1) len += ch.length / 3;
+    }
+    return len;
+}
+
+
+
+-->
+</SCRIPT>
+<TABLE Border='0' Cellpadding='0'  Cellspacing='0' Width='800' Height='' bgcolor=''>
+<FORM METHOD='POST' ACTION=""  name="MessagSendForm" >
+<TR align='' valign='top' bgcolor=''>
+	<TD width='100'></TD>
+	<TD width='750'>
+	<!--  -->
+		<TABLE Border='1' Cellpadding='0'  Cellspacing='0' Width='100%' Height='' bgcolor=''>
+		<TR align='' valign='' bgcolor=''>
+			<TD height='30' COLSPAN='2' >
+			<B><FONT SIZE="" COLOR="#3300FF">* [중요]: 한글은 2바이트 입니다.(EUCKR)<BR>
+* [중요]: 엔터(개행,줄바꿈)의 경우 1byte 처리 '\r\n' 을 '\n' 로만 처리<BR>
+* SMS:90byte, LMS:91byte 이상 2000byte 이하</FONT></B>
+			</TD>
+		</TR>
+		<TR align='' valign='' bgcolor=''>
+			<TD height='30' COLSPAN='2' > 한글 자리수 & byte 연산 (euckr)</TD>
+		</TR>
+		<TR align='' valign='' bgcolor=''>
+			<TD><TEXTAREA NAME="MSG_TXT" cols="30" rows="10" onkeyup="javascript:getByteLengh(this)" onmouseover="javascript:getByteLengh(this)" onmouseout="javascript:getByteLengh(this)" onblur="javascript:getByteLengh(this)" ></TEXTAREA></TD>
+			<TD ROWSPAN='2'><INPUT TYPE='button' onClick="javascript:input_Text();"  value='SMS TEST'     maxlength='' STYLE='WIDTH:150px'><BR>
+<!-- 				<INPUT TYPE='button' onClick="javascript:input_Text(1);"   value='문자80byte..' maxlength='' STYLE='WIDTH:150px'><BR>
+				<INPUT TYPE='button' onClick="javascript:input_Text(2);"   value='숫자80byte'   maxlength='' STYLE='WIDTH:150px'><BR> -->
+				<INPUT TYPE='button' onClick="javascript:input_Text(3);"   value='문자90byte'   maxlength='' STYLE='WIDTH:150px'><BR>
+				<INPUT TYPE='button' onClick="javascript:input_Text(4);"   value='숫자90byte'   maxlength='' STYLE='WIDTH:150px'><BR>
+				<INPUT TYPE='button' onClick="javascript:input_Text(8);"   value='트림용93byte'   maxlength='' STYLE='WIDTH:150px'><BR>
+				<INPUT TYPE='button' onClick="javascript:input_Text(5);"   value='TestBED 안내' maxlength='' STYLE='WIDTH:150px'><BR>
+				<INPUT TYPE='button' onClick="javascript:input_Text(6);"   value='누리기동간단' maxlength='' STYLE='WIDTH:150px'><BR>
+				<INPUT TYPE='button' onClick="javascript:input_Text(9);"   value='지우기' maxlength=''><BR>
+				<FONT SIZE="2"><input type="text" id="ThisByte" value="0" style='border-collapse:collapse;border:none;Height:15px;WIDTH:32px;text-align:right;'  readonly/>byte(<input type="text" id="MsgType"  value="SMS" style='border-collapse:collapse;border:none;Height:15px;WIDTH:30px;text-align:right;' readonly/>)(EUCKR)<input type="text" name='ThistLenVal' id="ThisLength" value="0" style="background-color:#FFFFCC;border-collapse:collapse;border:none;font-size:12px;width:30px;margin:0;padding:0;margin-top:0;text-align:right;font-weight:bold;"  readonly/>자(length)</FONT>
+
+			</TD>
+		</TR>
+ 		<TR align='CENTER' valign='' bgcolor=''>
+			<TD><INPUT TYPE='button' Onclick='GetBytes(document.MessagSendForm.MSG_TXT)' value='바이트 확인' maxlength=''></TD>
+			<TD></TD>
+			<TD></TD>
+		</TR>
+		</TABLE>
+	<!--  -->
+	</TD>
+	<TD width='300'>
+
+
+	</TD>
+</TR>
+</FORM>
+</TABLE>
+
+
+</body>
+</html>

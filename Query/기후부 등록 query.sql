@@ -4,7 +4,7 @@ SHOW PROCESSLIST;
 SELECT * 
 FROM information_schema.innodb_trx;
 
-KILL 3017;
+kill 7;
 
 commit;
 
