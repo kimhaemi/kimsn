@@ -266,7 +266,7 @@ radar_new/
 |---|---|---|---|
 | S1 | ✅ 코드 해결 (`b75f60c`, 런타임 검증 대기) | 웹 인증 사실상 비활성화: `/**` 및 `anyRequest()` 모두 `permitAll()`, `authenticated()` 전부 주석. 인터셉터 등록도 주석. 비로그인으로 회원 생성/삭제·문자 발송·설정 변경 가능. CSRF도 disable | `radar-web/.../config/SecurityConfig.java`, `WebMvcConfig.java:16` |
 | S2 | 🔴 | 관측소 root 계정 등 SFTP 비밀번호가 평문으로 Git 커밋됨 (파일당 약 35건), 동일 비밀번호 다수 관측소 공유 | `config/application*.yml` (4개) |
-| S3 | 🔴 | DB 접속 비밀번호 평문 Git 커밋 | `common-data/src/main/resources/common-data.yml`, `Query/DB 접속 정보.sql` |
+| S3 | 🔴 | DB 접속 비밀번호 평문 Git 커밋 | `common-data/src/main/resources/common-data.yml`, `Query/DB 접속 정보.sql`, `note/그룹 감시자료 설정.sql` 1~2행(2026-11-19 추가 발견) |
 | S4 | 🔴 | GitLab 복구 코드, DB 전체 덤프 Git 커밋 | `note/gitlab-recovery-codes.txt`, `Query/dump/` |
 | S5 | ✅ 해결 (`3ad5473`) | SFTP 비밀번호를 매 주기 로그에 기록 → 이제 `******`/`(미설정)`만 기록. **이미 쌓인 운영 로그 파일에는 비밀번호가 남아 있으므로 삭제·비밀번호 교체 필요** | `Daemon/.../service/StepOneService.java:105` |
 | S6 | ✅ 해결 (`ade302c`) | `spring-boot-devtools`가 `implementation`으로 운영 jar에 포함 | `radar-web/build.gradle` |
@@ -799,6 +799,7 @@ commit: `ade302c`
 | 2026-11-19 | **주석 표시 형식 변경** | commit `f277315`. 사용자 요청: "명확하게 내가 아닌 것 확인할 수 있게. 예: `/* Claude 주석 */`". 모든 Claude 주석을 `/* Claude 주석 (2026-11-19): ... */`(yml·sh는 `# /* ... */`, HTML은 `<!-- /* ... */ -->`)로 변환, `check_comments.py`도 새 표시 인식으로 수정. 검증: build·테스트 14/14, 스크립트 FAIL 0, 사라진 기존 주석 0건. **절차 실수**: 코드 변경 여부 검사와 commit을 한 명령으로 실행해, 검사가 "코드 변경 파일 3개"를 보고했는데도 commit됨. 직후 확인 결과 2개(build.gradle 계열)는 여러 줄 블록 주석의 둘째 줄을 검사 로직이 코드로 오인한 것, 1개(check_comments.py)는 의도한 검사 로직 수정으로 실제 문제는 없었음. 이후 검사와 commit을 분리 |
 | 2026-11-19 | **K. 사용자 관리 ADMIN 전용 권한** | commit `8e233cc`. `/users/**` → `hasAuthority("ADMIN")`, `error/403.html` 추가. 발견: 회원 생성 화면이 권한 값을 브라우저에서 보내 USER도 관리자 계정을 만들 수 있었음 → 이번 변경으로 차단. 덤프 기준 ADMIN 1명·USER 1명 확인(개수만). 테스트 23/23(권한 9개 추가). K-09 첫 시도 실패(테스트 환경에 오류 화면 연결 Bean 없음) → 템플릿 직접 렌더링으로 변경. 대조군: ADMIN 규칙 제거 시 4개 실패 확인 후 원복 |
 | 2026-11-19 | **로컬 DB 웹 테스트 ① 접속·기동·비로그인 확인** | 환경: Windows MySQL 8.0.41(포트 3308, 스키마 watchdog/nuri/nuri2). WSL의 `localhost`는 Windows가 아니라 접속 불가, Windows 호스트 주소로는 `root`가 localhost 전용이라 거부 → 사용자 허용 후 WSL 대역 전용 테스트 계정(3개 스키마 권한, 사용자가 먼저 만들어 둔 계정의 비밀번호를 사용자 허용하에 재설정) 사용. 접속 정보는 저장소 밖 `~/.radar-localdb.env`(권한 600)에 두고 환경 변수로 주입 — 사용자가 수정한 `common-data.yml`(로컬 비밀번호 포함)은 commit하지 않음. 사전 점검(조회만): 회원 7명(ADMIN 1, USER 6, roles NULL 0), 비밀번호 7명 모두 BCrypt, STOPSMS=1. **웹 서버 기동 성공**(Java 25.0.5.1, Hikari·Hibernate 초기화, ERROR/WARN 0). 비로그인 HTTP 확인 R-01~R-09 기대대로(로그인 화면+CSRF, 보호 화면·/users 302→login, 토큰 없는 POST 403, 토큰 있어도 비로그인 302, 정적 200, 없는 아이디 로그인 → error=true(실제 JPA 회원 조회 실행), 토큰 없는 로그인 403). Windows 브라우저에서 `http://localhost:8080` 접속 확인. 로그인 후 확인은 테스트 계정 결정 대기 |
+| 2026-11-19 | **로컬 DB 웹 테스트 ② 로그인 후 확인·로컬 DB 구조 맞추기** | 사용자가 브라우저로 `test` 계정 로그인(13:05) → **로그인 성공**(Security 7 + 실제 DB 회원 조회 + BCrypt 확인). 직후 메인 화면 500: `Unknown column 'sd1_0.agency_cd'` (`MenuService.getStationList` ← `MenuController.main`). 원인: 로컬 DB가 기후부(MCEE) 기능 이전 구조 — 엔티티 대비 컬럼 8개 없음(`station_rdr` agency_cd·style_attr·status, `receive_condition`·`station_status`·`sms_target_group_link` agency_cd, `sms_target_group` agency_cd·gubun). 업그레이드 전 코드(`b250e18`)도 같은 컬럼을 쓰므로 **Java 25/Boot 4 문제 아님**. 처음에 "로컬 DB = 2026-07-16 덤프"로 잘못 추정했으나, 덤프에는 8개 컬럼과 기후부 데이터가 이미 있음을 확인(덤프 구조 ↔ 엔티티 누락 0건) → 로컬 DB는 덤프보다 이전 상태. 사용자 허용하에 로컬 DB 수정(접속 주소가 로컬 DB가 아니면 중단하는 실행기 사용): ① 컬럼 8개 추가(저장소 `Query/기후부 등록 query.sql`, `note/그룹 감시자료 설정.sql`의 ALTER와 같은 정의) ② 기존 행 agency_cd='KMA', 문자 그룹 gubun(지점 구분값, 묶음 그룹 0), 지도 좌표 style_attr ③ 사용자 요청으로 덤프에서 **기상청B(MCEE) 18개 지점**(station_rdr 18·station_status 10·receive_condition 18·sms_target_group 10·link 3행)과 **기상청A 제주공항 JIA(gubun 3, TDWR)**(각 1행, link 2행) 추가 — 모두 rollback 시험 실행으로 건수 확인 후 한 트랜잭션으로 반영. 회원·수신 기록·문자 수신자는 개인정보/운영 기록이라 가져오지 않음. 전부 `docs/verify/localdb_schema_sync.sql`로 정리(INSERT IGNORE, 다시 실행해도 0건 — 재실행으로 확인, 되돌리기 SQL 포함). 수정 후 엔티티 ↔ 로컬 DB 누락 컬럼 0건. 로그: 13:05 오류 1건 이후 **ERROR/Exception 0건**, 메인·관측소(KSN) 화면 30초 자동 갱신 정상. 수신 표가 빈 것은 로컬 DB에 오늘 수신 기록이 없어서(Daemon 미실행)이며 정상. WARN: Thymeleaf `Deprecated unwrapped fragment expression`(`layout/default_layout` 10·17행, 화면마다 2건) — 동작 영향 없음, 다음 Thymeleaf에서 제거 예정이라 `~{...}` 형식으로 정리 권장(미적용). 보안 발견: `note/그룹 감시자료 설정.sql` 1~2행에 DB root 비밀번호 평문(Git 추적 중) → S3에 추가 |
 | 2026-11-19 | 문서 보강 | 처음 보는 사람을 위한 0장(현재 상태, 용어, 환경 준비, 빌드·테스트 방법, 자주 나는 오류, commit 목록)과 8장(DB·서버가 필요한 남은 작업 따라하기) 추가. 6.8-C/F/S5/G/J 상세 기록 |
 
 ---
@@ -823,6 +824,8 @@ commit: `ade302c`
   mysql -u root -p < Query/dump/dump-nuri2-202607161334.sql
   ```
   (덤프 파일에 `CREATE DATABASE`/`USE` 문이 없으면 스키마를 먼저 만들고 `mysql -u root -p <스키마명> < 덤프파일`로 복원)
+
+- (2026-11-19 추가) **로컬 DB가 지금 소스보다 예전 구조이면** 로그인 후 `Unknown column ... agency_cd` 오류가 난다. 덤프로 다시 복원하거나, `docs/verify/localdb_schema_sync.sql`(컬럼 8개 추가 + 기상청B 18개 지점·제주공항 추가, 다시 실행해도 안전)을 개발 DB에서 실행한다. **운영 DB에는 실행하지 않는다**
 
 **② 문자 발송 끄기 (개발 DB에서)**
 - Daemon은 `sms_send_onoff` 테이블의 `code='STOPSMS'` 행이 `value=1`일 때만 문자를 보낸다 (`StepTwoService.java:265`)
