@@ -61,7 +61,7 @@
   <div class="meta">
     작성일 <b>2026-11-19</b><br>
     브랜치 <b>ver_java25</b> (원격 push 전)<br>
-    기준 commit <b>b250e18</b> 이후 <b>32개</b> commit
+    기준 commit <b>b250e18</b> 이후 <b>36개</b> commit<br>로컬 테스트 완료 후 갱신
   </div>
 </header>
 
@@ -79,7 +79,7 @@
   <div class="lead">
     2026-11-17 OpenJDK에서 인증 없이 원격으로 서버를 장악할 수 있는 취약점 <b>Java4Shell (CVE-2026-114938, CVSS 9.2)</b>이 공개되었다.
     패치된 Java 25를 쓰려면 프레임워크도 함께 올려야 하므로 Java·Spring Boot·빌드 도구를 모두 전환했다.
-    <br><b style="color:var(--ink)">결론:</b> 개발 PC와 로컬 DB에서 확인할 수 있는 항목은 대부분 통과했다.
+    <br><b style="color:var(--ink)">결론:</b> 개발 PC와 로컬 DB에서 할 수 있는 테스트는 <b style="color:var(--ok)">모두 마쳤고 통과</b>했다 (업그레이드로 생긴 화면 오류 1건은 발견 즉시 수정).
     <b>운영 배포 전에 운영 환경에서만 가능한 확인(SFTP 호환성, 운영 DB 관리자 계정, 서버 JDK 설치)과 노출된 비밀번호 교체가 남아 있다.</b>
   </div>
 </section>
@@ -91,7 +91,7 @@
     <tr><td class="k">A</td><td>빌드 설정 전환 (Gradle 9.9.1, toolchain 25)</td><td><span class="chip ok">완료</span></td><td>Daemon jar 5종 + 웹 jar 생성, wrapper·SHA-256 검증 포함</td></tr>
     <tr><td class="k">B</td><td><code>javax</code> → <code>jakarta</code> 패키지 전환</td><td><span class="chip ok">완료</span></td><td>3개 모듈 컴파일 성공, Boot 4 API 변경 2건 함께 반영</td></tr>
     <tr><td class="k">C</td><td>로그인·보안 설정 재작성, 인증 복구</td><td><span class="chip ok">완료</span></td><td>로그인 필수 · CSRF 방어. 자동 테스트 14개 + 로컬 DB 실제 화면 확인</td></tr>
-    <tr><td class="k">D</td><td>DB 쿼리(JPA / Hibernate 7) 검증</td><td><span class="chip part">일부</span></td><td>웹 화면은 로컬 DB에서 오류 0건. Daemon 테스트 모드는 미진행</td></tr>
+    <tr><td class="k">D</td><td>DB 쿼리(JPA / Hibernate 7) 검증</td><td><span class="chip ok">완료</span></td><td>로컬 DB: 웹 화면 31개·검색·저장, Daemon 테스트 모드 7주기 오류 0. 화면 오류 1건 수정</td></tr>
     <tr><td class="k">E</td><td>설정 파일(yml) 정리</td><td><span class="chip ok">완료</span></td><td>Boot 4에서 Daemon이 시작되지 않던 오류 1건 발견·수정, 설정 로딩 53/53</td></tr>
     <tr><td class="k">F</td><td>운영 실행 스크립트 JDK 25 적용</td><td><span class="chip ok">완료</span></td><td>25.0.5.1 미만 Java는 시작 차단. 스크립트 6개 × 7항목 FAIL 0</td></tr>
     <tr><td class="k">K</td><td>사용자 관리 관리자(ADMIN) 전용</td><td><span class="chip ok">완료</span></td><td>USER가 스스로 관리자 계정을 만들 수 있던 문제 차단. 실제 화면 확인</td></tr>
@@ -114,7 +114,7 @@
       <tr><td>SFTP (JSch)</td><td>0.1.55 (유지보수 중단)</td><td><b>mwiede 2.28.8</b></td></tr>
       <tr><td>MySQL 드라이버</td><td>8.0.33</td><td><b>9.7.0</b></td></tr>
     </table>
-    <p class="muted" style="margin-top:8px;font-size:13px">작업 전 의존성 점검에서 약 123건의 CVE(Critical 16)를 확인했다. 작업 후 버전 기준 재점검은 남은 작업이다.</p>
+    <p class="muted" style="margin-top:8px;font-size:13px">의존성 취약점: 작업 전 약 123건(Critical 16) → 작업 후 실제 빌드 라이브러리 111개 재점검 결과 <b style="color:var(--ink)">1건</b> (ognl 3.3.4, Moderate, Spring 환경에서는 실제 위험 낮음).</p>
   </div>
   <div>
     <h2>4. 보안 문제 처리 현황</h2>
@@ -141,9 +141,12 @@
       <tr><td>보안·권한 자동 테스트</td><td><span class="chip ok">23 / 23</span> 대조군으로 회귀 탐지 확인</td></tr>
       <tr><td>설정 로딩 테스트</td><td><span class="chip ok">53 / 53</span></td></tr>
       <tr><td>운영 스크립트 테스트</td><td><span class="chip ok">FAIL 0</span></td></tr>
-      <tr><td>로컬 DB 웹: 로그인 · 화면 조회</td><td><span class="chip ok">통과</span> 서버 오류 0건</td></tr>
+      <tr><td>로컬 DB 웹: 화면 31개 · 검색 폼 8건</td><td><span class="chip ok">통과</span> 서버 오류 0건 (수정 후)</td></tr>
       <tr><td>로컬 DB 웹: 관리자 권한 (403)</td><td><span class="chip ok">통과</span></td></tr>
-      <tr><td>로컬 DB 웹: 저장 기능 (CSRF)</td><td><span class="chip ok">통과</span> 문자 발송 없음 확인</td></tr>
+      <tr><td>로컬 DB 웹: 저장 · 로그아웃 · 세션 만료</td><td><span class="chip ok">통과</span> 만료 후 저장은 거부</td></tr>
+      <tr><td>문자 발송 화면 저장 (가짜 번호)</td><td><span class="chip ok">통과</span> 저장 확인 후 삭제</td></tr>
+      <tr><td>Daemon 테스트 모드 (가상 수집)</td><td><span class="chip ok">통과</span> 판정·문자 차단 정상</td></tr>
+      <tr><td>open-in-view 끄고 화면 전체</td><td><span class="chip ok">통과</span></td></tr>
       <tr><td>기존 주석 보존 검사</td><td><span class="chip ok">사라진 주석 0건</span></td></tr>
     </table>
   </div>
@@ -154,6 +157,8 @@
       <li><b>권한 상승</b> — 회원 생성 화면이 권한 값을 브라우저에서 보내 USER가 관리자 계정을 만들 수 있었음 → 관리자 전용으로 차단</li>
       <li><b>로컬 DB 구조 차이</b> — 로그인 후 500 오류. 코드가 아니라 로컬 DB가 옛 구조였음 → 맞춤 SQL 작성·적용 (업그레이드와 무관)</li>
       <li><b>화면 경고</b> — Thymeleaf 옛 표현식 경고(화면마다 2건) → 0건</li>
+      <li><b>문자 결과 화면 오류</b> — Thymeleaf 3.1 보안 제한으로 화면이 중간에 끊김(응답은 200이라 눈에 안 띔) → 표현식 수정</li>
+      <li><b>위험한 테스트 예시</b> — 문서의 Daemon 테스트 설정대로 하면 나머지 관측소에 실제 SFTP 접속 → 예시 수정·경고 추가</li>
       <li><b>새로 발견한 평문 비밀번호</b> — 참고 SQL 파일 1개 (S3에 추가)</li>
       <li><b>문서 이력의 민감값</b> — 테스트 주소·계정 이름을 Git 이력에서 제거 (push 전)</li>
     </ul>
@@ -172,13 +177,13 @@
     </ul>
   </div>
   <div class="box">
-    <h2>8. 남은 테스트 (14건)</h2>
+    <h2>8. 남은 테스트 (6건 — 모두 운영 환경)</h2>
     <table>
       <tr><th>어디서</th><th>항목</th></tr>
-      <tr><td class="k">로컬 (8)</td><td>로그아웃 · 세션 만료 후 저장 · 나머지 화면 전부 · 검색 폼 · 문자 발송 화면(누리2 미연결 DB만) · Daemon 테스트 모드 · open-in-view 설정 · 작업 후 CVE 재점검</td></tr>
+      <tr><td class="k">로컬</td><td><span class="chip ok">8건 모두 완료</span> 로그아웃 · 세션 만료 · 화면 전체 · 검색 폼 · 문자 저장 · Daemon · open-in-view · CVE 재점검</td></tr>
       <tr><td class="k">운영 (6)</td><td>관측소 SSH 버전 · SFTP 실제 접속 · 사전 확인(CPU·Java·관리자 계정) · JDK 25 설치 · 순차 배포 · 배포 후 웹 재확인</td></tr>
     </table>
-    <p class="muted" style="margin-top:8px;font-size:13px">결정 대기: USER에게 사용자 관리 메뉴 숨김 여부, 추가 관리자 전용 기능, 화면 캐시 설정, 정리 대상 파일 삭제, push 방식</p>
+    <p class="muted" style="margin-top:8px;font-size:13px">결정 대기: 세션 만료 시 안내 메시지, ognl 버전, open-in-view 적용, 사용자 관리 메뉴 숨김, 기존 버그(joinForm 등) 정리, push 방식 — 문서 8.6</p>
   </div>
 </section>
 
