@@ -1166,6 +1166,10 @@ commit: `ade302c`
   - `ffc5f5e`→`2d494fb`, `6434409`→`853ba0e`, `b52705a`→`7963afa`, `d6dc7a0`→`0e82caa`
   - 예전 번호는 이제 브랜치에 없다
 - 참고: 예전 commit 안의 문서 본문에는 그 시점의 예전 번호가 그대로 남아 있다 (기록이라 고치지 않음)
+- **reflog 정리 (사용자 요청)**
+  - 예전 commit은 Git의 복구 기록(reflog)에만 남아 있었다
+  - `git reflog expire --expire=now --expire-unreachable=now --all` + `git gc --prune=now`로 완전히 삭제했다 (되돌릴 수 없음)
+  - 확인: 예전 commit 7개 모두 `git cat-file -e` 결과 없음. 저장소 전체 파일 객체에서 해당 값 검색 0건. `git fsck` 오류 없음
 
 ---
 
