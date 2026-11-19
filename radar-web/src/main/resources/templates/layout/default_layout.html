@@ -7,14 +7,16 @@
 <!-- 📌 1. 정석적인 head 태그를 명시해 줍니다 -->
 <head>
   <!-- 📌 2. configFragment 조각이 head 태그를 포함하고 있으므로 th:replace로 완전히 갈아끼웁니다 -->
-  <th:block th:replace="layout/config :: configFragment"></th:block>
+  <th:block th:replace="~{layout/config :: configFragment}"></th:block>
+  <!-- /* Claude 주석 (2026-11-19): Thymeleaf 3.1 경고(Deprecated unwrapped fragment expression) 해소 — "layout/config :: configFragment" → "~{layout/config :: configFragment}" (동작 동일) */ -->
 </head>
 
 <body style="zoom: 1;">
 
 <!-- header -->
 <div class="wrap">
-  <th:block th:replace="layout/header :: headerFragment"></th:block>
+  <th:block th:replace="~{layout/header :: headerFragment}"></th:block>
+  <!-- /* Claude 주석 (2026-11-19): Thymeleaf 3.1 경고(Deprecated unwrapped fragment expression) 해소 — "layout/header :: headerFragment" → "~{layout/header :: headerFragment}" (동작 동일) */ -->
 </div>
 
 <div id="wrap">
