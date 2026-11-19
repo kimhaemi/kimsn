@@ -4,7 +4,31 @@
 # 참고용 자료입니다.
 # 모듈작동이 되지 않을 수 있습니다.
 #################################################
-#JAVA_HOME=/usr/lib/jvm/java-1.8.0-openjdk-1.8.0.342.b07-2.el8_6.x86_64
+#################################################
+# [Java 실행 환경] 2026-11-19 OpenJDK 25 전환
+#  - JAVA_HOME: 운영 서버의 JDK 25 설치 경로. 서버에 JAVA_HOME 환경 변수가 있으면 그 값을 우선 사용
+#    (RHEL 계열 패키지 설치 시 보통 /usr/lib/jvm/java-25-openjdk, 서버마다 실제 경로 확인 필요)
+#  - JAVA_MIN_VERSION: Java4Shell(CVE-2026-114938) 패치가 포함된 최소 버전. 이보다 낮으면 시작하지 않음
+#  - 이전 설정(참고): JAVA_HOME=/usr/lib/jvm/java-1.8.0-openjdk-1.8.0.342.b07-2.el8_6.x86_64
+#################################################
+JAVA_HOME=${JAVA_HOME:-/usr/lib/jvm/java-25-openjdk}
+JAVA_BIN=$JAVA_HOME/bin/java
+JAVA_MIN_VERSION=25.0.5.1
+
+# Java 실행 파일과 버전 확인 (start 시 호출)
+check_java() {
+        if [ ! -x "$JAVA_BIN" ]; then
+                echo "[ERROR] Java 실행 파일을 찾을 수 없습니다: $JAVA_BIN (JAVA_HOME 경로 확인)"
+                exit 1
+        fi
+        JAVA_VER=`"$JAVA_BIN" -XshowSettings:properties -version 2>&1 | awk -F'= ' '/ java.version = /{print $2; exit}'`
+        LOWEST=`printf '%s\n%s\n' "$JAVA_MIN_VERSION" "$JAVA_VER" | sort -V | head -1`
+        if [ -z "$JAVA_VER" ] || [ "$LOWEST" != "$JAVA_MIN_VERSION" ]; then
+                echo "[ERROR] Java 버전($JAVA_VER)이 최소 요구 버전($JAVA_MIN_VERSION)보다 낮거나 확인할 수 없습니다. JDK 25.0.5.1 이상을 설치하세요."
+                exit 1
+        fi
+        echo "Java: $JAVA_BIN ($JAVA_VER)"
+}
 RADAR_HOME=/home/watcher/deamon/RDR
 RADAR_NAME_JAR=RDR.jar
 RADAR_DAEMON_TYPE=-DDAEMON_TYPE=KMA_RDR
@@ -39,10 +63,12 @@ case "$1" in
 
         [Vv]ersion)
                 echo "$RADAR_TITLE"
+                "$JAVA_BIN" -version 2>&1 | head -1
         ;;
 
  [Ss]tart)
         echo "START $RADAR_TITLE Process"
+        check_java
 
         case "$2" in
                 [Aa]ll)
@@ -57,7 +83,7 @@ case "$1" in
                                 else
                                 {
                                         cd $RADAR_HOME
-                                        nohup java $RADAR_DAEMON_TYPE -jar $RADAR_HOME/$RADAR_NAME_JAR >> "$RADAR_LOGS/$RADAR_TITLE.log" 2>&1 &
+                                        nohup "$JAVA_BIN" $RADAR_DAEMON_TYPE -jar $RADAR_HOME/$RADAR_NAME_JAR >> "$RADAR_LOGS/$RADAR_TITLE.log" 2>&1 &
                                         echo "$radar_list $RADAR_TITLE Process Start-up."
                                 }
                                 fi
@@ -75,7 +101,7 @@ case "$1" in
                         else
                         {
                                 # cd $RADAR_HOME/$2
-                                nohup java $RADAR_DAEMON_TYPE -jar $RADAR_HOME/$RADAR_NAME_JAR >> "$RADAR_LOGS/$RADAR_TITLE.log" 2>&1 &
+                                nohup "$JAVA_BIN" $RADAR_DAEMON_TYPE -jar $RADAR_HOME/$RADAR_NAME_JAR >> "$RADAR_LOGS/$RADAR_TITLE.log" 2>&1 &
                                 echo "$RADAR_TITLE Process Start-up."
                         }
                         fi
