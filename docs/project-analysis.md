@@ -28,6 +28,7 @@
 | D | DB 쿼리(JPA) 동작 검증 | ⏳ **DB 필요** — 미진행 | 8.3 |
 | E | 설정 파일(yml) 정리 | ✅ 완료 | 6.8-E |
 | F | 운영 실행 스크립트 JDK 25 적용 | ✅ 완료 | 6.8-F |
+| K | 사용자 관리(`/users/**`) ADMIN 전용 권한 | ✅ 코드·자동 테스트 완료 / ⏳ 실제 화면 확인 필요 | 6.8-K, 8.2 |
 | 보안 | S1, S5, S6, S7 해결 / S2~S4, S8 남음 | 일부 완료 | 4.1 |
 | 배포 | 운영 서버 JDK 25 설치 → 순차 교체 | ⏳ 미진행 | 8.5 |
 
@@ -114,7 +115,7 @@ source ~/.bashrc
 - 만들어지는 파일
   - 웹: `radar-web/build/libs/RADAR_WEB.jar`
   - 데몬: `Daemon/build/libs/RDR.jar`, `SDR.jar`, `TDWR.jar`, `RDR_B.jar`, `SDR_B.jar`
-- 확인된 결과(2026-11-19): 성공, 자동 테스트 14개 모두 통과
+- 확인된 결과(2026-11-19): 성공, 자동 테스트 23개 모두 통과 (보안 C-01~C-14 + 권한 K-01~K-09)
 
 **보안 자동 테스트만 실행**
 ```bash
@@ -175,30 +176,34 @@ java -cp "/tmp/rdr/BOOT-INF/classes:/tmp/rdr/BOOT-INF/lib/*" docs/verify/ConfigL
 | `7bb787f` | 빌드 | `.gitattributes` (줄바꿈 규칙) |
 | `779cdc6` | 문서 | 0장·8장 추가 |
 | `ab480ac` | 주석 | Claude 작성 주석에 `[Claude 2026-11-19]` 표시, 기존 주석 원문 복원 (실행 코드 변경 없음) |
-| (다음 commit) | 문서·검증 | 0.8 주석 구분 규칙, 9장 검토자 검증 가이드, 검증 스크립트 3개(`test_process_scripts.sh`, `JschDefaults.java`, `check_comments.py`) — `git log -1 -- docs/verify/check_comments.py`로 해시 확인 |
+| `1aa2ce5` | 문서·검증 | 0.8 주석 구분 규칙, 9장 검토자 검증 가이드, 검증 스크립트 3개(`test_process_scripts.sh`, `JschDefaults.java`, `check_comments.py`) |
+| `f277315` | 주석 | Claude 주석 표시를 `/* Claude 주석 (2026-11-19): ... */` 형식으로 통일 (실행 코드 변경 없음) |
+| `8e233cc` | K | 사용자 관리(`/users/**`) ADMIN 전용 권한, 403 화면, 권한 테스트 9개 |
 
 ### 0.8 주석 구분 규칙 — 누가 쓴 주석인가
 
-이번 업그레이드 작업에서 Claude(AI 작업자)가 소스에 추가한 주석은 **기존 작성자의 주석과 섞이지 않도록** 아래처럼 표시했다.
+Claude(AI 작업자)가 소스에 추가한 주석은 **기존 작성자의 주석과 한눈에 구분되도록** 모두 `/* Claude 주석 ... */` 모양으로 표시한다 (2026-11-19 사용자 요청으로 `f277315`에서 이 형식으로 통일. 그 전에는 `[Claude 2026-11-19]` 표시를 썼음).
 
-| 형태 | 예시 | 의미 |
+| 파일 종류 / 형태 | 표시 예시 | 의미 |
 |---|---|---|
-| 한 줄 주석 | `// [Claude 2026-11-19] 3.14.0 → BOM 관리 (3.20.0)` | 이 줄은 Claude 작성 |
-| 여러 줄 주석 | 첫 줄에 `[Claude 2026-11-19]`, 다음 줄부터 들여쓰기로 이어짐 | 표시된 줄과 바로 이어지는 들여쓴 줄까지 Claude 작성 |
-| 여러 줄 블록 | `# ===== [Claude 2026-11-19] ... 시작 =====` ~ `# ===== [Claude 2026-11-19] ... 끝 =====` | 시작~끝 사이(코드 포함) 전체가 Claude 추가분 |
-| 줄 끝 주석 | `nohup "$JAVA_BIN" ... &   # [Claude 2026-11-19] java → "$JAVA_BIN"` | 이 줄의 코드가 Claude에 의해 변경됨 |
-| 새 파일 | 파일 머리말에 `[Claude 2026-11-19] 새로 작성한 파일` | 파일 전체(주석 포함)가 Claude 작성 |
-| 기존 코드 보존 블록 | `===== [Claude 2026-11-19] 기존 코드 원문 보존 ... 시작/끝 =====` | 블록 안은 **기존 코드와 기존 주석의 원문**. 새 버전에서 쓰지 않게 되어 주석 처리만 함 (`SecurityConfig.java`) |
+| Java·Gradle·JS 한 줄 | `/* Claude 주석 (2026-11-19): 3.14.0 → BOM 관리 (3.20.0) */` | 이 주석은 Claude 작성 |
+| Java·Gradle·JS 여러 줄 | `/* Claude 주석 (2026-11-19): 첫 줄` … `마지막 줄 */` | `/*`부터 `*/`까지 하나의 Claude 주석 |
+| 코드 줄 끝 | `mainClass = '...' /* Claude 주석 (2026-11-19): 존재하지 않던 ... 수정 */` | 이 줄의 코드가 Claude에 의해 변경됨 |
+| yml·sh·.gitattributes (`#` 주석만 가능) | `# /* Claude 주석 (2026-11-19): ... */` | 위와 같음 (`#` 뒤에 같은 모양) |
+| HTML | `<!-- /* Claude 주석 (2026-11-19): ... */ -->` | 위와 같음 |
+| 범위 블록 | `/* Claude 주석 (2026-11-19) 시작: ... */` ~ `/* Claude 주석 (2026-11-19) 끝: ... */` | 시작~끝 사이(코드 포함) 전체가 Claude 추가분 (운영 스크립트의 Java 실행 환경 블록) |
+| 기존 코드 보존 블록 | `/* Claude 주석 (2026-11-19) 시작: 기존 코드 원문 보존 ... */` ~ `끝` | 블록 안은 **기존 코드와 기존 주석의 원문**. 새 버전에서 쓰지 않게 되어 주석 처리만 함 (`SecurityConfig.java`) |
+| 새 파일 | 파일 맨 위 `/* Claude 주석 (2026-11-19): 새로 작성한 파일 ...` | 파일 전체(안의 주석 포함)가 Claude 작성 |
 
-- **표시가 없는 주석은 모두 기존 작성자의 주석**이다. 📌, 💡 같은 이모지 주석은 기존 작성자 스타일이며 Claude 주석에는 쓰지 않았다
+- **`Claude 주석`이라는 글자가 없는 주석은 모두 기존 작성자의 주석**이다. 📌, 💡 같은 이모지 주석은 기존 작성자 스타일이며 Claude 주석에는 쓰지 않는다
 - 작업 중 실수로 바뀌거나 지워졌던 기존 주석(주석 처리된 import의 `javax`→`jakarta` 치환, SecurityConfig·build.gradle·운영 스크립트 주석 등)은 `ab480ac`에서 **원문 그대로 복원**했다
-- 기존 주석이 붙어 있던 코드가 바뀐 경우, 기존 주석은 그대로 두고 바로 아래에 `[Claude ...] 위 주석은 기존 ... 설명` 식으로 설명을 덧붙였다. 예: `build.gradle`의 `version '4.1.2' apply false // Java 11 지원하는 안정 버전`(기존 주석) + 다음 줄 Claude 설명
+- 기존 주석이 붙어 있던 코드가 바뀐 경우, 기존 주석은 그대로 두고 바로 아래에 `/* Claude 주석 (...): 위 주석은 기존 ... 설명 */`을 덧붙였다. 예: `build.gradle`의 `version '4.1.2' apply false // Java 11 지원하는 안정 버전`(기존 주석) + 다음 줄 Claude 설명
 - **찾는 방법**
   ```bash
-  git grep -n "\[Claude 2026-11-19\]"            # Claude 주석 전체 목록
-  python3 -I docs/verify/check_comments.py       # 표시 누락·기존 주석 삭제 여부 자동 검사 (9.3 참고)
+  git grep -n "Claude 주석"                      # Claude 주석 전체 목록
+  python3 -I docs/verify/check_comments.py       # 표시 누락·기존 주석 삭제 여부 자동 검사 (9.3.9)
   ```
-- 앞으로 작업할 때도 같은 규칙을 쓴다 (날짜만 작업일로 변경)
+- 앞으로 작업할 때도 같은 형식을 쓴다 (날짜만 작업일로 변경)
 
 ---
 
@@ -440,6 +445,9 @@ radar_new/
 - [x] S5. SFTP 비밀번호 로그 제거 (`3ad5473`)
 - [x] `.gitattributes` 추가 (`7bb787f`)
 - [ ] SFTP 접속 호환성 확인: 관측소 서버가 새 jsch의 알고리즘을 지원하는지 (8.4)
+- [x] K. 사용자 관리 ADMIN 전용 권한 (`8e233cc`, 테스트 23/23, 대조군 확인)
+- [ ] K 화면 확인: USER/ADMIN 계정으로 사용자 관리 접근, 403 화면 표시 (8.2)
+- [ ] 운영 DB에 ADMIN 계정이 1명 이상 있는지, `roles`가 NULL인 회원이 없는지 확인 (8.5)
 - [ ] D. JPA 네이티브 쿼리 검증
 - [x] E. 설정 파일 정리 (`1f1ae08`, 검증 완료 → 6.8-E)
 - [ ] (D 단계에서) `spring.jpa.open-in-view` 실제 적용 여부 결정 (현재 잘못된 위치에 있어 효과 없음)
@@ -711,6 +719,57 @@ commit: `ade302c`
 - **영향**: 관측소 서버의 SSH(OpenSSH)가 **7.2보다 오래된 버전**(예: CentOS/RHEL 6 계열의 OpenSSH 5.x)이면 `rsa-sha2-*`를 지원하지 않아 `Algorithm negotiation fail` 또는 `UnknownHostKey`류 오류로 **접속이 실패할 수 있다**. 관측소 장비(Rainbow5 등)에 오래된 OS가 있는지 확인이 필요하다
 - **확인과 대응 방법** → 8.4
 
+#### K. 사용자 관리 ADMIN 전용 권한 (2026-11-19 완료, commit `8e233cc`)
+
+##### 배경 — 왜 필요한가
+
+- C 단계에서 "로그인한 사람만" 쓸 수 있게 했지만, **로그인한 사람은 누구나(USER 포함) 사용자 관리 기능을 쓸 수 있었다**
+- 더 큰 문제: 회원 생성 화면(`admin_user_form.html:104`)이 **권한 값을 브라우저에서 정해 서버로 보낸다** (`roles: memberClass == "A" ? "ADMIN" : "USER"`). 따라서 USER 계정으로 로그인한 사람이 회원 생성 API에 `roles=ADMIN`을 보내 **스스로 관리자 계정을 만들 수 있었다**
+- 이번 변경으로 `/users/**` 전체를 ADMIN만 쓸 수 있게 하여 이 경로를 막았다
+
+##### 변경 내용
+
+| 파일 | 변경 |
+|---|---|
+| `SecurityConfig.java` | `ADMIN_PATHS = { "/users/**" }` 추가, `.requestMatchers(ADMIN_PATHS).hasAuthority("ADMIN")` (공개 경로 다음, `anyRequest().authenticated()` 앞) |
+| `templates/error/403.html` (새 파일) | 권한 없음 안내 화면. 기존 `error/404.html`을 복사해 제목과 문구만 변경 ("403 - Forbidden", "관리자(ADMIN) 계정으로 로그인하세요") |
+| `SecurityConfigTest.java` | 권한 테스트 K-01~K-09 추가, 기존 C-06·C-07 대상 경로 변경 (아래) |
+
+- **ADMIN 전용이 된 경로** (`/users/**` 아래 전부)
+  - 화면: `/users/admin_user`(사용자 목록), `/users/admin_user_form`(등록·수정), `/users/joinForm`
+  - API: `/users/admin_user_create`, `/users/admin_user_modify`, `/users/admin_user_del`
+- **그 외 기능**(관측소, 통계, 문자, 설정 화면 등)은 지금처럼 로그인한 모든 사용자가 사용 가능
+- **`hasRole`이 아니라 `hasAuthority`를 쓴 이유**: `PrincipalDetails.getAuthorities()`가 DB `watchdog_member.roles` 값(`Roles` enum 이름)을 그대로 권한 이름으로 돌려준다 → 권한 이름이 `"ADMIN"`/`"USER"`다. Spring의 `hasRole("ADMIN")`은 `"ROLE_ADMIN"`을 찾기 때문에 맞지 않는다. 이 전제는 테스트 K-08로 확인한다
+- **적용 전 데이터 확인**: 2026-07-16 덤프(`Query/dump/dump-watchdog-*.sql`)의 `watchdog_member`는 2명이고 `roles`가 ADMIN 1명, USER 1명이었다 (개인정보는 출력하지 않고 개수만 집계). **운영 DB에 ADMIN이 한 명도 없으면 아무도 사용자 관리를 할 수 없게 되므로** 배포 전에 반드시 확인한다 (8.5)
+
+##### 테스트 방법과 결과 — `./gradlew :radar-web:test` (DB 없이 실행)
+
+- 테스트 계정 2개를 가짜 회원 조회(Mock)에 등록: `tester`(USER), `admin1`(ADMIN). 비밀번호는 BCrypt로 암호화해 저장
+- `with(user(...))`로 로그인 상태를 흉내 낼 때도 실제와 같은 권한 이름(`"USER"`/`"ADMIN"`)을 사용 (Spring 테스트 기본값 `ROLE_USER`를 쓰면 실제와 달라짐)
+- **결과: 전체 23개 통과** (기존 14개 + 권한 9개)
+
+| # | 시나리오 | 기대 결과 (= 실제) |
+|---|---|---|
+| K-01 | USER로 사용자 목록 화면 `GET /users/admin_user` | 403 |
+| K-02 | USER로 회원 생성 API `POST /users/admin_user_create` + CSRF | 403 (**USER가 관리자 계정을 만들 수 없음**) |
+| K-03 | USER로 회원 수정·삭제 API | 둘 다 403 |
+| K-04 | ADMIN으로 사용자 화면 2개·생성·삭제 API | 모두 보안 통과 (테스트에는 컨트롤러가 없어 404) |
+| K-05 | ADMIN으로 일반 관리 화면 | 보안 통과 (ADMIN도 다른 기능 사용 가능) |
+| K-06 | **실제 로그인 흐름**: `admin1`로 `/loginProc` 로그인 → 받은 세션으로 `/users/admin_user` | 보안 통과. 실제 `PrincipalDetails`가 만든 권한으로 판정됨 |
+| K-07 | 실제 로그인 흐름: `tester`(USER)로 로그인 → `/users/admin_user` | 403 |
+| K-08 | `PrincipalDetails`의 권한 이름 | ADMIN → `"ADMIN"`, USER → `"USER"` (`hasAuthority` 전제 확인) |
+| K-09 | `error/403.html` 템플릿 렌더링 | "403 - Forbidden"과 안내 문구 포함 |
+
+- **기존 테스트 조정**: C-06·C-07은 "로그인 사용자 + CSRF 유무"를 보는 테스트인데, 대상이었던 `/users/admin_user_del`이 ADMIN 전용이 되어 USER는 CSRF와 상관없이 403이 된다. 테스트 의도를 유지하려고 대상을 설정 변경 API `/manage/station_status_modify`로 바꿨다
+- **처음 실행 시 실패 1건과 수정**: K-09를 처음에는 `/error` 요청으로 확인하려 했으나 Spring 기본 오류 화면(Whitelabel)이 나왔다. 진단용 임시 테스트로 확인한 결과, 테스트 환경(MockMvc)에는 `DispatcherServlet` Bean이 없어 Boot의 "상태 코드별 오류 화면 연결" Bean(`conventionErrorViewResolver`)이 만들어지지 않는 것이 원인이었다 (실제 앱에서는 만들어짐 — 기존 `error/404.html`도 같은 방식). 그래서 K-09는 **템플릿을 Thymeleaf로 직접 렌더링해 내용을 확인**하는 방식으로 바꾸고, "403 상황에서 이 화면이 실제로 뜨는지"는 8.2 화면 확인 항목에 추가했다. 진단용 테스트는 삭제했다
+- **대조군**: ADMIN 규칙 줄을 임시로 빼고 실행 → **K-01, K-02, K-03, K-07 4개 실패** (USER가 사용자 관리에 접근 가능해짐을 테스트가 잡아냄). 확인 후 원복 (`hasAuthority("ADMIN")` 존재 확인)
+- 전체 `./gradlew build` 성공, `check_comments.py` 사라진 기존 주석 0건
+
+##### 남은 확인과 참고
+
+- **메뉴 표시**: 메뉴는 DB(`/getMenuData`)에서 오므로 USER에게도 "사용자 관리" 메뉴가 보일 수 있다. 눌러도 403 화면이 나올 뿐 기능은 막혀 있다. 메뉴를 숨길지는 결정 사항 (8.6)
+- **`roles`가 비어 있는(NULL) 회원**: `PrincipalDetails.getAuthorities()`가 `user.getRoles().toString()`을 호출하므로 로그인 시 오류가 날 수 있다 (기존 코드의 위험, 이번에 변경하지 않음). 배포 전 확인 SQL은 8.5
+
 ---
 
 ## 7. 작업 이력
@@ -737,6 +796,8 @@ commit: `ade302c`
 | 2026-11-19 | jsch 알고리즘 호환성 점검 | 0.1.55와 2.28.8의 기본 알고리즘 비교: `ssh-rsa`(SHA-1), `ssh-dss`, sha1 키 교환, CBC 암호화 등이 기본값에서 빠짐 → 오래된 관측소 서버 접속 실패 가능성. 서버 확인 절차와 대응 코드를 8.4에 정리. 보안 이슈 S8(호스트 키 검증 생략) 추가 |
 | 2026-11-19 | **주석 구분 표시와 기존 주석 복원** | commit `ab480ac`. 사용자 요청: "파일 수정 시 내가 작성한 주석과 구분". Claude 주석 전체에 `[Claude 2026-11-19]` 표시(여러 줄은 시작/끝 표시, 새 파일은 머리말). 작업 중 바뀌거나 지워졌던 기존 주석을 원문 복원(주석 처리 import의 javax 3줄, SecurityConfig 주석 약 15줄은 "기존 코드 원문 보존" 블록으로, build.gradle 계열 6곳, 운영 스크립트 6개의 `#JAVA_HOME` 줄, login.html 1줄). 실행 코드 변경 0건(diff 분석). 재검증: build·테스트 14/14, 스크립트 6개, ConfigLoadTest 53/53, check_props 문제 0, 사라진 기존 주석 0건 |
 | 2026-11-19 | **검토자 검증 가이드(9장)·검증 스크립트 추가** | 사용자 요청: "내가 어떻게 확인하고 검증해야 하는지". 단계별 diff 검토 포인트·실행 명령·기대 결과·기록표 작성. 수작업 검증을 스크립트로 정리: `docs/verify/test_process_scripts.sh`(운영 스크립트 6개 × 7항목, 결과 FAIL 0), `JschDefaults.java`, `check_comments.py`(표시 없는 추가 주석 1건=기존 주석 복원, 사라진 기존 주석 0건). 9장의 모든 명령을 문서에 적힌 그대로 실행해 기대 결과와 일치 확인 (이 환경에 `unzip`이 없어 대체 명령도 확인) |
+| 2026-11-19 | **주석 표시 형식 변경** | commit `f277315`. 사용자 요청: "명확하게 내가 아닌 것 확인할 수 있게. 예: `/* Claude 주석 */`". 모든 Claude 주석을 `/* Claude 주석 (2026-11-19): ... */`(yml·sh는 `# /* ... */`, HTML은 `<!-- /* ... */ -->`)로 변환, `check_comments.py`도 새 표시 인식으로 수정. 검증: build·테스트 14/14, 스크립트 FAIL 0, 사라진 기존 주석 0건. **절차 실수**: 코드 변경 여부 검사와 commit을 한 명령으로 실행해, 검사가 "코드 변경 파일 3개"를 보고했는데도 commit됨. 직후 확인 결과 2개(build.gradle 계열)는 여러 줄 블록 주석의 둘째 줄을 검사 로직이 코드로 오인한 것, 1개(check_comments.py)는 의도한 검사 로직 수정으로 실제 문제는 없었음. 이후 검사와 commit을 분리 |
+| 2026-11-19 | **K. 사용자 관리 ADMIN 전용 권한** | commit `8e233cc`. `/users/**` → `hasAuthority("ADMIN")`, `error/403.html` 추가. 발견: 회원 생성 화면이 권한 값을 브라우저에서 보내 USER도 관리자 계정을 만들 수 있었음 → 이번 변경으로 차단. 덤프 기준 ADMIN 1명·USER 1명 확인(개수만). 테스트 23/23(권한 9개 추가). K-09 첫 시도 실패(테스트 환경에 오류 화면 연결 Bean 없음) → 템플릿 직접 렌더링으로 변경. 대조군: ADMIN 규칙 제거 시 4개 실패 확인 후 원복 |
 | 2026-11-19 | 문서 보강 | 처음 보는 사람을 위한 0장(현재 상태, 용어, 환경 준비, 빌드·테스트 방법, 자주 나는 오류, commit 목록)과 8장(DB·서버가 필요한 남은 작업 따라하기) 추가. 6.8-C/F/S5/G/J 상세 기록 |
 
 ---
@@ -797,6 +858,9 @@ java -jar radar-web/build/libs/RADAR_WEB.jar --server.port=8080
 | 4 | 관리 화면 각각에서 **저장/수정/삭제** 1회씩 (아래 화면 목록) | 정상 처리 | F12 → Network에서 해당 요청이 **403**이면 요청 헤더에 `X-CSRF-TOKEN`이 있는지 확인 → 없으면 그 화면이 `common.js`를 불러오지 않는 것 |
 | 5 | 검색 폼 제출: 통계(`/stat/{site}`), 관측 이력(`/station/hist/{site}`), 문자 결과(`/manage/sms_send_result`, `/manage/sms_send_result_nuri2`) | 정상 조회 | Network에서 폼 데이터에 `_csrf`가 포함됐는지 |
 | 6 | 우측 상단 **Logout** 클릭 | 로그인 화면으로 이동, 뒤로 가기 후 관리 화면 접근 시 다시 로그인 요구 | `layout/header.html`의 logoutForm |
+| 6-1 | **USER 계정**으로 로그인 → 주소창에 `/users/admin_user` 입력 (또는 사용자 관리 메뉴 클릭) | "403 - Forbidden" 안내 화면(`error/403.html`) | 기본 오류 화면(Whitelabel)이 나오면 `templates/error/403.html` 배포 여부 확인 |
+| 6-2 | **ADMIN 계정**으로 로그인 → 사용자 관리에서 사용자 등록·수정·삭제 1회씩 | 정상 처리 | 403이면 그 계정의 `roles`가 `ADMIN`인지 DB 확인 |
+| 6-3 | USER 계정으로 다른 관리 화면(관측소, 문자 설정 등) 저장 | 정상 처리 (ADMIN 전용은 사용자 관리뿐) | |
 | 7 | 로그인 후 30분 이상(세션 만료) 방치 → 저장 버튼 | 현재는 로그인 화면 HTML이 응답으로 와서 오류처럼 보일 수 있음 | 필요하면 후속 개선(만료 시 로그인 화면으로 이동하도록) |
 
 **저장/수정/삭제가 있는 관리 화면 목록** (`PostController`의 POST 21개 기준)
@@ -879,6 +943,11 @@ config.put("kex", JSch.getConfig("kex") + ",diffie-hellman-group14-sha1,diffie-h
 - 운영 서버 CPU: `grep -o -m1 avx512vbmi /proc/cpuinfo` (출력되면 Java4Shell 영향 대상 → 업그레이드 시급)
 - 현재 Java: `java -version`, 운영 스크립트가 쓰는 Java 경로
 - 8.2~8.4 완료 여부
+- **ADMIN 계정 확인** (권한 적용 후 사용자 관리는 ADMIN만 가능):
+  ```sql
+  SELECT roles, COUNT(*) FROM watchdog.watchdog_member GROUP BY roles;   -- ADMIN이 1 이상이어야 함, NULL 행이 없어야 함
+  ```
+  ADMIN이 없으면 배포 전에 관리자 계정 1개의 `roles`를 `'ADMIN'`으로 지정한다. `roles`가 NULL인 회원은 로그인 시 오류가 날 수 있으므로 `'USER'` 등으로 채운다
 
 **② JDK 25 설치 (운영 서버, RHEL 계열 예시)**
 - 배포판 저장소에 `25.0.5.1` 이상이 있는지, **변경 이력에 CVE-2026-114938이 있는지** 확인 후 설치
@@ -914,7 +983,7 @@ cp -a /home/watcher/radarWebsite /home/watcher/radarWebsite.bak_$(date +%Y%m%d)
 | # | 항목 | 선택지 | 비고 |
 |---|---|---|---|
 | 1 | 노출된 비밀번호 교체 (S2~S5) | 관측소 SFTP, DB, GitLab 복구 코드 교체 | **가장 시급**. Git 이력에도 남아 있으므로 교체가 우선, 이력 정리(`git filter-repo`)는 그다음 |
-| 2 | 관리 기능 권한 구분 | 현재: 로그인하면 모두 가능 / 변경: 사용자 관리 등은 ADMIN만 | 권한 값이 `ROLE_` 접두어 없는 `USER`/`ADMIN`이라 `hasAuthority("ADMIN")` 사용 |
+| 2 | 관리 기능 권한 구분 | ✅ **적용함** (`8e233cc`): 사용자 관리(`/users/**`)는 ADMIN만. 추가로 ADMIN 전용으로 할 기능(예: 문자 발송 ON/OFF, 경고 기준 설정)이 있으면 `ADMIN_PATHS`에 경로 추가 | 사용자 관리 메뉴를 USER에게 숨길지도 결정 필요 |
 | 3 | `open-in-view` | 8.3-③ 결과에 따라 | |
 | 4 | `spring.thymeleaf.cache` | 운영은 `true` 권장 (현재 `false`) | 화면 응답 속도 |
 | 5 | SFTP 호스트 키 검증 (S8) | `known_hosts` 준비 후 `StrictHostKeyChecking=yes` | 서버 작업 필요 |
@@ -939,7 +1008,7 @@ git log --oneline b250e18..HEAD      # 이번 작업 commit 목록 (0.7과 같�
 java -version                         # 25.0.5.1 이상
 ./gradlew build                       # 마지막에 BUILD SUCCESSFUL
 ```
-- `./gradlew build`가 성공하면 **컴파일 + 보안 자동 테스트 14개 + jar 6종 생성**이 모두 통과한 것이다
+- `./gradlew build`가 성공하면 **컴파일 + 보안·권한 자동 테스트 23개 + jar 6종 생성**이 모두 통과한 것이다
 - 실패하면 0.6의 "자주 만나는 오류" 표 참고
 
 ### 9.2 변경 내용 읽는 방법
@@ -950,7 +1019,7 @@ java -version                         # 25.0.5.1 이상
 | commit 하나가 바꾼 파일 목록만 | `git show --stat <해시>` |
 | 파일 하나의 작업 전/후 비교 | `git diff b250e18 -- <파일경로>` (예: `git diff b250e18 -- radar-web/src/main/java/kr/or/kimsn/radar/web/config/SecurityConfig.java`) |
 | 작업 전 원본 파일 보기 | `git show b250e18:<파일경로>` |
-| Claude가 추가한 주석 전체 | `git grep -n "\[Claude 2026-11-19\]"` |
+| Claude가 추가한 주석 전체 | `git grep -n "Claude 주석"` |
 | 화면으로 보기 | VS Code/IntelliJ의 Git 히스토리(파일 우클릭 → Git → Show History), 또는 GitHub에 push 후 commit 화면 |
 
 - `b250e18`은 **작업 시작 전 마지막 commit**(기존 작성자의 "dump sql")이다. 모든 비교의 기준점이다
@@ -1007,7 +1076,7 @@ grep -rn "^import javax\." --include=*.java . | grep -v "javax.sql"
 ```bash
 ./gradlew :radar-web:test
 ```
-- 기대: `BUILD SUCCESSFUL`. 보고서 `radar-web/build/reports/tests/test/index.html`을 브라우저로 열면 **14 tests, 0 failures** 와 C-01~C-14 이름이 보임 (각 시나리오 의미는 6.8-C 표)
+- 기대: `BUILD SUCCESSFUL`. 보고서 `radar-web/build/reports/tests/test/index.html`을 브라우저로 열면 **23 tests, 0 failures** 와 C-01~C-14, K-01~K-09 이름이 보임 (각 시나리오 의미는 6.8-C, 6.8-K 표)
 
 ③ (선택) 대조군 — 테스트가 진짜로 문제를 잡는지 직접 확인
 1. `SecurityConfig.java`에서 `.csrf(csrf -> { })`를 `.csrf(csrf -> csrf.disable())`로, `.anyRequest().authenticated()`를 `.anyRequest().permitAll()`로 **임시로** 바꾼다
@@ -1049,10 +1118,10 @@ grep -E "Starting DaemonApplication|profile is active|Found [0-9]+ JPA|Communica
 #### 9.3.5 F. 운영 스크립트 — commit `83e3e1a`, `01cf88b`
 
 ① 눈으로: `git diff b250e18 -- config/RDR_process.sh`
-- [ ] `===== [Claude ...] 추가 시작 ===== ~ 끝 =====` 블록과 `check_java` 호출, `"$JAVA_BIN"` 실행 줄 외에 바뀐 곳이 없는가
+- [ ] `# /* Claude 주석 (2026-11-19) 시작: ...` ~ `끝` 블록과 `check_java` 호출, `"$JAVA_BIN"` 실행 줄 외에 바뀐 곳이 없는가
 - [ ] 6개 스크립트의 추가 블록이 똑같은가 (블록 시작~끝 표시 사이를 비교):
   ```bash
-  blk() { sed -n '/Java 실행 환경 (OpenJDK 25 전환) 추가 시작/,/Java 실행 환경 추가 끝/p' "$1"; }
+  blk() { sed -n '/Claude 주석 (2026-11-19) 시작: Java 실행 환경/,/Claude 주석 (2026-11-19) 끝: Java 실행 환경/p' "$1"; }
   for f in RDR_B SDR SDR_B TDWR RADAR_WEB; do diff <(blk config/RDR_process.sh) <(blk config/${f}_process.sh) >/dev/null && echo "$f 같음" || echo "$f 다름"; done
   ```
   기대: 5줄 모두 `같음`
@@ -1100,7 +1169,23 @@ python3 -I docs/verify/check_comments.py
   - `[검사 1-a] 표시 없는 추가 주석`: **1건** — `build.gradle`의 `// Java 11 지원하는 안정 버전` (기존 주석을 원래 자리에 복원한 것. `git show b250e18:build.gradle | grep "안정 버전"`으로 원문 확인 가능)
   - `[검사 1-b] 연속 줄`: 여러 줄 Claude 주석의 2번째 줄 이후 (정상)
   - `[검사 2] 사라진 기존 주석`: **0건**
-- 눈으로: `git show ab480ac`에서 `+` 줄은 `[Claude ...]` 표시 또는 기존 주석 복원뿐이고, 코드 줄의 내용은 바뀌지 않았는지
+- 눈으로: `git show ab480ac`(기존 주석 복원)와 `git show f277315`(표시 형식 통일)에서 `+` 줄은 `Claude 주석` 표시 또는 기존 주석 복원뿐이고, 코드 줄의 내용은 바뀌지 않았는지
+
+#### 9.3.10 K. 사용자 관리 ADMIN 전용 — commit `8e233cc`
+
+① 눈으로: `git show 8e233cc -- radar-web/src/main/java`
+- [ ] `ADMIN_PATHS`가 `/users/**`이고 `.requestMatchers(ADMIN_PATHS).hasAuthority("ADMIN")`가 `anyRequest()` **앞**에 있는가 (순서가 뒤면 적용되지 않음)
+- [ ] `hasRole`이 아니라 `hasAuthority`인가 (이유: 6.8-K)
+- [ ] `templates/error/403.html`이 `404.html`과 제목·문구만 다른가: `diff radar-web/src/main/resources/templates/error/404.html radar-web/src/main/resources/templates/error/403.html`
+
+② 실행:
+```bash
+./gradlew :radar-web:test
+```
+- 기대: 23 tests, 0 failures. 보고서에서 K-01~K-09 확인
+- (선택) 대조군: `SecurityConfig.java`의 `.requestMatchers(ADMIN_PATHS).hasAuthority("ADMIN")` 줄 앞에 `//`를 붙이고 테스트 → **K-01, K-02, K-03, K-07 실패**해야 정상 → `git checkout -- radar-web/src/main/java/kr/or/kimsn/radar/web/config/SecurityConfig.java`로 원복
+
+③ 실제 화면: 8.2의 6-1~6-3 (DB 필요), 배포 전 ADMIN 계정 확인 SQL은 8.5
 
 ### 9.4 확인 중 문제를 발견했을 때
 
@@ -1123,6 +1208,7 @@ python3 -I docs/verify/check_comments.py
 | 9.3.7 G 줄바꿈 | | | | |
 | 9.3.8 J jsch 비교 | | | | |
 | 9.3.9 주석 구분 | | | | |
+| 9.3.10 K ADMIN 권한 | | | | |
 | 8.2 화면 확인 (DB 필요) | | | | |
 | 8.3 JPA 검증 (DB 필요) | | | | |
 | 8.4 SFTP 호환성 (서버 필요) | | | | |
