@@ -78,6 +78,8 @@ daemonSystems.each { sysType, config ->
         }
 
         classpath = sourceSets.main.runtimeClasspath
+        // (2026-11-19) 직접 등록한 BootJar는 플러그인이 targetJavaVersion을 채워주지 않으므로 명시 (Boot 4 필수)
+        targetJavaVersion = provider { java.targetCompatibility }
 
         // 매니페스트에 시스템 식별 구분자 박제
         manifest {
