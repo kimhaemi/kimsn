@@ -2,7 +2,7 @@ package kr.or.kimsn.radar.web;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.persistence.autoconfigure.EntityScan; // Spring Boot 4: 패키지 이동
+import org.springframework.boot.persistence.autoconfigure.EntityScan; // [Claude 2026-11-19] Spring Boot 4: org.springframework.boot.autoconfigure.domain → persistence.autoconfigure 패키지 이동
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 // 다른 모듈의 패키지(kr.or.kimsn.radar)까지 모두 스캔하도록 설정

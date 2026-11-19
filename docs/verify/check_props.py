@@ -1,4 +1,4 @@
-"""Spring Boot 설정 키 정적 검사.
+"""[Claude 2026-11-19] 새로 작성한 파일 — Spring Boot 설정 키 정적 검사.
 
 사용법: python3 -I check_props.py <boot.jar> <yml> [<yml> ...]
 

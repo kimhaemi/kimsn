@@ -4,9 +4,9 @@ plugins {
 
 dependencies {
     implementation project(':common-data')
-    // spring-boot-starter-batch 제거 (2026-11-19): 소스에서 Spring Batch 미사용
+    // [Claude 2026-11-19] spring-boot-starter-batch 제거: 소스에서 Spring Batch 미사용
     implementation 'org.json:json:20260814'
-    // com.jcraft:jsch:0.1.55(유지보수 중단) → 유지보수 포크로 교체 (패키지명 com.jcraft.jsch 동일)
+    // [Claude 2026-11-19] com.jcraft:jsch:0.1.55(유지보수 중단) → 유지보수 포크로 교체 (패키지명 com.jcraft.jsch 동일)
     implementation 'com.github.mwiede:jsch:2.28.8'
 
     // Annotation Processor 추가
@@ -53,8 +53,10 @@ def daemonSystems = [
     'SDR_B' : [desc: '기상청B 소형 레이더 데몬 인프라']
 ]
 
-// (2026-11-19) tasks.bootJar.getClass()는 Gradle 장식 클래스(BootJar_Decorated)를 돌려주므로
-// Spring Boot 플러그인의 BootJar 타입을 직접 사용합니다.
+// 💡 완결: 그레이들 내장 태스크 컨테이너에서 BootJar 클래스 타입을 안전하게 역추적하여 주입합니다.
+// 소스 코드 상에서 'org' 문자열이 완전히 청소되므로 문법 해석 오류가 영구적으로 차단됩니다.
+// [Claude 2026-11-19] 위 주석은 기존 방식(def bootJarTaskType = tasks.bootJar.getClass()) 설명.
+//   getClass()는 Gradle 장식 클래스(BootJar_Decorated)를 돌려주므로 Spring Boot 플러그인의 BootJar 타입을 직접 사용하도록 변경
 daemonSystems.each { sysType, config ->
     tasks.register("bootJar_${sysType}", org.springframework.boot.gradle.tasks.bundling.BootJar) {
         group = 'build'
@@ -65,7 +67,7 @@ daemonSystems.each { sysType, config ->
 
         archiveClassifier = sysType
         archiveVersion = project.version
-        mainClass = 'kr.or.kimsn.radar.daemon.DaemonApplication' // (2026-11-19) 존재하지 않던 RadarDaemonApplication → 실제 클래스로 수정
+        mainClass = 'kr.or.kimsn.radar.daemon.DaemonApplication' // [Claude 2026-11-19] 존재하지 않던 RadarDaemonApplication → 실제 클래스로 수정
 
         // ❌ [기존 코드 삭제]: with copySpec { from sourceSets.main.output }
 
@@ -78,7 +80,7 @@ daemonSystems.each { sysType, config ->
         }
 
         classpath = sourceSets.main.runtimeClasspath
-        // (2026-11-19) 직접 등록한 BootJar는 플러그인이 targetJavaVersion을 채워주지 않으므로 명시 (Boot 4 필수)
+        // [Claude 2026-11-19] 직접 등록한 BootJar는 플러그인이 targetJavaVersion을 채워주지 않으므로 명시 (Boot 4 필수)
         targetJavaVersion = provider { java.targetCompatibility }
 
         // 매니페스트에 시스템 식별 구분자 박제
