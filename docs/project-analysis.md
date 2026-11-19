@@ -5,6 +5,175 @@
 
 ---
 
+## 0. 처음 읽는 분을 위한 안내
+
+### 0.1 이 문서는 무엇인가
+
+이 프로젝트(`radar_new`)는 **기상 레이더 관측소가 자료(파일)를 제때 보내는지 감시하고, 문제가 생기면 담당자에게 문자를 보내는 시스템**이다. 2026년 11월, OpenJDK에서 심각한 보안 취약점(Java4Shell, CVE-2026-114938)이 공개되었고, 이를 계기로 아래 작업을 진행하고 있다.
+
+- Java 실행 환경: **OpenJDK 11 → OpenJDK 25.0.5.1 이상** (취약점이 수정된 버전)
+- 프레임워크: **Spring Boot 2.7.12 → 4.1.2** (Java 25를 쓰려면 함께 올려야 함)
+- 그 과정에서 발견한 **보안 문제(S1~S8) 수정**
+
+이 문서는 "무엇을, 왜, 어떻게 바꿨고, 어떻게 확인했는지"를 처음 보는 사람도 따라 할 수 있도록 기록한다.
+
+### 0.2 지금 상태 한눈에 보기 (2026-11-19 기준)
+
+| 단계 | 내용 | 상태 | 자세히 |
+|---|---|---|---|
+| 준비 | 개발 PC에 JDK 25.0.5.1, Gradle 9.9.1 준비 | ✅ 완료 | 0.5 |
+| A | 빌드 설정(Gradle) 전환 | ✅ 완료 | 6.8-A |
+| B | `javax` → `jakarta` 패키지 전환 | ✅ 완료 | 6.8-B |
+| C | 로그인/보안 설정 재작성 + 인증 복구(S1) | ✅ 코드·자동 테스트 완료 / ⏳ 실제 DB로 화면 확인 필요 | 6.8-C, 8.2 |
+| D | DB 쿼리(JPA) 동작 검증 | ⏳ **DB 필요** — 미진행 | 8.3 |
+| E | 설정 파일(yml) 정리 | ✅ 완료 | 6.8-E |
+| F | 운영 실행 스크립트 JDK 25 적용 | ✅ 완료 | 6.8-F |
+| 보안 | S1, S5, S6, S7 해결 / S2~S4, S8 남음 | 일부 완료 | 4.1 |
+| 배포 | 운영 서버 JDK 25 설치 → 순차 교체 | ⏳ 미진행 | 8.5 |
+
+> **현재 브랜치 `ver_java25`에만 반영되어 있고, 원격(origin)에는 아직 push하지 않았다.**
+
+### 0.3 읽는 순서
+
+1. **전체 그림**: 1장(개요) → 2장(폴더 구조) → 3장(동작 흐름)
+2. **왜 바꾸나**: 4장(발견된 문제) → 5장(라이브러리 취약점) → 6.1(Java4Shell)
+3. **무엇을 바꿨나**: 6.8(단계별 변경 내역과 테스트 방법)
+4. **직접 해 보기**: 0.5(환경 준비) → 0.6(빌드·테스트)
+5. **앞으로 할 일**: 8장(남은 작업 따라하기)
+6. **경과 기록**: 7장(작업 이력), 0.7(commit 목록)
+
+### 0.4 용어 설명
+
+| 용어 | 뜻 (이 프로젝트에서) |
+|---|---|
+| JDK / OpenJDK | Java 프로그램을 만들고(컴파일) 실행하는 도구 모음. `java`(실행), `javac`(컴파일) 명령이 들어 있다 |
+| LTS | 장기 지원 버전. Java 25는 LTS라 보안 패치를 오래 받을 수 있다 (Java 27은 단기 버전) |
+| CVE | 공개된 보안 취약점에 붙는 고유 번호. 예: CVE-2026-114938 |
+| Gradle | 소스 컴파일, 라이브러리 다운로드, jar 생성을 자동으로 해 주는 빌드 도구 |
+| Gradle wrapper (`gradlew`) | 프로젝트에 정해진 Gradle 버전을 자동으로 내려받아 실행하는 스크립트. **Gradle을 따로 설치하지 않아도 된다** |
+| Spring Boot | 이 프로젝트가 사용하는 Java 웹/서버 프레임워크 |
+| BOM | Spring Boot가 "서로 호환되는 라이브러리 버전 목록"을 정해 둔 것. 그래서 `build.gradle`에 버전을 일일이 적지 않는다 |
+| `javax` → `jakarta` | Java EE가 Jakarta EE로 이름이 바뀌면서 패키지 이름도 바뀜. Spring Boot 3 이상은 `jakarta.*`만 지원 |
+| JPA / Hibernate | Java 객체와 DB 테이블을 연결하는 기술. 이 프로젝트는 대부분 직접 쓴 SQL(native query)을 사용 |
+| Spring Security | 로그인, 접근 권한, CSRF 방어를 담당하는 라이브러리 |
+| CSRF | 사용자가 로그인한 상태를 악용해 다른 사이트가 몰래 요청을 보내는 공격. 막기 위해 서버가 발급한 **토큰**을 요청마다 함께 보내야 한다 |
+| MockMvc / @WebMvcTest | 실제 서버를 띄우지 않고 웹 요청을 흉내 내서 테스트하는 방법. DB 없이 보안 설정을 검증할 때 사용 |
+| SFTP / JSch | 관측소 서버에 접속해 파일을 확인하는 방식(SFTP)과 그 Java 라이브러리(JSch) |
+| 누리2(Nuri2) | 문자 발송 에이전트. DB 테이블(`NURI2_NRMSG_DATA`)에 행을 넣으면 문자가 발송된다 |
+| Daemon 5종 | 레이더 종류·기관별 감시 프로그램: RDR(기상청A 대형), SDR(기상청A 소형), TDWR(공항), RDR_B(기상청B 대형), SDR_B(기상청B 소형) |
+| commit 해시 | Git 변경 기록의 고유 번호(예: `ade302c`). `git show ade302c`로 내용을 볼 수 있다 |
+
+### 0.5 개발 환경 준비 (따라하기)
+
+아래는 Ubuntu(WSL 포함) 기준이다. 실제로 이 순서로 개발 PC를 준비했다.
+
+**① 소스 받기**
+```bash
+git clone https://github.com/kimhaemi/kimsn.git
+cd kimsn
+git checkout ver_java25        # 업그레이드 작업 브랜치
+```
+
+**② JDK 25 설치** (관리자 비밀번호 필요 — 반드시 일반 터미널 창에서 실행)
+```bash
+sudo apt-get update
+sudo apt-get install -y openjdk-25-jdk-headless
+```
+- `headless`는 화면(GUI) 라이브러리만 뺀 버전이며 `javac`도 포함되어 빌드에 충분하다
+- **확인 1 — 버전**: `java -version` → 첫 줄이 `openjdk version "25.0.5.1"` 이상이어야 한다
+- **확인 2 — Java4Shell 패치 포함 여부**: 버전 번호만으로 판단하지 말고 패키지 변경 이력을 본다
+  ```bash
+  apt-get changelog openjdk-25-jdk-headless | grep CVE-2026-114938
+  ```
+  `+ CVE-2026-114938`이 출력되면 패치가 포함된 것이다 (2026-11-19 확인: `25.0.5.1+2-1~26.04.1`에 포함)
+- **확인 3 — CPU 영향 여부**(참고): `grep -o -m1 avx512vbmi /proc/cpuinfo` 가 출력되면 Java4Shell 영향을 받는 CPU다. 이 개발 PC는 해당됨
+
+**③ (선택) JAVA_HOME 설정** — IDE나 다른 도구가 JDK를 찾기 쉽게
+```bash
+echo 'export JAVA_HOME=/usr/lib/jvm/java-25-openjdk-amd64' >> ~/.bashrc
+source ~/.bashrc
+```
+
+**④ Gradle** — **따로 설치할 필요 없다.** 프로젝트의 `./gradlew`가 Gradle 9.9.1을 자동으로 내려받는다 (`~/.gradle/wrapper/dists/`에 저장, 최초 1회 인터넷 필요). 내려받은 파일은 `gradle/wrapper/gradle-wrapper.properties`의 `distributionSha256Sum`으로 위·변조 여부를 검사한다.
+```bash
+./gradlew --version     # "Gradle 9.9.1", "Launcher JVM: 25.0.5.1" 이 보이면 정상
+```
+(참고: 작업자는 wrapper 파일을 새로 만들기 위해서만 `~/opt/gradle-9.9.1`에 Gradle을 설치했다. 다른 사람은 필요 없다.)
+
+**⑤ Windows에서 직접 빌드할 경우**: JDK 25를 설치하고 `gradlew.bat build`를 실행한다. `.gitattributes`가 `gradlew.bat`을 Windows 줄바꿈(CRLF)으로 유지해 준다.
+
+### 0.6 빌드와 테스트 실행 (따라하기)
+
+**전체 빌드 (컴파일 + 자동 테스트 + jar 생성)**
+```bash
+./gradlew build
+```
+- 처음에는 라이브러리를 내려받느라 몇 분 걸릴 수 있다. 끝에 `BUILD SUCCESSFUL`이 나오면 성공
+- 만들어지는 파일
+  - 웹: `radar-web/build/libs/RADAR_WEB.jar`
+  - 데몬: `Daemon/build/libs/RDR.jar`, `SDR.jar`, `TDWR.jar`, `RDR_B.jar`, `SDR_B.jar`
+- 확인된 결과(2026-11-19): 성공, 자동 테스트 14개 모두 통과
+
+**보안 자동 테스트만 실행**
+```bash
+./gradlew :radar-web:test
+```
+- 결과 보고서: `radar-web/build/reports/tests/test/index.html` (브라우저로 열기)
+- DB 없이 실행된다. 테스트 내용은 6.8-C "자동 테스트" 참고
+
+**설정 파일 검증 스크립트** (yml을 고친 뒤 확인용, 6.8-E 참고)
+```bash
+# 1) 정적 검사: yml 키가 Spring Boot 4에서 유효한지
+python3 -I docs/verify/check_props.py Daemon/build/libs/RDR.jar Daemon/src/main/resources/application.yml
+python3 -I docs/verify/check_props.py radar-web/build/libs/RADAR_WEB.jar radar-web/src/main/resources/application.yml
+# 결과에 UNKNOWN / DEPRECATED 가 없으면 정상 (Web의 spring.devtools.* 1건은 정상)
+
+# 2) 설정 로딩 테스트: 운영과 같은 라이브러리로 yml을 실제로 읽어 봄
+mkdir -p /tmp/rdr && (cd /tmp/rdr && jar xf "$OLDPWD/Daemon/build/libs/RDR.jar")
+java -cp "/tmp/rdr/BOOT-INF/classes:/tmp/rdr/BOOT-INF/lib/*" docs/verify/ConfigLoadTest.java "$PWD"
+# 마지막 줄 "결과: PASS 53 / FAIL 0" 이면 정상
+```
+
+**자주 만나는 오류와 해결**
+
+| 오류 메시지 | 원인 | 해결 |
+|---|---|---|
+| `org/gradle/api/plugins/JavaPluginConvention` | Gradle 9에서 옛 Spring Boot 2.7 플러그인을 사용 | 이미 4.1.2로 수정됨. 옛 브랜치를 빌드하는 경우에 발생 |
+| `Unsupported class file major version 69` | Java 25로 만든 파일을 옛 도구(구버전 IDE 플러그인 등)가 읽음 | IDE/플러그인을 Java 25 지원 버전으로 업데이트 |
+| `package javax.persistence does not exist` | `javax` import가 남아 있음 | `jakarta.persistence`로 변경 (6.8-B) |
+| `Communications link failure` | DB에 접속할 수 없음 | DB 주소·방화벽 확인. DB 없는 환경에서 실행하면 정상적으로 발생 |
+| `cannot use classpath wildcards` | `spring.config.import`에 `classpath*:` 사용 | `classpath:`로 변경 (6.8-E에서 수정 완료) |
+| `did not discover any tests` | 테스트 실행기(JUnit 5) 설정 누락 | 루트 `build.gradle`의 `useJUnitPlatform()` (수정 완료) |
+| 브라우저에서 저장/삭제 시 **403** | 요청에 CSRF 토큰이 없음 | 해당 화면이 `common.js`를 불러오는지, `<meta name="_csrf">`가 있는지 확인 (6.8-C) |
+| `[ERROR] Java 버전(...)이 최소 요구 버전(25.0.5.1)보다 낮거나...` | 운영 스크립트의 버전 검사 | JDK 25.0.5.1 이상 설치 후 `JAVA_HOME` 지정 (6.8-F) |
+| `check_java: command not found` | 스크립트가 옛 버전/일부만 반영 | `01cf88b` 이후 버전의 스크립트 사용 |
+
+### 0.7 이번 작업의 commit 목록 (브랜치 `ver_java25`, 오래된 순)
+
+각 commit은 `git show <해시>`로 변경 내용을 볼 수 있다. 문제가 생기면 `git revert <해시>`로 해당 변경만 되돌릴 수 있다.
+
+| commit | 단계 | 내용 |
+|---|---|---|
+| `ade302c` | A | Spring Boot 4.1.2 / Java 25 / Gradle 9.9.1 빌드 설정 전환, wrapper 추가 |
+| `3f363cf` | 문서 | 분석·계획 문서 추가 |
+| `da91928` | B | common-data `javax` → `jakarta` |
+| `a0543da` | B | Daemon `javax` → `jakarta` + Boot 4 API 변경 반영 |
+| `a3b58b1` | B | radar-web `javax` → `jakarta` |
+| `0d98238` | 문서 | B 단계 결과 |
+| `b75f60c` | C | SecurityConfig 재작성, 인증 복구(S1), CSRF 활성화 |
+| `b7e0a7d` | C | 화면에서 CSRF 토큰 전달 (common.js, 로그인, 로그아웃) |
+| `47d1b27` | A 보완 | Daemon jar 5종 생성 오류 수정 (`targetJavaVersion`) |
+| `03f0656` | 문서 | C 단계 결과 |
+| `1f1ae08` | E | yml 설정 정리 (Daemon 기동 실패 오류 수정 포함) |
+| `e8ad9e8` | 문서 | E 단계 테스트 방법, 검증 스크립트 |
+| `83e3e1a` | F | 운영 스크립트 JDK 25 경로·버전 검사 |
+| `01cf88b` | F 보완 | Web 스크립트 누락 부분 수정 |
+| `3ad5473` | 보안 | SFTP 비밀번호 로그 기록 제거(S5) |
+| `e5d048f` | C 검증 | DB 없이 실행되는 보안 자동 테스트 14개 |
+| `7bb787f` | 빌드 | `.gitattributes` (줄바꿈 규칙) |
+
+---
+
 ## 1. 개요
 
 - **목적**: 기상 레이더 관측소 자료 수신 감시 + 장애/복구 SMS 알림 시스템
@@ -66,9 +235,10 @@ radar_new/
 | S2 | 🔴 | 관측소 root 계정 등 SFTP 비밀번호가 평문으로 Git 커밋됨 (파일당 약 35건), 동일 비밀번호 다수 관측소 공유 | `config/application*.yml` (4개) |
 | S3 | 🔴 | DB 접속 비밀번호 평문 Git 커밋 | `common-data/src/main/resources/common-data.yml`, `Query/DB 접속 정보.sql` |
 | S4 | 🔴 | GitLab 복구 코드, DB 전체 덤프 Git 커밋 | `note/gitlab-recovery-codes.txt`, `Query/dump/` |
-| S5 | 🟠 | SFTP 비밀번호를 매 주기 로그에 기록 | `Daemon/.../service/StepOneService.java:105` |
+| S5 | ✅ 해결 (`3ad5473`) | SFTP 비밀번호를 매 주기 로그에 기록 → 이제 `******`/`(미설정)`만 기록. **이미 쌓인 운영 로그 파일에는 비밀번호가 남아 있으므로 삭제·비밀번호 교체 필요** | `Daemon/.../service/StepOneService.java:105` |
 | S6 | ✅ 해결 (`ade302c`) | `spring-boot-devtools`가 `implementation`으로 운영 jar에 포함 | `radar-web/build.gradle` |
 | S7 | ✅ 해결 (`ade302c`) | `common-data/build.gradle`에 HTTP 저장소(`http://apache.org`, `allowInsecureProtocol`) 설정 | `common-data/build.gradle` |
+| S8 | 🟡 (2026-11-19 추가) | SFTP 접속 시 서버 신원 확인 생략(`StrictHostKeyChecking=no`) → 중간자 공격으로 가짜 서버에 비밀번호가 전달될 수 있음. 해결하려면 운영 서버에 관측소별 `known_hosts`를 준비해야 하므로 서버 작업과 함께 진행 | `Daemon/.../util/SftpUtil.java:35` |
 
 > S2~S4는 Git 이력에 남아 있으므로 파일 삭제만으로 부족 → **비밀번호/복구코드 교체 우선**, 이후 이력 정리(git filter-repo 등) 검토.
 
@@ -78,7 +248,13 @@ radar_new/
 - 외부 설정 경로 하드코딩 (`/home/watcher/deamon/...`, `deamon` 오타)
 - 주기마다 `newCachedThreadPool()` 신규 생성, `awaitTermination` 없이 고정 대기 후 StepTwo 진행 → SFTP 지연 시 StepOne 완료 전 판정 가능
 - 백업 파일 혼재: `ConfigFileEnum_back.java`, `SmsService.java.back`, `config/application copy.yml`
-- `jsch` 이중 존재: `com.jcraft:jsch:0.1.55`(build.gradle 사용, 유지보수 중단) / `libs/jsch-0.2.20.jar`(mwiede 포크)
+- `jsch` 이중 존재: `com.jcraft:jsch:0.1.55`(build.gradle 사용, 유지보수 중단) / `libs/jsch-0.2.20.jar`(mwiede 포크) → `ade302c`에서 mwiede 2.28.8로 통일
+- ⚠️ **(2026-11-19 추가) jsch 교체로 오래된 SSH 서버 접속이 실패할 수 있음** → 6.8-J, 8.4 참고
+- 운영 스크립트의 `stop` 명령은 부모 프로세스 ID가 1인 프로세스만 종료함(`awk '{if(1 == $3) ...}'`). RHEL 서버에서는 정상이지만 다른 환경(WSL 등)에서는 종료되지 않음 (6.8-F 테스트에서 확인, 기존 동작이라 변경하지 않음)
+- 운영 스크립트 `start all` 분기의 실행 여부 검사가 `grep "RADAR_TITLE"`(변수 `$` 누락)이라 항상 "실행 중 아님"으로 판단 → `start all` 사용 시 중복 실행 가능 (기존 버그, 변경하지 않음. `start`만 사용 권장)
+- 로그인 실패 메시지가 화면에 표시되지 않음: `AuthenticationFailure`는 세션에 저장, `LoginController`는 request attribute에서 읽음 (기존 버그)
+- `LoginController`의 `POST /logout` 메서드는 Spring Security가 먼저 처리하므로 호출되지 않음 (정리 대상)
+- `RadarConfigProperties.getDynamicPath()`는 어디서도 호출되지 않는 코드 (정리 대상)
 
 ## 5. 의존성 취약점 점검 요약 (2026-11-19, OSV.dev 기준)
 
@@ -231,12 +407,17 @@ radar_new/
 - [x] B. javax → jakarta 전환 (common-data와 Daemon 컴파일 성공, radar-web은 C 단계 이후 컴파일 가능)
 - [x] `.gitignore` 정리: `gradle/`, `gradlew` 제외 규칙 제거, wrapper를 Git에 포함
 - [x] C. SecurityConfig 재작성 및 S1 해결 (코드와 빌드 완료)
-- [ ] C 런타임 검증: 실제 DB가 있는 환경에서 로그인, 로그아웃, 화면별 POST/Ajax 동작 확인 (6.8-C 검증 절차)
+- [x] C 자동 테스트: DB 없이 보안 규칙 14개 검증 (`e5d048f`, 14/14 통과, 대조군 확인)
+- [ ] C 화면 확인: 실제 DB가 있는 환경에서 화면별 저장/삭제(Ajax)와 검색 폼 동작 확인 (8.2)
+- [x] S5. SFTP 비밀번호 로그 제거 (`3ad5473`)
+- [x] `.gitattributes` 추가 (`7bb787f`)
+- [ ] SFTP 접속 호환성 확인: 관측소 서버가 새 jsch의 알고리즘을 지원하는지 (8.4)
 - [ ] D. JPA 네이티브 쿼리 검증
 - [x] E. 설정 파일 정리 (`1f1ae08`, 검증 완료 → 6.8-E)
 - [ ] (D 단계에서) `spring.jpa.open-in-view` 실제 적용 여부 결정 (현재 잘못된 위치에 있어 효과 없음)
-- [ ] F. 운영 스크립트 수정
-- [ ] 기능 검증 및 순차 배포
+- [x] F. 운영 스크립트 수정 (`83e3e1a`, `01cf88b`)
+- [ ] 운영 서버 JDK 25 설치 경로 확인 후 스크립트 기본값(`/usr/lib/jvm/java-25-openjdk`)과 맞는지 확인 (8.5)
+- [ ] 기능 검증 및 순차 배포 (8.5)
 
 ### 6.7 참고 자료
 
@@ -310,19 +491,48 @@ commit: `ade302c`
 - `:Daemon:buildAllRadarJar` 성공. 5종 jar의 manifest가 `Start-Class: kr.or.kimsn.radar.daemon.DaemonApplication`, `Radar-System-Type`, `Build-Jdk-Spec: 25`
 - 기동 시도 로그에서 Log4j2가 `log4j2.yml`(YamlConfiguration)을 정상 로드하는 것 확인
 
-**런타임 검증 (미완료)**: DB 없이 웹만 띄워 보려던 시도는 실패함. `DataSourceConfig`의 Hikari 풀이 기동 시점에 DB에 접속하고, lazy-init을 켜도 `entityManagerFactory`는 먼저 초기화되기 때문. H2 임시 클래스패스 방식은 권한 정책으로 실행하지 못함. **실제(또는 개발용) DB가 있는 환경에서 아래 항목을 확인해야 함**:
+**실제 서버 기동으로 확인하려던 시도 (실패 → 자동 테스트로 대체)**: DB 없이 웹 서버만 띄워 확인하려 했으나, `DataSourceConfig`의 DB 연결 풀(Hikari)이 기동 즉시 DB에 접속해 서버가 뜨지 않았다. 지연 초기화(lazy-init)를 켜도 JPA(`entityManagerFactory`)가 먼저 초기화되어 실패했고, 테스트용 인메모리 DB(H2)를 붙이는 방법은 작업 환경의 권한 정책으로 실행하지 못했다. 그래서 **서버를 띄우지 않고 웹 요청을 흉내 내는 자동 테스트**를 만들었다 (아래).
 
-| # | 확인 항목 | 기대 결과 |
-|---|---|---|
-| 1 | 비로그인으로 `/manage/station_status` 접근 | `/login`으로 302 이동 |
-| 2 | 비로그인으로 `POST /users/admin_user_del` | 403 또는 로그인 페이지로 이동 (API 실행되면 안 됨) |
-| 3 | `/login` 화면 소스 | `<input type="hidden" name="_csrf" ...>` 존재 |
-| 4 | 정상 계정으로 로그인 | `/`로 이동, 메뉴 정상 표시 |
-| 5 | 로그인 실패 | `/login?error=true` |
-| 6 | 화면별 저장/수정/삭제 (fnCall Ajax) | 정상 처리 (403 나면 토큰 누락 화면) |
-| 7 | 검색 폼 제출 (통계, 이력, 문자 결과) | 정상 조회 |
-| 8 | Logout 버튼 | `/login?logout`으로 이동, 이후 보호된 화면 접근 시 로그인 요구 |
-| 9 | 세션 만료 후 Ajax 요청 | 로그인 페이지 HTML이 반환됨. 화면에서 오류로 보일 수 있음 → 필요하면 후속 개선 |
+##### 자동 테스트 (2026-11-19, commit `e5d048f`) — DB 없이 실행
+
+- **파일**: `radar-web/src/test/java/kr/or/kimsn/radar/securitytest/SecurityConfigTest.java`
+- **실행**: `./gradlew :radar-web:test` (보고서: `radar-web/build/reports/tests/test/index.html`)
+- **원리**
+  - `@WebMvcTest`는 웹 계층(요청 처리, Spring Security 필터, Thymeleaf 화면)만 띄우고 DB·JPA는 띄우지 않는다
+  - **실제 운영 코드를 그대로 사용**: `SecurityConfig`, `AuthenticationSuccess`, `AuthenticationFailure`, `LoginController`, `login.html`
+  - **가짜로 바꾼 것은 회원 조회(`UserSecurityService`) 하나뿐**: DB 대신 테스트 계정 `tester`(비밀번호는 BCrypt로 암호화해 저장, 권한 USER)만 돌려주고, 다른 아이디는 "사용자 없음" 처리
+  - 테스트를 별도 패키지(`kr.or.kimsn.radar.securitytest`)에 두고 테스트 전용 설정(`TestApp`)을 사용 → DB 연결을 요구하는 `RadarWebApplication`(`@EnableJpaRepositories`)이 로드되지 않음
+  - `MockMvc`로 요청을 보내고 응답 코드·이동 주소·쿠키·화면 내용을 검사
+- **추가한 테스트 의존성** (`radar-web/build.gradle`, 테스트에만 사용되어 운영 jar에는 포함 안 됨): `spring-boot-starter-webmvc-test`, `spring-boot-starter-security-test`
+- **결과: 14개 모두 통과**
+
+| # | 시나리오 | 요청 | 기대 결과 (= 실제 결과) | 의미 |
+|---|---|---|---|---|
+| C-01 | 로그인 화면 | 비로그인 `GET /login` | 200, 화면에 `name="_csrf"` hidden 입력과 `action="/loginProc"` 포함 | 로그인 화면은 열리고 CSRF 토큰이 자동 삽입됨 |
+| C-02 | 정적 리소스 | 비로그인 `GET /css/radar/common.css` | 200 | 로그인 화면의 CSS/JS가 차단되지 않음 |
+| C-03 | 관리 화면 차단 | 비로그인 `GET /manage/station_status` | 302 → `/login` | **S1 해결 확인**: 로그인 없이 관리 화면 불가 |
+| C-04 | API 차단 (토큰 없음) | 비로그인 `POST /users/admin_user_del` | 403 | 외부에서 회원 삭제 API 호출 불가 |
+| C-05 | API 차단 (토큰 있음) | 비로그인 `POST /users/admin_user_del` + CSRF | 302 → `/login` | 토큰이 있어도 로그인 없으면 실행 안 됨 |
+| C-06 | CSRF 방어 | 로그인 사용자 `POST` (토큰 없음) | 403 | 로그인 상태를 악용한 위조 요청 차단 |
+| C-07 | 정상 요청 통과 | 로그인 사용자 `POST` + CSRF | 404 | 보안 필터 통과 (테스트에는 해당 컨트롤러를 넣지 않았으므로 404가 정상) |
+| C-08 | 정상 화면 통과 | 로그인 사용자 `GET /manage/station_status` | 404 | 위와 같음 |
+| C-09 | 로그인 성공 | `POST /loginProc` (tester/올바른 비밀번호) + CSRF | 302 → `/`, `userId` 쿠키 = tester | `AuthenticationSuccess` 정상 동작 |
+| C-10 | 로그인 실패 (비밀번호) | 틀린 비밀번호 | 302 → `/login?error=true` | `AuthenticationFailure` 정상 동작 |
+| C-11 | 로그인 실패 (아이디) | 없는 아이디 | 302 → `/login?error=true` | 위와 같음 |
+| C-12 | 위조 로그인 차단 | `POST /loginProc` (토큰 없음) | 403 | 외부 사이트에서 로그인 요청 위조 불가 |
+| C-13 | 로그아웃 | 로그인 사용자 `POST /logout` + CSRF | 302 → `/login?logout`, `userId` 쿠키 삭제(유효기간 0) | 로그아웃 정상 |
+| C-14 | 강제 로그아웃 차단 | `POST /logout` (토큰 없음) | 403 | 외부 사이트에서 강제 로그아웃 불가 |
+
+- **처음 실행했을 때 실패한 내용과 수정 (참고)**
+  1. `did not discover any tests` → Gradle 9는 JUnit 5 실행 설정이 필요. 루트 `build.gradle`에 `useJUnitPlatform()` 추가
+  2. 14개 전부 `UsernameNotFoundException` → 테스트 코드 문제: Mockito에서 "아무 아이디 → 예외" 스텁을 먼저 등록한 뒤 "tester → 계정" 스텁을 등록하는 순간 첫 스텁이 실행됨. 인자 값으로 분기하는 스텁 하나로 변경
+  3. C-03, C-05 실패: 실제 이동 주소는 `/login`인데 비교 패턴 `**/login`이 맨 앞 `/`와 맞지 않음. 정확한 주소 비교로 변경 (**보안 동작은 처음부터 정상이었음**)
+- **대조군 확인 (테스트가 실제로 문제를 잡아내는지)**: `SecurityConfig`를 예전 상태(전체 허용 `anyRequest().permitAll()` + CSRF 끄기 `csrf.disable()`)로 **임시 변경**하고 테스트를 돌림 → **7개 실패**(C-01, C-03, C-04, C-05, C-06, C-12, C-14). 즉 누군가 보안 설정을 다시 풀면 테스트가 실패해서 알려 준다. 확인 후 원래대로 복구했고 `git status`로 변경 없음을 확인함
+- **자동 테스트로 확인할 수 없는 것** → 8.2에서 실제 화면으로 확인 필요
+  - 각 화면의 Ajax(`fnCall`) 저장/삭제가 `common.js`를 통해 토큰을 제대로 보내는지 (브라우저의 JavaScript 동작)
+  - 검색 폼(통계, 이력, 문자 결과)이 토큰과 함께 제출되는지
+  - 실제 DB 회원 계정으로 로그인
+  - 세션 만료 후 Ajax 요청 시 화면 동작 (로그인 페이지 HTML이 돌아와 오류처럼 보일 수 있음)
 
 **참고 / 후속 검토**
 - 권한(Role) 구분은 아직 없음. 로그인한 사용자는 모두 회원 관리(`/users/**`) 등 전체 기능 사용 가능. ADMIN 전용으로 제한할지는 검토 필요 (권한 값: `USER`/`ADMIN`, `ROLE_` 접두어 없음 → `hasAuthority('ADMIN')` 형태로 써야 함)
@@ -394,6 +604,85 @@ commit: `ade302c`
 - 공통 확인: Log4j2가 jar 내부 `log4j2.yml`을 `YamlConfiguration`으로 로드하고, 상대 경로 `./logs/`에 `RDR.log` / `RADAR_WEB.log` 생성 (임시 폴더 안)
 - 확인하지 못한 것: DB 연결 이후 단계(Hibernate 초기화, Repository 쿼리, 스케줄러 실행). D 단계에서 DB 연동 테스트로 확인 필요
 
+#### F. 운영 실행 스크립트 JDK 25 적용 (2026-11-19 완료, commit `83e3e1a`, `01cf88b`)
+
+##### 배경
+
+운영 서버에서는 `config/*_process.sh` 스크립트로 프로그램을 시작/종료한다. 기존 스크립트는 그냥 `java` 명령을 썼기 때문에, 서버에 Java가 여러 개 설치돼 있으면 **어떤 Java로 실행될지 보장되지 않았다**(PATH 순서에 따라 Java 8/11이 실행될 수 있음). Java 25 전용으로 빌드한 jar를 옛 Java로 실행하면 `UnsupportedClassVersionError`로 실패하고, 패치 전 Java 25로 실행하면 Java4Shell에 노출된다.
+
+##### 변경 내용
+
+| 대상 | 변경 |
+|---|---|
+| `RDR`, `RDR_B`, `SDR`, `SDR_B`, `TDWR`, `RADAR_WEB` `_process.sh` (6개) | ① `JAVA_HOME=${JAVA_HOME:-/usr/lib/jvm/java-25-openjdk}`: 서버에 `JAVA_HOME` 환경 변수가 있으면 그 값, 없으면 기본 경로 사용 |
+| | ② `java` → `"$JAVA_BIN"`(= `$JAVA_HOME/bin/java`)로 실행: PATH와 관계없이 정해진 JDK 사용 |
+| | ③ `check_java` 함수: `start` 때 실행 파일이 있는지, `java.version`이 `25.0.5.1` 이상인지 검사. 아니면 `[ERROR]` 메시지 출력 후 **시작하지 않음**(종료 코드 1). 버전 비교는 `sort -V`(버전 순서 정렬) 사용 |
+| | ④ `version` 명령에 Java 버전 한 줄 추가 출력 |
+| `radar_process.sh` | **변경 안 함**: `daemon-xx.jar`를 가리키는 예전 템플릿으로, 실제 운영에 쓰이지 않음 |
+
+- 기본 경로 `/usr/lib/jvm/java-25-openjdk`는 RHEL 계열 패키지 설치 시의 일반적인 경로다. **운영 서버에 실제로 설치된 경로가 다르면** ① 스크립트 기본값을 고치거나 ② 서버에서 `export JAVA_HOME=<실제 경로>`를 설정하면 된다
+- 기존 동작(시작/종료/목록 로직, 로그 파일 위치, `DAEMON_TYPE` 값)은 바꾸지 않았다
+
+##### 테스트 방법과 결과
+
+- **문법 검사**: `bash -n <스크립트>` → 6개 모두 통과
+- **실행 테스트 준비** (운영 경로는 건드리지 않음)
+  1. 임시 폴더에 스크립트를 복사하고 `RADAR_HOME`만 임시 폴더로 바꿈 (그 외 내용은 원본과 동일함을 `diff`로 확인)
+  2. **테스트용 jar(Probe)**: 진짜 프로그램 대신, 받은 `DAEMON_TYPE`·`java.version`·`java.home`을 출력하고 30초 뒤 종료하는 작은 jar를 만들어 `RDR.jar` 등의 이름으로 배치
+  3. **가짜 JDK**: `java.version = 21.0.5`, `25.0.5`를 출력하는 가짜 `bin/java`를 만들어 낮은 버전 상황을 재현
+- **1차 결과: Web 스크립트 결함 발견 → 수정**: 처음 수정(`83e3e1a`)에서 Web 스크립트에만 `check_java` 정의가 빠져 `check_java: command not found`, `nohup: failed to run command ''` 오류가 났다. 원인은 블록 복사 시 끝 위치를 `}`+줄바꿈으로 찾았는데 `${JAVA_HOME:-...}` 줄에서 먼저 걸린 것. **이 결과를 확인하기 전에 commit이 같은 명령 안에서 실행되어** 결함이 있는 상태로 commit됐고, `01cf88b`에서 바로 수정했다. 이후로는 테스트 확인 후에 commit하도록 단계를 나눔
+- **최종 결과 (6개 스크립트 전부 같은 테스트)**
+
+| 케이스 | 조건 | 기대 | RDR | RDR_B | SDR | SDR_B | TDWR | RADAR_WEB |
+|---|---|---|---|---|---|---|---|---|
+| F1 | `JAVA_HOME`이 없는 경로 | `[ERROR] Java 실행 파일을 찾을 수 없습니다`, 종료 코드 1 | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| F2 | Java 21 | `[ERROR] Java 버전(21.0.5)이 ... 낮거나`, 종료 코드 1 | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| F3 | Java 25.0.5 (패치 직전 버전) | 종료 코드 1 (**25.0.5 < 25.0.5.1 판정 확인**) | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| F6 | 실제 JDK 25.0.5.1 | `Java: .../java (25.0.5.1)` 출력 후 기동. Probe 출력에서 `java.version=25.0.5.1` | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| F6' | `DAEMON_TYPE` 전달 | KMA_RDR / MCEE_RDR / KMA_SDR / MCEE_SDR / KMA_TDWR / (Web 없음) | ✅ KMA_RDR | ✅ MCEE_RDR | ✅ KMA_SDR | ✅ MCEE_SDR | ✅ KMA_TDWR | ✅ null |
+
+- **RDR 스크립트로 추가 확인한 것**
+  - F4 `JAVA_HOME` 미지정: 기본값 `/usr/lib/jvm/java-25-openjdk/bin/java`를 찾음 → 개발 PC(Ubuntu)에는 `-amd64`가 붙은 경로라 `[ERROR]` (**의도된 동작**: 경로가 다르면 시작하지 않음)
+  - F5 `version`: `RDR` + `openjdk version "25.0.5.1" 2026-11-17`
+  - F7 `list`: 실행 중인 프로세스 표시 정상
+  - F8 이미 실행 중일 때 `start`: `RDR Alive.` 출력, 중복 실행 안 함
+  - F9 `stop`: **WSL에서는 종료되지 않음**. 기존 로직이 부모 프로세스 ID가 1인 프로세스만 종료하는데 WSL에서는 부모가 `/init`(PID 2513)이기 때문. RHEL 서버에서는 PID 1(systemd)이 부모가 되므로 기존처럼 동작할 것으로 판단. **기존 로직이며 이번에 바꾸지 않음** → 운영 서버에서 `stop` 동작을 한 번 확인할 것
+- 테스트 후 임시 프로세스는 모두 종료했음 (`pgrep`으로 0개 확인)
+
+#### S5. SFTP 비밀번호 로그 기록 제거 (2026-11-19 완료, commit `3ad5473`)
+
+- **문제**: `StepOneService`가 수집 주기마다 관측소 SFTP 비밀번호를 `log.info("[{} pwd]: {}", ...)`로 로그 파일에 기록했다. 로그 파일을 볼 수 있는 사람은 누구나 관측소 root 비밀번호를 알 수 있었다
+- **변경**: 비밀번호가 설정돼 있으면 `******`, 비어 있으면 `(미설정)`만 기록
+  ```java
+  log.info("[{} pwd]: {}", siteStr, sitePwd.isEmpty() ? "(미설정)" : "******");
+  ```
+- **확인 방법**
+  - `./gradlew :Daemon:compileJava` 성공
+  - 전체 소스에서 비밀번호 변수를 로그로 출력하는 코드 검색: `grep -rnE "log\.[a-z]+\(.*([Pp]wd|[Pp]assword)"` → 수정한 줄 외에는 주석 처리된 2줄(`LoginController`)뿐. `System.out`으로 출력하는 곳도 없음
+  - `SftpUtil`의 로그도 확인: 호스트·경로·파일명만 기록하고 비밀번호는 기록하지 않음
+- **남은 조치 (서버 작업)**: 운영 서버의 기존 로그 파일(`/home/watcher/deamon/*/logs/`)에 이미 비밀번호가 남아 있다. 로그 파일 정리와 **관측소 비밀번호 교체**가 필요하다 (S2와 함께 진행)
+
+#### G. `.gitattributes` 추가 (2026-11-19 완료, commit `7bb787f`)
+
+- **왜 필요한가**: Windows용 `gradlew.bat`은 Windows 줄바꿈(CRLF)이어야 하고, 리눅스용 셸 스크립트(`*.sh`, `gradlew`)는 LF여야 한다. 셸 스크립트에 CRLF가 섞이면 `/bin/bash^M: bad interpreter` 오류로 실행되지 않는다. Git 설정이 사람마다 달라도 같은 결과가 나오도록 저장소에 규칙을 넣었다
+- **규칙**: `/gradlew.bat` → CRLF, `/gradlew`·`*.sh` → LF, `*.jar` → 바이너리(변환 금지). 영향 범위를 줄이려고 `note/` 폴더의 다른 배치 파일에는 적용하지 않음
+- **확인**: `git check-attr`로 규칙 적용 확인, `git add --renormalize .` 실행 후 변경된 파일 0개 확인 (저장소 안의 파일은 이미 LF로 저장돼 있어 내용 변화 없음)
+
+#### J. SFTP 라이브러리(jsch) 교체에 따른 접속 호환성 점검 (2026-11-19, DB 없이 확인 가능한 부분)
+
+- **배경**: A 단계에서 jsch를 `com.jcraft:jsch:0.1.55`(2018년 이후 유지보수 중단)에서 `com.github.mwiede:jsch:2.28.8`(유지보수 중인 후속판)로 바꿨다. 코드(패키지명)는 같지만, **새 버전은 보안상 약한 암호 알고리즘을 기본으로 허용하지 않는다**
+- **확인 방법**: 두 버전 jar로 각각 `JSch.getConfig(...)` 기본값을 출력하는 작은 프로그램을 실행해 비교 (예전 jar는 `libs/jsch-0.1.55.jar`, 외부 접속 없음)
+
+| 항목 | 0.1.55 (기존)에만 있고 2.28.8 (현재)에서 빠진 것 | 2.28.8에 새로 생긴 것 |
+|---|---|---|
+| 키 교환 (kex) | `diffie-hellman-group14-sha1`, `diffie-hellman-group-exchange-sha1`, `diffie-hellman-group1-sha1` | `curve25519-sha256`, `mlkem768x25519-sha256`, `diffie-hellman-group14-sha256`, `group16/18-sha512` 등 |
+| 서버 호스트 키 | `ssh-rsa`(SHA-1 서명), `ssh-dss` | `rsa-sha2-256`, `rsa-sha2-512`, `ssh-ed25519` 등 |
+| 암호화 (cipher) | `aes*-cbc`, `3des-*`, `blowfish-cbc` | `aes128/256-gcm@openssh.com` |
+| 무결성 (MAC) | `hmac-md5`, `hmac-sha1-96`, `hmac-md5-96` | `hmac-sha2-*-etm@openssh.com`, `hmac-sha2-512` |
+
+- **영향**: 관측소 서버의 SSH(OpenSSH)가 **7.2보다 오래된 버전**(예: CentOS/RHEL 6 계열의 OpenSSH 5.x)이면 `rsa-sha2-*`를 지원하지 않아 `Algorithm negotiation fail` 또는 `UnknownHostKey`류 오류로 **접속이 실패할 수 있다**. 관측소 장비(Rainbow5 등)에 오래된 OS가 있는지 확인이 필요하다
+- **확인과 대응 방법** → 8.4
+
 ---
 
 ## 7. 작업 이력
@@ -413,3 +702,192 @@ commit: `ade302c`
 | 2026-11-19 | **6.3-B javax → jakarta 전환** | 모듈별 commit: common-data `da91928`, Daemon `a0543da`, radar-web `a3b58b1`. common-data와 Daemon 컴파일 성공. 그 외 Boot 4/Spring 6 API 변경 2건(`@EntityScan` 패키지, Trigger 반환형) 함께 수정. radar-web은 SecurityConfig(C 단계)만 남음. 상세는 6.8-B |
 | 2026-11-19 | **6.3-C Security 7 재작성 + S1 인증 복구** | commit `b75f60c`(SecurityConfig), `b7e0a7d`(화면 CSRF 토큰 처리), `47d1b27`(Daemon bootJar targetJavaVersion 보완). 전체 `assemble`과 Daemon 5종 jar 빌드 성공, 운영 jar에서 devtools 제외 확인. **런타임 검증은 DB가 필요해 미완료** → 6.8-C 검증 절차 |
 | 2026-11-19 | **6.3-E 설정 파일 정리** | commit `1f1ae08`. `use-legacy-processing` 제거(2곳), Daemon의 `server.servlet.encoding.*`·devtools 제거, `common-data.yml`의 효과 없는 jpa 설정 주석 표시. **기동 테스트로 실제 오류 1건 발견·수정**: Daemon `spring.config.import`의 `classpath*:` 와일드카드 때문에 Boot 4에서 기동 실패하던 문제. 검증: T1 정적 검사(Daemon 문제 키 0건), T2 설정 로딩 53/53 PASS, T3 가짜 DB 기동 테스트 통과. 테스트 스크립트는 `docs/verify/`에 보관 |
+| 2026-11-19 | **6.3-F 운영 스크립트 JDK 25 적용** | commit `83e3e1a`. 6개 스크립트에 `JAVA_HOME` 기본값, `$JAVA_BIN` 실행, `check_java`(25.0.5.1 이상 검사) 추가. **Web 스크립트에 함수 정의가 빠진 채 commit됨**(테스트 결과 확인 전에 commit이 같은 명령에서 실행) → `01cf88b`에서 수정. 최종: 6개 모두 F1~F3(차단)·F6(정상 기동, DAEMON_TYPE 전달) 통과. 기존 `stop` 로직은 WSL에서 동작하지 않음(PPID 조건, 서버에서 확인 필요) |
+| 2026-11-19 | **보안 S5 해결** | commit `3ad5473`. SFTP 비밀번호 로그 기록 → `******`. 다른 비밀번호 출력 코드 없음 확인. 기존 운영 로그 정리·비밀번호 교체는 서버 작업으로 남음 |
+| 2026-11-19 | **C 단계 자동 테스트 추가** | commit `e5d048f`. `@WebMvcTest` 기반 14개 시나리오, DB 없이 14/14 통과. 대조군(보안 설정을 예전처럼 풀었을 때) 7개 실패 확인 후 원복. `./gradlew build` 전체(컴파일+테스트+jar 6종) 처음으로 성공 |
+| 2026-11-19 | `.gitattributes` 추가 | commit `7bb787f`. `gradlew.bat` CRLF, `*.sh`·`gradlew` LF, `*.jar` binary. renormalize 결과 변경 파일 0개 확인 |
+| 2026-11-19 | jsch 알고리즘 호환성 점검 | 0.1.55와 2.28.8의 기본 알고리즘 비교: `ssh-rsa`(SHA-1), `ssh-dss`, sha1 키 교환, CBC 암호화 등이 기본값에서 빠짐 → 오래된 관측소 서버 접속 실패 가능성. 서버 확인 절차와 대응 코드를 8.4에 정리. 보안 이슈 S8(호스트 키 검증 생략) 추가 |
+| 2026-11-19 | 문서 보강 | 처음 보는 사람을 위한 0장(현재 상태, 용어, 환경 준비, 빌드·테스트 방법, 자주 나는 오류, commit 목록)과 8장(DB·서버가 필요한 남은 작업 따라하기) 추가. 6.8-C/F/S5/G/J 상세 기록 |
+
+---
+
+## 8. 남은 작업 따라하기 (DB·서버가 필요한 작업)
+
+> 이 장은 아직 진행하지 않은 작업의 **절차서**다. 진행한 뒤에는 결과를 7장(작업 이력)에 기록한다.
+
+### 8.1 DB 연동 테스트 환경 준비 — ⚠️ 먼저 꼭 읽기
+
+**절대 하지 말 것**
+- **운영 DB로 테스트하지 않는다.** Daemon은 테스트 모드에서도 수신 이력(`receive_data`)과 상태(`receive_condition`)를 기록하고, 문자 큐(`nuri2.NURI2_NRMSG_DATA`)에 행을 넣는다. 누리2 에이전트가 연결된 DB라면 **실제 문자가 발송된다**
+- `common-data.yml`에 개발 DB 비밀번호를 적어 commit하지 않는다 (아래 환경 변수 방식 사용)
+
+**① 개발용 MySQL 준비**
+- 쿼리에서 스키마 이름을 직접 쓰므로(`nuri.NURI_MSG_DATA`, `nuri2.NURI2_NRMSG_DATA` 등) 개발 DB에도 **`watchdog`, `nuri`, `nuri2` 스키마를 같은 이름으로** 만들어야 한다
+- `Query/dump/`의 덤프로 복원할 수 있다 (`dump-watchdog-*.sql`, `dump-nuri-*.sql`, `dump-nuri2-*.sql`). 덤프에는 회원·연락처 등 실제 데이터가 들어 있으므로 개발 DB 접근을 제한한다
+  ```bash
+  # 예시 (개발용 MySQL에서)
+  mysql -u root -p < Query/dump/dump-watchdog-202607161334.sql
+  mysql -u root -p < Query/dump/dump-nuri-202607161334.sql
+  mysql -u root -p < Query/dump/dump-nuri2-202607161334.sql
+  ```
+  (덤프 파일에 `CREATE DATABASE`/`USE` 문이 없으면 스키마를 먼저 만들고 `mysql -u root -p <스키마명> < 덤프파일`로 복원)
+
+**② 문자 발송 끄기 (개발 DB에서)**
+- Daemon은 `sms_send_onoff` 테이블의 `code='STOPSMS'` 행이 `value=1`일 때만 문자를 보낸다 (`StepTwoService.java:265`)
+  ```sql
+  UPDATE watchdog.sms_send_onoff SET value = 0 WHERE code = 'STOPSMS';   -- 문자 발송 OFF
+  ```
+- 그리고 개발 DB에는 누리2 에이전트를 연결하지 않는다 (이중 안전장치)
+
+**③ DB 접속 정보는 환경 변수로 넣기** (파일 수정 없음)
+- `DataSourceConfig`는 `config.datasource.*` 값을 읽는다. Spring은 환경 변수 `CONFIG_DATASOURCE_URL`처럼 점(.)을 밑줄(_)로, 소문자를 대문자로 바꾼 이름도 같은 값으로 인식하며, 이 값이 yml보다 우선한다
+  ```bash
+  export CONFIG_DATASOURCE_URL='jdbc:mysql://<개발DB주소>:3306/watchdog?characterEncoding=UTF-8'
+  export CONFIG_DATASOURCE_USERNAME='<개발DB계정>'
+  export CONFIG_DATASOURCE_PASSWORD='<개발DB비밀번호>'
+  ```
+- 명령행 인자(`--config.datasource.password=...`)도 가능하지만 `ps` 명령으로 다른 사용자에게 보일 수 있어 권장하지 않는다
+- (2026-11-19 확인) 운영과 같은 라이브러리(RDR.jar 내부)로 `StandardEnvironment` + `YamlPropertySourceFactory`(common-data.yml)를 구성하고 환경 변수 `CONFIG_DATASOURCE_URL`, `CONFIG_DATASOURCE_USERNAME`을 지정해 조회 → **환경 변수 값이 yml 값보다 우선 적용됨**을 확인
+
+### 8.2 C 단계 화면 확인 (로그인·CSRF)
+
+**실행**: `./gradlew build` 후, 8.1 환경 변수를 설정한 터미널에서
+```bash
+java -jar radar-web/build/libs/RADAR_WEB.jar --server.port=8080
+```
+로그에 `Started RadarWebApplication ... using Java 25.0.5.1`이 나오면 브라우저에서 `http://localhost:8080` 접속
+
+**확인 항목** (자동 테스트 C-01~C-14로 이미 확인된 것은 제외하고, 브라우저에서만 확인 가능한 것 위주)
+
+| # | 할 일 | 기대 결과 | 문제일 때 확인할 것 |
+|---|---|---|---|
+| 1 | 로그인하지 않고 `http://localhost:8080/manage/station_status` 입력 | 로그인 화면으로 이동 | SecurityConfig |
+| 2 | 개발 DB에 있는 실제 계정으로 로그인 | 메인 화면(`/`)과 메뉴 표시 | `watchdog_member` 테이블의 비밀번호가 BCrypt 형식(`$2a$...`)인지 |
+| 3 | 브라우저 개발자 도구(F12) → Elements에서 `<meta name="_csrf"` 검색 | 토큰 값이 있는 meta 태그 3개 | `layout/config.html` |
+| 4 | 관리 화면 각각에서 **저장/수정/삭제** 1회씩 (아래 화면 목록) | 정상 처리 | F12 → Network에서 해당 요청이 **403**이면 요청 헤더에 `X-CSRF-TOKEN`이 있는지 확인 → 없으면 그 화면이 `common.js`를 불러오지 않는 것 |
+| 5 | 검색 폼 제출: 통계(`/stat/{site}`), 관측 이력(`/station/hist/{site}`), 문자 결과(`/manage/sms_send_result`, `/manage/sms_send_result_nuri2`) | 정상 조회 | Network에서 폼 데이터에 `_csrf`가 포함됐는지 |
+| 6 | 우측 상단 **Logout** 클릭 | 로그인 화면으로 이동, 뒤로 가기 후 관리 화면 접근 시 다시 로그인 요구 | `layout/header.html`의 logoutForm |
+| 7 | 로그인 후 30분 이상(세션 만료) 방치 → 저장 버튼 | 현재는 로그인 화면 HTML이 응답으로 와서 오류처럼 보일 수 있음 | 필요하면 후속 개선(만료 시 로그인 화면으로 이동하도록) |
+
+**저장/수정/삭제가 있는 관리 화면 목록** (`PostController`의 POST 21개 기준)
+
+| 화면(GET) | 저장 동작(POST) |
+|---|---|
+| `/manage/station_set_rc` 경고 기준 설정 | `/manage/station_set_rc_modify` |
+| `/manage/station_set_rcc` | `/manage/station_set_rcc_modify` |
+| `/manage/station_set_rs` 수신 설정 | `/manage/station_set_rs_modify` |
+| `/manage/sms_set_msg` 문자 메시지 설정 | `/manage/sms_set_msg_modify` |
+| `/manage/station_status` 지점 운영 상태 | `/manage/station_status_modify` |
+| `/manage/sms_target_group` 등 문자 대상 그룹 | `/manage/sms_target_group_modify`, `_member_modify`, `_member_unlink`, `_member_addlink`, `_unlink`, `_addlink` |
+| `/manage/sms_target_member` 문자 대상자 | `/manage/sms_target_member_modify`, `_delete`, `_add` |
+| `/manage/sms_send_onoff` 문자 발송 ON/OFF | `/manage/sms_send_onoff_modify` |
+| `/manage/sms_send_nuri2` 문자 발송 | `/manage/sms_send_save_nuri2` (⚠️ 실제 문자 큐 적재 — 개발 DB에서만) |
+| `/manage/sms_template` 문자 템플릿 | `/manage/sms_temp_add`, `_modify`, `_delete` |
+| `/users/admin_user` 사용자 관리 | `/users/admin_user_create`, `_modify`, `_del` |
+
+### 8.3 D 단계: DB 쿼리(JPA) 검증
+
+**왜 필요한가**: Hibernate가 5.6 → 7.4로 크게 바뀌었다. 이 프로젝트의 `@Query` 43개는 모두 직접 쓴 SQL(native query)이라 문법 영향은 작지만, **조회 결과를 Java 타입으로 바꾸는 방식**(예: 숫자 컬럼이 `BigInteger`/`Long`/`Integer` 중 무엇으로 오는지)이 달라져 실행 시점에 오류가 날 수 있다. 이는 컴파일로는 잡히지 않고 **실제로 쿼리를 실행해야** 드러난다.
+
+**① Web 화면 전체 열어 보기**: 8.2 실행 상태에서 아래 화면을 모두 열고, 서버 로그(`./logs/RADAR_WEB.log`)에 `ERROR`/`Exception`이 없는지 확인
+- 메인 `/`, 관측소 `/station/{site}`, 이력 `/station/hist/{site}`, 통계 `/stat/{site}`, 8.2의 관리 화면 전부, 문자 결과 화면 2개, 사용자 관리
+- 오류가 나면 로그에서 `Repository` 이름과 메서드를 찾아 해당 `@Query`의 반환 타입을 확인
+
+**② Daemon 테스트 모드 실행** (SFTP 접속 없이 판정·DB 기록 흐름 확인)
+- Daemon에는 외부 yml의 `radar.config.global.mode: "test"`일 때 SFTP 대신 지정한 결과를 넣는 기능이 있다 (`StepOneService.java:58`)
+- 준비: 작업 폴더를 만들고 `config/application.yml`을 복사한 뒤 아래처럼 수정 (Daemon은 실행 위치 기준 `./config/application.yml`을 찾는다)
+  ```yaml
+  radar:
+    config:
+      global:
+        mode: "test"
+        target_site: "KWK"          # 테스트할 관측소 코드 (비우면 전체)
+        recv_condition: "MISS"      # RECV(수신) 또는 MISS(미수신)
+        codedtl: "file_no"          # ok, file_no, filesize_no, network_no, network_ok, file_ok, filesize_ok
+  ```
+- 실행 (8.1의 환경 변수 설정 후)
+  ```bash
+  cd <작업 폴더>
+  java -DDAEMON_TYPE=KMA_RDR -jar <프로젝트>/Daemon/build/libs/RDR.jar
+  ```
+- 확인
+  - 로그(`./logs/RDR.log`): `[⚙️ 실시간 가상 테스트 가드 발동]`, `receive_data insert 결과`, `2번째 프로세스 상태 판정 진입`, `정산 루프 최종 완료`가 순서대로 나오는지, `ERROR` 없는지
+  - DB: `watchdog.receive_data`에 `TEST_INJECTED_...` 파일명 행 추가, `receive_condition` 상태 변경
+  - 문자: `STOPSMS=0`이면 로그에 `[장애시 문자 발송 기능 off]`. 문자 흐름까지 확인하려면 **누리2 에이전트가 연결되지 않은 개발 DB에서만** `STOPSMS=1`로 바꾸고 `nuri2.NURI2_NRMSG_DATA`에 행이 들어가는지 확인
+  - `recv_condition`/`codedtl`을 바꿔 가며(미수신 → 복구) 장애/복구 판정이 기존과 같은지 확인. 실행 중 yml을 고치면 `YmlRefreshManager`가 자동으로 다시 읽는다
+- 끝나면 `Ctrl+C`로 종료
+
+**③ `open-in-view` 결정**: 현재 설정이 잘못된 위치에 있어 효과가 없다(6.8-E). 아래처럼 실행해 ①의 화면을 다시 열어 보고 `LazyInitializationException`이 없으면 `common-data.yml`의 설정을 `spring.jpa.open-in-view: false`로 옮긴다
+```bash
+java -jar radar-web/build/libs/RADAR_WEB.jar --spring.jpa.open-in-view=false
+```
+
+### 8.4 SFTP 접속 호환성 확인 (jsch 교체 영향, 6.8-J)
+
+**① 관측소 서버의 SSH 버전 확인** — 관측소에 접속할 수 있는 **운영 서버에서** 관측소마다 실행
+```bash
+ssh -vv -o BatchMode=yes -p <포트> <계정>@<관측소IP> exit 2>&1 | grep -E "remote software version|kex: algorithm|host key algorithm"
+```
+- `remote software version OpenSSH_7.4` 처럼 **7.2 이상이면 대부분 문제없음**
+- `OpenSSH_5.x`, `6.x` 이거나 SSH가 OpenSSH가 아닌 장비(전용 장비 펌웨어 등)면 접속 실패 가능성이 높다
+- (`BatchMode=yes`라서 비밀번호를 묻지 않고 협상 정보만 보고 끝난다)
+
+**② 실제 접속 확인**: 8.3-② 방식에서 `mode: "real"`로 실행하되, **개발 DB의 관측소 목록을 1곳만 활성(status=1)**으로 두고 한 주기 실행 → 로그의 `[{관측소} 접속 유무]: true` 확인
+
+**③ 실패할 경우 대응** (오래된 서버에만 옛 알고리즘을 추가로 허용) — `SftpUtil.open()`의 `session.setConfig(config)` 전에 추가
+```java
+// 오래된 관측소 서버 호환: 기본값 뒤에 옛 알고리즘을 덧붙임 (보안이 약하므로 필요한 경우에만)
+config.put("server_host_key", JSch.getConfig("server_host_key") + ",ssh-rsa");
+config.put("PubkeyAcceptedAlgorithms", JSch.getConfig("PubkeyAcceptedAlgorithms") + ",ssh-rsa");
+config.put("kex", JSch.getConfig("kex") + ",diffie-hellman-group14-sha1,diffie-hellman-group-exchange-sha1");
+```
+- 근본 해결은 관측소 서버의 SSH 업그레이드다. 위 코드는 임시 대응이며 적용 시 7장에 기록한다
+
+### 8.5 운영 배포 절차와 되돌리기(롤백)
+
+**① 배포 전 확인**
+- 운영 서버 CPU: `grep -o -m1 avx512vbmi /proc/cpuinfo` (출력되면 Java4Shell 영향 대상 → 업그레이드 시급)
+- 현재 Java: `java -version`, 운영 스크립트가 쓰는 Java 경로
+- 8.2~8.4 완료 여부
+
+**② JDK 25 설치 (운영 서버, RHEL 계열 예시)**
+- 배포판 저장소에 `25.0.5.1` 이상이 있는지, **변경 이력에 CVE-2026-114938이 있는지** 확인 후 설치
+  ```bash
+  sudo dnf install java-25-openjdk-headless          # 패키지 이름은 배포판에 따라 다를 수 있음
+  rpm -q --changelog java-25-openjdk-headless | grep CVE-2026-114938
+  ls /usr/lib/jvm/                                    # 실제 설치 경로 확인
+  ```
+- 설치 경로가 `/usr/lib/jvm/java-25-openjdk`가 아니면 스크립트의 `JAVA_HOME` 기본값을 고치거나 `export JAVA_HOME=<경로>` 설정
+- **기존 JDK 11은 지우지 않는다** (롤백용)
+
+**③ 백업**
+```bash
+cp -a /home/watcher/deamon /home/watcher/deamon.bak_$(date +%Y%m%d)
+cp -a /home/watcher/radarWebsite /home/watcher/radarWebsite.bak_$(date +%Y%m%d)
+```
+
+**④ 교체 순서** (한 번에 바꾸지 않고 하나씩, 각 단계마다 한 주기 이상 지켜본 뒤 다음으로)
+1. 관측소가 가장 적은 **TDWR(공항 2곳)** → `./TDWR_process.sh stop` → 새 `TDWR.jar`·새 `TDWR_process.sh` 복사 → `./TDWR_process.sh start`
+2. 로그 확인: `Java: ... (25.0.5.1)`, `Starting DaemonApplication ... using Java 25.0.5.1`, 관측소별 `접속 유무: true`, `ERROR` 없음
+3. 이상 없으면 SDR → SDR_B → RDR → RDR_B 순으로 같은 방법 반복
+4. 마지막으로 Web(`RADAR_WEB_process.sh`) 교체 후 8.2 확인 항목 중 1·2·4·6 재확인
+- `stop` 후 `./XXX_process.sh list`로 프로세스가 실제로 종료됐는지 꼭 확인 (6.8-F의 stop 관련 주의)
+
+**⑤ 되돌리기 (문제 발생 시)**
+1. `./XXX_process.sh stop` (종료 안 되면 `list`로 PID 확인 후 `kill <PID>`)
+2. 백업 폴더의 **예전 jar와 예전 스크립트**를 원래 위치로 복사 (예전 jar는 Java 11용이므로 예전 스크립트(PATH의 java 사용)와 함께 되돌려야 함)
+3. `./XXX_process.sh start` 후 정상 동작 확인
+4. 원인 파악 후 7장에 기록
+
+### 8.6 결정이 필요한 사항
+
+| # | 항목 | 선택지 | 비고 |
+|---|---|---|---|
+| 1 | 노출된 비밀번호 교체 (S2~S5) | 관측소 SFTP, DB, GitLab 복구 코드 교체 | **가장 시급**. Git 이력에도 남아 있으므로 교체가 우선, 이력 정리(`git filter-repo`)는 그다음 |
+| 2 | 관리 기능 권한 구분 | 현재: 로그인하면 모두 가능 / 변경: 사용자 관리 등은 ADMIN만 | 권한 값이 `ROLE_` 접두어 없는 `USER`/`ADMIN`이라 `hasAuthority("ADMIN")` 사용 |
+| 3 | `open-in-view` | 8.3-③ 결과에 따라 | |
+| 4 | `spring.thymeleaf.cache` | 운영은 `true` 권장 (현재 `false`) | 화면 응답 속도 |
+| 5 | SFTP 호스트 키 검증 (S8) | `known_hosts` 준비 후 `StrictHostKeyChecking=yes` | 서버 작업 필요 |
+| 6 | 정리 대상 파일 삭제 | `ConfigFileEnum_back.java`, `SmsService.java.back`, `config/application copy.yml`, `config/radar_process.sh`, `libs/`의 옛 jar, 호출되지 않는 코드 | 삭제해도 Git 이력에는 남음 |
+| 7 | 기존 버그 수정 | 로그인 실패 메시지 미표시, 스크립트 `start all` 중복 실행 | 6.8-C 참고 / 4.2 참고 |
+| 8 | 원격 저장소 push | `ver_java25` 브랜치 push 및 병합 방식 | 8.2~8.4 확인 후 권장 |
