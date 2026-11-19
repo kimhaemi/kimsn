@@ -60,8 +60,8 @@
   </div>
   <div class="meta">
     작성일 <b>2026-11-19</b><br>
-    브랜치 <b>ver_java25</b> (원격 push 전)<br>
-    기준 commit <b>b250e18</b> 이후 <b>36개</b> commit<br>로컬 테스트 완료 후 갱신
+    브랜치 <b>ver_java25</b> (원격 push 완료)<br>
+    기준 commit <b>b250e18</b> 이후 <b>37개</b> commit<br>로컬 테스트 완료 · push 후 갱신
   </div>
 </header>
 
@@ -160,7 +160,7 @@
       <li><b>문자 결과 화면 오류</b> — Thymeleaf 3.1 보안 제한으로 화면이 중간에 끊김(응답은 200이라 눈에 안 띔) → 표현식 수정</li>
       <li><b>위험한 테스트 예시</b> — 문서의 Daemon 테스트 설정대로 하면 나머지 관측소에 실제 SFTP 접속 → 예시 수정·경고 추가</li>
       <li><b>새로 발견한 평문 비밀번호</b> — 참고 SQL 파일 1개 (S3에 추가)</li>
-      <li><b>문서 이력의 민감값</b> — 테스트 주소·계정 이름을 Git 이력에서 제거 (push 전)</li>
+      <li><b>문서 이력의 민감값</b> — 테스트 주소·계정 이름을 push 전에 Git 이력에서 제거</li>
     </ul>
   </div>
 </section>
@@ -183,7 +183,7 @@
       <tr><td class="k">로컬</td><td><span class="chip ok">8건 모두 완료</span> 로그아웃 · 세션 만료 · 화면 전체 · 검색 폼 · 문자 저장 · Daemon · open-in-view · CVE 재점검</td></tr>
       <tr><td class="k">운영 (6)</td><td>관측소 SSH 버전 · SFTP 실제 접속 · 사전 확인(CPU·Java·관리자 계정) · JDK 25 설치 · 순차 배포 · 배포 후 웹 재확인</td></tr>
     </table>
-    <p class="muted" style="margin-top:8px;font-size:13px">결정 대기: 세션 만료 시 안내 메시지, ognl 버전, open-in-view 적용, 사용자 관리 메뉴 숨김, 기존 버그(joinForm 등) 정리, push 방식 — 문서 8.6</p>
+    <p class="muted" style="margin-top:8px;font-size:13px">결정 대기: 세션 만료 시 안내 메시지, ognl 버전, open-in-view 적용, 사용자 관리 메뉴 숨김, 기존 버그(joinForm 등) 정리, 다른 브랜치로 병합 방식 — 문서 8.6</p>
   </div>
 </section>
 

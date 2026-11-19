@@ -57,7 +57,7 @@
 | 보안 | S1, S5, S6, S7 해결 / S2~S4(비밀번호 노출), S8(호스트 키) 남음 | 🔶 일부 | 4.1 |
 | 배포 | 운영 서버 JDK 25 설치 → 순차 교체 | ⏳ 미진행 — 운영 서버 필요 | 8.5, 9.6 |
 
-> **현재 브랜치 `ver_java25`에만 반영되어 있고, 원격(origin)에는 아직 push하지 않았다.**
+> **2026-11-19 원격(origin, GitHub)의 `ver_java25` 브랜치에 push했다** (강제 push 아님, 7.2.31). master 등 다른 브랜치로의 병합은 하지 않았다 (8.6-8).
 > 아직 남은 테스트는 **9.6**에 한 표로 모아 두었다. 로컬에서 할 수 있는 테스트는 2026-11-19에 모두 진행했다 (7.2.29).
 
 ### 0.3 읽는 순서 — 목적별
@@ -130,7 +130,7 @@
 |---|---|
 | commit / commit 해시 | Git 변경 기록 한 건과 그 고유 번호(예: `ade302c`). `git show ade302c`로 내용을 볼 수 있다 |
 | 브랜치 | 작업 갈래. 이번 작업은 `ver_java25` 브랜치에서 했다 |
-| push | 내 PC의 commit을 원격 저장소(GitHub 등)에 올리는 것. **아직 하지 않았다** |
+| push | 내 PC의 commit을 원격 저장소(GitHub 등)에 올리는 것. 2026-11-19 `ver_java25` 브랜치를 push했다 |
 | `b250e18` | 작업 시작 전 마지막 commit. 모든 "작업 전/후" 비교의 기준점 |
 
 ### 0.5 개발 환경 준비 (따라하기)
@@ -259,6 +259,7 @@ java -cp "/tmp/rdr/BOOT-INF/classes:/tmp/rdr/BOOT-INF/lib/*" docs/verify/ConfigL
 | `270d892` | 문서 | 작업 보고서 이미지(PNG)와 원본 HTML |
 | `d15ed4c` | 웹 | 문자 결과 화면 2개의 Thymeleaf 3.1 표현식 오류 수정 |
 | `bb7f7cb` | 문서 | 남은 로컬 테스트 결과, Daemon 테스트 예시의 위험 수정 |
+| `162bd45` | 문서 | 작업 보고서 이미지 최신화 (여기까지 1차 push) |
 
 > 목록 확인: `git log --oneline --reverse b250e18..HEAD` 결과와 이 표가 같아야 한다 (이 표를 갱신한 문서 commit은 표를 쓴 뒤에 만들어지므로 맨 마지막에 1개 더 있다).
 
@@ -981,7 +982,9 @@ commit: `ade302c`
 | 28 | Git 이력 정리 (민감값 제거) | commit 7개 다시 작성, reflog까지 정리 | `baab8f7` `83e48c5` |
 | 29 | 작업 보고서 이미지 작성 | 한 장짜리 보고서 PNG + 원본 HTML | `270d892` |
 | 30 | 남은 로컬 테스트 전부 진행 | 8건 완료. 업그레이드로 생긴 화면 오류 1건 발견·수정, 문서의 위험한 예시 수정 | `d15ed4c` `bb7f7cb` |
-| 31 | 작업 보고서 이미지 최신화 | 로컬 테스트 결과 반영 | (이 commit) |
+| 31 | 작업 보고서 이미지 최신화 | 로컬 테스트 결과 반영 | `162bd45` |
+| 32 | 원격 push | `ver_java25` 36개 commit을 GitHub에 push (강제 push 아님) | — |
+| 33 | push 상태 문구 갱신 | 문서·보고서의 "push 전" 문구 갱신 후 다시 push | (이 commit) |
 
 ### 7.2 상세 기록
 
@@ -1276,6 +1279,18 @@ commit: `ade302c`
   - 아래 여백만 줄여 다시 생성했고, 작업에 쓴 Windows 임시 폴더는 삭제했다
 - 참고: 보고서의 "36개 commit"은 이 commit까지 포함한 수다
 
+#### 7.2.31 원격 push와 push 상태 문구 갱신 (#32, #33)
+- **사용자 요청**: "원격에 push해줘", 이어서 "문서와 보고서 push 상태 갱신하고 commit, push해줘"
+- **push 전 확인**
+  - `git fetch` 후 원격에만 있는 commit 0개, 원격 `ver_java25`(`b250e18`)가 로컬의 조상임 → 강제 push 없이 앞으로 밀기(fast-forward)만으로 가능
+  - 올라갈 commit 36개에 추가된 줄에서 비밀번호·IP 패턴 검사 → 해당 없음 (걸린 2줄은 Java 버전 번호)
+  - 이력에서 지운 테스트용 주소·계정 이름 0건
+  - 사용자의 미commit `common-data.yml`(로컬 비밀번호)은 commit되지 않아 올라가지 않음
+- **1차 push**: `git push origin ver_java25` → 원격 `b250e18..162bd45`. 이후 로컬과 원격이 같음
+- **문구 갱신 (이 commit)**: 0.2 상태 안내, 0.4 용어(push), 8.6-8(push 완료·병합은 결정 대기), 9.2, 9.6의 "push 방식" → "병합 방식", 보고서 머리말 "(원격 push 전)" → "(원격 push 완료)"와 commit 수
+- 이 commit은 만든 뒤 같은 방법으로 다시 push한다 (2차 push)
+- 참고: 원격 저장소에는 작업 전부터 비밀번호들(S2~S4)이 올라가 있다. 이번 push로 새로 노출된 값은 없지만 교체는 여전히 필요하다
+
 ---
 
 ## 8. 남은 작업 따라하기 (DB·서버가 필요한 작업)
@@ -1513,7 +1528,7 @@ cp -a /home/watcher/radarWebsite /home/watcher/radarWebsite.bak_$(date +%Y%m%d)
 | 5 | SFTP 호스트 키 검증 (S8) | `known_hosts` 준비 후 `StrictHostKeyChecking=yes` | 서버 작업 필요 |
 | 6 | 정리 대상 파일 삭제 | `ConfigFileEnum_back.java`, `SmsService.java.back`, `config/application copy.yml`, `config/radar_process.sh`, `libs/`의 옛 jar, 호출되지 않는 코드 | 삭제해도 Git 이력에는 남음 |
 | 7 | 기존 버그 수정 | 로그인 실패 메시지 미표시, 스크립트 `start all` 중복 실행 | 6.8-C 참고 / 4.2 참고 |
-| 8 | 원격 저장소 push | `ver_java25` 브랜치 push 및 병합 방식 | 8.2~8.4 확인 후 권장 |
+| 8 | 원격 저장소 push·병합 | ✅ `ver_java25` 브랜치 push 완료 (2026-11-19, 사용자 요청). master 등으로 병합할지, 방식(PR 검토 후 병합 등)은 결정 대기 | 병합은 운영 확인(9.6 #8~#13) 후 권장 |
 | 9 | 세션 만료 후 저장 안내 (2026-11-19 추가) | 그대로 둠 / `common.js`의 `fnCall` 오류 처리에서 403·로그인 화면 응답이면 "로그인이 만료되었습니다" 안내 후 로그인 화면으로 이동 | 지금은 저장이 조용히 실패함(데이터는 안전) |
 | 10 | `ognl` 3.3.4 취약점 CVE-2026-113730 (Moderate) | 그대로 둠 / `build.gradle`에서 `ognl:ognl:3.4.13`으로 강제 후 화면 전체 재확인 | Thymeleaf가 가져오는 라이브러리. Spring 환경에서는 표현식을 SpEL로 처리해 OGNL을 쓰지 않으므로 실제 위험 낮음. 다음 Thymeleaf 업데이트로 해결될 수 있음 |
 | 11 | `/users/joinForm` 주소 | 컨트롤러 메서드 삭제 / 템플릿 추가 | 템플릿 파일이 없어 ADMIN이 열면 500 (업그레이드 전부터 있던 문제, 메뉴에서 연결되지 않음) |
@@ -1549,7 +1564,7 @@ java -version                         # 25.0.5.1 이상
 | 파일 하나의 작업 전/후 비교 | `git diff b250e18 -- <파일경로>` (예: `git diff b250e18 -- radar-web/src/main/java/kr/or/kimsn/radar/web/config/SecurityConfig.java`) |
 | 작업 전 원본 파일 보기 | `git show b250e18:<파일경로>` |
 | Claude가 추가한 주석 전체 | `git grep -n "Claude 주석"` |
-| 화면으로 보기 | VS Code/IntelliJ의 Git 히스토리(파일 우클릭 → Git → Show History), 또는 GitHub에 push 후 commit 화면 |
+| 화면으로 보기 | VS Code/IntelliJ의 Git 히스토리(파일 우클릭 → Git → Show History), 또는 GitHub 웹에서 `ver_java25` 브랜치의 commit 화면 (push 완료) |
 
 - `b250e18`은 **작업 시작 전 마지막 commit**(기존 작성자의 "dump sql")이다. 모든 비교의 기준점이다
 - 검토할 때는 commit을 **오래된 순서**로 보면 흐름을 따라가기 쉽다 (0.7 표 순서)
@@ -1770,4 +1785,4 @@ python3 -I docs/verify/check_comments.py
 
 **테스트는 아니지만 배포 전에 할 일** (8.6)
 - 노출된 비밀번호 교체 (S2~S4, `note/그룹 감시자료 설정.sql`의 DB root 비밀번호 포함) — 가장 시급
-- 결정 대기: 사용자 관리 메뉴를 USER에게 숨길지, ADMIN 전용으로 더 막을 경로, `spring.thymeleaf.cache`, 정리 대상 파일 삭제, push 방식
+- 결정 대기: 사용자 관리 메뉴를 USER에게 숨길지, ADMIN 전용으로 더 막을 경로, `spring.thymeleaf.cache`, 정리 대상 파일 삭제, 다른 브랜치로 병합 방식
