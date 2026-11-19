@@ -41,6 +41,8 @@
 4. **직접 해 보기**: 0.5(환경 준비) → 0.6(빌드·테스트)
 5. **앞으로 할 일**: 8장(남은 작업 따라하기)
 6. **경과 기록**: 7장(작업 이력), 0.7(commit 목록)
+7. **내가 직접 검증하기**: 9장(검토자 확인·검증 가이드) — 변경 내용을 직접 확인하고 결과를 기록하는 방법
+8. **주석 읽는 법**: 0.8(누가 쓴 주석인지 구분하는 규칙)
 
 ### 0.4 용어 설명
 
@@ -171,6 +173,32 @@ java -cp "/tmp/rdr/BOOT-INF/classes:/tmp/rdr/BOOT-INF/lib/*" docs/verify/ConfigL
 | `3ad5473` | 보안 | SFTP 비밀번호 로그 기록 제거(S5) |
 | `e5d048f` | C 검증 | DB 없이 실행되는 보안 자동 테스트 14개 |
 | `7bb787f` | 빌드 | `.gitattributes` (줄바꿈 규칙) |
+| `779cdc6` | 문서 | 0장·8장 추가 |
+| `ab480ac` | 주석 | Claude 작성 주석에 `[Claude 2026-11-19]` 표시, 기존 주석 원문 복원 (실행 코드 변경 없음) |
+| (다음 commit) | 문서·검증 | 0.8 주석 구분 규칙, 9장 검토자 검증 가이드, 검증 스크립트 3개(`test_process_scripts.sh`, `JschDefaults.java`, `check_comments.py`) — `git log -1 -- docs/verify/check_comments.py`로 해시 확인 |
+
+### 0.8 주석 구분 규칙 — 누가 쓴 주석인가
+
+이번 업그레이드 작업에서 Claude(AI 작업자)가 소스에 추가한 주석은 **기존 작성자의 주석과 섞이지 않도록** 아래처럼 표시했다.
+
+| 형태 | 예시 | 의미 |
+|---|---|---|
+| 한 줄 주석 | `// [Claude 2026-11-19] 3.14.0 → BOM 관리 (3.20.0)` | 이 줄은 Claude 작성 |
+| 여러 줄 주석 | 첫 줄에 `[Claude 2026-11-19]`, 다음 줄부터 들여쓰기로 이어짐 | 표시된 줄과 바로 이어지는 들여쓴 줄까지 Claude 작성 |
+| 여러 줄 블록 | `# ===== [Claude 2026-11-19] ... 시작 =====` ~ `# ===== [Claude 2026-11-19] ... 끝 =====` | 시작~끝 사이(코드 포함) 전체가 Claude 추가분 |
+| 줄 끝 주석 | `nohup "$JAVA_BIN" ... &   # [Claude 2026-11-19] java → "$JAVA_BIN"` | 이 줄의 코드가 Claude에 의해 변경됨 |
+| 새 파일 | 파일 머리말에 `[Claude 2026-11-19] 새로 작성한 파일` | 파일 전체(주석 포함)가 Claude 작성 |
+| 기존 코드 보존 블록 | `===== [Claude 2026-11-19] 기존 코드 원문 보존 ... 시작/끝 =====` | 블록 안은 **기존 코드와 기존 주석의 원문**. 새 버전에서 쓰지 않게 되어 주석 처리만 함 (`SecurityConfig.java`) |
+
+- **표시가 없는 주석은 모두 기존 작성자의 주석**이다. 📌, 💡 같은 이모지 주석은 기존 작성자 스타일이며 Claude 주석에는 쓰지 않았다
+- 작업 중 실수로 바뀌거나 지워졌던 기존 주석(주석 처리된 import의 `javax`→`jakarta` 치환, SecurityConfig·build.gradle·운영 스크립트 주석 등)은 `ab480ac`에서 **원문 그대로 복원**했다
+- 기존 주석이 붙어 있던 코드가 바뀐 경우, 기존 주석은 그대로 두고 바로 아래에 `[Claude ...] 위 주석은 기존 ... 설명` 식으로 설명을 덧붙였다. 예: `build.gradle`의 `version '4.1.2' apply false // Java 11 지원하는 안정 버전`(기존 주석) + 다음 줄 Claude 설명
+- **찾는 방법**
+  ```bash
+  git grep -n "\[Claude 2026-11-19\]"            # Claude 주석 전체 목록
+  python3 -I docs/verify/check_comments.py       # 표시 누락·기존 주석 삭제 여부 자동 검사 (9.3 참고)
+  ```
+- 앞으로 작업할 때도 같은 규칙을 쓴다 (날짜만 작업일로 변경)
 
 ---
 
@@ -707,6 +735,8 @@ commit: `ade302c`
 | 2026-11-19 | **C 단계 자동 테스트 추가** | commit `e5d048f`. `@WebMvcTest` 기반 14개 시나리오, DB 없이 14/14 통과. 대조군(보안 설정을 예전처럼 풀었을 때) 7개 실패 확인 후 원복. `./gradlew build` 전체(컴파일+테스트+jar 6종) 처음으로 성공 |
 | 2026-11-19 | `.gitattributes` 추가 | commit `7bb787f`. `gradlew.bat` CRLF, `*.sh`·`gradlew` LF, `*.jar` binary. renormalize 결과 변경 파일 0개 확인 |
 | 2026-11-19 | jsch 알고리즘 호환성 점검 | 0.1.55와 2.28.8의 기본 알고리즘 비교: `ssh-rsa`(SHA-1), `ssh-dss`, sha1 키 교환, CBC 암호화 등이 기본값에서 빠짐 → 오래된 관측소 서버 접속 실패 가능성. 서버 확인 절차와 대응 코드를 8.4에 정리. 보안 이슈 S8(호스트 키 검증 생략) 추가 |
+| 2026-11-19 | **주석 구분 표시와 기존 주석 복원** | commit `ab480ac`. 사용자 요청: "파일 수정 시 내가 작성한 주석과 구분". Claude 주석 전체에 `[Claude 2026-11-19]` 표시(여러 줄은 시작/끝 표시, 새 파일은 머리말). 작업 중 바뀌거나 지워졌던 기존 주석을 원문 복원(주석 처리 import의 javax 3줄, SecurityConfig 주석 약 15줄은 "기존 코드 원문 보존" 블록으로, build.gradle 계열 6곳, 운영 스크립트 6개의 `#JAVA_HOME` 줄, login.html 1줄). 실행 코드 변경 0건(diff 분석). 재검증: build·테스트 14/14, 스크립트 6개, ConfigLoadTest 53/53, check_props 문제 0, 사라진 기존 주석 0건 |
+| 2026-11-19 | **검토자 검증 가이드(9장)·검증 스크립트 추가** | 사용자 요청: "내가 어떻게 확인하고 검증해야 하는지". 단계별 diff 검토 포인트·실행 명령·기대 결과·기록표 작성. 수작업 검증을 스크립트로 정리: `docs/verify/test_process_scripts.sh`(운영 스크립트 6개 × 7항목, 결과 FAIL 0), `JschDefaults.java`, `check_comments.py`(표시 없는 추가 주석 1건=기존 주석 복원, 사라진 기존 주석 0건). 9장의 모든 명령을 문서에 적힌 그대로 실행해 기대 결과와 일치 확인 (이 환경에 `unzip`이 없어 대체 명령도 확인) |
 | 2026-11-19 | 문서 보강 | 처음 보는 사람을 위한 0장(현재 상태, 용어, 환경 준비, 빌드·테스트 방법, 자주 나는 오류, commit 목록)과 8장(DB·서버가 필요한 남은 작업 따라하기) 추가. 6.8-C/F/S5/G/J 상세 기록 |
 
 ---
@@ -891,3 +921,208 @@ cp -a /home/watcher/radarWebsite /home/watcher/radarWebsite.bak_$(date +%Y%m%d)
 | 6 | 정리 대상 파일 삭제 | `ConfigFileEnum_back.java`, `SmsService.java.back`, `config/application copy.yml`, `config/radar_process.sh`, `libs/`의 옛 jar, 호출되지 않는 코드 | 삭제해도 Git 이력에는 남음 |
 | 7 | 기존 버그 수정 | 로그인 실패 메시지 미표시, 스크립트 `start all` 중복 실행 | 6.8-C 참고 / 4.2 참고 |
 | 8 | 원격 저장소 push | `ver_java25` 브랜치 push 및 병합 방식 | 8.2~8.4 확인 후 권장 |
+
+---
+
+## 9. 검토자 확인·검증 가이드 — 직접 확인하는 방법
+
+> 이 장은 **작업 결과를 받은 사람이 직접** "무엇이 바뀌었는지 보고, 정말 동작하는지 확인하는" 절차다.
+> Claude가 실행한 테스트를 그대로 다시 돌려 볼 수 있도록 명령과 기대 결과를 함께 적었다.
+> 각 항목을 확인하면 9.5의 표에 결과를 기록한다.
+
+### 9.1 준비 (처음 한 번)
+
+```bash
+cd <프로젝트 폴더>
+git checkout ver_java25
+git log --oneline b250e18..HEAD      # 이번 작업 commit 목록 (0.7과 같아야 함)
+java -version                         # 25.0.5.1 이상
+./gradlew build                       # 마지막에 BUILD SUCCESSFUL
+```
+- `./gradlew build`가 성공하면 **컴파일 + 보안 자동 테스트 14개 + jar 6종 생성**이 모두 통과한 것이다
+- 실패하면 0.6의 "자주 만나는 오류" 표 참고
+
+### 9.2 변경 내용 읽는 방법
+
+| 보고 싶은 것 | 명령 / 방법 |
+|---|---|
+| commit 하나의 변경 내용 | `git show <해시>` (예: `git show b75f60c`) |
+| commit 하나가 바꾼 파일 목록만 | `git show --stat <해시>` |
+| 파일 하나의 작업 전/후 비교 | `git diff b250e18 -- <파일경로>` (예: `git diff b250e18 -- radar-web/src/main/java/kr/or/kimsn/radar/web/config/SecurityConfig.java`) |
+| 작업 전 원본 파일 보기 | `git show b250e18:<파일경로>` |
+| Claude가 추가한 주석 전체 | `git grep -n "\[Claude 2026-11-19\]"` |
+| 화면으로 보기 | VS Code/IntelliJ의 Git 히스토리(파일 우클릭 → Git → Show History), 또는 GitHub에 push 후 commit 화면 |
+
+- `b250e18`은 **작업 시작 전 마지막 commit**(기존 작성자의 "dump sql")이다. 모든 비교의 기준점이다
+- 검토할 때는 commit을 **오래된 순서**로 보면 흐름을 따라가기 쉽다 (0.7 표 순서)
+
+### 9.3 단계별 확인 체크리스트
+
+각 단계마다 ① **눈으로 확인할 것**(diff 검토 포인트) ② **실행해서 확인할 것**(명령과 기대 결과)으로 나눴다.
+
+#### 9.3.1 A. 빌드 설정 — commit `ade302c`, `47d1b27`
+
+① 눈으로: `git show ade302c -- build.gradle common-data/build.gradle Daemon/build.gradle radar-web/build.gradle`
+- [ ] `org.springframework.boot` 버전이 `4.1.2`인가
+- [ ] Java 버전이 `JavaLanguageVersion.of(25)`(toolchain)로 바뀌었는가
+- [ ] 의존성에 버전 숫자를 직접 적은 곳이 꼭 필요한 것만 남았는가 (json-simple, modelmapper, jsr305, org.json, jsch)
+- [ ] `http://` 저장소가 없어졌는가 (S7)
+- [ ] devtools가 `developmentOnly`인가 (S6)
+
+② 실행:
+```bash
+./gradlew :radar-web:dependencies --configuration runtimeClasspath | grep -E "spring-core:|tomcat-embed-core:|spring-security-core:|thymeleaf:|snakeyaml:|log4j-core:|jsch:" | sort -u
+```
+- 기대: `spring-core:7.0.10`, `tomcat-embed-core:11.0.27`, `spring-security-core:7.1.2`, `thymeleaf:...3.1.5.RELEASE`, `snakeyaml:2.6`(또는 `-> 2.6`), `log4j-core:2.25.5`, `jsch:2.28.8`
+```bash
+jar tf radar-web/build/libs/RADAR_WEB.jar | grep -c devtools
+```
+- 기대: `0` (운영 jar에 devtools 없음)
+```bash
+unzip -p Daemon/build/libs/RDR.jar META-INF/MANIFEST.MF | grep -E "Start-Class|Radar-System-Type|Build-Jdk-Spec"
+# unzip이 없으면: mkdir /tmp/mf && cd /tmp/mf && jar xf <프로젝트>/Daemon/build/libs/RDR.jar META-INF/MANIFEST.MF && cat META-INF/MANIFEST.MF
+```
+- 기대: `Start-Class: kr.or.kimsn.radar.daemon.DaemonApplication`, `Radar-System-Type: RDR`, `Build-Jdk-Spec: 25`
+
+#### 9.3.2 B. javax → jakarta — commit `da91928`, `a0543da`, `a3b58b1`
+
+① 눈으로: `git show --stat da91928` 등. 대부분 **import 줄만** 바뀌었는지 확인
+- [ ] `git show a0543da`에서 import 외 코드 변경은 2곳뿐인가: `@EntityScan` import 경로, `Scheduler`의 `nextExecution()`
+
+② 실행:
+```bash
+grep -rn "^import javax\." --include=*.java . | grep -v "javax.sql"
+```
+- 기대: **출력 없음** (실제 import 중 `javax.sql.DataSource`만 남아야 함. 주석 처리된 `// import javax...` 3줄은 기존 주석이라 그대로 있음)
+
+#### 9.3.3 C. 로그인·보안 — commit `b75f60c`, `b7e0a7d`, `e5d048f`
+
+① 눈으로: `git diff b250e18 -- radar-web/src/main/java/kr/or/kimsn/radar/web/config/SecurityConfig.java`
+- [ ] `PUBLIC_PATHS`(로그인 없이 열리는 경로)가 `/login`, 정적 리소스, 오류 화면뿐인가
+- [ ] `.anyRequest().authenticated()`인가 (예전: `permitAll()`)
+- [ ] `csrf().disable()`이 없어졌는가
+- [ ] `git show b7e0a7d`: `common.js`가 모든 Ajax 요청 헤더와 POST 폼에 토큰을 넣는가, `login.html`이 `th:action`인가, 로그아웃이 POST 폼인가
+
+② 실행 — 자동 테스트:
+```bash
+./gradlew :radar-web:test
+```
+- 기대: `BUILD SUCCESSFUL`. 보고서 `radar-web/build/reports/tests/test/index.html`을 브라우저로 열면 **14 tests, 0 failures** 와 C-01~C-14 이름이 보임 (각 시나리오 의미는 6.8-C 표)
+
+③ (선택) 대조군 — 테스트가 진짜로 문제를 잡는지 직접 확인
+1. `SecurityConfig.java`에서 `.csrf(csrf -> { })`를 `.csrf(csrf -> csrf.disable())`로, `.anyRequest().authenticated()`를 `.anyRequest().permitAll()`로 **임시로** 바꾼다
+2. `./gradlew :radar-web:test` → **7개 실패**해야 정상 (C-01, C-03, C-04, C-05, C-06, C-12, C-14)
+3. **반드시 원복**: `git checkout -- radar-web/src/main/java/kr/or/kimsn/radar/web/config/SecurityConfig.java` 후 `git status`에 변경이 없는지 확인
+
+④ 실제 화면 확인: DB가 필요하다 → 8.2
+
+#### 9.3.4 E. 설정 파일 — commit `1f1ae08`
+
+① 눈으로: `git diff b250e18 -- Daemon/src/main/resources/application.yml radar-web/src/main/resources/application.yml common-data/src/main/resources/common-data.yml`
+- [ ] 삭제된 키가 6.8-E 표와 같은가 (`use-legacy-processing`, Daemon의 `server.servlet.encoding.*`·devtools)
+- [ ] Daemon의 `spring.config.import`가 `classpath:`(별표 없음)인가
+- [ ] `common-data.yml`은 **주석만** 추가되고 값은 그대로인가
+
+② 실행 (먼저 `./gradlew build`):
+```bash
+# (1) 설정 키 정적 검사
+python3 -I docs/verify/check_props.py Daemon/build/libs/RDR.jar Daemon/src/main/resources/application.yml
+python3 -I docs/verify/check_props.py radar-web/build/libs/RADAR_WEB.jar radar-web/src/main/resources/application.yml
+```
+- 기대: Daemon은 모든 줄이 `ok`. Web은 `UNKNOWN spring.devtools.livereload.enabled` 1줄만 (운영 jar에 devtools가 없어서 생기는 정상 결과)
+```bash
+# (2) 설정 로딩 테스트 — 운영과 같은 라이브러리로 yml을 실제로 읽음 (외부 접속 없음)
+rm -rf /tmp/rdr && mkdir -p /tmp/rdr && (cd /tmp/rdr && jar xf "$OLDPWD/Daemon/build/libs/RDR.jar")
+java -cp "/tmp/rdr/BOOT-INF/classes:/tmp/rdr/BOOT-INF/lib/*" docs/verify/ConfigLoadTest.java "$PWD"
+```
+- 기대: 마지막 줄 `결과: PASS 53 / FAIL 0`
+- 참고: 실행한 폴더에 `logs/` 폴더가 생길 수 있다 (Log4j 초기화. `.gitignore` 대상이라 Git에는 올라가지 않음)
+```bash
+# (3) 기동 테스트 — 가짜 DB 주소로 실행해 "설정 처리 → DB 접속 단계"까지 가는지 (운영 DB 접속 안 함)
+mkdir -p /tmp/boot && cd /tmp/boot
+timeout 90 java -jar <프로젝트>/Daemon/build/libs/RDR.jar --config.datasource.url='jdbc:mysql://127.0.0.1:1/none'
+grep -E "Starting DaemonApplication|profile is active|Found [0-9]+ JPA|Communications link failure|wildcards" logs/RDR.log
+```
+- 기대: `Starting DaemonApplication ... using Java 25.0.5.1`, `profile is active: "local-daemon"`, `Found 24 JPA repository interfaces`, 마지막에 `Communications link failure`(가짜 DB라 정상). **`cannot use classpath wildcards`가 나오면 실패**
+- ⚠️ `--config.datasource.url` 인자를 빼먹으면 `common-data.yml`의 실제 DB로 접속을 시도하므로 반드시 넣는다
+
+#### 9.3.5 F. 운영 스크립트 — commit `83e3e1a`, `01cf88b`
+
+① 눈으로: `git diff b250e18 -- config/RDR_process.sh`
+- [ ] `===== [Claude ...] 추가 시작 ===== ~ 끝 =====` 블록과 `check_java` 호출, `"$JAVA_BIN"` 실행 줄 외에 바뀐 곳이 없는가
+- [ ] 6개 스크립트의 추가 블록이 똑같은가 (블록 시작~끝 표시 사이를 비교):
+  ```bash
+  blk() { sed -n '/Java 실행 환경 (OpenJDK 25 전환) 추가 시작/,/Java 실행 환경 추가 끝/p' "$1"; }
+  for f in RDR_B SDR SDR_B TDWR RADAR_WEB; do diff <(blk config/RDR_process.sh) <(blk config/${f}_process.sh) >/dev/null && echo "$f 같음" || echo "$f 다름"; done
+  ```
+  기대: 5줄 모두 `같음`
+
+② 실행 — 자동 검증 스크립트 (운영 경로를 건드리지 않고 임시 폴더에서 실행 후 정리):
+```bash
+bash docs/verify/test_process_scripts.sh                    # Ubuntu (JDK: /usr/lib/jvm/java-25-openjdk-amd64)
+bash docs/verify/test_process_scripts.sh /usr/lib/jvm/java-25-openjdk   # RHEL 등 경로가 다른 경우
+```
+- 기대: 스크립트마다 7개 `PASS`(문법, 경로 없음 거부, Java 21 거부, Java 25.0.5 거부, 25.0.5.1 시작, JDK 25로 실행, DAEMON_TYPE 전달), 마지막 줄 `결과: FAIL 0`
+
+③ 운영 서버에서 (배포 시): `./RDR_process.sh version` → Java 버전 표시, `start` → `Java: ... (25.0.5.1)` 표시, `stop` 후 `list`로 **실제 종료 확인** (6.8-F의 stop 주의)
+
+#### 9.3.6 S5. 비밀번호 로그 제거 — commit `3ad5473`
+
+```bash
+grep -rnE "log\.[a-z]+\(.*(sitePwd|[Pp]assword)" --include=*.java . | grep -v "^\S*:\s*//"
+```
+- 기대: `StepOneService.java`의 `"******"` 처리된 줄 1개만
+- 실제 동작은 8.3-②(Daemon 테스트 모드) 실행 시 로그의 `[관측소 pwd]: ******` 로 확인
+
+#### 9.3.7 G. 줄바꿈 규칙 — commit `7bb787f`
+
+```bash
+git check-attr eol -- gradlew.bat gradlew config/RDR_process.sh
+git ls-files --eol -- gradlew.bat gradlew 'config/*.sh'
+```
+- 기대: `gradlew.bat: eol: crlf`, 나머지 `eol: lf` / `i/lf` (저장소에는 LF로 저장)
+
+#### 9.3.8 J. SFTP 라이브러리 호환성 (점검 결과 재현)
+
+```bash
+java -cp libs/jsch-0.1.55.jar docs/verify/JschDefaults.java
+java -cp "$(find ~/.gradle/caches -name 'jsch-2.28.8.jar' | head -1)" docs/verify/JschDefaults.java
+```
+- 기대: 첫 번째(기존)의 `server_host_key`에는 `ssh-rsa,ssh-dss`가 있고, 두 번째(현재)에는 없다 (6.8-J 표와 같음)
+- 관측소 서버 확인은 8.4
+
+#### 9.3.9 주석 구분 — commit `ab480ac`
+
+```bash
+python3 -I docs/verify/check_comments.py
+```
+- 기대
+  - `[검사 1-a] 표시 없는 추가 주석`: **1건** — `build.gradle`의 `// Java 11 지원하는 안정 버전` (기존 주석을 원래 자리에 복원한 것. `git show b250e18:build.gradle | grep "안정 버전"`으로 원문 확인 가능)
+  - `[검사 1-b] 연속 줄`: 여러 줄 Claude 주석의 2번째 줄 이후 (정상)
+  - `[검사 2] 사라진 기존 주석`: **0건**
+- 눈으로: `git show ab480ac`에서 `+` 줄은 `[Claude ...]` 표시 또는 기존 주석 복원뿐이고, 코드 줄의 내용은 바뀌지 않았는지
+
+### 9.4 확인 중 문제를 발견했을 때
+
+1. 어떤 명령에서 어떤 결과가 나왔는지(화면 출력 그대로) 기록
+2. 해당 commit만 되돌리려면 `git revert <해시>` (이후 commit이 같은 파일을 고쳤다면 충돌할 수 있으니 확인 후 진행)
+3. 7장 작업 이력에 "검토 중 발견" 항목으로 기록하고, 다음 작업에서 수정
+
+### 9.5 검토 결과 기록표 (직접 채우기)
+
+| 항목 | 확인일 | 확인자 | 결과 (통과/문제) | 메모 |
+|---|---|---|---|---|
+| 9.1 `./gradlew build` | | | | |
+| 9.3.1 A 빌드 설정 | | | | |
+| 9.3.2 B jakarta | | | | |
+| 9.3.3 C 보안 (자동 테스트) | | | | |
+| 9.3.3-③ C 대조군 (선택) | | | | |
+| 9.3.4 E 설정 파일 | | | | |
+| 9.3.5 F 운영 스크립트 | | | | |
+| 9.3.6 S5 | | | | |
+| 9.3.7 G 줄바꿈 | | | | |
+| 9.3.8 J jsch 비교 | | | | |
+| 9.3.9 주석 구분 | | | | |
+| 8.2 화면 확인 (DB 필요) | | | | |
+| 8.3 JPA 검증 (DB 필요) | | | | |
+| 8.4 SFTP 호환성 (서버 필요) | | | | |
