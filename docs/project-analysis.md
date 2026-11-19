@@ -62,13 +62,13 @@ radar_new/
 
 | # | 등급 | 내용 | 위치 |
 |---|---|---|---|
-| S1 | 🔴 | 웹 인증 사실상 비활성화: `/**` 및 `anyRequest()` 모두 `permitAll()`, `authenticated()` 전부 주석. 인터셉터 등록도 주석. 비로그인으로 회원 생성/삭제·문자 발송·설정 변경 가능. CSRF도 disable | `radar-web/.../config/SecurityConfig.java`, `WebMvcConfig.java:16` |
+| S1 | ✅ 코드 해결 (`b75f60c`, 런타임 검증 대기) | 웹 인증 사실상 비활성화: `/**` 및 `anyRequest()` 모두 `permitAll()`, `authenticated()` 전부 주석. 인터셉터 등록도 주석. 비로그인으로 회원 생성/삭제·문자 발송·설정 변경 가능. CSRF도 disable | `radar-web/.../config/SecurityConfig.java`, `WebMvcConfig.java:16` |
 | S2 | 🔴 | 관측소 root 계정 등 SFTP 비밀번호가 평문으로 Git 커밋됨 (파일당 약 35건), 동일 비밀번호 다수 관측소 공유 | `config/application*.yml` (4개) |
 | S3 | 🔴 | DB 접속 비밀번호 평문 Git 커밋 | `common-data/src/main/resources/common-data.yml`, `Query/DB 접속 정보.sql` |
 | S4 | 🔴 | GitLab 복구 코드, DB 전체 덤프 Git 커밋 | `note/gitlab-recovery-codes.txt`, `Query/dump/` |
 | S5 | 🟠 | SFTP 비밀번호를 매 주기 로그에 기록 | `Daemon/.../service/StepOneService.java:105` |
-| S6 | 🟠 | `spring-boot-devtools`가 `implementation`으로 운영 jar에 포함 | `radar-web/build.gradle` |
-| S7 | 🟡 | `common-data/build.gradle`에 HTTP 저장소(`http://apache.org`, `allowInsecureProtocol`) 설정 | `common-data/build.gradle` |
+| S6 | ✅ 해결 (`ade302c`) | `spring-boot-devtools`가 `implementation`으로 운영 jar에 포함 | `radar-web/build.gradle` |
+| S7 | ✅ 해결 (`ade302c`) | `common-data/build.gradle`에 HTTP 저장소(`http://apache.org`, `allowInsecureProtocol`) 설정 | `common-data/build.gradle` |
 
 > S2~S4는 Git 이력에 남아 있으므로 파일 삭제만으로 부족 → **비밀번호/복구코드 교체 우선**, 이후 이력 정리(git filter-repo 등) 검토.
 
@@ -230,7 +230,8 @@ radar_new/
 - [x] A. Gradle 설정 전환 (설정 단계와 의존성 다운로드 성공, 컴파일은 B 단계 필요)
 - [x] B. javax → jakarta 전환 (common-data와 Daemon 컴파일 성공, radar-web은 C 단계 이후 컴파일 가능)
 - [x] `.gitignore` 정리: `gradle/`, `gradlew` 제외 규칙 제거, wrapper를 Git에 포함
-- [ ] C. SecurityConfig 재작성 및 S1 해결
+- [x] C. SecurityConfig 재작성 및 S1 해결 (코드와 빌드 완료)
+- [ ] C 런타임 검증: 실제 DB가 있는 환경에서 로그인, 로그아웃, 화면별 POST/Ajax 동작 확인 (6.8-C 검증 절차)
 - [ ] D. JPA 네이티브 쿼리 검증
 - [ ] E. 설정 파일 정리
 - [ ] F. 운영 스크립트 수정
@@ -288,6 +289,46 @@ commit: `ade302c`
 - `jakarta.transaction.Transactional`은 기존 동작을 그대로 유지하려고 1:1로 바꿨음. Spring `@Transactional`로 통일할지는 이후 검토
 - 남은 경고: `SftpUtil.java:32`의 `Session.setPassword(String)` deprecation (mwiede jsch). 동작에는 영향 없음
 
+#### C. Spring Security 7 및 S1 인증 복구 (2026-11-19 코드 완료, 런타임 검증 대기)
+
+| commit | 파일 | 변경 |
+|---|---|---|
+| `b75f60c` | `SecurityConfig.java` | Security 7 람다 DSL로 재작성 (`authorizeHttpRequests`, `requestMatchers`) |
+| | | **허용 경로**: `/login`, `/css/**`, `/js/**`, `/images/**`, `/fonts/**`, `/favicon.ico`, `/error`, `/common/error`. **그 외 전부 인증 필요** |
+| | | CSRF 보호 활성화 (기존 `csrf().disable()` 제거) |
+| | | 로그아웃: `POST /logout`, 세션 무효화, `JSESSIONID`/`userId` 쿠키 삭제, `/login?logout`으로 이동 |
+| | | `AuthenticationManagerBuilder` 수동 구성 제거 (`UserSecurityService`와 `BCryptPasswordEncoder` Bean 자동 연결) |
+| `b7e0a7d` | `layout/config.html` | `_csrf`, `_csrf_header`, `_csrf_parameter` meta 추가 (default_layout을 쓰는 모든 화면에 적용) |
+| | `static/js/common/common.js` | jQuery `ajaxSend`로 모든 Ajax 요청 헤더에 토큰 추가 (`fnCall` POST 24곳, `default.js`의 `$.post` 포함). `method="post"` 폼(10개)에는 화면 로드 시 hidden 토큰 자동 삽입 |
+| | `views/login.html` | `action` → `th:action="@{/loginProc}"` (Thymeleaf가 토큰 자동 삽입) |
+| | `layout/header.html` | 로그아웃 GET 링크 → 숨김 POST 폼 제출 |
+| `47d1b27` | `Daemon/build.gradle` | (A 단계 보완) `bootJar_*` 태스크에 `targetJavaVersion` 지정. 지정하지 않으면 Boot 4에서 jar 생성 실패 |
+
+**빌드 검증 (완료)**
+- `./gradlew assemble` 성공. `RADAR_WEB.jar`(약 84MB)에 devtools가 **포함되지 않음** 확인 (S6). jsch 2.28.8, spring-security 7.1.2, thymeleaf-extras-springsecurity6 포함
+- `:Daemon:buildAllRadarJar` 성공. 5종 jar의 manifest가 `Start-Class: kr.or.kimsn.radar.daemon.DaemonApplication`, `Radar-System-Type`, `Build-Jdk-Spec: 25`
+- 기동 시도 로그에서 Log4j2가 `log4j2.yml`(YamlConfiguration)을 정상 로드하는 것 확인
+
+**런타임 검증 (미완료)**: DB 없이 웹만 띄워 보려던 시도는 실패함. `DataSourceConfig`의 Hikari 풀이 기동 시점에 DB에 접속하고, lazy-init을 켜도 `entityManagerFactory`는 먼저 초기화되기 때문. H2 임시 클래스패스 방식은 권한 정책으로 실행하지 못함. **실제(또는 개발용) DB가 있는 환경에서 아래 항목을 확인해야 함**:
+
+| # | 확인 항목 | 기대 결과 |
+|---|---|---|
+| 1 | 비로그인으로 `/manage/station_status` 접근 | `/login`으로 302 이동 |
+| 2 | 비로그인으로 `POST /users/admin_user_del` | 403 또는 로그인 페이지로 이동 (API 실행되면 안 됨) |
+| 3 | `/login` 화면 소스 | `<input type="hidden" name="_csrf" ...>` 존재 |
+| 4 | 정상 계정으로 로그인 | `/`로 이동, 메뉴 정상 표시 |
+| 5 | 로그인 실패 | `/login?error=true` |
+| 6 | 화면별 저장/수정/삭제 (fnCall Ajax) | 정상 처리 (403 나면 토큰 누락 화면) |
+| 7 | 검색 폼 제출 (통계, 이력, 문자 결과) | 정상 조회 |
+| 8 | Logout 버튼 | `/login?logout`으로 이동, 이후 보호된 화면 접근 시 로그인 요구 |
+| 9 | 세션 만료 후 Ajax 요청 | 로그인 페이지 HTML이 반환됨. 화면에서 오류로 보일 수 있음 → 필요하면 후속 개선 |
+
+**참고 / 후속 검토**
+- 권한(Role) 구분은 아직 없음. 로그인한 사용자는 모두 회원 관리(`/users/**`) 등 전체 기능 사용 가능. ADMIN 전용으로 제한할지는 검토 필요 (권한 값: `USER`/`ADMIN`, `ROLE_` 접두어 없음 → `hasAuthority('ADMIN')` 형태로 써야 함)
+- `LoginController`의 `@PostMapping("/logout")`은 Security LogoutFilter가 먼저 처리하므로 호출되지 않음 (정리 대상)
+- 로그인 실패 메시지: `AuthenticationFailure`는 메시지를 세션에 저장하는데 `LoginController`는 request attribute를 읽음 → 메시지가 보이지 않는 기존 버그 (변경 없음)
+- 템플릿에 `xmlns:sec` 선언은 있지만 실제 `sec:` 속성 사용은 0건 → extras를 추가해도 화면 변화 없음
+
 ---
 
 ## 7. 작업 이력
@@ -305,3 +346,4 @@ commit: `ade302c`
 | 2026-11-19 | **6.3-A 빌드 설정 전환 (Spring Boot 4.1.2)** | 6.8-A 변경 내역 참조. `./gradlew help` 성공, 3개 모듈 runtimeClasspath 다운로드 실패 0건. `compileJava`는 예상대로 실패: `package javax.persistence does not exist` 등 (common-data에서 javac 오류 출력 한도 200건 도달) → 다음 단계 B(javax → jakarta) |
 | 2026-11-19 | A 단계와 문서 Git commit | `.gitignore`에서 `gradle/`, `gradlew` 규칙 제거 후 wrapper 포함 commit `ade302c`, 문서 commit `3f363cf` (브랜치 `ver_java25`) |
 | 2026-11-19 | **6.3-B javax → jakarta 전환** | 모듈별 commit: common-data `da91928`, Daemon `a0543da`, radar-web `a3b58b1`. common-data와 Daemon 컴파일 성공. 그 외 Boot 4/Spring 6 API 변경 2건(`@EntityScan` 패키지, Trigger 반환형) 함께 수정. radar-web은 SecurityConfig(C 단계)만 남음. 상세는 6.8-B |
+| 2026-11-19 | **6.3-C Security 7 재작성 + S1 인증 복구** | commit `b75f60c`(SecurityConfig), `b7e0a7d`(화면 CSRF 토큰 처리), `47d1b27`(Daemon bootJar targetJavaVersion 보완). 전체 `assemble`과 Daemon 5종 jar 빌드 성공, 운영 jar에서 devtools 제외 확인. **런타임 검증은 DB가 필요해 미완료** → 6.8-C 검증 절차 |
