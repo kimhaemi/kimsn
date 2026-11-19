@@ -172,7 +172,8 @@
                     </td>
                     <td th:text="${smsList.sms_txt}" class="left"></td>
                 </tr>
-                <tr th:if="${smsRsultList.content.size == 0 }">
+                <!-- /* Claude 주석 (2026-11-19): Thymeleaf 3.1 보안 제한으로 "smsRsultList.content.size == 0"이 오류(EL1021E, JDK 내부 리스트 멤버 접근 금지) → #lists.isEmpty 유틸리티로 변경 (의미 동일) */ -->
+                <tr th:if="${#lists.isEmpty(smsRsultList.content)}">
                     <td colspan="7">데이터가 없습니다.</td>
                 </tr>
             </tbody>
