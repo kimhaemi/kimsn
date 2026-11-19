@@ -222,14 +222,14 @@ radar_new/
 - [x] 개발 PC(WSL)에 OpenJDK 25.0.5.1+2 설치 (Ubuntu `openjdk-25-jdk-headless 25.0.5.1+2-1~26.04.1`, 변경 이력에 CVE-2026-114938 수정 명시). 설치 경로 `/usr/lib/jvm/java-25-openjdk-amd64`, `/usr/bin/java`로 PATH 등록됨
 - [ ] (선택) `~/.bashrc`에 `JAVA_HOME` 설정 — 사용자 직접 진행
 - [x] 개발 PC에 Gradle 9.9.1 설치 (`~/opt/gradle-9.9.1`, SHA-256 검증) / 프로젝트 wrapper 9.9.1 생성 (`gradlew`, `gradlew.bat`, `gradle/wrapper/`, `distributionSha256Sum` 포함)
-- [ ] `.gitignore`에서 `gradle/`, `gradlew` 제외 규칙 정리 (wrapper를 Git에 포함하려면 필요)
 - [ ] 운영 서버 CPU의 AVX-512 VBMI 지원 여부 확인 (참고: 개발 PC CPU는 **지원함** → 영향 대상)
 - [ ] 운영 JDK 배포판과 정확한 빌드 확인 (`java -version`)
 - [ ] (응급) 현재 JDK 11 배포판 패치 빌드 적용 여부 결정
 - [ ] 노출된 비밀번호와 GitLab 복구 코드 교체 (S2~S4)
 - [x] Spring Boot 목표 버전 확정 → **4.1.2** (2026-11-19 사용자 결정)
 - [x] A. Gradle 설정 전환 (설정 단계와 의존성 다운로드 성공, 컴파일은 B 단계 필요)
-- [ ] B. javax → jakarta 전환
+- [x] B. javax → jakarta 전환 (common-data와 Daemon 컴파일 성공, radar-web은 C 단계 이후 컴파일 가능)
+- [x] `.gitignore` 정리: `gradle/`, `gradlew` 제외 규칙 제거, wrapper를 Git에 포함
 - [ ] C. SecurityConfig 재작성 및 S1 해결
 - [ ] D. JPA 네이티브 쿼리 검증
 - [ ] E. 설정 파일 정리
@@ -270,7 +270,23 @@ radar_new/
 | | devtools `implementation` → `developmentOnly` (S6 해결) |
 | | `thymeleaf-extras-springsecurity6` 추가 → **주의**: 템플릿의 `sec:` 속성이 이제 실제로 동작하므로, 로그인 상태에 따라 화면 요소가 보이거나 숨겨질 수 있음 (C 단계 인증 복구와 함께 확인) |
 
+commit: `ade302c`
+
 다운로드 확인한 주요 버전: Spring 7.0.10, Security 7.1.2, Tomcat 11.0.27, Hibernate 7.4.13, Log4j 2.25.5, SnakeYAML 2.6, Thymeleaf 3.1.5, Jackson 3.1.7 (+ Jackson 2.21.7, Log4j2용), mysql-connector-j 9.7.0, jsch 2.28.8, Lombok 1.18.48
+
+#### B. javax → jakarta 전환 (2026-11-19 완료)
+
+| 모듈 | commit | 변경 | 컴파일 |
+|---|---|---|---|
+| common-data | `da91928` | 41개 파일: `javax.persistence` → `jakarta.persistence`, `javax.transaction` → `jakarta.transaction` (import만 변경) | ✅ 성공 |
+| Daemon | `a0543da` | `YmlRefreshManager` (`jakarta.annotation`), `StepTwoService` (`jakarta.transaction`) | ✅ 성공 |
+| | | **Boot 4 API 변경**: `DaemonApplication`의 `@EntityScan` 패키지 → `org.springframework.boot.persistence.autoconfigure` | |
+| | | **Spring 6+ API 변경**: `Scheduler` Trigger 람다 `nextExecutionTime()`(Date) → `nextExecution()`(Instant) | |
+| radar-web | `a3b58b1` | 13개 파일: `javax.servlet` → `jakarta.servlet` 등, `RadarWebApplication`의 `@EntityScan` 패키지 변경 | ⏳ `SecurityConfig` 오류만 남음 (C 단계) |
+
+- 변경하지 않은 것: `javax.sql.DataSource`(JDK 표준), 주석 처리된 javax import 3곳
+- `jakarta.transaction.Transactional`은 기존 동작을 그대로 유지하려고 1:1로 바꿨음. Spring `@Transactional`로 통일할지는 이후 검토
+- 남은 경고: `SftpUtil.java:32`의 `Session.setPassword(String)` deprecation (mwiede jsch). 동작에는 영향 없음
 
 ---
 
@@ -287,3 +303,5 @@ radar_new/
 | 2026-11-19 | 개발 PC OpenJDK 25 설치 | Ubuntu 26.04 보안 저장소의 `openjdk-25-jdk-headless 25.0.5.1+2-1~26.04.1` 설치 (패키지 변경 이력에 CVE-2026-114938 포함 확인). `java`/`javac` 25.0.5.1 동작 확인. JAVA_HOME 자동 설정은 권한 정책으로 보류(사용자 직접 설정 안내). 개발 PC CPU가 AVX-512 VBMI를 지원해 Java4Shell 영향 대상이었음 |
 | 2026-11-19 | Gradle 9.9.1 설치와 wrapper 생성 | 배포본 SHA-256 검증 후 `~/opt/gradle-9.9.1`에 설치. 빈 임시 프로젝트에서 wrapper 생성 후 프로젝트에 복사 (`gradlew.bat` 교체, `gradlew`·`gradle/wrapper/` 신규). `./gradlew --version` 확인 결과 Gradle 9.9.1 / JVM 25.0.5.1. 현재 build.gradle로 `./gradlew help`를 실행하면 **실패(예상한 결과)**: `build.gradle:16`에서 `org/gradle/api/plugins/JavaPluginConvention` 오류. Spring Boot 2.7 플러그인이 Gradle 9에서 삭제된 API를 사용하기 때문 → 6.3-A 빌드 설정 전환 필요 |
 | 2026-11-19 | **6.3-A 빌드 설정 전환 (Spring Boot 4.1.2)** | 6.8-A 변경 내역 참조. `./gradlew help` 성공, 3개 모듈 runtimeClasspath 다운로드 실패 0건. `compileJava`는 예상대로 실패: `package javax.persistence does not exist` 등 (common-data에서 javac 오류 출력 한도 200건 도달) → 다음 단계 B(javax → jakarta) |
+| 2026-11-19 | A 단계와 문서 Git commit | `.gitignore`에서 `gradle/`, `gradlew` 규칙 제거 후 wrapper 포함 commit `ade302c`, 문서 commit `3f363cf` (브랜치 `ver_java25`) |
+| 2026-11-19 | **6.3-B javax → jakarta 전환** | 모듈별 commit: common-data `da91928`, Daemon `a0543da`, radar-web `a3b58b1`. common-data와 Daemon 컴파일 성공. 그 외 Boot 4/Spring 6 API 변경 2건(`@EntityScan` 패키지, Trigger 반환형) 함께 수정. radar-web은 SecurityConfig(C 단계)만 남음. 상세는 6.8-B |
