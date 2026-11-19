@@ -1,6 +1,6 @@
 plugins {
-    id 'org.springframework.boot' version '2.7.12' apply false // Java 11 지원하는 안정 버전
-    id 'io.spring.dependency-management' version '1.0.15.RELEASE' apply false
+    id 'org.springframework.boot' version '4.1.2' apply false // Java 25 (OpenJDK 25.0.5.1+) 대응
+    id 'io.spring.dependency-management' version '1.1.7' apply false
     id 'java'
 }
 
@@ -18,8 +18,16 @@ subprojects {
 
     group = 'kr.or.kimsn.radar'
     version = '0.0.1-SNAPSHOT'
-    sourceCompatibility = '11'
-    targetCompatibility = '11'
+    // Gradle 9에서 project 수준 sourceCompatibility/targetCompatibility 속성이 제거됨 → toolchain 사용
+    java {
+        toolchain {
+            languageVersion = JavaLanguageVersion.of(25)
+        }
+    }
+
+    tasks.withType(JavaCompile).configureEach {
+        options.encoding = 'UTF-8'
+    }
 
     // 💡 1. 로깅 충돌 방지를 위해 기본 내장된 Logback(spring-boot-starter-logging)을 완전히 제외합니다.
     configurations {
@@ -35,9 +43,7 @@ subprojects {
 //            url "http://apache.org"
 //            allowInsecureProtocol = true // SSL 검증 우회 및 HTTP 허용 (Gradle 7.x 이상 필수)
 //        }
-        // 💡 2. 외부망 보안 차단을 우회하고 자동으로 파일을 받아오는 글로벌 공식 저장소 배치
-        maven { url "https://maven.org" }
-        maven { url "https://gradle.org" }
+        // (2026-11-19) 저장소가 아닌 URL(https://maven.org, https://gradle.org) 제거
         // 3. 로컬 백업용 폴더 (libs)
         flatDir {
             dirs "${rootDir}/libs"
@@ -48,23 +54,27 @@ subprojects {
         // 모든 모듈이 공통으로 사용할 라이브러리
 //        implementation 'org.slf4j:slf4j-api'
         /*logback 의존성 추가*/
-        implementation 'org.springframework.boot:spring-boot-starter-log4j2:2.7.12'
-        testImplementation 'org.springframework.boot:spring-boot-starter-test:2.7.12'
+        // 버전은 Spring Boot BOM(4.1.2)이 관리 — 개별 버전 하드코딩 제거
+        implementation 'org.springframework.boot:spring-boot-starter-log4j2'
+        testImplementation 'org.springframework.boot:spring-boot-starter-test'
+        testRuntimeOnly 'org.junit.platform:junit-platform-launcher' // Gradle 9부터 명시 필요
 
         implementation 'com.googlecode.json-simple:json-simple:1.1.1'
 
-        implementation 'org.springframework.security:spring-security-crypto:5.7.12'
+        implementation 'org.springframework.security:spring-security-crypto'
 
 //        // DB 관련 의존성 필수 추가
         implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 ////        implementation name: 'mysql-connector-j-9.2.0'
 //        runtimeOnly("com.mysql:mysql-connector-j")
 
+        // log4j2.yml 설정 파일 파싱용 (Log4j2는 Jackson 2 사용 → Boot의 jackson-2-bom이 관리)
         implementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-yaml'
 
-        implementation 'org.apache.commons:commons-lang3:3.14.0'
-        implementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-xml'
-        implementation 'org.modelmapper:modelmapper:2.3.9'
+        implementation 'org.apache.commons:commons-lang3' // BOM 관리 (3.20.0)
+        // Spring Boot 4는 Jackson 3(tools.jackson) 사용 → XML 메시지 변환도 Jackson 3 모듈로 교체
+        implementation 'tools.jackson.dataformat:jackson-dataformat-xml'
+        implementation 'org.modelmapper:modelmapper:3.2.8'
 
         implementation 'com.google.code.findbugs:jsr305:3.0.2'
 

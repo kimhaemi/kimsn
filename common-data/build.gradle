@@ -1,20 +1,12 @@
 bootJar { enabled = false }
 jar { enabled = true } // 다른 모듈에서 참조할 수 있도록 일반 jar 생성 활성화
 
-repositories {
-    maven {
-        url "http://apache.org"
-        allowInsecureProtocol = true
-    }
-    flatDir {
-        dirs "${rootDir}/libs"
-    }
-}
+// (2026-11-19) HTTP 저장소(http://apache.org, allowInsecureProtocol) 제거 — 저장소는 루트 build.gradle에서 공통 관리
 
 dependencies {
 
-    // build.gradle
-    implementation 'com.jcraft:jsch:0.1.55'
+    // com.jcraft:jsch:0.1.55(유지보수 중단) → 유지보수 포크로 교체 (패키지명 com.jcraft.jsch 동일)
+    implementation 'com.github.mwiede:jsch:2.28.8'
 
 //    implementation 'com.mysql:mysql-connector-j:9.2.0'
 //    runtimeOnly 'com.h2database:h2' // 또는 mysql, postgresql 등
