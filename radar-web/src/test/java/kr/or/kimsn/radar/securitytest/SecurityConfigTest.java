@@ -33,8 +33,7 @@ import kr.or.kimsn.radar.web.config.auth.PrincipalDetails;
 import kr.or.kimsn.radar.web.config.auth.UserSecurityService;
 import kr.or.kimsn.radar.web.controller.LoginController;
 
-/**
- * [Claude 2026-11-19] 새로 작성한 파일 (이 파일의 모든 주석은 Claude 작성)
+/* Claude 주석 (2026-11-19): 새로 작성한 파일 (이 파일의 모든 주석은 Claude 작성)
  *
  * Spring Security 설정(SecurityConfig) 동작 검증 — DB 없이 실행 가능 (6.3-C / 보안 S1).
  *

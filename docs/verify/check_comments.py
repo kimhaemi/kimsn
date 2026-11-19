@@ -1,10 +1,10 @@
-"""[Claude 2026-11-19] 새로 작성한 파일 — 주석 구분 검사.
+"""/* Claude 주석 (2026-11-19) */ 새로 작성한 파일 — 주석 구분 검사.
 
 사용법 (프로젝트 루트에서):  python3 -I docs/verify/check_comments.py [기준_commit]
   기준 commit 기본값: b250e18 (업그레이드 작업 시작 전 마지막 commit)
 
-검사 1) 기준 이후 "추가된 주석" 중 [Claude 2026-11-19] 표시가 없는 줄
-        - 새로 작성한 파일, "===== [Claude ...] 시작 ~ 끝 =====" 블록 내부는 제외
+검사 1) 기준 이후 "추가된 주석" 중 "Claude 주석" 표시가 없는 줄
+        - 새로 작성한 파일, "/* Claude 주석 (...) 시작: ~ /* Claude 주석 (...) 끝" 블록 내부는 제외
         - 표시된 줄 바로 다음의 들여쓴 연속 줄(여러 줄 주석의 2번째 줄 이후)은 '연속'으로 따로 표시
         - 기존 주석을 원문 그대로 복원한 줄은 검사 2와 함께 보면 구분됨
 검사 2) 기준 commit에 있던 주석 중 현재 파일에서 사라진 줄 (0건이어야 함)
@@ -13,11 +13,11 @@ import re
 import subprocess
 import sys
 
-TAG = "[Claude 2026-11-19]"
+TAG = "Claude 주석"
 BASE = sys.argv[1] if len(sys.argv) > 1 else "b250e18"
 EXCLUDE = [":!docs", ":!gradle/wrapper", ":!gradlew", ":!gradlew.bat", ":!.gitignore"]
 COMMENT = re.compile(r"\s*(//|#|<!--|\*|/\*)")
-TRAILING = re.compile(r"\s(//|#)\s")
+TRAILING = re.compile(r"\s(//|#|/\*)\s")
 
 
 def diff_lines():
@@ -48,9 +48,9 @@ def main():
             cur, inblock, prev_tagged = f, False, False
         if sign != "+" or f in added_new:
             continue
-        if TAG in s and "시작" in s:
+        if TAG in s and ") 시작:" in s:
             inblock = True
-        if TAG in s and "끝" in s:
+        if TAG in s and ") 끝" in s:
             inblock = False
             continue
         is_comment = COMMENT.match(s) or TRAILING.search(s)

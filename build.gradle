@@ -1,6 +1,6 @@
 plugins {
     id 'org.springframework.boot' version '4.1.2' apply false // Java 11 지원하는 안정 버전
-    // [Claude 2026-11-19] 위 주석은 기존(2.7.12) 설명. 4.1.2로 변경 — Java 25(OpenJDK 25.0.5.1+) 대응
+    /* Claude 주석 (2026-11-19): 위 주석은 기존(2.7.12) 설명. 4.1.2로 변경 — Java 25(OpenJDK 25.0.5.1+) 대응 */
     id 'io.spring.dependency-management' version '1.1.7' apply false
     id 'java'
 }
@@ -19,8 +19,8 @@ subprojects {
 
     group = 'kr.or.kimsn.radar'
     version = '0.0.1-SNAPSHOT'
-    // [Claude 2026-11-19] sourceCompatibility/targetCompatibility = '11' → Java 25 toolchain
-    //   (Gradle 9에서 project 수준 sourceCompatibility/targetCompatibility 속성이 제거됨)
+    /* Claude 주석 (2026-11-19): sourceCompatibility/targetCompatibility = '11' → Java 25 toolchain
+         (Gradle 9에서 project 수준 sourceCompatibility/targetCompatibility 속성이 제거됨) */
     java {
         toolchain {
             languageVersion = JavaLanguageVersion.of(25)
@@ -31,7 +31,7 @@ subprojects {
         options.encoding = 'UTF-8'
     }
 
-    // [Claude 2026-11-19] JUnit 5(Jupiter) 테스트 실행 설정. 없으면 Gradle 9이 테스트를 찾지 못함
+    /* Claude 주석 (2026-11-19): JUnit 5(Jupiter) 테스트 실행 설정. 없으면 Gradle 9이 테스트를 찾지 못함 */
     tasks.withType(Test).configureEach {
         useJUnitPlatform()
     }
@@ -51,7 +51,7 @@ subprojects {
 //            allowInsecureProtocol = true // SSL 검증 우회 및 HTTP 허용 (Gradle 7.x 이상 필수)
 //        }
         // 💡 2. 외부망 보안 차단을 우회하고 자동으로 파일을 받아오는 글로벌 공식 저장소 배치
-        // [Claude 2026-11-19] 위 주석의 저장소 2개(https://maven.org, https://gradle.org)는 Maven 저장소가 아니라 제거함
+        /* Claude 주석 (2026-11-19): 위 주석의 저장소 2개(https://maven.org, https://gradle.org)는 Maven 저장소가 아니라 제거함 */
         // 3. 로컬 백업용 폴더 (libs)
         flatDir {
             dirs "${rootDir}/libs"
@@ -62,10 +62,10 @@ subprojects {
         // 모든 모듈이 공통으로 사용할 라이브러리
 //        implementation 'org.slf4j:slf4j-api'
         /*logback 의존성 추가*/
-        // [Claude 2026-11-19] 버전은 Spring Boot BOM(4.1.2)이 관리 — 개별 버전 하드코딩 제거
+        /* Claude 주석 (2026-11-19): 버전은 Spring Boot BOM(4.1.2)이 관리 — 개별 버전 하드코딩 제거 */
         implementation 'org.springframework.boot:spring-boot-starter-log4j2'
         testImplementation 'org.springframework.boot:spring-boot-starter-test'
-        testRuntimeOnly 'org.junit.platform:junit-platform-launcher' // [Claude 2026-11-19] Gradle 9부터 명시 필요
+        testRuntimeOnly 'org.junit.platform:junit-platform-launcher' /* Claude 주석 (2026-11-19): Gradle 9부터 명시 필요 */
 
         implementation 'com.googlecode.json-simple:json-simple:1.1.1'
 
@@ -76,11 +76,11 @@ subprojects {
 ////        implementation name: 'mysql-connector-j-9.2.0'
 //        runtimeOnly("com.mysql:mysql-connector-j")
 
-        // [Claude 2026-11-19] log4j2.yml 설정 파일 파싱용 (Log4j2는 Jackson 2 사용 → Boot의 jackson-2-bom이 관리)
+        /* Claude 주석 (2026-11-19): log4j2.yml 설정 파일 파싱용 (Log4j2는 Jackson 2 사용 → Boot의 jackson-2-bom이 관리) */
         implementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-yaml'
 
-        implementation 'org.apache.commons:commons-lang3' // [Claude 2026-11-19] 3.14.0 → BOM 관리 (3.20.0)
-        // [Claude 2026-11-19] Spring Boot 4는 Jackson 3(tools.jackson) 사용 → XML 메시지 변환도 Jackson 3 모듈로 교체
+        implementation 'org.apache.commons:commons-lang3' /* Claude 주석 (2026-11-19): 3.14.0 → BOM 관리 (3.20.0) */
+        /* Claude 주석 (2026-11-19): Spring Boot 4는 Jackson 3(tools.jackson) 사용 → XML 메시지 변환도 Jackson 3 모듈로 교체 */
         implementation 'tools.jackson.dataformat:jackson-dataformat-xml'
         implementation 'org.modelmapper:modelmapper:3.2.8'
 

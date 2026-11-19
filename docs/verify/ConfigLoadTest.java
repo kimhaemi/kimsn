@@ -14,8 +14,7 @@ import org.springframework.scheduling.support.CronExpression;
 
 import kr.or.kimsn.radar.data.config.YamlPropertySourceFactory;
 
-/**
- * [Claude 2026-11-19] 새로 작성한 파일 (이 파일의 모든 주석은 Claude 작성)
+/* Claude 주석 (2026-11-19): 새로 작성한 파일 (이 파일의 모든 주석은 Claude 작성)
  *
  * E 단계 설정 로딩 검증 (Spring Boot 4.1.2 / SnakeYAML 2.6 / Log4j 2.25.5 런타임 라이브러리 사용).
  * 비밀번호·IP 등 값은 출력하지 않고 존재 여부/타입 변환만 확인한다.

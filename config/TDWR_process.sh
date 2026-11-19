@@ -5,7 +5,7 @@
 # 모듈작동이 되지 않을 수 있습니다.
 #################################################
 #JAVA_HOME=/usr/lib/jvm/java-1.8.0-openjdk-1.8.0.342.b07-2.el8_6.x86_64
-# ===== [Claude 2026-11-19] Java 실행 환경 (OpenJDK 25 전환) 추가 시작 =====
+# /* Claude 주석 (2026-11-19) 시작: Java 실행 환경 (OpenJDK 25 전환) 추가 — 여기부터 'Claude 주석 끝'까지 Claude가 추가/보존한 내용 */
 #  - JAVA_HOME: 운영 서버의 JDK 25 설치 경로. 서버에 JAVA_HOME 환경 변수가 있으면 그 값을 우선 사용
 #    (RHEL 계열 패키지 설치 시 보통 /usr/lib/jvm/java-25-openjdk, 서버마다 실제 경로 확인 필요)
 #  - JAVA_MIN_VERSION: Java4Shell(CVE-2026-114938) 패치가 포함된 최소 버전. 이보다 낮으면 시작하지 않음
@@ -28,7 +28,7 @@ check_java() {
         fi
         echo "Java: $JAVA_BIN ($JAVA_VER)"
 }
-# ===== [Claude 2026-11-19] Java 실행 환경 추가 끝 =====
+# /* Claude 주석 (2026-11-19) 끝: Java 실행 환경 추가 */
 RADAR_HOME=/home/watcher/deamon/TDWR
 RADAR_NAME_JAR=TDWR.jar
 RADAR_DAEMON_TYPE=-DDAEMON_TYPE=KMA_TDWR
@@ -63,12 +63,12 @@ case "$1" in
 
         [Vv]ersion)
                 echo "$RADAR_TITLE"
-                "$JAVA_BIN" -version 2>&1 | head -1   # [Claude 2026-11-19] Java 버전 표시 (추가)
+                "$JAVA_BIN" -version 2>&1 | head -1   # /* Claude 주석 (2026-11-19): Java 버전 표시 (추가) */
         ;;
 
  [Ss]tart)
         echo "START $RADAR_TITLE Process"
-        check_java   # [Claude 2026-11-19] 시작 전 Java 경로·버전 검사 (추가)
+        check_java   # /* Claude 주석 (2026-11-19): 시작 전 Java 경로·버전 검사 (추가) */
 
         case "$2" in
                 [Aa]ll)
@@ -83,7 +83,7 @@ case "$1" in
                                 else
                                 {
                                         cd $RADAR_HOME
-                                        nohup "$JAVA_BIN" $RADAR_DAEMON_TYPE -jar $RADAR_HOME/$RADAR_NAME_JAR >> "$RADAR_LOGS/$RADAR_TITLE.log" 2>&1 &   # [Claude 2026-11-19] java → "$JAVA_BIN" (정해진 JDK로 실행)
+                                        nohup "$JAVA_BIN" $RADAR_DAEMON_TYPE -jar $RADAR_HOME/$RADAR_NAME_JAR >> "$RADAR_LOGS/$RADAR_TITLE.log" 2>&1 &   # /* Claude 주석 (2026-11-19): java → "$JAVA_BIN" (정해진 JDK로 실행) */
                                         echo "$radar_list $RADAR_TITLE Process Start-up."
                                 }
                                 fi
@@ -101,7 +101,7 @@ case "$1" in
                         else
                         {
                                 # cd $RADAR_HOME/$2
-                                nohup "$JAVA_BIN" $RADAR_DAEMON_TYPE -jar $RADAR_HOME/$RADAR_NAME_JAR >> "$RADAR_LOGS/$RADAR_TITLE.log" 2>&1 &   # [Claude 2026-11-19] java → "$JAVA_BIN" (정해진 JDK로 실행)
+                                nohup "$JAVA_BIN" $RADAR_DAEMON_TYPE -jar $RADAR_HOME/$RADAR_NAME_JAR >> "$RADAR_LOGS/$RADAR_TITLE.log" 2>&1 &   # /* Claude 주석 (2026-11-19): java → "$JAVA_BIN" (정해진 JDK로 실행) */
                                 echo "$RADAR_TITLE Process Start-up."
                         }
                         fi

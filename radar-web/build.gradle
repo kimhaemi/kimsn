@@ -16,19 +16,19 @@ dependencies {
     implementation 'nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect'
 
     // 웹 서비스 제공을 위한 의존성
-    // [Claude 2026-11-19] Spring Boot 4: spring-boot-starter-web → spring-boot-starter-webmvc 로 명칭 변경
+    /* Claude 주석 (2026-11-19): Spring Boot 4: spring-boot-starter-web → spring-boot-starter-webmvc 로 명칭 변경 */
     implementation 'org.springframework.boot:spring-boot-starter-webmvc'
     // 필요 시 타임리프 등 추가
     implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
     //spring-boot-devtools .html파일을 컴파일만 해주면 서버 재시작 없이 view 파일 변경이 가능
-    // [Claude 2026-11-19] implementation → developmentOnly: 운영 jar(bootJar)에 포함되지 않도록
+    /* Claude 주석 (2026-11-19): implementation → developmentOnly: 운영 jar(bootJar)에 포함되지 않도록 */
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
 
     implementation 'org.springframework.boot:spring-boot-starter-security'
-    // [Claude 2026-11-19] 템플릿의 sec: 네임스페이스(xmlns:sec) 처리를 위해 추가 (기존에는 의존성 누락으로 미동작)
+    /* Claude 주석 (2026-11-19): 템플릿의 sec: 네임스페이스(xmlns:sec) 처리를 위해 추가 (기존에는 의존성 누락으로 미동작) */
     implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity6'
 
-    // [Claude 2026-11-19] DB 없이 Spring Security 동작을 검증하는 테스트용 (MockMvc + spring-security-test)
+    /* Claude 주석 (2026-11-19): DB 없이 Spring Security 동작을 검증하는 테스트용 (MockMvc + spring-security-test) */
     testImplementation 'org.springframework.boot:spring-boot-starter-webmvc-test'
     testImplementation 'org.springframework.boot:spring-boot-starter-security-test'
 

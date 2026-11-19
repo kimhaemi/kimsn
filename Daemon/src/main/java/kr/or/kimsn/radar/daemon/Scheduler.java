@@ -70,7 +70,7 @@ public class Scheduler implements SchedulingConfigurer { // 💡 무중단 동�
 
                 // 3. 다음 수집 주행 스케줄 타임라인을 동적으로 재계산하여 이식
                 CronTrigger trigger = new CronTrigger(cronExpression);
-                // [Claude 2026-11-19] Spring 6+: Trigger 람다는 java.util.Date 대신 java.time.Instant 반환 (기존: trigger.nextExecutionTime(triggerContext))
+                /* Claude 주석 (2026-11-19): Spring 6+: Trigger 람다는 java.util.Date 대신 java.time.Instant 반환 (기존: trigger.nextExecutionTime(triggerContext)) */
                 return trigger.nextExecution(triggerContext);
             }
         );

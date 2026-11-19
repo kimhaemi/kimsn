@@ -13,8 +13,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
-/**
- * [Claude 2026-11-19] Spring Security 7 설정으로 재작성
+/* Claude 주석 (2026-11-19): Spring Security 7 설정으로 재작성
  *
  * - 기존: 모든 경로 permitAll + CSRF 비활성화 → 비로그인으로 회원/문자/설정 API 호출 가능 (보안 이슈 S1)
  * - 변경: 로그인 화면·정적 리소스·오류 화면만 허용, 나머지는 인증 필요. CSRF 보호 활성화.
@@ -31,7 +30,7 @@ public class SecurityConfig {
     private final AuthenticationSuccess authenticationSuccess;
     private final AuthenticationFailure authenticationFailure;
 
-    /** [Claude 2026-11-19] 인증 없이 접근 가능한 경로 */
+    /* Claude 주석 (2026-11-19): 인증 없이 접근 가능한 경로 */
     private static final String[] PUBLIC_PATHS = {
         "/login",
         "/css/**", "/js/**", "/images/**", "/fonts/**", "/favicon.ico",
@@ -47,9 +46,9 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         // csrf는 비활성화하고 /css, /index는 접속허용, /user/** url은 USER 권한만 가능으로 설정을 구성한다. 그리고
         // user를 생성해주고, password encoder를 bean으로 선언해준다.
-        // [Claude 2026-11-19] 위 주석은 기존 설정 설명. 현재는 CSRF 활성화 + PUBLIC_PATHS 외 전부 인증 필요.
+        /* Claude 주석 (2026-11-19): 위 주석은 기존 설정 설명. 현재는 CSRF 활성화 + PUBLIC_PATHS 외 전부 인증 필요. */
 
-        // ===== [Claude 2026-11-19] 기존 코드 원문 보존 (Security 7에서 불필요하여 주석 처리) 시작 =====
+        /* Claude 주석 (2026-11-19) 시작: 기존 코드 원문 보존 (Security 7에서 불필요하여 주석 처리) — 여기부터 'Claude 주석 끝'까지 Claude가 추가/보존한 내용 */
         // // 📌 [안전] 인증 매니저 빌더를 꺼내어 서비스와 인코더를 한 번에 등록합니다. (순환 참조 원천 차단)
         // AuthenticationManagerBuilder authenticationManagerBuilder =
         //     http.getSharedObject(AuthenticationManagerBuilder.class);
@@ -69,10 +68,10 @@ public class SecurityConfig {
 //            .antMatchers("/station/**").authenticated() //인증
 //            .antMatchers("/stat/**").authenticated() //인증
         //     .anyRequest().permitAll()
-        // ===== [Claude 2026-11-19] 기존 코드 원문 보존 끝 =====
+        /* Claude 주석 (2026-11-19) 끝: 기존 코드 원문 보존 */
 
         http
-            // [Claude 2026-11-19] CSRF 보호 활성화(기본값). 토큰은 Thymeleaf th:action 폼과 common.js(Ajax 헤더/폼 hidden)에서 전달
+            /* Claude 주석 (2026-11-19): CSRF 보호 활성화(기본값). 토큰은 Thymeleaf th:action 폼과 common.js(Ajax 헤더/폼 hidden)에서 전달 */
             .csrf(csrf -> { })
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers(PUBLIC_PATHS).permitAll()
@@ -88,7 +87,7 @@ public class SecurityConfig {
                 .permitAll()
             )
             .logout(logout -> logout
-                .logoutUrl("/logout")               // [Claude 2026-11-19] POST + CSRF 토큰 (header.html 로그아웃 폼)
+                .logoutUrl("/logout")               /* Claude 주석 (2026-11-19): POST + CSRF 토큰 (header.html 로그아웃 폼) */
                 .logoutSuccessUrl("/login?logout")
                 .invalidateHttpSession(true)
                 .deleteCookies("JSESSIONID", "userId")

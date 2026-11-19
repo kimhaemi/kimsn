@@ -1,6 +1,6 @@
-# [Claude 2026-11-19] server.servlet.encoding.* (charset/force/enabled) 제거
+# /* Claude 주석 (2026-11-19): server.servlet.encoding.* (charset/force/enabled) 제거
 #  - Daemon은 웹 서버가 없는 모듈이라 원래 효과가 없었고,
-#  - Boot 4에서는 spring.servlet.encoding.* 로 이름이 바뀌어 옛 키는 삭제(error)됨
+#  - Boot 4에서는 spring.servlet.encoding.* 로 이름이 바뀌어 옛 키는 삭제(error)됨 */
 spring:
   output:
     ansi:
@@ -13,16 +13,16 @@ spring:
 
   # 💡 멀티모듈 내부 클래스패스 상의 공통 데이터베이스 속성 결합선 유지
   config:
-    # [Claude 2026-11-19] use-legacy-processing: true 제거 — Boot 3.0에서 삭제, Boot 4.1.2 코드에서 참조 없음(무시되던 키)
+    # /* Claude 주석 (2026-11-19): use-legacy-processing: true 제거 — Boot 3.0에서 삭제, Boot 4.1.2 코드에서 참조 없음(무시되던 키) */
     import:
-      # [Claude 2026-11-19] classpath*: → classpath: (Boot 4는 config import에 와일드카드 불가 → 기동 실패했음)
+      # /* Claude 주석 (2026-11-19): classpath*: → classpath: (Boot 4는 config import에 와일드카드 불가 → 기동 실패했음) */
       - "optional:classpath:common-data.yml"
   data:
     jpa:
       repositories:
         bootstrap-mode: default
 
-  # [Claude 2026-11-19] spring.devtools.livereload.enabled 제거 — Daemon 모듈은 devtools 의존성이 없어 효과 없음
+  # /* Claude 주석 (2026-11-19): spring.devtools.livereload.enabled 제거 — Daemon 모듈은 devtools 의존성이 없어 효과 없음 */
 
 # 💡 외부 확장 연동 통로 지정: 런타임 시 외부에 노출된 별도의 log4j2.yml 설정을 바라보도록 구성
 logging:

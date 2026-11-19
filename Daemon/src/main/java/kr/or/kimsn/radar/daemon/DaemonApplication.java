@@ -5,7 +5,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import java.net.URL;
 import java.util.jar.Attributes;
 import java.util.jar.Manifest;
-import org.springframework.boot.persistence.autoconfigure.EntityScan; // [Claude 2026-11-19] Spring Boot 4: org.springframework.boot.autoconfigure.domain → persistence.autoconfigure 패키지 이동
+import org.springframework.boot.persistence.autoconfigure.EntityScan; /* Claude 주석 (2026-11-19): Spring Boot 4: org.springframework.boot.autoconfigure.domain → persistence.autoconfigure 패키지 이동 */
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 

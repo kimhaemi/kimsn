@@ -1,5 +1,4 @@
-/**
- * [Claude 2026-11-19] 새로 작성한 파일 — JSch 기본 SSH 알고리즘 출력 (6.8-J)
+/* Claude 주석 (2026-11-19): 새로 작성한 파일 — JSch 기본 SSH 알고리즘 출력 (6.8-J)
  *
  * 사용법 (프로젝트 루트에서, 외부 접속 없음):
  *   java -cp libs/jsch-0.1.55.jar docs/verify/JschDefaults.java                       # 기존 jsch

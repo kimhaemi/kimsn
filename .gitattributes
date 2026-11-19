@@ -1,4 +1,4 @@
-# [Claude 2026-11-19] 새로 작성한 파일 — 줄바꿈(EOL) 규칙
+# /* Claude 주석 (2026-11-19): 새로 작성한 파일 — 줄바꿈(EOL) 규칙 */
 # - Windows 배치 파일은 CRLF여야 cmd.exe에서 정상 실행됨
 # - 리눅스 셸 스크립트는 LF여야 함 (CRLF면 "/bin/bash^M: bad interpreter" 오류)
 /gradlew.bat     text eol=crlf

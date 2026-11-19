@@ -1,5 +1,4 @@
-/*
- * [Claude 2026-11-19] CSRF 토큰 자동 전달 (Spring Security CSRF 보호 활성화 대응) — 이 주석 블록과 바로 아래 함수 전체가 추가분
+/* Claude 주석 (2026-11-19): CSRF 토큰 자동 전달 (Spring Security CSRF 보호 활성화 대응) — 이 주석 블록과 바로 아래 함수 전체가 추가분
  *  - layout/config.html 의 <meta name="_csrf*"> 값을 사용
  *  - jQuery Ajax($.ajax, $.post, fnCall): 모든 요청 헤더에 토큰 추가
  *  - method="post" 폼: 화면 로드 시 hidden 입력값으로 토큰 추가 (form.submit() 호출 포함)

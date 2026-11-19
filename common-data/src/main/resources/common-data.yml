@@ -19,10 +19,10 @@ config:
     validation-timeout: 5000
 
 # query
-# [Claude 2026-11-19] 점검 메모: 아래 jpa 블록은 spring. 이 아니라 config. 하위에 있어 Spring이 읽지 않음(효과 없음).
+# /* Claude 주석 (2026-11-19): 점검 메모: 아래 jpa 블록은 spring. 이 아니라 config. 하위에 있어 Spring이 읽지 않음(효과 없음).
 #    실제 적용값은 기본값 spring.jpa.open-in-view=true. 의도대로 false 적용 시 화면 렌더링 중 지연 로딩 동작이
 #    바뀔 수 있어 D 단계(JPA 검증)에서 DB 연동 테스트 후 반영 예정.
-#    또한 config.datasource.max-pool 등 풀 옵션은 DataSourceConfig.java 에 하드코딩된 값이 사용됨.
+#    또한 config.datasource.max-pool 등 풀 옵션은 DataSourceConfig.java 에 하드코딩된 값이 사용됨. */
   jpa:
     open-in-view: false #spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
 #    show-sql: true # true 설정시 JPA 쿼리문 확인 가능
