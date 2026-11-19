@@ -1,7 +1,7 @@
 # radar_new 프로젝트 분석 및 작업 이력
 
 > 이 문서는 소스 분석 결과와 이후 작업 이력을 계속 누적 기록합니다.
-> 보안상 비밀번호·IP 계정 등 민감값은 이 문서에 기록하지 않습니다.
+> 보안상 비밀번호·IP·계정 등 민감값은 이 문서에 기록하지 않습니다. 명령 예시에서는 `<개발DB주소>`처럼 꺾쇠 괄호로 표시합니다.
 
 ---
 
@@ -9,13 +9,37 @@
 
 ### 0.1 이 문서는 무엇인가
 
-이 프로젝트(`radar_new`)는 **기상 레이더 관측소가 자료(파일)를 제때 보내는지 감시하고, 문제가 생기면 담당자에게 문자를 보내는 시스템**이다. 2026년 11월, OpenJDK에서 심각한 보안 취약점(Java4Shell, CVE-2026-114938)이 공개되었고, 이를 계기로 아래 작업을 진행하고 있다.
+**한 줄 요약**: 기상 레이더 감시 시스템(`radar_new`)을 보안 취약점이 없는 최신 Java로 옮기는 작업의 **설명서이자 작업 일지**다.
 
-- Java 실행 환경: **OpenJDK 11 → OpenJDK 25.0.5.1 이상** (취약점이 수정된 버전)
-- 프레임워크: **Spring Boot 2.7.12 → 4.1.2** (Java 25를 쓰려면 함께 올려야 함)
-- 그 과정에서 발견한 **보안 문제(S1~S8) 수정**
+**이 시스템이 하는 일 (쉽게)**
 
-이 문서는 "무엇을, 왜, 어떻게 바꿨고, 어떻게 확인했는지"를 처음 보는 사람도 따라 할 수 있도록 기록한다.
+전국의 기상 레이더 관측소는 몇 분마다 관측 자료 파일을 만든다. 이 시스템은 그 파일이 **제때, 정상 크기로** 만들어지는지 계속 확인하고, 문제가 생기면 담당자에게 **문자(SMS)** 를 보낸다. 담당자는 **관리 웹 화면**에서 관측소 상태를 보고 감시 기준과 문자 대상자를 설정한다.
+
+```
+ [관측소 서버 34곳]                 [감시 서버]                               [담당자]
+  레이더 자료 파일   ──SFTP 확인──▶  Daemon (감시 프로그램 5종)
+                                     │  ① 파일이 있나? 크기는 정상인가?
+                                     │  ② 연속으로 실패하면 "장애", 회복되면 "복구"
+                                     ▼
+                                   MySQL DB  ◀──조회·설정──  radar-web (관리 웹)  ◀── 브라우저
+                                     │  (수신 이력, 상태, 문자 대상자, 회원)
+                                     ▼
+                                   문자 큐 테이블 ──▶ 누리2 에이전트 ──▶ 담당자 휴대폰 문자
+```
+
+**왜 작업하나**
+
+2026-11-17에 OpenJDK(Java 실행 환경)에서 원격으로 서버를 장악할 수 있는 심각한 취약점(Java4Shell, CVE-2026-114938)이 공개되었다. 이 시스템은 Java 11과 오래된 Spring Boot 2.7로 만들어져 있었는데, 취약점이 고쳐진 Java 25를 쓰려면 프레임워크도 함께 올려야 한다. 그래서 아래 작업을 진행했다.
+
+| 항목 | 작업 전 | 작업 후 |
+|---|---|---|
+| Java 실행 환경 | OpenJDK 11 | **OpenJDK 25.0.5.1 이상** (취약점 수정 버전) |
+| 프레임워크 | Spring Boot 2.7.12 | **Spring Boot 4.1.2** |
+| 빌드 도구 | Gradle (버전 불명, wrapper 없음) | **Gradle 9.9.1** (wrapper 포함) |
+| 웹 보안 | 로그인 없이 모든 기능 사용 가능, CSRF 방어 꺼짐 | 로그인 필수, CSRF 방어, 사용자 관리는 관리자만 |
+| 그 밖의 보안 문제 | 비밀번호 로그 기록 등 8건(S1~S8) | 4건 해결, 4건은 서버·비밀번호 교체 작업으로 남음 |
+
+이 문서는 "**무엇을, 왜, 어떻게 바꿨고, 어떻게 확인했는지**"를 처음 보는 사람도 따라 할 수 있게 기록한다. 실패한 시도와 실수도 숨기지 않고 적었다.
 
 ### 0.2 지금 상태 한눈에 보기 (2026-11-19 기준)
 
@@ -24,47 +48,90 @@
 | 준비 | 개발 PC에 JDK 25.0.5.1, Gradle 9.9.1 준비 | ✅ 완료 | 0.5 |
 | A | 빌드 설정(Gradle) 전환 | ✅ 완료 | 6.8-A |
 | B | `javax` → `jakarta` 패키지 전환 | ✅ 완료 | 6.8-B |
-| C | 로그인/보안 설정 재작성 + 인증 복구(S1) | ✅ 코드·자동 테스트 완료 / ⏳ 실제 DB로 화면 확인 필요 | 6.8-C, 8.2 |
-| D | DB 쿼리(JPA) 동작 검증 | ⏳ **DB 필요** — 미진행 | 8.3 |
+| C | 로그인/보안 설정 재작성 + 인증 복구(S1) | ✅ 완료 — 자동 테스트 14개 + 로컬 DB에서 실제 화면 확인 | 6.8-C, 7.2 |
+| D | DB 쿼리(JPA) 동작 검증 | 🔶 일부 — 웹 화면은 로컬 DB에서 오류 없음, Daemon은 미진행 | 8.3, 9.6 |
 | E | 설정 파일(yml) 정리 | ✅ 완료 | 6.8-E |
 | F | 운영 실행 스크립트 JDK 25 적용 | ✅ 완료 | 6.8-F |
-| K | 사용자 관리(`/users/**`) ADMIN 전용 권한 | ✅ 코드·자동 테스트 완료 / ⏳ 실제 화면 확인 필요 | 6.8-K, 8.2 |
-| 보안 | S1, S5, S6, S7 해결 / S2~S4, S8 남음 | 일부 완료 | 4.1 |
-| 배포 | 운영 서버 JDK 25 설치 → 순차 교체 | ⏳ 미진행 | 8.5 |
+| K | 사용자 관리(`/users/**`) ADMIN 전용 권한 | ✅ 완료 — 자동 테스트 9개 + 실제 화면 확인 | 6.8-K |
+| 웹 경고 | Thymeleaf fragment 표현식 경고 정리 | ✅ 완료 | 7.2 |
+| 보안 | S1, S5, S6, S7 해결 / S2~S4(비밀번호 노출), S8(호스트 키) 남음 | 🔶 일부 | 4.1 |
+| 배포 | 운영 서버 JDK 25 설치 → 순차 교체 | ⏳ 미진행 — 운영 서버 필요 | 8.5, 9.6 |
 
 > **현재 브랜치 `ver_java25`에만 반영되어 있고, 원격(origin)에는 아직 push하지 않았다.**
+> 아직 남은 테스트는 **9.6**에 한 표로 모아 두었다.
 
-### 0.3 읽는 순서
+### 0.3 읽는 순서 — 목적별
 
-1. **전체 그림**: 1장(개요) → 2장(폴더 구조) → 3장(동작 흐름)
-2. **왜 바꾸나**: 4장(발견된 문제) → 5장(라이브러리 취약점) → 6.1(Java4Shell)
-3. **무엇을 바꿨나**: 6.8(단계별 변경 내역과 테스트 방법)
-4. **직접 해 보기**: 0.5(환경 준비) → 0.6(빌드·테스트)
-5. **앞으로 할 일**: 8장(남은 작업 따라하기)
-6. **경과 기록**: 7장(작업 이력), 0.7(commit 목록)
-7. **내가 직접 검증하기**: 9장(검토자 확인·검증 가이드) — 변경 내용을 직접 확인하고 결과를 기록하는 방법
-8. **주석 읽는 법**: 0.8(누가 쓴 주석인지 구분하는 규칙)
+| 나는… | 이 순서로 읽기 |
+|---|---|
+| **처음 이 프로젝트를 본다** | 0.1 → 1장(개요) → 2장(폴더 구조) → 3장(동작 흐름, 주요 테이블) → 0.4(용어) |
+| **무엇이 바뀌었는지 알고 싶다** | 0.2 → 6.2(목표 버전) → 6.8(단계별 변경 내역) → 0.7(commit 목록) |
+| **변경 내용을 직접 검증하려 한다** | 0.5(환경 준비) → 0.6(빌드·테스트) → 9장(검증 가이드) → 9.5(결과 기록표) |
+| **남은 일을 이어서 하려 한다** | 9.6(남은 테스트 목록) → 8장(절차서) → 8.6(결정 필요 사항) |
+| **운영 서버에 배포하려 한다** | 4.1(보안 문제) → 8.5(배포·롤백 절차) → 9.6 #8~#13 |
+| **왜 이렇게 했는지 경과가 궁금하다** | 7장(작업 이력: 요약 표 → 상세 기록) |
+| **소스의 주석이 누구 것인지 헷갈린다** | 0.8(주석 구분 규칙) |
 
 ### 0.4 용어 설명
+
+**Java·빌드 관련**
 
 | 용어 | 뜻 (이 프로젝트에서) |
 |---|---|
 | JDK / OpenJDK | Java 프로그램을 만들고(컴파일) 실행하는 도구 모음. `java`(실행), `javac`(컴파일) 명령이 들어 있다 |
 | LTS | 장기 지원 버전. Java 25는 LTS라 보안 패치를 오래 받을 수 있다 (Java 27은 단기 버전) |
 | CVE | 공개된 보안 취약점에 붙는 고유 번호. 예: CVE-2026-114938 |
+| RCE | 원격 코드 실행(Remote Code Execution). 공격자가 네트워크로 서버에서 원하는 명령을 실행할 수 있는, 가장 위험한 종류의 취약점 |
+| CVSS | 취약점 심각도 점수(0~10). 9점 이상은 Critical(긴급) |
 | Gradle | 소스 컴파일, 라이브러리 다운로드, jar 생성을 자동으로 해 주는 빌드 도구 |
 | Gradle wrapper (`gradlew`) | 프로젝트에 정해진 Gradle 버전을 자동으로 내려받아 실행하는 스크립트. **Gradle을 따로 설치하지 않아도 된다** |
-| Spring Boot | 이 프로젝트가 사용하는 Java 웹/서버 프레임워크 |
+| jar | Java 프로그램 묶음 파일. `java -jar RADAR_WEB.jar`처럼 실행한다 |
+| 의존성(라이브러리) | 프로젝트가 가져다 쓰는 외부 프로그램 조각. 오래된 의존성에 취약점이 많이 있었다 (5장) |
 | BOM | Spring Boot가 "서로 호환되는 라이브러리 버전 목록"을 정해 둔 것. 그래서 `build.gradle`에 버전을 일일이 적지 않는다 |
+| 멀티모듈 | 한 저장소 안에 여러 프로그램(모듈)이 같이 있는 구조. 여기서는 `common-data`, `Daemon`, `radar-web` 3개 |
+
+**Spring·웹 관련**
+
+| 용어 | 뜻 (이 프로젝트에서) |
+|---|---|
+| Spring Boot | 이 프로젝트가 사용하는 Java 웹/서버 프레임워크 |
 | `javax` → `jakarta` | Java EE가 Jakarta EE로 이름이 바뀌면서 패키지 이름도 바뀜. Spring Boot 3 이상은 `jakarta.*`만 지원 |
-| JPA / Hibernate | Java 객체와 DB 테이블을 연결하는 기술. 이 프로젝트는 대부분 직접 쓴 SQL(native query)을 사용 |
 | Spring Security | 로그인, 접근 권한, CSRF 방어를 담당하는 라이브러리 |
 | CSRF | 사용자가 로그인한 상태를 악용해 다른 사이트가 몰래 요청을 보내는 공격. 막기 위해 서버가 발급한 **토큰**을 요청마다 함께 보내야 한다 |
+| Thymeleaf | 웹 화면(HTML)을 서버에서 만들어 주는 템플릿 엔진. `templates/` 폴더의 HTML 파일 |
+| fragment | Thymeleaf에서 여러 화면이 같이 쓰는 조각(머리글, 메뉴 등). `th:replace="~{layout/header :: headerFragment}"`처럼 불러온다 |
+| Ajax | 화면을 새로 고치지 않고 JavaScript로 서버에 요청을 보내는 방식. 이 프로젝트의 저장 버튼 대부분이 Ajax(`fnCall`)를 쓴다 |
+| HTTP 상태 코드 | 200 성공, 302 다른 주소로 이동(예: 로그인 화면), 403 권한 없음/토큰 없음, 404 없는 주소, 500 서버 오류 |
+| ADMIN / USER | 회원 권한. DB `watchdog_member.roles` 값. 사용자 관리 화면은 ADMIN만 쓸 수 있다 |
 | MockMvc / @WebMvcTest | 실제 서버를 띄우지 않고 웹 요청을 흉내 내서 테스트하는 방법. DB 없이 보안 설정을 검증할 때 사용 |
+
+**DB·운영 관련**
+
+| 용어 | 뜻 (이 프로젝트에서) |
+|---|---|
+| JPA / Hibernate | Java 객체와 DB 테이블을 연결하는 기술. 이 프로젝트는 대부분 직접 쓴 SQL(native query)을 사용 |
+| 엔티티(Entity) | DB 테이블 한 개에 대응하는 Java 클래스. 이 프로젝트에서는 `common-data/.../dto/*Dto.java`가 엔티티 역할 |
+| 스키마 | DB 안의 테이블 묶음. 이 프로젝트는 `watchdog`(본 데이터), `nuri`, `nuri2`(문자 발송) 3개를 쓴다 |
+| 덤프(dump) | DB 내용을 SQL 파일로 통째로 저장한 것. `Query/dump/`에 있다 |
+| Hikari | DB 연결을 미리 만들어 두고 재사용하는 연결 풀(pool) 라이브러리 |
+| 환경 변수 | 프로그램 실행 전에 터미널에서 지정하는 값(`export 이름=값`). DB 비밀번호를 파일에 쓰지 않고 넘길 때 사용 |
 | SFTP / JSch | 관측소 서버에 접속해 파일을 확인하는 방식(SFTP)과 그 Java 라이브러리(JSch) |
-| 누리2(Nuri2) | 문자 발송 에이전트. DB 테이블(`NURI2_NRMSG_DATA`)에 행을 넣으면 문자가 발송된다 |
+| 누리2(Nuri2) | 문자 발송 에이전트. DB 테이블(`nuri2.NURI2_NRMSG_DATA`)에 행을 넣으면 문자가 발송된다 |
+| STOPSMS | `watchdog.sms_send_onoff` 테이블의 문자 발송 스위치. **이름과 달리 `value=1`이면 문자 발송 켜짐, `0`이면 꺼짐** (`StepTwoService.java`의 `onoffDto.getValue() == 1` 조건) |
+| 기상청A / 기상청B | 관측소 소속 기관. 기상청A = `KMA`(기상청), 기상청B = `MCEE`(기후부). DB의 `agency_cd` 값 |
+| 대형 / 소형 / 공항 | 레이더 구분. DB의 `gubun` 값 1 / 2 / 3. 자료 종류는 대형 `RDR`, 소형 `SDR`, 공항 `TDWR` |
 | Daemon 5종 | 레이더 종류·기관별 감시 프로그램: RDR(기상청A 대형), SDR(기상청A 소형), TDWR(공항), RDR_B(기상청B 대형), SDR_B(기상청B 소형) |
-| commit 해시 | Git 변경 기록의 고유 번호(예: `ade302c`). `git show ade302c`로 내용을 볼 수 있다 |
+| RUN / MRO | 관측소 운영 상태. RUN = 정상 운영, MRO = 점검 중 (관리 화면의 체크박스) |
+| WSL | Windows 안에서 리눅스를 쓰는 기능. 이번 작업의 개발 PC 환경. **WSL 안의 `localhost`는 Windows가 아니다** (8.1-④) |
+
+**Git 관련**
+
+| 용어 | 뜻 |
+|---|---|
+| commit / commit 해시 | Git 변경 기록 한 건과 그 고유 번호(예: `ade302c`). `git show ade302c`로 내용을 볼 수 있다 |
+| 브랜치 | 작업 갈래. 이번 작업은 `ver_java25` 브랜치에서 했다 |
+| push | 내 PC의 commit을 원격 저장소(GitHub 등)에 올리는 것. **아직 하지 않았다** |
+| `b250e18` | 작업 시작 전 마지막 commit. 모든 "작업 전/후" 비교의 기준점 |
 
 ### 0.5 개발 환경 준비 (따라하기)
 
@@ -153,7 +220,7 @@ java -cp "/tmp/rdr/BOOT-INF/classes:/tmp/rdr/BOOT-INF/lib/*" docs/verify/ConfigL
 
 ### 0.7 이번 작업의 commit 목록 (브랜치 `ver_java25`, 오래된 순)
 
-각 commit은 `git show <해시>`로 변경 내용을 볼 수 있다. 문제가 생기면 `git revert <해시>`로 해당 변경만 되돌릴 수 있다.
+**commit이란**: 변경 한 묶음에 붙은 기록이다. 단계마다 따로 commit했기 때문에 필요하면 한 단계만 골라 보거나 되돌릴 수 있다. 각 commit은 `git show <해시>`로 변경 내용을 볼 수 있다. 문제가 생기면 `git revert <해시>`로 해당 변경만 되돌릴 수 있다.
 
 | commit | 단계 | 내용 |
 |---|---|---|
@@ -179,6 +246,15 @@ java -cp "/tmp/rdr/BOOT-INF/classes:/tmp/rdr/BOOT-INF/lib/*" docs/verify/ConfigL
 | `1aa2ce5` | 문서·검증 | 0.8 주석 구분 규칙, 9장 검토자 검증 가이드, 검증 스크립트 3개(`test_process_scripts.sh`, `JschDefaults.java`, `check_comments.py`) |
 | `f277315` | 주석 | Claude 주석 표시를 `/* Claude 주석 (2026-11-19): ... */` 형식으로 통일 (실행 코드 변경 없음) |
 | `8e233cc` | K | 사용자 관리(`/users/**`) ADMIN 전용 권한, 403 화면, 권한 테스트 9개 |
+| `0f0b82e` | 문서 | K 단계 결과(6.8-K), 새 주석 형식(0.8), 검증 가이드·배포 전 ADMIN 확인 |
+| `0570f9d` | 문서 | 로컬 DB 웹 테스트 ① 접속·기동·비로그인 보안 확인 |
+| `440a9bf` | 문서·검증 | 로컬 DB 웹 테스트 ② 로그인, 로컬 DB 구조 맞춤 SQL(`docs/verify/localdb_schema_sync.sql`) |
+| `90118a5` | 웹 | Thymeleaf fragment 표현식을 `~{...}` 형식으로 (경고 제거) |
+| `ffc5f5e` | 문서 | 로컬 DB 웹 테스트 ③ 경고 해소·관리자 권한 확인 |
+| `6434409` | 문서 | 로컬 DB 웹 테스트 ④ 저장 기능(CSRF) 확인 |
+| `b52705a` | 문서 | 검토 결과 기록표(9.5), 남은 테스트 목록(9.6) |
+
+> 목록 확인: `git log --oneline --reverse b250e18..HEAD` 결과와 이 표가 같아야 한다 (이 문서 보강 commit은 표를 쓴 뒤에 만들어지므로 맨 마지막에 1개 더 있다).
 
 ### 0.8 주석 구분 규칙 — 누가 쓴 주석인가
 
@@ -205,66 +281,150 @@ Claude(AI 작업자)가 소스에 추가한 주석은 **기존 작성자의 주�
   ```
 - 앞으로 작업할 때도 같은 형식을 쓴다 (날짜만 작업일로 변경)
 
+### 0.9 자주 묻는 질문
+
+**Q. 지금 바로 운영 서버에 배포해도 되나요?**
+아니요. 개발 PC와 로컬 DB에서 확인할 수 있는 것은 대부분 확인했지만, 운영 환경에서만 확인할 수 있는 항목이 남아 있다. 특히 ① 관측소 서버가 새 SFTP 라이브러리의 암호 방식을 지원하는지(8.4), ② 운영 DB에 ADMIN 계정이 있는지(8.5)를 먼저 확인해야 한다. 남은 항목은 9.6 #8~#13.
+
+**Q. Java만 25로 바꾸고 프레임워크는 그대로 두면 안 되나요?**
+안 된다. Spring Boot 2.7과 옛 Lombok은 Java 25로 만든 클래스 파일을 다루지 못해 빌드부터 실패한다 (6.2 마지막 설명).
+
+**Q. DB가 없어도 확인할 수 있는 것은?**
+`./gradlew build` 한 번으로 컴파일, 보안·권한 자동 테스트 23개, jar 6종 생성이 확인된다. 설정 파일·운영 스크립트·SFTP 라이브러리 비교는 `docs/verify/`의 스크립트로 DB 없이 확인할 수 있다 (9.3).
+
+**Q. 웹에서 저장 버튼을 눌렀더니 403이 나와요.**
+요청에 CSRF 토큰이 빠진 경우다. 그 화면이 공통 틀(`layout/default_layout`)과 `common.js`를 쓰는지 확인한다. 사용자 관리 화면이라면 ADMIN 계정이 아니어서 403이 정상이다 (0.6 오류 표, 6.8-K).
+
+**Q. 로그인하자마자 `Unknown column ... agency_cd` 오류(500)가 나요.**
+코드 문제가 아니라 DB가 기후부 기능 이전의 옛 구조인 경우다. 덤프로 다시 복원하거나 `docs/verify/localdb_schema_sync.sql`을 **개발 DB에서** 실행한다 (8.1-①, 7.2.21).
+
+**Q. 테스트하다가 실제 문자가 나가지 않게 하려면?**
+① 개발 DB에는 누리2 에이전트를 연결하지 않고, ② `STOPSMS` 행을 `value=0`(꺼짐)으로 둔다. 이름과 달리 `value=1`이 "발송 켜짐"이다 (0.4, 8.1-②). 웹 테스트만 할 때는 문자 발송 화면(`/manage/sms_send_nuri2`)의 저장 버튼만 누르지 않으면 된다.
+
+**Q. 문제가 생기면 어떻게 되돌리나요?**
+소스는 `git revert <commit>`으로 단계별로 되돌릴 수 있다 (0.7). 운영 서버는 백업해 둔 예전 jar와 예전 스크립트로 돌아간다 (8.5-⑤). 로컬 DB 변경은 `localdb_schema_sync.sql` 맨 아래의 되돌리기 SQL을 쓴다.
+
+**Q. `Claude 주석`이 붙은 주석은 지워도 되나요?**
+실행에는 영향이 없으므로 지워도 동작은 같다. 다만 누가 무엇을 바꿨는지 추적하는 표시이므로, 검토가 끝나기 전까지는 두는 것을 권장한다 (0.8).
+
 ---
 
 ## 1. 개요
 
-- **목적**: 기상 레이더 관측소 자료 수신 감시 + 장애/복구 SMS 알림 시스템
-- **구성**: Gradle 멀티모듈 3개 (`common-data`, `Daemon`, `radar-web`)
-- **규모**: Java 소스 105개, 약 8,200 라인
-- **기술 스택**: Java 11 (`sourceCompatibility = '11'`), Spring Boot 2.7.12, Spring Data JPA, Spring Security, Thymeleaf, Log4j2, JSch(SFTP), MySQL
-- **Git 브랜치**: `ver_java25` (원격: master, dev, backup, radar_new, ver_java25) — 브랜치명과 달리 빌드 설정은 아직 Java 11
+| 항목 | 내용 |
+|---|---|
+| 목적 | 기상 레이더 관측소 자료 수신 감시 + 장애/복구 SMS 알림 |
+| 구성 | Gradle 멀티모듈 3개: `common-data`(공통 DB 계층), `Daemon`(감시 프로그램), `radar-web`(관리 웹) |
+| 규모 | Java 소스 105개, 약 8,200줄. Repository(DB 조회 인터페이스) 24개, 직접 쓴 SQL `@Query` 43개 |
+| DB | MySQL 8. 스키마 `watchdog`(본 데이터), `nuri`·`nuri2`(문자 발송) |
+| 감시 대상 | 레이더 관측소 34곳: 기상청A(KMA) 대형 11·소형 3·공항 2, 기상청B(MCEE) 대형 7·소형 11 |
+| Git 브랜치 | `ver_java25` (원격 브랜치: master, dev, backup, radar_new, ver_java25) |
+
+**기술 스택 — 작업 전과 후**
+
+| 구분 | 작업 전 (`b250e18`) | 작업 후 (현재) |
+|---|---|---|
+| Java | 11 (`sourceCompatibility = '11'`) | 25 (Gradle toolchain) |
+| Spring Boot | 2.7.12 | 4.1.2 |
+| Spring Framework / Security | 5.3.27 / 5.7.8 | 7.0.10 / 7.1.2 |
+| JPA 구현체 (Hibernate) | 5.6.15 | 7.4.13 |
+| 웹 서버 (Tomcat) | 9.0.75 | 11.0.27 |
+| 화면 템플릿 (Thymeleaf) | 3.0.15 | 3.1.5 |
+| 로그 (Log4j2) | 2.17.2 | 2.25.5 |
+| SFTP (JSch) | com.jcraft 0.1.55 (유지보수 중단) | com.github.mwiede 2.28.8 |
+| DB 드라이버 | mysql-connector-j 8.0.33 | 9.7.0 |
+
+> 참고: 브랜치 이름은 처음부터 `ver_java25`였지만, 작업 전 빌드 설정은 Java 11이었다.
 
 ## 2. 디렉터리 구조
 
+**쉽게 말하면**: `common-data`는 DB를 읽고 쓰는 공통 부품이고, `Daemon`과 `radar-web`이 이 부품을 가져다 쓴다. Daemon은 화면 없이 계속 돌면서 감시하고, radar-web은 사람이 브라우저로 보는 관리 화면이다.
+
 ```
 radar_new/
-├─ common-data/   공통 데이터 계층 (일반 jar)
-│   ├─ config/     DataSourceConfig (Hikari, pool=1), YamlPropertySourceFactory
-│   ├─ dto/        JPA 엔티티 역할 (*Dto) + 복합키 (pkColumn/)
-│   ├─ repository/ Spring Data JPA 22개 (SmsSendRepository 592줄 최대)
-│   └─ resources/common-data.yml   DB 접속 정보
+├─ common-data/   공통 데이터 계층 (일반 jar — 단독 실행 안 함, 다른 두 모듈이 가져다 씀)
+│   ├─ config/     DataSourceConfig (DB 연결, Hikari pool=1), YamlPropertySourceFactory (yml 읽기)
+│   ├─ dto/        JPA 엔티티 역할 (*Dto = 테이블 1개) + 복합키 (pkColumn/)
+│   ├─ repository/ Spring Data JPA 24개 (SmsSendRepository 592줄이 가장 큼)
+│   └─ resources/common-data.yml   DB 접속 정보 (⚠️ 비밀번호 평문 — 보안 S3)
 │
-├─ Daemon/        감시 데몬 (jar 5종: RDR, SDR, TDWR, RDR_B, SDR_B)
-│   ├─ DaemonApplication   Manifest의 Radar-System-Type → 로그 파일명 분기
-│   ├─ Scheduler           동적 크론. 관측소별 스레드로 StepOne → PauseTime(20s) 대기 → StepTwo
+├─ Daemon/        감시 프로그램 (같은 소스로 jar 5종: RDR, SDR, TDWR, RDR_B, SDR_B)
+│   ├─ DaemonApplication   jar 안 표시(Manifest의 Radar-System-Type)로 로그 파일 이름을 나눔
+│   ├─ Scheduler           정해진 주기(크론)마다 관측소별 스레드 실행: StepOne → 20초 대기 → StepTwo
 │   ├─ service/
-│   │   ├─ StepOneService  SFTP(JSch) 접속 → 파일 존재/크기 확인 → receive_data INSERT
-│   │   ├─ StepTwoService  연속 장애/복구 판정 → receive_condition 갱신
-│   │   ├─ SmsService      장애/복구 문자 → 누리2(NURI2_NRMSG_DATA) 큐 INSERT
+│   │   ├─ StepOneService  SFTP로 관측소 접속 → 파일이 있는지·크기 확인 → receive_data에 기록
+│   │   ├─ StepTwoService  연속 실패/회복 횟수로 장애·복구 판정 → receive_condition 갱신
+│   │   ├─ SmsService      장애/복구 문자 → 누리2 문자 큐(NURI2_NRMSG_DATA)에 INSERT
 │   │   └─ QueryService    Repository 호출 창구
 │   ├─ config/
-│   │   ├─ YmlRefreshManager     외부 application.yml WatchService 감시 → 무중단 반영
-│   │   └─ RadarConfigProperties 외부 yml 직접 파싱 (SnakeYAML)
-│   └─ util/ SftpUtil, TimeUtil
+│   │   ├─ YmlRefreshManager     외부 application.yml이 바뀌면 자동으로 다시 읽음 (재시작 불필요)
+│   │   └─ RadarConfigProperties 외부 yml 직접 읽기 (SnakeYAML)
+│   └─ util/ SftpUtil (SFTP 접속), TimeUtil
 │
-├─ radar-web/     관리 웹 (Thymeleaf + Spring Security, RADAR_WEB.jar)
-│   ├─ controller/  화면: /station, /stat, /manage/*, SMS 그룹·대상자, /users
-│   ├─ restApi/     PostController: 설정 변경·회원 CRUD·문자 발송 등 POST 21개, GetController
-│   └─ config/      SecurityConfig, WebMvcConfig, InterceptorConfig, auth/
+├─ radar-web/     관리 웹 (Thymeleaf 화면 + Spring Security 로그인, RADAR_WEB.jar)
+│   ├─ controller/  화면 8개: 메인·관측소(Menu, Station), 통계(Statistics), 관리(Manage),
+│   │               문자(Sms, SmsGroup), 사용자 관리(Members), 로그인(Login)
+│   ├─ restApi/     PostController: 설정 변경·회원 생성/수정/삭제·문자 발송 등 POST 21개, GetController
+│   ├─ config/      SecurityConfig(로그인·권한), WebMvcConfig, InterceptorConfig, auth/(로그인 처리)
+│   └─ resources/templates/  화면 HTML (layout/ 공통 틀, views/ 화면별, error/ 오류 화면)
 │
-├─ config/   운영 설정: 외부 application*.yml (관측소별 SFTP 접속 정보), *_process.sh 실행 스크립트
-├─ Query/    운영 SQL, DB 전체 덤프 7개
+├─ config/   운영 설정: 외부 application*.yml (관측소별 SFTP 접속 정보 — ⚠️ 비밀번호 평문, S2),
+│            *_process.sh 운영 실행 스크립트 (start/stop/list/version)
+├─ Query/    운영 SQL 모음, DB 전체 덤프 7개 (dump/)
 ├─ note/     누리2 SDK 압축본/문서, 참고 SQL
-└─ libs/     로컬 jar (flatDir 저장소)
+├─ libs/     로컬 jar (nuri2 등 Maven에 없는 라이브러리)
+└─ docs/     이 문서와 검증 스크립트(verify/) — 이번 작업에서 추가
 ```
 
-## 3. 동작 흐름 (Daemon)
+## 3. 동작 흐름
 
-1. 기동 옵션 `-DDAEMON_TYPE` → 기관(KMA / 이름에 MCEE 포함 시 MCEE) 및 레이더 구분(1 대형 / 2 소형 / 3 공항) 결정
-2. 외부 yml `radar.config.paths.<TYPE>.cron-expression` 주기로 실행 (기본값 `30 * * * * *`)
-3. **StepOne**: DB에서 관측소 목록 조회 → 관측소별 스레드(0.5초 간격 기동)가 SFTP로 해당 시각 파일·크기 확인 → 수신 이력 기록
-4. **StepTwo**: 경고 기준(receive_condition_criteria)에 따라 장애/복구 판정 → 필요 시 SmsService로 문자 큐 적재
+### 3.1 Daemon (감시 프로그램)
+
+1. **시작**: 운영 스크립트가 `java -DDAEMON_TYPE=KMA_RDR -jar RDR.jar`처럼 실행한다. `DAEMON_TYPE`으로 기관(KMA / 이름에 MCEE가 있으면 MCEE)과 레이더 구분(1 대형 / 2 소형 / 3 공항)이 정해진다
+2. **주기 실행**: 외부 yml의 `radar.config.paths.<TYPE>.cron-expression` 주기(기본값 `30 * * * * *` = 매분 30초)마다 아래를 반복한다
+3. **StepOne — 확인**: DB에서 감시할 관측소 목록을 읽고, 관측소마다 스레드를 0.5초 간격으로 띄워 SFTP로 접속한다. 그 시각의 자료 파일이 있는지, 크기가 기준 범위인지 확인해 `receive_data`에 기록한다
+4. **StepTwo — 판정**: 경고 기준(`receive_condition_criteria`)과 비교해 상태를 정한다. 예: 자료가 연속 N회 미수신이면 `WARN`(경고), 다시 정상이 N회 이어지면 `RETR`(복구), 전 지점이 미수신이면 `TOTA`(네트워크 장애). 결과는 `receive_condition`에 저장
+5. **문자**: 상태가 바뀌었고 문자 발송 스위치(`STOPSMS` 행의 `value=1`)가 켜져 있으면, 문자 대상 그룹의 수신자에게 보낼 문자를 `nuri2.NURI2_NRMSG_DATA`에 넣는다. 누리2 에이전트가 이 테이블을 읽어 실제 문자를 보낸다
 
 외부 설정 파일 탐색 순서: `/home/watcher/deamon/config/application.yml` → `../config/` → `./config/` → `./Daemon/config/`
+
+### 3.2 radar-web (관리 웹)
+
+1. 브라우저로 접속하면 **로그인 화면**이 먼저 나온다 (C 단계에서 복구한 동작. 작업 전에는 로그인 없이 전부 열렸다)
+2. 로그인하면 **메인 화면**에 관측소 지도와 상태가 나온다. 메인·관측소 화면은 30초마다 자동으로 새로 고친다
+3. 관리 메뉴에서 경고 기준, 수신 설정, 관측소 운영 상태(RUN/MRO), 문자 대상 그룹·수신자, 문자 템플릿, 문자 발송 ON/OFF를 바꾼다. 저장 버튼은 Ajax로 `PostController`에 요청한다 (CSRF 토큰 자동 첨부)
+4. **사용자 관리**(`/users/**`)는 ADMIN 권한 회원만 쓸 수 있다 (K 단계). USER가 열면 403 화면이 나온다
+
+### 3.3 주요 DB 테이블 (`watchdog` 스키마)
+
+설명은 덤프 파일에 적힌 테이블 설명(COMMENT)과 소스 사용처를 기준으로 했다.
+
+| 테이블 | 하는 일 | 주로 쓰는 곳 |
+|---|---|---|
+| `station_rdr` | 레이더 지점 정보 (지점 코드, 이름, 구분 `gubun`, 기관 `agency_cd`, 지도 위치 `style_attr`) | 메인 화면 지도·메뉴, Daemon 관측소 목록 |
+| `station_status` | 지점의 현재 운영 상태 (RUN 정상 운영 / MRO 점검) | 관리 > 지점 운영 상태 |
+| `receive_data` | 자료 수신 확인 기록 (몇 시 자료가 왔는지, 크기) — 가장 큰 테이블 | Daemon StepOne 기록, 관측소·통계 화면 |
+| `receive_condition` | 지점·자료 종류별 현재 수신 상태 (정상/경고/복구 등) | Daemon StepTwo 판정 결과, 메인 화면 |
+| `receive_condition_criteria` | 경고 기준 (연속 몇 회면 경고·복구인지) | Daemon 판정, 관리 > 경고 기준 설정 |
+| `receive_setting` | 자료 수신 처리 설정 | 관측소 화면 (`StationController`) |
+| `sms_target_group` / `sms_target_member` | 문자 수신자 그룹 / 수신자 | 관리 > 문자 대상 |
+| `sms_target_group_link` / `sms_target_member_link` | 어느 지점 장애를 어느 그룹에 보낼지 / 수신자가 어느 그룹에 속하는지 | Daemon 문자 발송 대상 조회 |
+| `sms_send_pattern` | 문자 메시지 형식 | 문자 내용 만들기 |
+| `sms_send_onoff` | 문자 발송 스위치 (`STOPSMS`, `value=1`이면 발송) | Daemon, 관리 > 문자 발송 ON/OFF |
+| `watchdog_member` | 웹 회원 (아이디, BCrypt 비밀번호, 권한 `roles`) | 로그인, 사용자 관리 |
+| `menu` | 웹 메뉴 목록 | 화면 상단 메뉴 |
+
+문자 발송용 `nuri2.NURI2_NRMSG_DATA`(문자 큐)에 행이 들어가면 누리2 에이전트가 실제로 문자를 보낸다. **개발·테스트 DB에서는 누리2 에이전트를 연결하지 않는다** (8.1).
 
 ## 4. 발견된 문제점
 
 ### 4.1 보안 (긴급)
 
+> 등급: 🔴 긴급(아직 남음) / 🟡 주의(남음) / ✅ 해결. S2~S4는 코드 수정이 아니라 **비밀번호 교체**가 필요한 문제라 개발 작업만으로는 해결되지 않는다.
+
 | # | 등급 | 내용 | 위치 |
 |---|---|---|---|
-| S1 | ✅ 코드 해결 (`b75f60c`, 런타임 검증 대기) | 웹 인증 사실상 비활성화: `/**` 및 `anyRequest()` 모두 `permitAll()`, `authenticated()` 전부 주석. 인터셉터 등록도 주석. 비로그인으로 회원 생성/삭제·문자 발송·설정 변경 가능. CSRF도 disable | `radar-web/.../config/SecurityConfig.java`, `WebMvcConfig.java:16` |
+| S1 | ✅ 해결 (`b75f60c`, 자동 테스트 + 로컬 DB 화면 확인 완료) | 웹 인증 사실상 비활성화: `/**` 및 `anyRequest()` 모두 `permitAll()`, `authenticated()` 전부 주석. 인터셉터 등록도 주석. 비로그인으로 회원 생성/삭제·문자 발송·설정 변경 가능. CSRF도 disable | `radar-web/.../config/SecurityConfig.java`, `WebMvcConfig.java:16` |
 | S2 | 🔴 | 관측소 root 계정 등 SFTP 비밀번호가 평문으로 Git 커밋됨 (파일당 약 35건), 동일 비밀번호 다수 관측소 공유 | `config/application*.yml` (4개) |
 | S3 | 🔴 | DB 접속 비밀번호 평문 Git 커밋 | `common-data/src/main/resources/common-data.yml`, `Query/DB 접속 정보.sql`, `note/그룹 감시자료 설정.sql` 1~2행(2026-11-19 추가 발견) |
 | S4 | 🔴 | GitLab 복구 코드, DB 전체 덤프 Git 커밋 | `note/gitlab-recovery-codes.txt`, `Query/dump/` |
@@ -291,23 +451,25 @@ radar_new/
 
 ## 5. 의존성 취약점 점검 요약 (2026-11-19, OSV.dev 기준)
 
-- 방법: Spring Boot 2.7.12 BOM 관리 버전 기준으로 OSV.dev 조회 (로컬에 Java/Gradle 없어 실제 의존성 트리 미확인)
+- 방법: Spring Boot 2.7.12 BOM 관리 버전 기준으로 OSV.dev 조회 (점검 당시 개발 PC에 Java/Gradle이 없어 실제 의존성 트리는 확인하지 못함)
+- **이 표는 작업 전 점검 결과**다. 오른쪽 끝 열에 작업 후 실제로 들어간 버전을 적었다 (`./gradlew :radar-web:dependencies`, `:Daemon:dependencies`로 확인). **작업 후 버전으로 CVE를 다시 조회하지는 않았다** → 9.6 #14
 - 결과: 고유 CVE 약 123건 (Critical 16 / High 45 / Moderate 52 / Low 11)
 
-| 라이브러리 (현재) | 주요 이슈 | 조치 버전 |
-|---|---|---|
-| Tomcat embed 9.0.75 | 42건 (Critical 9, CVE-2025-24813 RCE 등) | 9.0.121 |
-| Thymeleaf 3.0.15 | Critical 3건 (표현식 샌드박스 우회) | 3.1.5 |
-| Spring Security 5.7.8 / crypto 5.7.12 | CVE-2023-34034 등 | 5.7.16+ (OSS 지원 종료) |
-| Spring Framework 5.3.27 | 30건+, 다수 6.2.x에서만 수정 | Java 17 + Boot 3.x 필요 |
-| SnakeYAML 1.30 | CVE-2022-1471 (RCE) | 2.x |
-| Jackson 2.13.5 | 14건 | 2.18.11 |
-| mysql-connector-j 8.0.33 | CVE-2023-22102 | 9.2.0 |
-| org.json 20230618 | CVE-2023-5072 | 20260719 |
-| Log4j2 2.17.2 | Moderate 5건 | 2.25.5 |
-| commons-lang3 3.14.0 | CVE-2025-48924 | 3.18.0 |
+| 라이브러리 (작업 전) | 주요 이슈 | 조치 버전 | 작업 후 적용 버전 |
+|---|---|---|---|
+| Tomcat embed 9.0.75 | 42건 (Critical 9, CVE-2025-24813 RCE 등) | 9.0.121 | 11.0.27 |
+| Thymeleaf 3.0.15 | Critical 3건 (표현식 샌드박스 우회) | 3.1.5 | 3.1.5 |
+| Spring Security 5.7.8 / crypto 5.7.12 | CVE-2023-34034 등 | 5.7.16+ (OSS 지원 종료) | 7.1.2 |
+| Spring Framework 5.3.27 | 30건+, 다수 6.2.x에서만 수정 | Java 17 + Boot 3.x 필요 | 7.0.10 |
+| SnakeYAML 1.30 | CVE-2022-1471 (RCE) | 2.x | 2.6 |
+| Jackson 2.13.5 | 14건 | 2.18.11 | 3.1.7 (Spring용) + 2.21.7 (Log4j2 YAML용) |
+| mysql-connector-j 8.0.33 | CVE-2023-22102 | 9.2.0 | 9.7.0 |
+| org.json 20230618 | CVE-2023-5072 | 20260719 | 20260814 |
+| Log4j2 2.17.2 | Moderate 5건 | 2.25.5 | 2.25.5 |
+| commons-lang3 3.14.0 | CVE-2025-48924 | 3.18.0 | 3.20.0 |
 
-- 근본 해결: **Java 17/21 + Spring Boot 3.5.x 이상** 이전 (javax → jakarta 전환 포함)
+- 근본 해결(점검 당시 결론): **Java 17/21 + Spring Boot 3.5.x 이상** 이전 (javax → jakarta 전환 포함) → 실제로는 Java 25 + Spring Boot 4.1.2로 진행
+- 작업 후에도 남은 오래된 라이브러리: `json-simple` 1.1.1 (2012년 이후 유지보수 중단, 사용처 1곳 — 6.3-G)
 - Java SE 11 런타임: 11.0.33+10 미만 버전은 2026년 10월 CPU 및 후속 Security Alert(CVE-2026-91403, CVE-2026-114820) 대상
 - 미점검: `nuri2.jar`, `nuri2_ojdbc23.jar` (비공개 라이브러리)
 
@@ -325,7 +487,9 @@ radar_new/
 
 ### 6.2 목표 버전
 
-| 항목 | 현재 | 목표 | 비고 |
+> 작업 전 계획 단계의 표다. 실제 적용된 버전은 1장 "기술 스택 — 작업 전과 후"와 6.8-A에 있다.
+
+| 항목 | 작업 전 | 목표 | 비고 |
 |---|---|---|---|
 | JDK | OpenJDK 11 | **OpenJDK 25.0.5.1 이상 (LTS)** | 27은 LTS가 아닌 단기 버전. 브랜치명 `ver_java25`와도 일치 |
 | Gradle | 버전 미확인 (wrapper jar 없음, gradlew.bat만 있음) | **9.x** (현재 9.9.1) | Java 25를 실행하려면 Gradle 9.1 이상 필요 |
@@ -422,7 +586,7 @@ radar_new/
 | Gradle 설정 | 4개 + wrapper | 중 (Gradle 9와 Boot 4 문법) |
 | javax → jakarta | 약 56개 | 하 (일괄 치환) |
 | SecurityConfig와 인증 | 약 5개 | 중 (S1 해결 포함) |
-| JPA 네이티브 쿼리 검증 | Repository 22개 | 중 (실행 테스트 필요) |
+| JPA 네이티브 쿼리 검증 | Repository 24개 | 중 (실행 테스트 필요) |
 | 템플릿 (CSRF, sec 네임스페이스) | 약 30개 확인 | 하~중 |
 | 운영 스크립트 | 7개 | 하 |
 
@@ -507,7 +671,7 @@ commit: `ade302c`
 - `jakarta.transaction.Transactional`은 기존 동작을 그대로 유지하려고 1:1로 바꿨음. Spring `@Transactional`로 통일할지는 이후 검토
 - 남은 경고: `SftpUtil.java:32`의 `Session.setPassword(String)` deprecation (mwiede jsch). 동작에는 영향 없음
 
-#### C. Spring Security 7 및 S1 인증 복구 (2026-11-19 코드 완료, 런타임 검증 대기)
+#### C. Spring Security 7 및 S1 인증 복구 (2026-11-19 완료 — 자동 테스트 + 로컬 DB 화면 확인)
 
 | commit | 파일 | 변경 |
 |---|---|---|
@@ -564,14 +728,14 @@ commit: `ade302c`
   2. 14개 전부 `UsernameNotFoundException` → 테스트 코드 문제: Mockito에서 "아무 아이디 → 예외" 스텁을 먼저 등록한 뒤 "tester → 계정" 스텁을 등록하는 순간 첫 스텁이 실행됨. 인자 값으로 분기하는 스텁 하나로 변경
   3. C-03, C-05 실패: 실제 이동 주소는 `/login`인데 비교 패턴 `**/login`이 맨 앞 `/`와 맞지 않음. 정확한 주소 비교로 변경 (**보안 동작은 처음부터 정상이었음**)
 - **대조군 확인 (테스트가 실제로 문제를 잡아내는지)**: `SecurityConfig`를 예전 상태(전체 허용 `anyRequest().permitAll()` + CSRF 끄기 `csrf.disable()`)로 **임시 변경**하고 테스트를 돌림 → **7개 실패**(C-01, C-03, C-04, C-05, C-06, C-12, C-14). 즉 누군가 보안 설정을 다시 풀면 테스트가 실패해서 알려 준다. 확인 후 원래대로 복구했고 `git status`로 변경 없음을 확인함
-- **자동 테스트로 확인할 수 없는 것** → 8.2에서 실제 화면으로 확인 필요
+- **자동 테스트로 확인할 수 없는 것** → 8.2에서 실제 화면으로 확인 필요 (2026-11-19 로컬 DB에서 로그인·저장·조회 확인 완료, 7.2.20~7.2.24. 세션 만료·검색 폼은 9.6)
   - 각 화면의 Ajax(`fnCall`) 저장/삭제가 `common.js`를 통해 토큰을 제대로 보내는지 (브라우저의 JavaScript 동작)
   - 검색 폼(통계, 이력, 문자 결과)이 토큰과 함께 제출되는지
   - 실제 DB 회원 계정으로 로그인
   - 세션 만료 후 Ajax 요청 시 화면 동작 (로그인 페이지 HTML이 돌아와 오류처럼 보일 수 있음)
 
 **참고 / 후속 검토**
-- 권한(Role) 구분은 아직 없음. 로그인한 사용자는 모두 회원 관리(`/users/**`) 등 전체 기능 사용 가능. ADMIN 전용으로 제한할지는 검토 필요 (권한 값: `USER`/`ADMIN`, `ROLE_` 접두어 없음 → `hasAuthority('ADMIN')` 형태로 써야 함)
+- (작성 당시) 권한(Role) 구분은 아직 없음. 로그인한 사용자는 모두 회원 관리(`/users/**`) 등 전체 기능 사용 가능 → **이후 K 단계(`8e233cc`)에서 사용자 관리를 ADMIN 전용으로 적용함** (6.8-K)
 - `LoginController`의 `@PostMapping("/logout")`은 Security LogoutFilter가 먼저 처리하므로 호출되지 않음 (정리 대상)
 - 로그인 실패 메시지: `AuthenticationFailure`는 메시지를 세션에 저장하는데 `LoginController`는 request attribute를 읽음 → 메시지가 보이지 않는 기존 버그 (변경 없음)
 - 템플릿에 `xmlns:sec` 선언은 있지만 실제 `sec:` 속성 사용은 0건 → extras를 추가해도 화면 변화 없음
@@ -774,37 +938,215 @@ commit: `ade302c`
 
 ## 7. 작업 이력
 
-| 일자 | 작업 | 결과 / 비고 |
-|---|---|---|
-| 2026-11-19 | Java 버전 확인 | 로컬(WSL)에 JDK 미설치. 프로젝트는 Java 11 타깃. Java 11 취약 버전 조사 |
-| 2026-11-19 | 의존성 CVE 전체 점검 | 약 123건 확인 (5장 참조). 수정 미적용 |
-| 2026-11-19 | 소스 구조 파악 | 2~4장 작성. 보안 이슈 S1~S7 식별 |
-| 2026-11-19 | 분석 문서 생성 | 본 파일(`docs/project-analysis.md`) 생성 |
-| 2026-11-19 | OpenJDK 업그레이드 계획 수립 | CVE-2026-114938(Java4Shell) 조사. 목표 JDK 25.0.5.1과 Spring Boot 4.1.x. 소스 수정 범위 정리 (6장). 수정은 아직 적용하지 않음 |
-| 2026-11-19 | 문서 보완 | 진행 체크리스트(6.6)와 참고 자료 링크(6.7) 추가 |
-| 2026-11-19 | 개발 PC OpenJDK 25 설치 | Ubuntu 26.04 보안 저장소의 `openjdk-25-jdk-headless 25.0.5.1+2-1~26.04.1` 설치 (패키지 변경 이력에 CVE-2026-114938 포함 확인). `java`/`javac` 25.0.5.1 동작 확인. JAVA_HOME 자동 설정은 권한 정책으로 보류(사용자 직접 설정 안내). 개발 PC CPU가 AVX-512 VBMI를 지원해 Java4Shell 영향 대상이었음 |
-| 2026-11-19 | Gradle 9.9.1 설치와 wrapper 생성 | 배포본 SHA-256 검증 후 `~/opt/gradle-9.9.1`에 설치. 빈 임시 프로젝트에서 wrapper 생성 후 프로젝트에 복사 (`gradlew.bat` 교체, `gradlew`·`gradle/wrapper/` 신규). `./gradlew --version` 확인 결과 Gradle 9.9.1 / JVM 25.0.5.1. 현재 build.gradle로 `./gradlew help`를 실행하면 **실패(예상한 결과)**: `build.gradle:16`에서 `org/gradle/api/plugins/JavaPluginConvention` 오류. Spring Boot 2.7 플러그인이 Gradle 9에서 삭제된 API를 사용하기 때문 → 6.3-A 빌드 설정 전환 필요 |
-| 2026-11-19 | **6.3-A 빌드 설정 전환 (Spring Boot 4.1.2)** | 6.8-A 변경 내역 참조. `./gradlew help` 성공, 3개 모듈 runtimeClasspath 다운로드 실패 0건. `compileJava`는 예상대로 실패: `package javax.persistence does not exist` 등 (common-data에서 javac 오류 출력 한도 200건 도달) → 다음 단계 B(javax → jakarta) |
-| 2026-11-19 | A 단계와 문서 Git commit | `.gitignore`에서 `gradle/`, `gradlew` 규칙 제거 후 wrapper 포함 commit `ade302c`, 문서 commit `3f363cf` (브랜치 `ver_java25`) |
-| 2026-11-19 | **6.3-B javax → jakarta 전환** | 모듈별 commit: common-data `da91928`, Daemon `a0543da`, radar-web `a3b58b1`. common-data와 Daemon 컴파일 성공. 그 외 Boot 4/Spring 6 API 변경 2건(`@EntityScan` 패키지, Trigger 반환형) 함께 수정. radar-web은 SecurityConfig(C 단계)만 남음. 상세는 6.8-B |
-| 2026-11-19 | **6.3-C Security 7 재작성 + S1 인증 복구** | commit `b75f60c`(SecurityConfig), `b7e0a7d`(화면 CSRF 토큰 처리), `47d1b27`(Daemon bootJar targetJavaVersion 보완). 전체 `assemble`과 Daemon 5종 jar 빌드 성공, 운영 jar에서 devtools 제외 확인. **런타임 검증은 DB가 필요해 미완료** → 6.8-C 검증 절차 |
-| 2026-11-19 | **6.3-E 설정 파일 정리** | commit `1f1ae08`. `use-legacy-processing` 제거(2곳), Daemon의 `server.servlet.encoding.*`·devtools 제거, `common-data.yml`의 효과 없는 jpa 설정 주석 표시. **기동 테스트로 실제 오류 1건 발견·수정**: Daemon `spring.config.import`의 `classpath*:` 와일드카드 때문에 Boot 4에서 기동 실패하던 문제. 검증: T1 정적 검사(Daemon 문제 키 0건), T2 설정 로딩 53/53 PASS, T3 가짜 DB 기동 테스트 통과. 테스트 스크립트는 `docs/verify/`에 보관 |
-| 2026-11-19 | **6.3-F 운영 스크립트 JDK 25 적용** | commit `83e3e1a`. 6개 스크립트에 `JAVA_HOME` 기본값, `$JAVA_BIN` 실행, `check_java`(25.0.5.1 이상 검사) 추가. **Web 스크립트에 함수 정의가 빠진 채 commit됨**(테스트 결과 확인 전에 commit이 같은 명령에서 실행) → `01cf88b`에서 수정. 최종: 6개 모두 F1~F3(차단)·F6(정상 기동, DAEMON_TYPE 전달) 통과. 기존 `stop` 로직은 WSL에서 동작하지 않음(PPID 조건, 서버에서 확인 필요) |
-| 2026-11-19 | **보안 S5 해결** | commit `3ad5473`. SFTP 비밀번호 로그 기록 → `******`. 다른 비밀번호 출력 코드 없음 확인. 기존 운영 로그 정리·비밀번호 교체는 서버 작업으로 남음 |
-| 2026-11-19 | **C 단계 자동 테스트 추가** | commit `e5d048f`. `@WebMvcTest` 기반 14개 시나리오, DB 없이 14/14 통과. 대조군(보안 설정을 예전처럼 풀었을 때) 7개 실패 확인 후 원복. `./gradlew build` 전체(컴파일+테스트+jar 6종) 처음으로 성공 |
-| 2026-11-19 | `.gitattributes` 추가 | commit `7bb787f`. `gradlew.bat` CRLF, `*.sh`·`gradlew` LF, `*.jar` binary. renormalize 결과 변경 파일 0개 확인 |
-| 2026-11-19 | jsch 알고리즘 호환성 점검 | 0.1.55와 2.28.8의 기본 알고리즘 비교: `ssh-rsa`(SHA-1), `ssh-dss`, sha1 키 교환, CBC 암호화 등이 기본값에서 빠짐 → 오래된 관측소 서버 접속 실패 가능성. 서버 확인 절차와 대응 코드를 8.4에 정리. 보안 이슈 S8(호스트 키 검증 생략) 추가 |
-| 2026-11-19 | **주석 구분 표시와 기존 주석 복원** | commit `ab480ac`. 사용자 요청: "파일 수정 시 내가 작성한 주석과 구분". Claude 주석 전체에 `[Claude 2026-11-19]` 표시(여러 줄은 시작/끝 표시, 새 파일은 머리말). 작업 중 바뀌거나 지워졌던 기존 주석을 원문 복원(주석 처리 import의 javax 3줄, SecurityConfig 주석 약 15줄은 "기존 코드 원문 보존" 블록으로, build.gradle 계열 6곳, 운영 스크립트 6개의 `#JAVA_HOME` 줄, login.html 1줄). 실행 코드 변경 0건(diff 분석). 재검증: build·테스트 14/14, 스크립트 6개, ConfigLoadTest 53/53, check_props 문제 0, 사라진 기존 주석 0건 |
-| 2026-11-19 | **검토자 검증 가이드(9장)·검증 스크립트 추가** | 사용자 요청: "내가 어떻게 확인하고 검증해야 하는지". 단계별 diff 검토 포인트·실행 명령·기대 결과·기록표 작성. 수작업 검증을 스크립트로 정리: `docs/verify/test_process_scripts.sh`(운영 스크립트 6개 × 7항목, 결과 FAIL 0), `JschDefaults.java`, `check_comments.py`(표시 없는 추가 주석 1건=기존 주석 복원, 사라진 기존 주석 0건). 9장의 모든 명령을 문서에 적힌 그대로 실행해 기대 결과와 일치 확인 (이 환경에 `unzip`이 없어 대체 명령도 확인) |
-| 2026-11-19 | **주석 표시 형식 변경** | commit `f277315`. 사용자 요청: "명확하게 내가 아닌 것 확인할 수 있게. 예: `/* Claude 주석 */`". 모든 Claude 주석을 `/* Claude 주석 (2026-11-19): ... */`(yml·sh는 `# /* ... */`, HTML은 `<!-- /* ... */ -->`)로 변환, `check_comments.py`도 새 표시 인식으로 수정. 검증: build·테스트 14/14, 스크립트 FAIL 0, 사라진 기존 주석 0건. **절차 실수**: 코드 변경 여부 검사와 commit을 한 명령으로 실행해, 검사가 "코드 변경 파일 3개"를 보고했는데도 commit됨. 직후 확인 결과 2개(build.gradle 계열)는 여러 줄 블록 주석의 둘째 줄을 검사 로직이 코드로 오인한 것, 1개(check_comments.py)는 의도한 검사 로직 수정으로 실제 문제는 없었음. 이후 검사와 commit을 분리 |
-| 2026-11-19 | **K. 사용자 관리 ADMIN 전용 권한** | commit `8e233cc`. `/users/**` → `hasAuthority("ADMIN")`, `error/403.html` 추가. 발견: 회원 생성 화면이 권한 값을 브라우저에서 보내 USER도 관리자 계정을 만들 수 있었음 → 이번 변경으로 차단. 덤프 기준 ADMIN 1명·USER 1명 확인(개수만). 테스트 23/23(권한 9개 추가). K-09 첫 시도 실패(테스트 환경에 오류 화면 연결 Bean 없음) → 템플릿 직접 렌더링으로 변경. 대조군: ADMIN 규칙 제거 시 4개 실패 확인 후 원복 |
-| 2026-11-19 | **로컬 DB 웹 테스트 ① 접속·기동·비로그인 확인** | 환경: Windows MySQL 8.0.41(포트 3308, 스키마 watchdog/nuri/nuri2). WSL의 `localhost`는 Windows가 아니라 접속 불가, Windows 호스트 주소로는 `root`가 localhost 전용이라 거부 → 사용자 허용 후 WSL 대역 전용 테스트 계정(3개 스키마 권한, 사용자가 먼저 만들어 둔 계정의 비밀번호를 사용자 허용하에 재설정) 사용. 접속 정보는 저장소 밖 `~/.radar-localdb.env`(권한 600)에 두고 환경 변수로 주입 — 사용자가 수정한 `common-data.yml`(로컬 비밀번호 포함)은 commit하지 않음. 사전 점검(조회만): 회원 7명(ADMIN 1, USER 6, roles NULL 0), 비밀번호 7명 모두 BCrypt, STOPSMS=1. **웹 서버 기동 성공**(Java 25.0.5.1, Hikari·Hibernate 초기화, ERROR/WARN 0). 비로그인 HTTP 확인 R-01~R-09 기대대로(로그인 화면+CSRF, 보호 화면·/users 302→login, 토큰 없는 POST 403, 토큰 있어도 비로그인 302, 정적 200, 없는 아이디 로그인 → error=true(실제 JPA 회원 조회 실행), 토큰 없는 로그인 403). Windows 브라우저에서 `http://localhost:8080` 접속 확인. 로그인 후 확인은 테스트 계정 결정 대기 |
-| 2026-11-19 | **로컬 DB 웹 테스트 ② 로그인 후 확인·로컬 DB 구조 맞추기** | 사용자가 브라우저로 `test` 계정 로그인(13:05) → **로그인 성공**(Security 7 + 실제 DB 회원 조회 + BCrypt 확인). 직후 메인 화면 500: `Unknown column 'sd1_0.agency_cd'` (`MenuService.getStationList` ← `MenuController.main`). 원인: 로컬 DB가 기후부(MCEE) 기능 이전 구조 — 엔티티 대비 컬럼 8개 없음(`station_rdr` agency_cd·style_attr·status, `receive_condition`·`station_status`·`sms_target_group_link` agency_cd, `sms_target_group` agency_cd·gubun). 업그레이드 전 코드(`b250e18`)도 같은 컬럼을 쓰므로 **Java 25/Boot 4 문제 아님**. 처음에 "로컬 DB = 2026-07-16 덤프"로 잘못 추정했으나, 덤프에는 8개 컬럼과 기후부 데이터가 이미 있음을 확인(덤프 구조 ↔ 엔티티 누락 0건) → 로컬 DB는 덤프보다 이전 상태. 사용자 허용하에 로컬 DB 수정(접속 주소가 로컬 DB가 아니면 중단하는 실행기 사용): ① 컬럼 8개 추가(저장소 `Query/기후부 등록 query.sql`, `note/그룹 감시자료 설정.sql`의 ALTER와 같은 정의) ② 기존 행 agency_cd='KMA', 문자 그룹 gubun(지점 구분값, 묶음 그룹 0), 지도 좌표 style_attr ③ 사용자 요청으로 덤프에서 **기상청B(MCEE) 18개 지점**(station_rdr 18·station_status 10·receive_condition 18·sms_target_group 10·link 3행)과 **기상청A 제주공항 JIA(gubun 3, TDWR)**(각 1행, link 2행) 추가 — 모두 rollback 시험 실행으로 건수 확인 후 한 트랜잭션으로 반영. 회원·수신 기록·문자 수신자는 개인정보/운영 기록이라 가져오지 않음. 전부 `docs/verify/localdb_schema_sync.sql`로 정리(INSERT IGNORE, 다시 실행해도 0건 — 재실행으로 확인, 되돌리기 SQL 포함). 수정 후 엔티티 ↔ 로컬 DB 누락 컬럼 0건. 로그: 13:05 오류 1건 이후 **ERROR/Exception 0건**, 메인·관측소(KSN) 화면 30초 자동 갱신 정상. 수신 표가 빈 것은 로컬 DB에 오늘 수신 기록이 없어서(Daemon 미실행)이며 정상. WARN: Thymeleaf `Deprecated unwrapped fragment expression`(`layout/default_layout` 10·17행, 화면마다 2건) — 동작 영향 없음, 다음 Thymeleaf에서 제거 예정이라 `~{...}` 형식으로 정리 권장(미적용). 보안 발견: `note/그룹 감시자료 설정.sql` 1~2행에 DB root 비밀번호 평문(Git 추적 중) → S3에 추가 |
-| 2026-11-19 | **Thymeleaf fragment 표현식 경고 정리** | 로컬 DB 웹 테스트 로그의 WARN `Deprecated unwrapped fragment expression`(화면마다 2건) 해소. 해당 위치는 `layout/default_layout.html` 10·17행 두 곳뿐(전체 템플릿 검색으로 확인) → `th:replace="layout/config :: configFragment"` → `"~{layout/config :: configFragment}"`, header도 같은 방식. Thymeleaf 3.1 권장 형식이며 동작은 같음. 기존 📌 주석 유지, 바로 아래 Claude 주석 추가. 확인: `./gradlew build` 성공(radar-web 테스트 23/23), 주석 검사 사라진 기존 주석 0건, 새 jar에 수정 반영 확인 후 웹 서버 재시작(10.0초, ERROR 0). 직접 확인: 로그인 후 아무 화면이나 열고 서버 로그에서 `Deprecated unwrapped` 검색 → 0건이면 통과 |
-| 2026-11-19 | **로컬 DB 웹 테스트 ③ fragment 경고 확인·관리자 권한 확인** | fragment 수정(`90118a5`) 반영 서버에서 사용자가 다시 로그인 후 메인·수신 기준·통계 화면 조회(13:23~13:28) → 로그에 `Deprecated unwrapped` **0건**(수정 전 화면마다 2건), ERROR/Exception 0건(WARN은 기동 시 `open-in-view` 1건뿐). **관리자 권한(K, `/users/**` ADMIN 전용)은 사용자가 브라우저에서 직접 확인 완료**(13:28~13:55, 같은 시간 서버 로그 ERROR/Exception 0건). 403 거부는 Spring Security가 기본으로 로그를 남기지 않으므로 로그로는 따로 확인되지 않음. 남은 화면 확인: 저장 기능의 CSRF 토큰 전달(문자 발송 제외) |
-| 2026-11-19 | **로컬 DB 웹 테스트 ④ 저장 기능(CSRF) 확인** | **사용자가 브라우저에서 저장 기능 확인 완료**(문자 발송 제외). 서버 로그(재시작 13:23 ~ 13:58): ERROR/Exception 0건, fragment 경고 0건, CSRF 거부(403)로 저장이 막힌 흔적 없음. 저장 처리는 애플리케이션이 로그를 남기지 않아 로그로는 건별 확인 불가 → DB 조회로 보조 확인: `station_status` 점검(MRO) 지점 6곳 중 KSN·MIL·YIT는 덤프에 없는 값(로컬에서 저장된 것으로 보임, 이전 로컬 값은 기록이 없어 단정하지 않음). 문자 큐 `nuri2.NURI2_NRMSG_DATA` 1526행 그대로(문자 발송 없음), STOPSMS=1 변동 없음. 로그인 실패 6회(관리자 확인 중, 13:51 이전) — 실패 처리 정상 |
-| 2026-11-19 | **검토 결과 기록표(9.5) 정리, 남은 테스트 목록(9.6) 작성** | 9.5를 채우기 위해 DB 없이 가능한 확인을 다시 실행: 9.3.1 의존성 버전, 9.3.2 javax 0건, 9.3.4 check_props·ConfigLoadTest 53/0·기동 테스트, 9.3.5 스크립트 FAIL 0, 9.3.6, 9.3.7, 9.3.8 모두 기대대로. 빌드·테스트(23/23)·주석 검사는 같은 날 `90118a5` 기준 결과 사용, 대조군(9.3.3-③)은 앞선 실행 결과 사용. 화면 확인은 사용자 확인 결과로 기록(확인자 구분). 9.3.6 검사 명령 보완: Claude 주석 줄(옛 코드 원문 포함)이 함께 잡혀 2줄이 나오던 것 → `grep -v "Claude 주석"` 추가. 6.6 체크리스트의 C·K 화면 확인 완료 처리. 9.6: 로컬에서 할 수 있는 7개(로그아웃, 세션 만료, 나머지 화면, 검색 폼, 문자 발송 화면, Daemon 테스트 모드, open-in-view)와 운영에서 할 6개 정리 |
-| 2026-11-19 | 문서 보강 | 처음 보는 사람을 위한 0장(현재 상태, 용어, 환경 준비, 빌드·테스트 방법, 자주 나는 오류, commit 목록)과 8장(DB·서버가 필요한 남은 작업 따라하기) 추가. 6.8-C/F/S5/G/J 상세 기록 |
+> 7.1은 한 줄 요약, 7.2는 같은 순서의 상세 기록이다. 새 작업은 두 곳에 모두 추가한다.
+> 모든 작업은 2026-11-19에 진행했다. 실패와 실수도 그대로 적었다 (같은 실수를 반복하지 않기 위해).
+
+### 7.1 요약 (진행 순서)
+
+| # | 작업 | 결과 | commit |
+|---|---|---|---|
+| 1 | 현재 Java 버전·취약점 확인 | 개발 PC에 JDK 없음, 프로젝트는 Java 11 | — |
+| 2 | 의존성 CVE 전체 점검 | 약 123건 발견 (5장) | — |
+| 3 | 소스 구조 파악, 분석 문서 작성 | 1~4장 작성, 보안 문제 S1~S7 발견 | `3f363cf` |
+| 4 | Java 25 업그레이드 계획 | 목표: JDK 25.0.5.1, Spring Boot 4.1.x (6장) | `3f363cf` |
+| 5 | 개발 PC에 OpenJDK 25 설치 | 25.0.5.1+2, Java4Shell 패치 포함 확인 | — |
+| 6 | Gradle 9.9.1 설치, wrapper 생성 | 성공. 기존 설정으로는 빌드 실패(예상대로) | `ade302c` |
+| 7 | A. 빌드 설정 전환 | 설정·다운로드 성공, 컴파일은 B 필요 | `ade302c` |
+| 8 | B. javax → jakarta | common-data·Daemon 컴파일 성공 | `da91928` `a0543da` `a3b58b1` |
+| 9 | C. 보안 설정 재작성 + 인증 복구(S1) | 전체 빌드 성공 | `b75f60c` `b7e0a7d` `47d1b27` |
+| 10 | E. 설정 파일 정리 | 기동 실패 오류 1건 발견·수정 | `1f1ae08` |
+| 11 | F. 운영 스크립트 JDK 25 적용 | 6개 모두 통과 (1차에 결함 → 수정) | `83e3e1a` `01cf88b` |
+| 12 | S5. 비밀번호 로그 기록 제거 | 해결 | `3ad5473` |
+| 13 | C 자동 테스트 14개 | 14/14 통과, 대조군 확인 | `e5d048f` |
+| 14 | `.gitattributes` 추가 | 줄바꿈 규칙 고정 | `7bb787f` |
+| 15 | jsch 알고리즘 호환성 점검 | 오래된 SSH 서버 접속 실패 가능성 발견, S8 추가 | — |
+| 16 | 문서 보강 (0장·8장) | 처음 보는 사람용 안내, 남은 작업 절차서 | `779cdc6` |
+| 17 | 주석 구분 표시, 기존 주석 복원 | 실행 코드 변경 0건 | `ab480ac` |
+| 18 | 검증 가이드(9장)·검증 스크립트 | 스크립트 3개 추가 | `1aa2ce5` |
+| 19 | 주석 표시 형식 변경 (`/* Claude 주석 */`) | 완료 (검사·commit 한 명령 실수) | `f277315` |
+| 20 | K. 사용자 관리 ADMIN 전용 | 테스트 23/23, 대조군 확인 | `8e233cc` `0f0b82e` |
+| 21 | 로컬 DB 웹 테스트 ① 접속·기동 | 실제 DB로 웹 서버 첫 기동 성공, 비로그인 보안 확인 | `0570f9d` |
+| 22 | 로컬 DB 웹 테스트 ② 로그인·DB 구조 맞추기 | 로그인 성공. 로컬 DB가 옛 구조여서 맞춤 | `440a9bf` |
+| 23 | Thymeleaf fragment 경고 정리 | 경고 0건 | `90118a5` |
+| 24 | 로컬 DB 웹 테스트 ③ 경고·관리자 권한 확인 | 통과 | `ffc5f5e` |
+| 25 | 로컬 DB 웹 테스트 ④ 저장 기능 확인 | 통과, 문자 발송 없음 확인 | `6434409` |
+| 26 | 검토 결과 기록표(9.5), 남은 테스트 목록(9.6) | 확인 명령 재실행, 모두 기대대로 | `b52705a` |
+| 27 | 문서 전면 보강 (처음 보는 사람 기준) | 0~3장·7장 다시 작성, 민감값 제거 | (이 commit) |
+
+### 7.2 상세 기록
+
+#### 7.2.1 현재 Java 버전 확인 (#1)
+- 개발 PC(WSL)에는 JDK가 설치되어 있지 않았다. 프로젝트 빌드 설정은 Java 11을 대상으로 했다
+- Java 11의 취약 버전을 조사했다 (5장 마지막, 6.1)
+
+#### 7.2.2 의존성 CVE 점검 (#2)
+- Spring Boot 2.7.12가 관리하는 라이브러리 버전을 기준으로 OSV.dev에서 조회했다
+- 고유 CVE 약 123건 (Critical 16 / High 45 / Moderate 52 / Low 11). 이때는 수정하지 않았다 (5장)
+
+#### 7.2.3 소스 구조 파악과 문서 작성 (#3, #4)
+- 2~4장(구조, 동작 흐름, 문제점)을 작성하고 보안 문제 S1~S7을 찾았다
+- Java4Shell(CVE-2026-114938)을 조사해 목표를 JDK 25.0.5.1 + Spring Boot 4.1.x로 정하고 소스 수정 범위를 정리했다 (6장). 진행 체크리스트(6.6)와 참고 자료(6.7)도 추가
+- 문서 commit: `3f363cf`
+
+#### 7.2.4 개발 PC에 OpenJDK 25 설치 (#5)
+- Ubuntu 26.04 보안 저장소의 `openjdk-25-jdk-headless 25.0.5.1+2-1~26.04.1`을 설치했다. 관리자 비밀번호가 필요해 사용자가 직접 터미널에서 실행했다
+- 패키지 변경 이력에 CVE-2026-114938 수정이 있는 것을 확인했다. `java`/`javac` 25.0.5.1 동작 확인
+- 개발 PC CPU가 AVX-512 VBMI를 지원해 Java4Shell 영향 대상이었다
+- `JAVA_HOME`을 `~/.bashrc`에 자동으로 넣는 것은 작업 환경의 권한 정책으로 보류했다 (사용자가 직접 설정, 0.5-③)
+
+#### 7.2.5 Gradle 9.9.1 설치와 wrapper 생성 (#6)
+- 배포본의 SHA-256을 검증하고 `~/opt/gradle-9.9.1`에 설치했다. 빈 임시 프로젝트에서 wrapper를 만든 뒤 프로젝트에 복사했다 (`gradlew.bat` 교체, `gradlew`·`gradle/wrapper/` 새로 추가)
+- `./gradlew --version` → Gradle 9.9.1 / JVM 25.0.5.1
+- 기존 `build.gradle`로 `./gradlew help`를 실행하면 **실패(예상한 결과)**: `org/gradle/api/plugins/JavaPluginConvention` 오류. Spring Boot 2.7 플러그인이 Gradle 9에서 삭제된 기능을 쓰기 때문 → A 단계 필요
+
+#### 7.2.6 A. 빌드 설정 전환 (#7, `ade302c`)
+- 변경 내용은 6.8-A. `./gradlew help` 성공, 3개 모듈 라이브러리 다운로드 실패 0건
+- 컴파일은 예상대로 실패: `package javax.persistence does not exist` 등 → 다음 단계 B
+- `.gitignore`에서 `gradle/`, `gradlew` 제외 규칙을 지우고 wrapper를 Git에 포함했다
+
+#### 7.2.7 B. javax → jakarta 전환 (#8)
+- 모듈별 commit: common-data `da91928`, Daemon `a0543da`, radar-web `a3b58b1`
+- common-data·Daemon 컴파일 성공. radar-web은 SecurityConfig(C 단계)만 남았다
+- 같이 고친 Boot 4/Spring 6 변경 2건: `@EntityScan` 패키지 위치, 스케줄러 Trigger 반환형 (6.8-B)
+
+#### 7.2.8 C. 보안 설정 재작성 + 인증 복구 (#9)
+- commit `b75f60c`(SecurityConfig), `b7e0a7d`(화면에서 CSRF 토큰 보내기), `47d1b27`(Daemon jar 생성 오류 보완)
+- 전체 `assemble`과 Daemon 5종 jar 빌드 성공. 운영 jar에 개발 도구(devtools)가 빠진 것 확인 (S6)
+- 이때는 DB가 없어 실제 화면 확인을 못 했다 → 자동 테스트(#13)와 로컬 DB 테스트(#21~#25)로 확인
+
+#### 7.2.9 E. 설정 파일 정리 (#10, `1f1ae08`)
+- 지운 것: `use-legacy-processing`(2곳), Daemon의 `server.servlet.encoding.*`·devtools 설정. `common-data.yml`의 효과 없는 jpa 설정에는 주석만 달았다
+- **기동 테스트로 실제 오류 1건 발견·수정**: Daemon의 `spring.config.import`에 쓴 `classpath*:` 때문에 Boot 4에서 Daemon이 아예 시작되지 않았다 → `classpath:`로 변경
+- 확인: T1 정적 검사(Daemon 문제 키 0건), T2 설정 로딩 53/53 통과, T3 가짜 DB 기동 테스트 통과. 검증 스크립트는 `docs/verify/`에 보관 (6.8-E)
+
+#### 7.2.10 F. 운영 스크립트 JDK 25 적용 (#11)
+- commit `83e3e1a`: 6개 스크립트에 `JAVA_HOME` 기본값, `$JAVA_BIN`으로 실행, `check_java`(25.0.5.1 이상인지 검사) 추가
+- **실수**: Web 스크립트에 함수 정의가 빠진 채 commit됐다. 테스트 결과를 확인하기 전에 commit을 같은 명령으로 실행했기 때문 → `01cf88b`에서 수정하고, 이후로는 테스트 확인 후 commit하도록 단계를 나눴다
+- 최종: 6개 모두 낮은 Java 차단(F1~F3), 정상 기동·`DAEMON_TYPE` 전달(F6) 통과
+- 기존 `stop` 로직은 WSL에서 동작하지 않는다 (부모 프로세스 ID 조건). 운영 서버에서 확인 필요 (6.8-F)
+
+#### 7.2.11 S5. 비밀번호 로그 기록 제거 (#12, `3ad5473`)
+- 관측소 SFTP 비밀번호를 로그에 쓰던 코드를 `******`로 바꿨다. 다른 곳에서 비밀번호를 출력하는 코드는 없었다
+- 운영 서버에 이미 쌓인 로그 정리와 비밀번호 교체는 서버 작업으로 남았다
+
+#### 7.2.12 C 단계 자동 테스트 (#13, `e5d048f`)
+- `@WebMvcTest`로 DB 없이 실행되는 보안 테스트 14개 → 14/14 통과
+- **대조군**: 보안 설정을 예전처럼 풀면 7개가 실패하는 것을 확인하고 원복 → 테스트가 회귀를 잡아낸다
+- `./gradlew build` 전체(컴파일 + 테스트 + jar 6종)가 처음으로 성공
+
+#### 7.2.13 `.gitattributes` 추가 (#14, `7bb787f`)
+- `gradlew.bat`은 CRLF, `*.sh`·`gradlew`는 LF, `*.jar`는 바이너리. 다시 정규화(renormalize)해도 바뀐 파일 0개
+
+#### 7.2.14 jsch 알고리즘 호환성 점검 (#15)
+- jsch 0.1.55와 2.28.8의 기본 알고리즘을 비교했다. `ssh-rsa`(SHA-1), `ssh-dss`, sha1 키 교환, CBC 암호화가 새 버전 기본값에서 빠졌다
+- 오래된 관측소 서버는 접속이 실패할 수 있다. 서버 확인 절차와 대응 코드를 8.4에 정리했다
+- 보안 문제 S8(SFTP 서버 신원 확인 생략)을 추가했다
+
+#### 7.2.15 문서 보강 — 0장·8장 (#16, `779cdc6`)
+- 처음 보는 사람을 위한 0장(현재 상태, 용어, 환경 준비, 빌드·테스트, 자주 나는 오류, commit 목록)과 8장(DB·서버가 필요한 남은 작업 절차서)을 추가했다. 6.8-C/F/S5/G/J 상세 기록
+
+#### 7.2.16 주석 구분 표시와 기존 주석 복원 (#17, `ab480ac`)
+- 사용자 요청: "파일 수정 시 내가 작성한 주석과 구분해서 작성해줘"
+- Claude가 쓴 주석 전체에 표시를 붙였다(여러 줄은 시작/끝 표시, 새 파일은 머리말)
+- 작업 중 바뀌거나 지워졌던 기존 주석을 원문대로 복원: 주석 처리된 javax import 3줄, SecurityConfig 주석 약 15줄("기존 코드 원문 보존" 블록), build.gradle 계열 6곳, 운영 스크립트 6개의 `#JAVA_HOME` 줄, login.html 1줄
+- 실행 코드 변경 0건(diff 분석). 다시 확인: 빌드·테스트 14/14, 스크립트 6개, ConfigLoadTest 53/53, check_props 문제 0, 사라진 기존 주석 0건
+
+#### 7.2.17 검증 가이드(9장)와 검증 스크립트 (#18, `1aa2ce5`)
+- 사용자 요청: "내가 어떻게 확인하고 검증해야 하는지도 기재해줘"
+- 단계별로 눈으로 볼 곳, 실행 명령, 기대 결과, 기록표를 만들었다
+- 손으로 하던 검증을 스크립트로 정리: `test_process_scripts.sh`(운영 스크립트 6개 × 7항목, FAIL 0), `JschDefaults.java`, `check_comments.py`
+- 9장의 모든 명령을 문서에 적힌 그대로 실행해 기대 결과와 같음을 확인했다 (이 환경에 `unzip`이 없어 대체 명령도 확인)
+
+#### 7.2.18 주석 표시 형식 변경 (#19, `f277315`)
+- 사용자 요청: "명확하게 내가 아닌 것 확인할 수 있게. 예: `/* Claude 주석 */`"
+- 모든 Claude 주석을 `/* Claude 주석 (2026-11-19): ... */`로 바꿨다 (yml·sh는 `# /* ... */`, HTML은 `<!-- /* ... */ -->`). `check_comments.py`도 새 표시를 인식하게 수정
+- 확인: 빌드·테스트 14/14, 스크립트 FAIL 0, 사라진 기존 주석 0건
+- **실수**: 코드 변경 여부 검사와 commit을 한 명령으로 실행해서, 검사가 "코드 변경 파일 3개"를 보고했는데도 commit됐다. 직후 확인하니 2개는 여러 줄 주석의 둘째 줄을 검사가 코드로 오인한 것이고, 1개는 의도한 검사 로직 수정이라 실제 문제는 없었다. 이후 검사와 commit을 분리했다
+
+#### 7.2.19 K. 사용자 관리 ADMIN 전용 (#20, `8e233cc`, 문서 `0f0b82e`)
+- `/users/**`를 ADMIN만 쓰게 하고(`hasAuthority("ADMIN")`), 권한 없음 화면 `error/403.html`을 추가했다
+- **발견한 문제**: 회원 생성 화면이 권한 값을 브라우저에서 보내서, USER도 스스로 관리자 계정을 만들 수 있었다 → 이번 변경으로 차단
+- 덤프 기준 ADMIN 1명·USER 1명 확인(개수만 집계)
+- 테스트 23/23(권한 9개 추가). K-09는 첫 시도에 실패(테스트 환경에 오류 화면 연결 Bean이 없음) → 템플릿 직접 렌더링으로 변경
+- 대조군: ADMIN 규칙을 빼면 4개 실패 확인 후 원복
+
+#### 7.2.20 로컬 DB 웹 테스트 ① 접속·기동·비로그인 확인 (#21, `0570f9d`)
+- **환경**: 사용자 Windows PC의 MySQL 8.0.41 (포트 3308, 스키마 watchdog/nuri/nuri2). 웹만 테스트하고 Daemon은 실행하지 않았다
+- **접속 문제와 해결**
+  - WSL 안의 `localhost`는 Windows가 아니라서 접속되지 않았다
+  - Windows 주소로 바꾸자 MySQL의 `root` 계정이 "로컬에서만 접속 가능"으로 설정돼 있어 거부됐다
+  - 사용자 허락을 받아, 사용자가 만들어 둔 **WSL 대역 전용 테스트 계정**(3개 스키마 권한)의 비밀번호를 재설정해 사용했다
+  - 접속 정보는 저장소 밖의 파일(본인만 읽기, 권한 600)에 두고 환경 변수로 넘겼다. 사용자가 수정한 `common-data.yml`(로컬 비밀번호 포함)은 commit하지 않았다
+  - 방법은 8.1-④에 정리 (실제 주소·계정 이름은 문서에 적지 않음)
+- **사전 점검 (조회만)**: 회원 7명(ADMIN 1, USER 6, `roles` 빈 값 0), 비밀번호 7명 모두 BCrypt 형식, 문자 발송 스위치 `STOPSMS` value=1(켜짐 — Daemon을 돌리지 않으므로 웹 테스트에는 영향 없음)
+- **웹 서버 기동 성공**: Java 25.0.5.1, DB 연결 풀과 Hibernate 초기화 정상, ERROR/WARN 0
+- **비로그인 HTTP 확인 R-01~R-09 모두 기대대로**: 로그인 화면 + CSRF 토큰, 보호 화면·`/users`는 로그인 화면으로 이동, 토큰 없는 POST 403, 토큰 있어도 비로그인이면 로그인 화면으로, 정적 파일 200, 없는 아이디 로그인 → `error=true`(실제 DB 회원 조회 실행), 토큰 없는 로그인 403
+- R-10(로그인 안 한 상태의 404)은 테스트 설계 실수: 로그인 전에는 로그인 화면으로 먼저 보내는 것이 맞다
+- Windows 브라우저에서 `http://localhost:8080` 접속 확인
+
+#### 7.2.21 로컬 DB 웹 테스트 ② 로그인과 로컬 DB 구조 맞추기 (#22, `440a9bf`)
+- **로그인 성공**: 사용자가 브라우저로 로그인 → Security 7 + 실제 DB 회원 조회 + BCrypt 확인이 실제로 동작
+- **문제**: 로그인 직후 메인 화면에서 500 오류 `Unknown column 'sd1_0.agency_cd'` (`MenuService.getStationList` ← `MenuController.main`)
+- **원인**: 로컬 DB가 기후부(MCEE) 기능을 넣기 전 구조였다. 엔티티와 비교하니 컬럼 8개가 없었다
+  - `station_rdr`: `agency_cd`, `style_attr`, `status`
+  - `receive_condition`, `station_status`, `sms_target_group_link`: `agency_cd`
+  - `sms_target_group`: `agency_cd`, `gubun`
+  - 업그레이드 전 코드(`b250e18`)도 같은 컬럼을 쓰므로 **Java 25/Boot 4 문제가 아니다**
+- **정정**: 처음에 "로컬 DB = 2026-07-16 덤프"라고 잘못 추정했다. 덤프를 직접 확인하니 8개 컬럼과 기후부 데이터가 이미 들어 있었다(덤프 구조 ↔ 엔티티 누락 0건) → 로컬 DB는 덤프보다 이전 상태
+- **로컬 DB 수정 (사용자 허락 후, 접속 주소가 로컬 DB가 아니면 멈추는 실행기 사용)**
+  1. 컬럼 8개 추가 — 저장소의 `Query/기후부 등록 query.sql`, `note/그룹 감시자료 설정.sql`에 있는 ALTER 문과 같은 정의
+  2. 기존 행 채우기 — `agency_cd='KMA'`(기존 지점은 모두 기상청), 문자 그룹 `gubun`(지점 구분값, 묶음 그룹은 0), 지도 좌표 `style_attr`
+  3. 사용자 요청으로 덤프에서 **기상청B(MCEE) 18개 지점**(station_rdr 18, station_status 10, receive_condition 18, sms_target_group 10, link 3행)과 **기상청A 제주공항 JIA**(공항 gubun 3, TDWR — 각 1행, link 2행) 추가
+  - 모두 "넣었다가 되돌리기"로 건수를 먼저 확인한 뒤 한 트랜잭션으로 반영
+  - 회원·수신 기록·문자 수신자는 개인정보/운영 기록이라 가져오지 않았다
+- 전부 `docs/verify/localdb_schema_sync.sql`로 정리했다 (`INSERT IGNORE`라 다시 실행해도 0건 — 재실행으로 확인, 되돌리기 SQL 포함)
+- 수정 후 엔티티 ↔ 로컬 DB 누락 컬럼 0건. 로그: 이후 ERROR/Exception 0건, 메인·관측소 화면 30초 자동 갱신 정상
+- 수신 표가 빈 것은 로컬 DB에 오늘 수신 기록이 없어서(Daemon 미실행)이며 정상
+- 로그에서 발견: Thymeleaf `Deprecated unwrapped fragment expression` 경고(화면마다 2건) → #23에서 정리
+- 보안 발견: `note/그룹 감시자료 설정.sql` 1~2행에 DB root 비밀번호가 평문으로 있고 Git이 추적 중 → S3에 추가
+
+#### 7.2.22 Thymeleaf fragment 경고 정리 (#23, `90118a5`)
+- 경고 위치는 `layout/default_layout.html` 10·17행 두 곳뿐이었다 (전체 템플릿 검색으로 확인)
+- `th:replace="layout/config :: configFragment"` → `th:replace="~{layout/config :: configFragment}"`, header도 같은 방식. Thymeleaf 3.1 권장 형식이며 동작은 같다. 기존 📌 주석은 그대로 두고 아래에 Claude 주석을 달았다
+- 확인: `./gradlew build` 성공(radar-web 테스트 23/23), 사라진 기존 주석 0건, 새 jar에 수정이 들어간 것 확인 후 웹 서버 재시작(10.0초, ERROR 0)
+- 직접 확인하는 법: 로그인 후 아무 화면이나 열고 서버 로그에서 `Deprecated unwrapped`를 검색 → 0건이면 통과
+
+#### 7.2.23 로컬 DB 웹 테스트 ③ 경고 해소·관리자 권한 확인 (#24, `ffc5f5e`)
+- 사용자가 다시 로그인해 메인·수신 기준·통계 화면을 열었다 → `Deprecated unwrapped` **0건**(수정 전에는 화면마다 2건), ERROR/Exception 0건. WARN은 서버 시작 때 `open-in-view` 1건뿐(8.6-3)
+- **관리자 권한(K)은 사용자가 브라우저에서 직접 확인 완료**. 같은 시간 서버 로그 ERROR/Exception 0건
+- 참고: 권한 없음(403) 거부는 Spring Security가 기본으로 로그를 남기지 않아 로그로는 따로 보이지 않는다
+
+#### 7.2.24 로컬 DB 웹 테스트 ④ 저장 기능(CSRF) 확인 (#25, `6434409`)
+- **사용자가 브라우저에서 저장 기능 확인 완료** (문자 발송 제외)
+- 서버 로그: ERROR/Exception 0건, fragment 경고 0건, CSRF 거부(403)로 저장이 막힌 흔적 없음
+- 저장 처리는 애플리케이션이 로그를 남기지 않아 로그로는 건별 확인이 안 된다 → DB 조회로 보조 확인: `station_status`의 점검(MRO) 지점 6곳 중 KSN·MIL·YIT는 덤프에 없는 값(로컬에서 저장된 것으로 보이나, 테스트 전 값을 기록하지 않아 단정하지 않음)
+- 문자 큐 `nuri2.NURI2_NRMSG_DATA` 1526행 그대로(문자 발송 없음), `STOPSMS` 변동 없음
+- 로그인 실패 6회(관리자 확인 중) — 실패 처리 정상
+
+#### 7.2.25 검토 결과 기록표(9.5)와 남은 테스트 목록(9.6) (#26, `b52705a`)
+- 9.5를 채우려고 DB 없이 가능한 확인을 다시 실행: 9.3.1 의존성 버전, 9.3.2 javax 0건, 9.3.4 check_props·ConfigLoadTest 53/0·기동 테스트, 9.3.5 스크립트 FAIL 0, 9.3.6, 9.3.7, 9.3.8 → 모두 기대대로
+- 빌드·테스트(23/23)·주석 검사는 같은 날 `90118a5` 기준 결과, 대조군(9.3.3-③)은 앞선 실행 결과를 사용했다. 화면 확인은 사용자 확인 결과로 기록(확인자 구분)
+- 9.3.6 검사 명령 보완: Claude 주석 줄(옛 코드 원문 포함)이 함께 잡혀 2줄이 나오던 것 → `grep -v "Claude 주석"` 추가
+- 6.6 체크리스트의 C·K 화면 확인 완료 처리. 9.6에 로컬 7개, 운영 6개 남은 테스트 정리
+
+#### 7.2.26 문서 전면 보강 (#27)
+- 사용자 요청: "구체적으로 자세하게 처음 보는 사람도 이해할 수 있게"
+- 바꾼 곳
+  - 0.1 시스템 그림, 작업 전/후 비교
+  - 0.2 최신 상태, 0.3 목적별 읽는 순서
+  - 0.4 용어 추가 (STOPSMS, 기상청A/B, RUN/MRO, WSL 등)
+  - 0.7 commit 목록 최신화, 0.9 자주 묻는 질문
+  - 1~3장: 작업 전/후 기술 스택, 모듈 설명, 웹 동작, 주요 DB 테이블 표
+  - 5장 현재 적용 버전 열, 6.2 적용 결과 열
+  - 7장을 요약 표와 상세 기록으로 분리
+  - 8.1-④ WSL에서 Windows MySQL 접속 방법, 8.2 진행 상황 표시
+  - 4.1 등급 설명, 6.8-C 지난 표현 정리
+  - 9.6 #14 추가: 작업 후 버전으로 의존성 CVE 다시 조회 (문서를 다시 보다가, 작업 후 재점검을 하지 않은 것을 발견)
+- **바로잡은 것**
+  - 7장에 적혀 있던 테스트용 주소·계정 이름을 일반 표현으로 바꿨다 (이 문서의 민감값 기록 금지 원칙)
+  - Repository 개수: 22개 → 24개 (다시 세어 보니 24개, 2장·6.5)
+  - 지난 시점의 표현 갱신: "런타임 검증 대기", "권한 구분은 아직 없음"
+- 사실 확인: 기술 스택 버전, 지점 수(덤프 기준 34곳), 테이블 설명(덤프의 COMMENT)을 다시 확인한 뒤 적었다
 
 ---
 
@@ -848,7 +1190,49 @@ commit: `ade302c`
 - 명령행 인자(`--config.datasource.password=...`)도 가능하지만 `ps` 명령으로 다른 사용자에게 보일 수 있어 권장하지 않는다
 - (2026-11-19 확인) 운영과 같은 라이브러리(RDR.jar 내부)로 `StandardEnvironment` + `YamlPropertySourceFactory`(common-data.yml)를 구성하고 환경 변수 `CONFIG_DATASOURCE_URL`, `CONFIG_DATASOURCE_USERNAME`을 지정해 조회 → **환경 변수 값이 yml 값보다 우선 적용됨**을 확인
 
+**④ WSL(리눅스)에서 Windows에 설치한 MySQL로 접속할 때** (2026-11-19 이 방법으로 접속 확인)
+
+개발 PC가 Windows + WSL이고 MySQL이 Windows 쪽에 설치돼 있으면, 아래 세 가지 때문에 그냥은 접속되지 않는다.
+
+| 막히는 이유 | 증상 | 해결 |
+|---|---|---|
+| WSL 안의 `localhost`는 Windows가 아니라 WSL 자신이다 | `Communications link failure` | DB 주소를 **Windows 호스트 주소**로 쓴다 (아래 명령으로 확인) |
+| MySQL 계정이 "로컬에서만" 접속 가능하게 만들어져 있다 (예: `root@localhost`) | `Access denied for user ...` | WSL 대역에서 접속할 수 있는 **테스트 전용 계정**을 만든다 (root를 열지 않는다) |
+| Windows 방화벽이 MySQL 포트를 막는다 | 접속 시간 초과 | Windows 방화벽에서 해당 포트의 인바운드 허용 (사설망 한정) |
+
+```bash
+# 1) WSL에서 Windows 호스트 주소 확인 (WSL 기본 NAT 모드 기준)
+ip route show default | awk '{print $3}'
+```
+```sql
+-- 2) Windows의 MySQL Workbench 등에서 (개발 DB에서만!) 테스트 계정 만들기
+--    <WSL대역>은 1)에서 나온 주소의 앞 두 자리 + '.%'  (예: 주소가 A.B.C.D 이면 'A.B.%')
+CREATE USER '<테스트계정>'@'<WSL대역>' IDENTIFIED BY '<새 비밀번호>';
+GRANT ALL PRIVILEGES ON watchdog.* TO '<테스트계정>'@'<WSL대역>';
+GRANT ALL PRIVILEGES ON nuri.*     TO '<테스트계정>'@'<WSL대역>';
+GRANT ALL PRIVILEGES ON nuri2.*    TO '<테스트계정>'@'<WSL대역>';
+```
+```bash
+# 3) 접속 정보를 저장소 밖 파일에 두고(본인만 읽기), 환경 변수로 넘겨 웹 서버 실행
+cat > ~/.radar-localdb.env <<'EOF'
+CONFIG_DATASOURCE_URL='jdbc:mysql://<Windows호스트주소>:<포트>/watchdog'
+CONFIG_DATASOURCE_USERNAME='<테스트계정>'
+CONFIG_DATASOURCE_PASSWORD='<새 비밀번호>'
+EOF
+chmod 600 ~/.radar-localdb.env
+
+./gradlew :radar-web:bootJar
+mkdir -p ~/radar-webrun && cd ~/radar-webrun          # 로그(logs/)가 여기에 생긴다
+(set -a; . ~/.radar-localdb.env; set +a; java -jar <프로젝트>/radar-web/build/libs/RADAR_WEB.jar --server.port=8080)
+```
+- 로그에 `Started RadarWebApplication ... using Java 25.0.5.1`이 나오면 **Windows 브라우저에서 `http://localhost:8080`** 으로 접속한다 (WSL이 Windows의 localhost로 포트를 넘겨 준다)
+- 종료: 실행한 터미널에서 `Ctrl+C`
+- WSL 네트워크가 mirrored 모드이면 1)의 주소 대신 `localhost`로도 접속될 수 있다
+- 이 파일 이름(`.radar-localdb.env`)이 저장소 안에 생기지 않도록 반드시 홈 폴더(`~`)에 만든다. `common-data.yml`을 직접 고쳤다면 그 파일은 commit하지 않는다
+
 ### 8.2 C 단계 화면 확인 (로그인·CSRF)
+
+> **진행 상황 (2026-11-19, 로컬 DB)**: #1·#2·#4·#6-1~#6-3 확인 완료(7.2.20~7.2.24). #3(meta 태그), #5(검색 폼), #6(로그아웃), #7(세션 만료)은 기록이 없어 9.6에 남은 테스트로 올렸다.
 
 **실행**: `./gradlew build` 후, 8.1 환경 변수를 설정한 터미널에서
 ```bash
@@ -1228,7 +1612,7 @@ python3 -I docs/verify/check_comments.py
 
 ### 9.6 남은 테스트 목록 (2026-11-19 기준)
 
-> 위에서부터 할 수 있는 순서. "어디서"가 **로컬**이면 지금 개발 PC와 로컬 DB로 가능, **운영**이면 운영 서버나 운영 DB가 있어야 한다.
+> 위에서부터 할 수 있는 순서 (#14는 언제든 가능). "어디서"가 **로컬**이면 지금 개발 PC와 로컬 DB로 가능, **운영**이면 운영 서버나 운영 DB가 있어야 한다.
 
 | # | 테스트 | 어디서 | 방법 (절) | 통과 기준 | 주의 |
 |---|---|---|---|---|---|
@@ -1245,6 +1629,7 @@ python3 -I docs/verify/check_comments.py
 | 11 | 운영 JDK 25 설치·경로 | 운영 | 8.5-② | `25.0.5.1` 이상, 변경 이력에 CVE-2026-114938, 경로가 스크립트 기본값과 같음 | JDK 11은 지우지 않음(롤백용) |
 | 12 | 순차 배포 | 운영 | 8.5-④ | TDWR → SDR → SDR_B → RDR → RDR_B → Web 순, 단계마다 한 주기 이상 정상 | 문제 시 8.5-⑤로 되돌리기 |
 | 13 | 배포 후 Web 재확인 | 운영 | 8.2 #1·#2·#4·#6 | 정상 | |
+| 14 | 작업 후 의존성 CVE 재점검 | 로컬 (인터넷) | 5장 방법으로 `./gradlew :radar-web:dependencies`, `:Daemon:dependencies` 결과의 버전을 OSV.dev에서 다시 조회 | 남은 Critical/High 없음, 있으면 조치 버전 기록 | 5장 표는 작업 전 버전 기준이다 |
 
 **테스트는 아니지만 배포 전에 할 일** (8.6)
 - 노출된 비밀번호 교체 (S2~S4, `note/그룹 감시자료 설정.sql`의 DB root 비밀번호 포함) — 가장 시급
