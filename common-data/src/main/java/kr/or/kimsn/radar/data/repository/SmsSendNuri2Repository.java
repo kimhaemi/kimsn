@@ -1,6 +1,6 @@
 package kr.or.kimsn.radar.data.repository;
 
-import javax.transaction.Transactional;
+import jakarta.transaction.Transactional;
 import kr.or.kimsn.radar.data.dto.SmsSendNuri2Dto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

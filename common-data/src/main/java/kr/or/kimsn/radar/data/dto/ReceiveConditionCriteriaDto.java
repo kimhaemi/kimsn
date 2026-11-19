@@ -1,9 +1,9 @@
 package kr.or.kimsn.radar.data.dto;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.IdClass;
-import javax.persistence.Table;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.IdClass;
+import jakarta.persistence.Table;
 
 import kr.or.kimsn.radar.data.dto.pkColumn.ReceiveConditionCriteriaPk;
 import lombok.Data;

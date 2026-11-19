@@ -2,7 +2,7 @@ package kr.or.kimsn.radar.data.dto.pkColumn;
 
 import java.io.Serializable;
 
-import javax.persistence.Embeddable;
+import jakarta.persistence.Embeddable;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
