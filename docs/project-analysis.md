@@ -233,7 +233,8 @@ radar_new/
 - [x] C. SecurityConfig 재작성 및 S1 해결 (코드와 빌드 완료)
 - [ ] C 런타임 검증: 실제 DB가 있는 환경에서 로그인, 로그아웃, 화면별 POST/Ajax 동작 확인 (6.8-C 검증 절차)
 - [ ] D. JPA 네이티브 쿼리 검증
-- [ ] E. 설정 파일 정리
+- [x] E. 설정 파일 정리 (`1f1ae08`, 검증 완료 → 6.8-E)
+- [ ] (D 단계에서) `spring.jpa.open-in-view` 실제 적용 여부 결정 (현재 잘못된 위치에 있어 효과 없음)
 - [ ] F. 운영 스크립트 수정
 - [ ] 기능 검증 및 순차 배포
 
@@ -329,6 +330,70 @@ commit: `ade302c`
 - 로그인 실패 메시지: `AuthenticationFailure`는 메시지를 세션에 저장하는데 `LoginController`는 request attribute를 읽음 → 메시지가 보이지 않는 기존 버그 (변경 없음)
 - 템플릿에 `xmlns:sec` 선언은 있지만 실제 `sec:` 속성 사용은 0건 → extras를 추가해도 화면 변화 없음
 
+#### E. 설정 파일 정리 (2026-11-19 완료, commit `1f1ae08`)
+
+##### 변경 내용
+
+| 파일 | 변경 | 근거 |
+|---|---|---|
+| `Daemon/.../application.yml` | `spring.config.use-legacy-processing: true` 제거 | Boot 3.0에서 삭제된 키. Boot 4.1.2 jar의 `org/springframework/boot/context/config/` 전체 클래스에서 참조 0건 → 무시되던 키 |
+| | `spring.config.import`: `optional:classpath*:common-data.yml` → `optional:classpath:common-data.yml` | **기동 테스트에서 발견한 실제 오류**: `IllegalStateException: Location 'classpath*:common-data.yml' cannot use classpath wildcards`. Boot 2.7에서는 legacy processing이 켜져 있어 import 자체가 처리되지 않았기 때문에 드러나지 않았음 |
+| | `server.servlet.encoding.*` (charset, force, enabled) 제거 | Daemon은 웹 서버가 없음 (Daemon jar 메타데이터에 servlet 인코딩 속성 0건) → 원래 효과 없음. Boot 4에서는 `spring.servlet.encoding.*`으로 이름이 바뀌어 옛 키가 `level: error`로 삭제됨 (`spring-boot-web-server-4.1.2.jar` 메타데이터, since 4.0.0) |
+| | `spring.devtools.livereload.enabled` 제거 | Daemon 모듈에 devtools 의존성 없음 |
+| `radar-web/.../application.yml` | `spring.config.use-legacy-processing: true` 제거 | 위와 동일 |
+| | devtools 설정은 유지하고 주석 추가 | `spring-boot-devtools-4.1.2.jar` 메타데이터에 존재하는 정상 키. developmentOnly 실행에서만 적용 |
+| `common-data.yml` | 주석만 추가 (값 변경 없음) | `jpa.open-in-view: false`가 `spring.` 아래가 아니라 `config.` 아래에 있어서 Spring이 읽지 않음. 실제 적용값은 기본값 `true`. 고치면 화면 렌더링 중 지연 로딩 동작이 바뀔 수 있어 D 단계에서 DB 테스트 후 결정. `config.datasource.max-pool` 등 풀 옵션도 `DataSourceConfig.java`의 하드코딩 값이 사용됨 |
+
+변경하지 않은 것: `config/application*.yml`(외부 운영 설정. `radar.*` 커스텀 키만 있어 Boot 버전 영향 없음), `log4j2.yml` 2종(아래 T2-4에서 정상 확인), `spring.thymeleaf.cache: false`(운영에서는 true가 바람직하지만 동작 변경이라 별도 검토)
+
+##### 테스트 방법과 결과
+
+모든 테스트는 개발 PC(WSL Ubuntu 26.04, OpenJDK 25.0.5.1+2, Gradle 9.9.1)에서 실행했다. 실행 위치는 세션 임시 폴더이며 프로젝트나 서버 경로에는 파일을 만들지 않았다. **운영 DB와 관측소 서버에는 접속하지 않았고**, 비밀번호와 IP 값은 출력하지 않도록 작성했다.
+
+**T0. 빌드**
+- 명령: `./gradlew assemble :Daemon:buildAllRadarJar --no-daemon`
+- 결과: ✅ 성공. `RADAR_WEB.jar`와 Daemon 5종 jar(RDR, SDR, TDWR, RDR_B, SDR_B) 생성
+- 수정한 yml이 jar에 들어갔는지 확인: `RDR.jar`를 풀어서 `BOOT-INF/classes/application.yml`에 `classpath:common-data` 반영됨을 확인
+
+**T1. 설정 키 정적 검사 (Boot 4 메타데이터 대조)**: 스크립트 `docs/verify/check_props.py`
+- 방법: 빌드된 boot jar 안 `BOOT-INF/lib/*.jar` 전부에서 `META-INF/spring-configuration-metadata.json`과 `additional-spring-configuration-metadata.json`을 모음 → 알려진 속성, deprecated/삭제 속성(대체 키 포함) 목록 생성 → yml의 모든 leaf 키를 펼쳐서 `spring.`/`server.`/`logging.`/`management.` 접두어 키를 대조. `logging.level.<패키지>` 같은 Map 타입 하위 키는 부모 속성의 타입으로 판정
+- 명령: `python3 -I docs/verify/check_props.py <boot.jar> <yml>...`
+- 메타데이터 규모: RADAR_WEB.jar 속성 721개 (deprecated/삭제 106개), RDR.jar 속성 467개 (deprecated/삭제 68개)
+
+| 대상 | 수정 전 | 수정 후 |
+|---|---|---|
+| radar-web `application.yml` (키 14개 → 13개) | UNKNOWN 2: `spring.config.use-legacy-processing`, `spring.devtools.livereload.enabled` | UNKNOWN 1: `spring.devtools.livereload.enabled` (**예상된 결과**: 운영 jar에 devtools가 없어 메타데이터도 없음. devtools jar에는 정의돼 있음을 별도 확인) |
+| Daemon `application.yml` (키 14개 → 9개) | UNKNOWN 5: `server.servlet.encoding.charset/enabled/force`, `spring.config.use-legacy-processing`, `spring.devtools.livereload.enabled` | **문제 키 0건** |
+| `common-data.yml`, `config/application.yml` | 커스텀 접두어(`config.`, `radar.`)만 있어 검사 대상 아님 | 동일 |
+
+- 한계: 정적 검사는 **값의 형식**은 보지 않는다. 실제로 `classpath*:` 와일드카드 오류는 T1에서 잡히지 않았고 T3 기동 테스트에서 발견됨
+
+**T2. 설정 로딩 테스트 (실제 런타임 라이브러리)**: 프로그램 `docs/verify/ConfigLoadTest.java`
+- 방법: `RDR.jar`를 임시 폴더에 풀고, 그 안의 `BOOT-INF/classes`와 `BOOT-INF/lib/*`(Spring Boot 4.1.2, Spring 7.0.10, SnakeYAML 2.6, Log4j 2.25.5, Jackson 2.21.7 등 운영과 같은 jar)를 classpath로 Java 25 단일 파일 실행
+- 명령: `java -cp "<RDR.jar 풀린 폴더>/BOOT-INF/classes:<...>/BOOT-INF/lib/*" docs/verify/ConfigLoadTest.java <프로젝트 루트>`
+- 결과: ✅ **PASS 53 / FAIL 0** (yml 최종 수정 후 다시 실행해도 동일)
+
+| 그룹 | 무엇을 흉내 냈나 | 확인 내용 | 결과 |
+|---|---|---|---|
+| T2-1 | `YmlRefreshManager.reloadYml()`: `YamlPropertySourceLoader`로 외부 yml을 읽어 Environment 최상단에 추가 | `config/application.yml`, `config/application_real.yml` 각각: `global.mode`, `PauseTime`(Long), `sessionTimeOut`/`connectTimeOut`(Integer), `call_from`/`template_code` 조회 | 2파일 × 6건 PASS |
+| | `Scheduler`의 동적 크론 | 5개 시스템(KMA_RDR, KMA_SDR, KMA_TDWR, MCEE_RDR, MCEE_SDR)의 `cron-expression`을 Spring 7 `CronExpression.parse()`로 파싱 | 2파일 × 5건 PASS |
+| | `StepOneService`의 관측소별 접속 정보 조회 (`radar.config.paths.<TYPE>.stations.<SITE>.*`) | 관측소별 IP/ID/PASSWORD/PATH/FILE 존재, PORT→Integer, file_size_min/max→Long 변환. 관측소 수 11/3/2/7/11곳(총 34곳)이 PyYAML로 별도 집계한 수와 일치 | 2파일 × 5건 PASS |
+| T2-2 | `DataSourceConfig`의 `@PropertySource(factory = YamlPropertySourceFactory)` | `common-data.yml`의 driver-class-name = `com.mysql.cj.jdbc.Driver`, url 형식 `jdbc:mysql://`, username/password 존재, MySQL 드라이버 클래스 로드(mysql-connector-j 9.7.0) | 5건 PASS |
+| T2-3 | 모듈 `application.yml` 수정 결과 | Daemon·Web 각각: `use-legacy-processing` 없음, `server.servlet.encoding.*` 없음, `spring.config.import`가 common-data.yml 유지, `logging.config` 유지, `spring.application.name` 유지 | 2파일 × 5건 PASS |
+| T2-4 | Log4j2의 `log4j2.yml` 해석 (Boot 4는 Jackson 3를 쓰지만 Log4j2는 Jackson 2 YAML이 필요) | Daemon·Web 각각: `YamlConfiguration` 생성, appender 정의 해석(Daemon: RollingFile_Appender / Web: Console_Log, RollingFile_Appender), logger 정의 해석. `initialize()`만 하고 `start()`는 하지 않아 로그 파일은 생성하지 않음 | 2파일 × 3건 PASS |
+
+**T3. 실제 jar 기동 테스트 (가짜 DB)**
+- 방법: 빈 임시 폴더에서 `java -jar RDR.jar --config.datasource.url='jdbc:mysql://127.0.0.1:1/none'` 와 `java -jar RADAR_WEB.jar --server.port=18081 --config.datasource.url=...` 실행 (각 90초 제한). 명령행 인자가 `@PropertySource`보다 우선순위가 높으므로 **DB 접속은 항상 존재하지 않는 로컬 주소로 향함** → DB 연결 단계 이전까지의 기동 과정(설정 처리, 로깅, Bean 정의)을 확인
+- Daemon: 외부 `config/application.yml`은 임시 폴더 기준 경로에 없어서 읽지 않음 (YmlRefreshManager 탐색 경로 밖). `DAEMON_TYPE`을 지정하지 않았고, 스케줄러가 시작되기 전에 종료되므로 SFTP 접속 없음
+
+| 대상 | 1차 결과 (수정 전 import) | 2차 결과 (수정 후) |
+|---|---|---|
+| Daemon `RDR.jar` | ❌ `Location 'classpath*:common-data.yml' cannot use classpath wildcards`로 즉시 실패 → **import 수정의 근거** | ✅ `Starting DaemonApplication ... using Java 25.0.5.1` → `profile is active: "local-daemon"` → `Bootstrapping Spring Data JPA repositories in DEFAULT mode` → `Found 24 JPA repository interfaces` → 가짜 DB에서 `Communications link failure`로 종료 (**예상된 결과**) |
+| Web `RADAR_WEB.jar` | ✅ `Starting RadarWebApplication ... using Java 25.0.5.1` → `Tomcat initialized with port 18081` → 가짜 DB에서 `Communications link failure` (예상된 결과) | (웹 yml은 1차 실행 전에 이미 수정돼 있었음) |
+
+- 공통 확인: Log4j2가 jar 내부 `log4j2.yml`을 `YamlConfiguration`으로 로드하고, 상대 경로 `./logs/`에 `RDR.log` / `RADAR_WEB.log` 생성 (임시 폴더 안)
+- 확인하지 못한 것: DB 연결 이후 단계(Hibernate 초기화, Repository 쿼리, 스케줄러 실행). D 단계에서 DB 연동 테스트로 확인 필요
+
 ---
 
 ## 7. 작업 이력
@@ -347,3 +412,4 @@ commit: `ade302c`
 | 2026-11-19 | A 단계와 문서 Git commit | `.gitignore`에서 `gradle/`, `gradlew` 규칙 제거 후 wrapper 포함 commit `ade302c`, 문서 commit `3f363cf` (브랜치 `ver_java25`) |
 | 2026-11-19 | **6.3-B javax → jakarta 전환** | 모듈별 commit: common-data `da91928`, Daemon `a0543da`, radar-web `a3b58b1`. common-data와 Daemon 컴파일 성공. 그 외 Boot 4/Spring 6 API 변경 2건(`@EntityScan` 패키지, Trigger 반환형) 함께 수정. radar-web은 SecurityConfig(C 단계)만 남음. 상세는 6.8-B |
 | 2026-11-19 | **6.3-C Security 7 재작성 + S1 인증 복구** | commit `b75f60c`(SecurityConfig), `b7e0a7d`(화면 CSRF 토큰 처리), `47d1b27`(Daemon bootJar targetJavaVersion 보완). 전체 `assemble`과 Daemon 5종 jar 빌드 성공, 운영 jar에서 devtools 제외 확인. **런타임 검증은 DB가 필요해 미완료** → 6.8-C 검증 절차 |
+| 2026-11-19 | **6.3-E 설정 파일 정리** | commit `1f1ae08`. `use-legacy-processing` 제거(2곳), Daemon의 `server.servlet.encoding.*`·devtools 제거, `common-data.yml`의 효과 없는 jpa 설정 주석 표시. **기동 테스트로 실제 오류 1건 발견·수정**: Daemon `spring.config.import`의 `classpath*:` 와일드카드 때문에 Boot 4에서 기동 실패하던 문제. 검증: T1 정적 검사(Daemon 문제 키 0건), T2 설정 로딩 53/53 PASS, T3 가짜 DB 기동 테스트 통과. 테스트 스크립트는 `docs/verify/`에 보관 |
