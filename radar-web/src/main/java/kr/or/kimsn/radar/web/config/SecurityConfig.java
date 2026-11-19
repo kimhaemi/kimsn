@@ -17,6 +17,7 @@ import org.springframework.security.web.SecurityFilterChain;
  *
  * - 기존: 모든 경로 permitAll + CSRF 비활성화 → 비로그인으로 회원/문자/설정 API 호출 가능 (보안 이슈 S1)
  * - 변경: 로그인 화면·정적 리소스·오류 화면만 허용, 나머지는 인증 필요. CSRF 보호 활성화.
+ * - 권한: 사용자 관리(/users/**)는 ADMIN만 허용 (ADMIN_PATHS)
  *
  * 사용자 조회(UserSecurityService, @Service)와 BCryptPasswordEncoder Bean은
  * Spring Security가 자동으로 DaoAuthenticationProvider에 연결합니다.
@@ -35,6 +36,11 @@ public class SecurityConfig {
         "/login",
         "/css/**", "/js/**", "/images/**", "/fonts/**", "/favicon.ico",
         "/error", "/common/error"
+    };
+
+    /* Claude 주석 (2026-11-19): ADMIN 권한이 있어야 접근 가능한 경로 (사용자 관리 화면과 회원 생성·수정·삭제 API) */
+    private static final String[] ADMIN_PATHS = {
+        "/users/**"
     };
 
     @Bean
@@ -75,6 +81,10 @@ public class SecurityConfig {
             .csrf(csrf -> { })
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers(PUBLIC_PATHS).permitAll()
+                /* Claude 주석 (2026-11-19): 사용자 관리(/users/** — 화면, 회원 생성·수정·삭제 API)는 ADMIN 권한만 허용.
+                     권한 값은 PrincipalDetails.getAuthorities()가 돌려주는 Roles 이름("ADMIN"/"USER", ROLE_ 접두어 없음)이라
+                     hasRole("ADMIN")이 아니라 hasAuthority("ADMIN")를 사용. 권한이 없으면 403 → templates/error/403.html */
+                .requestMatchers(ADMIN_PATHS).hasAuthority("ADMIN")
                 .anyRequest().authenticated()
             )
             .formLogin(form -> form
