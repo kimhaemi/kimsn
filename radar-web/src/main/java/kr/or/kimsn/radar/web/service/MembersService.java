@@ -3,7 +3,7 @@ package kr.or.kimsn.radar.web.service;
 import java.util.List;
 import java.util.NoSuchElementException;
 
-import javax.transaction.Transactional;
+import jakarta.transaction.Transactional;
 
 import org.springframework.stereotype.Service;
 

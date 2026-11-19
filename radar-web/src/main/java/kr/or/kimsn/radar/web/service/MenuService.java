@@ -3,7 +3,7 @@ package kr.or.kimsn.radar.web.service;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.transaction.Transactional;
+import jakarta.transaction.Transactional;
 
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;

@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import java.util.stream.Collectors;
-import javax.transaction.Transactional;
+import jakarta.transaction.Transactional;
 
 import kr.or.kimsn.radar.data.dto.SmsSendNuri2Dto;
 import kr.or.kimsn.radar.data.repository.SmsSendNuri2Repository;
