@@ -254,6 +254,8 @@ java -cp "/tmp/rdr/BOOT-INF/classes:/tmp/rdr/BOOT-INF/lib/*" docs/verify/ConfigL
 | `853ba0e` | 문서 | 로컬 DB 웹 테스트 ④ 저장 기능(CSRF) 확인 |
 | `7963afa` | 문서 | 검토 결과 기록표(9.5), 남은 테스트 목록(9.6) |
 | `0e82caa` | 문서 | 처음 보는 사람 기준 문서 전면 보강 |
+| `baab8f7` | 문서 | Git 이력 정리(민감값 제거)에 따른 commit 번호 갱신 |
+| `83e48c5` | 문서 | reflog 정리 결과 기록 |
 
 > 목록 확인: `git log --oneline --reverse b250e18..HEAD` 결과와 이 표가 같아야 한다 (이 표를 갱신한 문서 commit은 표를 쓴 뒤에 만들어지므로 맨 마지막에 1개 더 있다).
 
@@ -973,7 +975,8 @@ commit: `ade302c`
 | 25 | 로컬 DB 웹 테스트 ④ 저장 기능 확인 | 통과, 문자 발송 없음 확인 | `853ba0e` |
 | 26 | 검토 결과 기록표(9.5), 남은 테스트 목록(9.6) | 확인 명령 재실행, 모두 기대대로 | `7963afa` |
 | 27 | 문서 전면 보강 (처음 보는 사람 기준) | 0~3장·7장 다시 작성, 민감값 제거 | `0e82caa` |
-| 28 | Git 이력 정리 (민감값 제거) | commit 7개 다시 작성, commit 번호 갱신 | (이 commit) |
+| 28 | Git 이력 정리 (민감값 제거) | commit 7개 다시 작성, reflog까지 정리 | `baab8f7` `83e48c5` |
+| 29 | 작업 보고서 이미지 작성 | 한 장짜리 보고서 PNG + 원본 HTML | (이 commit) |
 
 ### 7.2 상세 기록
 
@@ -1170,6 +1173,29 @@ commit: `ade302c`
   - 예전 commit은 Git의 복구 기록(reflog)에만 남아 있었다
   - `git reflog expire --expire=now --expire-unreachable=now --all` + `git gc --prune=now`로 완전히 삭제했다 (되돌릴 수 없음)
   - 확인: 예전 commit 7개 모두 `git cat-file -e` 결과 없음. 저장소 전체 파일 객체에서 해당 값 검색 0건. `git fsck` 오류 없음
+
+#### 7.2.28 작업 보고서 이미지 작성 (#29)
+- **사용자 요청**: "보고서 형태로 이미지 파일로 만들어줘"
+- **파일**
+  - `docs/report/upgrade-report-2026-11-19.png`: 2480×4300, 2배 해상도
+  - `docs/report/upgrade-report-2026-11-19.html`: 원본. 내용을 고칠 때는 이 파일을 수정한다
+- **내용**
+  - 상단 요약 카드: Java·Spring Boot 버전, 자동 테스트 23/23, 보안 8건 중 4건 해결
+  - 본문 8개 절: 배경과 결론, 단계별 진행 상태, 구성 요소 버전 작업 전·후, 보안 문제 처리 현황, 검증 결과, 발견·조치한 문제, 운영 배포 전 필수 작업, 남은 테스트 14건
+  - 숫자는 이 문서의 0.2, 5장, 9.5, 9.6과 같다. 비밀번호·IP·계정 같은 민감값은 넣지 않았다
+- **만드는 방법**: WSL에는 이미지 도구가 없어서 Windows의 Chrome을 화면 없이 실행(headless)해 HTML을 PNG로 저장했다. 글꼴은 맑은 고딕
+  ```bash
+  # HTML을 Windows 폴더로 복사한 뒤 (WSL에서 실행)
+  "/mnt/c/Program Files/Google/Chrome/Application/chrome.exe" --headless=new --hide-scrollbars \
+    --force-device-scale-factor=2 --user-data-dir="<Windows 임시 폴더>\profile" \
+    --window-size=1240,2150 --screenshot="<Windows 임시 폴더>\report.png" "file:///<Windows 경로>/report.html"
+  ```
+  - `--user-data-dir`로 임시 프로필을 써서 사용자의 Chrome 설정은 건드리지 않았다
+  - 작업 후 Windows 임시 폴더는 삭제했다
+- **확인**
+  - 생성된 이미지를 직접 열어 한글 글꼴, 표, 상태 표시가 깨지지 않는 것을 확인했다
+  - 아래 여백만 조정해 다시 생성했다
+- 참고: 보고서의 "32개 commit"은 작성 시점 기준이다 (이후 이 commit 등이 더해짐)
 
 ---
 

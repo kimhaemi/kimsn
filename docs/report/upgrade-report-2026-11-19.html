@@ -1,0 +1,192 @@
+<!doctype html>
+<!-- /* Claude 주석 (2026-11-19): 새로 작성한 파일 — 작업 보고서 원본 HTML. 같은 폴더의 PNG는 이 파일을 Chrome headless로 캡처한 것 */ -->
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>radar_new 업그레이드 작업 보고서</title>
+<style>
+  :root {
+    --ink: #1d2433; --muted: #5b6475; --line: #dfe3ea; --bg: #ffffff; --soft: #f5f7fa;
+    --navy: #1f3a5f; --ok: #1e7f4f; --ok-bg: #e3f4ea; --part: #9a6100; --part-bg: #fff2d9;
+    --todo: #5b6475; --todo-bg: #eceff3; --risk: #b42318; --risk-bg: #fde8e6;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { width: 1240px; background: var(--bg); color: var(--ink);
+         font-family: "Malgun Gothic", "맑은 고딕", sans-serif; font-size: 15px; line-height: 1.55; }
+  .page { padding: 44px 52px 36px; }
+  header { border-bottom: 3px solid var(--navy); padding-bottom: 18px; margin-bottom: 26px;
+           display: flex; justify-content: space-between; align-items: flex-end; }
+  h1 { font-size: 30px; color: var(--navy); letter-spacing: -0.5px; }
+  .sub { color: var(--muted); margin-top: 6px; font-size: 15px; }
+  .meta { text-align: right; color: var(--muted); font-size: 13.5px; line-height: 1.7; }
+  .meta b { color: var(--ink); }
+  h2 { font-size: 19px; color: var(--navy); margin: 0 0 12px; padding-left: 10px;
+       border-left: 5px solid var(--navy); line-height: 1.25; }
+  section { margin-bottom: 26px; }
+  .kpis { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
+  .kpi { background: var(--soft); border: 1px solid var(--line); border-radius: 10px; padding: 14px 16px; }
+  .kpi .label { color: var(--muted); font-size: 13px; }
+  .kpi .value { font-size: 23px; font-weight: 700; margin-top: 2px; letter-spacing: -0.3px; }
+  .kpi .note { color: var(--muted); font-size: 12.5px; margin-top: 2px; }
+  .lead { background: var(--soft); border: 1px solid var(--line); border-radius: 10px; padding: 14px 18px; }
+  .lead b { color: var(--risk); }
+  table { width: 100%; border-collapse: collapse; font-size: 14px; }
+  th, td { border-bottom: 1px solid var(--line); padding: 7px 10px; text-align: left; vertical-align: top; }
+  th { background: var(--soft); color: var(--muted); font-weight: 700; font-size: 13px; border-top: 1px solid var(--line); }
+  td.k { font-weight: 700; white-space: nowrap; }
+  .chip { display: inline-block; padding: 1px 9px; border-radius: 999px; font-size: 12.5px; font-weight: 700; white-space: nowrap; }
+  .ok { color: var(--ok); background: var(--ok-bg); }
+  .part { color: var(--part); background: var(--part-bg); }
+  .todo { color: var(--todo); background: var(--todo-bg); }
+  .risk { color: var(--risk); background: var(--risk-bg); }
+  .two { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; }
+  ul { padding-left: 18px; }
+  li { margin: 3px 0; }
+  .muted { color: var(--muted); }
+  .box { border: 1px solid var(--line); border-radius: 10px; padding: 14px 18px; }
+  .box.warn { border-color: #f1b8b2; background: #fffafa; }
+  .arrow { color: var(--muted); padding: 0 4px; }
+  footer { border-top: 1px solid var(--line); padding-top: 12px; color: var(--muted); font-size: 12.5px;
+           display: flex; justify-content: space-between; }
+</style>
+</head>
+<body>
+<div class="page">
+
+<header>
+  <div>
+    <h1>radar_new Java 25 · Spring Boot 4 업그레이드 작업 보고서</h1>
+    <div class="sub">기상 레이더 관측소 자료 수신 감시 · 장애 문자 알림 시스템</div>
+  </div>
+  <div class="meta">
+    작성일 <b>2026-11-19</b><br>
+    브랜치 <b>ver_java25</b> (원격 push 전)<br>
+    기준 commit <b>b250e18</b> 이후 <b>32개</b> commit
+  </div>
+</header>
+
+<section>
+  <div class="kpis">
+    <div class="kpi"><div class="label">Java 실행 환경</div><div class="value">11 → 25.0.5.1</div><div class="note">Java4Shell 패치 포함 버전</div></div>
+    <div class="kpi"><div class="label">Spring Boot</div><div class="value">2.7.12 → 4.1.2</div><div class="note">Spring 7 · Security 7 · Hibernate 7</div></div>
+    <div class="kpi"><div class="label">자동 테스트</div><div class="value">23 / 23 통과</div><div class="note">보안 14 · 관리자 권한 9 (DB 없이 실행)</div></div>
+    <div class="kpi"><div class="label">보안 문제</div><div class="value">8건 중 4건 해결</div><div class="note">남은 4건은 비밀번호 교체 · 서버 작업</div></div>
+  </div>
+</section>
+
+<section>
+  <h2>1. 배경과 결론</h2>
+  <div class="lead">
+    2026-11-17 OpenJDK에서 인증 없이 원격으로 서버를 장악할 수 있는 취약점 <b>Java4Shell (CVE-2026-114938, CVSS 9.2)</b>이 공개되었다.
+    패치된 Java 25를 쓰려면 프레임워크도 함께 올려야 하므로 Java·Spring Boot·빌드 도구를 모두 전환했다.
+    <br><b style="color:var(--ink)">결론:</b> 개발 PC와 로컬 DB에서 확인할 수 있는 항목은 대부분 통과했다.
+    <b>운영 배포 전에 운영 환경에서만 가능한 확인(SFTP 호환성, 운영 DB 관리자 계정, 서버 JDK 설치)과 노출된 비밀번호 교체가 남아 있다.</b>
+  </div>
+</section>
+
+<section>
+  <h2>2. 단계별 진행 상태</h2>
+  <table>
+    <tr><th style="width:56px">단계</th><th style="width:300px">내용</th><th style="width:96px">상태</th><th>결과</th></tr>
+    <tr><td class="k">A</td><td>빌드 설정 전환 (Gradle 9.9.1, toolchain 25)</td><td><span class="chip ok">완료</span></td><td>Daemon jar 5종 + 웹 jar 생성, wrapper·SHA-256 검증 포함</td></tr>
+    <tr><td class="k">B</td><td><code>javax</code> → <code>jakarta</code> 패키지 전환</td><td><span class="chip ok">완료</span></td><td>3개 모듈 컴파일 성공, Boot 4 API 변경 2건 함께 반영</td></tr>
+    <tr><td class="k">C</td><td>로그인·보안 설정 재작성, 인증 복구</td><td><span class="chip ok">완료</span></td><td>로그인 필수 · CSRF 방어. 자동 테스트 14개 + 로컬 DB 실제 화면 확인</td></tr>
+    <tr><td class="k">D</td><td>DB 쿼리(JPA / Hibernate 7) 검증</td><td><span class="chip part">일부</span></td><td>웹 화면은 로컬 DB에서 오류 0건. Daemon 테스트 모드는 미진행</td></tr>
+    <tr><td class="k">E</td><td>설정 파일(yml) 정리</td><td><span class="chip ok">완료</span></td><td>Boot 4에서 Daemon이 시작되지 않던 오류 1건 발견·수정, 설정 로딩 53/53</td></tr>
+    <tr><td class="k">F</td><td>운영 실행 스크립트 JDK 25 적용</td><td><span class="chip ok">완료</span></td><td>25.0.5.1 미만 Java는 시작 차단. 스크립트 6개 × 7항목 FAIL 0</td></tr>
+    <tr><td class="k">K</td><td>사용자 관리 관리자(ADMIN) 전용</td><td><span class="chip ok">완료</span></td><td>USER가 스스로 관리자 계정을 만들 수 있던 문제 차단. 실제 화면 확인</td></tr>
+    <tr><td class="k">배포</td><td>운영 서버 JDK 25 설치 → 순차 교체</td><td><span class="chip todo">미진행</span></td><td>운영 서버 필요. 절차·되돌리기 방법은 문서 8.5</td></tr>
+  </table>
+</section>
+
+<section class="two">
+  <div>
+    <h2>3. 주요 구성 요소 버전</h2>
+    <table>
+      <tr><th>구성 요소</th><th>작업 전</th><th>작업 후</th></tr>
+      <tr><td>Java</td><td>11</td><td><b>25.0.5.1</b></td></tr>
+      <tr><td>Spring Boot</td><td>2.7.12</td><td><b>4.1.2</b></td></tr>
+      <tr><td>Spring / Security</td><td>5.3.27 / 5.7.8</td><td><b>7.0.10 / 7.1.2</b></td></tr>
+      <tr><td>Hibernate</td><td>5.6.15</td><td><b>7.4.13</b></td></tr>
+      <tr><td>Tomcat</td><td>9.0.75</td><td><b>11.0.27</b></td></tr>
+      <tr><td>Thymeleaf</td><td>3.0.15</td><td><b>3.1.5</b></td></tr>
+      <tr><td>Log4j2 / SnakeYAML</td><td>2.17.2 / 1.30</td><td><b>2.25.5 / 2.6</b></td></tr>
+      <tr><td>SFTP (JSch)</td><td>0.1.55 (유지보수 중단)</td><td><b>mwiede 2.28.8</b></td></tr>
+      <tr><td>MySQL 드라이버</td><td>8.0.33</td><td><b>9.7.0</b></td></tr>
+    </table>
+    <p class="muted" style="margin-top:8px;font-size:13px">작업 전 의존성 점검에서 약 123건의 CVE(Critical 16)를 확인했다. 작업 후 버전 기준 재점검은 남은 작업이다.</p>
+  </div>
+  <div>
+    <h2>4. 보안 문제 처리 현황</h2>
+    <table>
+      <tr><th style="width:46px">#</th><th>내용</th><th style="width:78px">상태</th></tr>
+      <tr><td class="k">S1</td><td>로그인 없이 회원·문자·설정 기능 사용 가능, CSRF 꺼짐</td><td><span class="chip ok">해결</span></td></tr>
+      <tr><td class="k">S5</td><td>관측소 SFTP 비밀번호를 로그에 기록</td><td><span class="chip ok">해결</span></td></tr>
+      <tr><td class="k">S6</td><td>개발 도구(devtools)가 운영 jar에 포함</td><td><span class="chip ok">해결</span></td></tr>
+      <tr><td class="k">S7</td><td>암호화되지 않은 HTTP 라이브러리 저장소 사용</td><td><span class="chip ok">해결</span></td></tr>
+      <tr><td class="k">S2</td><td>관측소 SFTP 비밀번호가 Git에 평문 저장</td><td><span class="chip risk">교체 필요</span></td></tr>
+      <tr><td class="k">S3</td><td>DB 비밀번호가 Git에 평문 저장</td><td><span class="chip risk">교체 필요</span></td></tr>
+      <tr><td class="k">S4</td><td>GitLab 복구 코드·DB 덤프가 Git에 저장</td><td><span class="chip risk">교체 필요</span></td></tr>
+      <tr><td class="k">S8</td><td>SFTP 접속 시 서버 신원 확인 생략</td><td><span class="chip part">서버 작업</span></td></tr>
+    </table>
+  </div>
+</section>
+
+<section class="two">
+  <div>
+    <h2>5. 검증 결과</h2>
+    <table>
+      <tr><th>항목</th><th>결과</th></tr>
+      <tr><td>전체 빌드 (<code>./gradlew build</code>)</td><td><span class="chip ok">성공</span></td></tr>
+      <tr><td>보안·권한 자동 테스트</td><td><span class="chip ok">23 / 23</span> 대조군으로 회귀 탐지 확인</td></tr>
+      <tr><td>설정 로딩 테스트</td><td><span class="chip ok">53 / 53</span></td></tr>
+      <tr><td>운영 스크립트 테스트</td><td><span class="chip ok">FAIL 0</span></td></tr>
+      <tr><td>로컬 DB 웹: 로그인 · 화면 조회</td><td><span class="chip ok">통과</span> 서버 오류 0건</td></tr>
+      <tr><td>로컬 DB 웹: 관리자 권한 (403)</td><td><span class="chip ok">통과</span></td></tr>
+      <tr><td>로컬 DB 웹: 저장 기능 (CSRF)</td><td><span class="chip ok">통과</span> 문자 발송 없음 확인</td></tr>
+      <tr><td>기존 주석 보존 검사</td><td><span class="chip ok">사라진 주석 0건</span></td></tr>
+    </table>
+  </div>
+  <div>
+    <h2>6. 작업 중 발견하고 조치한 문제</h2>
+    <ul>
+      <li><b>Daemon 기동 실패</b> — 설정 import의 <code>classpath*:</code>가 Boot 4에서 오류. 기동 테스트로 발견해 수정</li>
+      <li><b>권한 상승</b> — 회원 생성 화면이 권한 값을 브라우저에서 보내 USER가 관리자 계정을 만들 수 있었음 → 관리자 전용으로 차단</li>
+      <li><b>로컬 DB 구조 차이</b> — 로그인 후 500 오류. 코드가 아니라 로컬 DB가 옛 구조였음 → 맞춤 SQL 작성·적용 (업그레이드와 무관)</li>
+      <li><b>화면 경고</b> — Thymeleaf 옛 표현식 경고(화면마다 2건) → 0건</li>
+      <li><b>새로 발견한 평문 비밀번호</b> — 참고 SQL 파일 1개 (S3에 추가)</li>
+      <li><b>문서 이력의 민감값</b> — 테스트 주소·계정 이름을 Git 이력에서 제거 (push 전)</li>
+    </ul>
+  </div>
+</section>
+
+<section class="two">
+  <div class="box warn">
+    <h2>7. 운영 배포 전 반드시 할 일</h2>
+    <ul>
+      <li><b>노출된 비밀번호 교체</b> (S2~S4) — 가장 시급. Git 이력에 남아 있음</li>
+      <li><b>관측소 SSH 버전 확인</b> — 새 SFTP 라이브러리는 옛 암호 방식을 기본 거부. OpenSSH 7.2 미만이면 접속 실패 가능</li>
+      <li><b>운영 DB 관리자 계정 확인</b> — ADMIN 1명 이상, 권한 빈 값 0건</li>
+      <li><b>운영 서버 JDK 25.0.5.1 이상 설치</b> — 변경 이력에 CVE-2026-114938 포함 확인, 기존 JDK 11은 되돌리기용으로 보관</li>
+      <li><b>순차 교체</b> — TDWR → SDR → SDR_B → RDR → RDR_B → 웹, 단계마다 한 주기 이상 관찰</li>
+    </ul>
+  </div>
+  <div class="box">
+    <h2>8. 남은 테스트 (14건)</h2>
+    <table>
+      <tr><th>어디서</th><th>항목</th></tr>
+      <tr><td class="k">로컬 (8)</td><td>로그아웃 · 세션 만료 후 저장 · 나머지 화면 전부 · 검색 폼 · 문자 발송 화면(누리2 미연결 DB만) · Daemon 테스트 모드 · open-in-view 설정 · 작업 후 CVE 재점검</td></tr>
+      <tr><td class="k">운영 (6)</td><td>관측소 SSH 버전 · SFTP 실제 접속 · 사전 확인(CPU·Java·관리자 계정) · JDK 25 설치 · 순차 배포 · 배포 후 웹 재확인</td></tr>
+    </table>
+    <p class="muted" style="margin-top:8px;font-size:13px">결정 대기: USER에게 사용자 관리 메뉴 숨김 여부, 추가 관리자 전용 기능, 화면 캐시 설정, 정리 대상 파일 삭제, push 방식</p>
+  </div>
+</section>
+
+<footer>
+  <div>상세 내용·명령·기대 결과: <b>docs/project-analysis.md</b> (0.2 상태 · 6.8 변경 내역 · 7장 이력 · 9.5 검토 기록 · 9.6 남은 테스트)</div>
+  <div>비밀번호·IP·계정 등 민감값은 이 보고서에 포함하지 않음</div>
+</footer>
+
+</div>
+</body>
+</html>
