@@ -54,8 +54,8 @@
         <!-- <div id="loginBoxTitle">기상 레이더<br/>자료수신모니터링</div> -->
         <div id="loginBoxTitle">기상 레이더 <br/>장애 문자 전송 시스템</div>
         
-        <form method="post" id="loginForm" name="loginForm"action="/loginProc">
-<!--          <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />-->
+        <!-- 📌 th:action 사용 시 Thymeleaf가 CSRF hidden 토큰을 자동 추가 (2026-11-19) -->
+        <form method="post" id="loginForm" name="loginForm" th:action="@{/loginProc}">
           <div id="inputBox">
             <div class="input-form-box"><span>아이디 </span><input type="text" name="userId" id="userId" class="form-control" ></div>
             <!-- <div id="idIsNull" style="display: none;">

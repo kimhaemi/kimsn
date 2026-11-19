@@ -1,3 +1,30 @@
+/*
+ * 📌 CSRF 토큰 자동 전달 (2026-11-19, Spring Security CSRF 보호 활성화 대응)
+ *  - layout/config.html 의 <meta name="_csrf*"> 값을 사용
+ *  - jQuery Ajax($.ajax, $.post, fnCall): 모든 요청 헤더에 토큰 추가
+ *  - method="post" 폼: 화면 로드 시 hidden 입력값으로 토큰 추가 (form.submit() 호출 포함)
+ */
+(function ($) {
+    if (!$) return;
+    var token = $("meta[name='_csrf']").attr("content");
+    var header = $("meta[name='_csrf_header']").attr("content");
+    var param = $("meta[name='_csrf_parameter']").attr("content");
+    if (!token || !header) return;
+
+    $(document).ajaxSend(function (e, xhr) {
+        xhr.setRequestHeader(header, token);
+    });
+
+    $(function () {
+        $("form").each(function () {
+            var method = ($(this).attr("method") || "get").toLowerCase();
+            if (method === "post" && param && $(this).find("input[name='" + param + "']").length === 0) {
+                $("<input>", { type: "hidden", name: param, value: token }).appendTo(this);
+            }
+        });
+    });
+})(window.jQuery);
+
 function fnCall(method, url, params){
     let result;
     $.ajax({

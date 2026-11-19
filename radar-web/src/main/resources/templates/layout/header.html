@@ -97,7 +97,11 @@
                     <a href="/"><b>기상레이더 장애 문자 전송 시스템</b></a>
                 </h1>
                 <ul class="logout">
-                    <li><a href="/logout" class="btn ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only">Logout</a></li>
+                    <!-- 📌 CSRF 보호 활성화로 로그아웃은 POST + 토큰 필요 (2026-11-19): 링크 → 폼 제출 -->
+                    <li>
+                        <form id="logoutForm" method="post" th:action="@{/logout}" style="display:none;"></form>
+                        <a href="#" onclick="document.getElementById('logoutForm').submit(); return false;" class="btn ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only">Logout</a>
+                    </li>
                     <li>
                         <div >
                             <!-- <button class="btn_hambuger" toggle_menu="">
