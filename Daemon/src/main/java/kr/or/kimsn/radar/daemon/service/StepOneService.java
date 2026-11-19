@@ -102,7 +102,8 @@ public class StepOneService {
                 log.info("[{} port]: {}", siteStr, port);
                 log.info("[{} ip]: {}", siteStr, siteIp);
                 log.info("[{} username]: {}", siteStr, siteUsername);
-                log.info("[{} pwd]: {}", siteStr, sitePwd);
+                // (2026-11-19, 보안 S5) 비밀번호 평문 로그 기록 제거 → 설정 여부만 기록
+                log.info("[{} pwd]: {}", siteStr, sitePwd.isEmpty() ? "(미설정)" : "******");
 
                 ReceiveSettingDto rsDto = queryService.getrRceiveSetting(dataKindStr);
                 
