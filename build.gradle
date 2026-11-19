@@ -29,6 +29,11 @@ subprojects {
         options.encoding = 'UTF-8'
     }
 
+    // (2026-11-19) JUnit 5(Jupiter) 테스트 실행 설정. 없으면 Gradle 9이 테스트를 찾지 못함
+    tasks.withType(Test).configureEach {
+        useJUnitPlatform()
+    }
+
     // 💡 1. 로깅 충돌 방지를 위해 기본 내장된 Logback(spring-boot-starter-logging)을 완전히 제외합니다.
     configurations {
         all {

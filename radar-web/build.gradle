@@ -27,4 +27,8 @@ dependencies {
     // 템플릿의 sec: 네임스페이스(xmlns:sec) 처리를 위해 추가 (기존에는 의존성 누락으로 미동작)
     implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity6'
 
+    // (2026-11-19) DB 없이 Spring Security 동작을 검증하는 테스트용 (MockMvc + spring-security-test)
+    testImplementation 'org.springframework.boot:spring-boot-starter-webmvc-test'
+    testImplementation 'org.springframework.boot:spring-boot-starter-security-test'
+
 }
